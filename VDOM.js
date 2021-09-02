@@ -7,6 +7,8 @@ class VDOM {
           };
           this.oldRender = appFunction();
           this.root = root;
+
+          window.vDOM = this;
      }
 
      static setState = (value) => new SetState(value);

@@ -12,18 +12,17 @@ class Router {
           this.current = routes[0];
           this.stack = [routes[0]];
 
-          window.addEventListener("popstate", (event) => {
+          window.addEventListener("popstate", (e) => {
                if (this.stack.length === 1) {
                     this.current = routes[0];
-                    window.vDOM.update();
+                    vDOM.update();
                     return;
                }
                const x = this.stack.pop();
-               console.log(x);
                routes.forEach((r) => {
                     if (x.name === r.name) {
                          this.current = r;
-                         window.vDOM.update();
+                         vDOM.update();
                          return;
                     }
                });
@@ -48,7 +47,7 @@ class Router {
                     history.pushState({}, this.current.title, `${name}`);
                     this.stack.push(this.current);
                     this.current = r;
-                    window.vDOM.update();
+                    vDOM.update();
                     return;
                }
           });
