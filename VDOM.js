@@ -1,13 +1,13 @@
 import SetState from "./SetState.js";
 
 class VDOM {
-     constructor({ appFunction, root }) {
+     constructor({ appFunction, root, devMode = false }) {
           this.app = () => {
                return appFunction();
           };
           this.oldRender = appFunction();
           this.root = root;
-
+          this.devMode = devMode;
           window.vDOM = this;
      }
 
@@ -20,8 +20,10 @@ class VDOM {
      }
 
      update() {
+          const startTime = new Date().getTime();
           this.oldRender.update(this.app());
           this.oldRender = this.app();
+          if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
      }
 }
 

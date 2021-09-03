@@ -140,28 +140,27 @@ class CreateComponent {
           if (this.events) {
                // add event listeners
 
+               render.events = {};
+
                if (this.events.onClick) {
-                    render.removeEventListener("click", onclick);
+                    render.events.onClick = this.events.onClick;
+                    // render.removeEventListener("click", onclick);
                     render.addEventListener("click", (e) => {
-                         this.events.onClick(e);
+                         render.events.onClick(e);
                     });
                }
                if (this.events.onChange) {
-                    render.removeEventListener("input", oninput);
+                    render.events.onChange = this.events.onChange;
+                    // .removeEventListener("input", oninput);
                     render.addEventListener("input", (e) => {
-                         this.events.onChange(e);
+                         render.events.onChange(e);
                     });
                }
                if (this.events.onChanged) {
-                    render.removeEventListener("change", onchange);
+                    render.events.onChanged = this.events.onChanged;
+                    // render.removeEventListener("change", onchange);
                     render.addEventListener("change", (e) => {
-                         this.events.onChanged(e);
-                    });
-               }
-               if (this.events.onDoubleClick) {
-                    render.removeEventListener("dbclick", ondblclick);
-                    render.addEventListener("dbclick", (e) => {
-                         this.events.onDoubleClick(e);
+                         render.events.onChanged(e);
                     });
                }
           }
@@ -302,13 +301,35 @@ class CreateComponent {
           if (newElement.events) {
                // replace with new onClick event
                if (newElement.events.onClick) {
-                    // console.log(newElement.events);
-                    if (this.events) {
-                         if (this.events.onClick !== newElement.events.onClick) {
-                              old.replaceWith(newElement.render());
-                         }
-                    }
+                    old.events.onClick = newElement.events.onClick;
                }
+
+               if (newElement.events.onChange) {
+                    old.events.onChange = newElement.events.onChange;
+               }
+
+               if (newElement.events.onChanged) {
+                    old.events.onChanged = newElement.events.onChanged;
+               }
+          }
+
+          if (!this.children && !newElement.children) {
+               return;
+          }
+
+          // if old children is empty, just add the children of the new element
+          if (!this.children && newElement.children) {
+               // console.log("old => ", this.children, "new => ", newElement.children);
+               newElement.children.forEach((child) =>
+                    old.append(child.render ? child.render() : child)
+               );
+               return;
+          }
+
+          // if new children is empty, just remove inner html
+          if (this.children && !newElement.children) {
+               old.innerHTML = "";
+               return;
           }
 
           // console.log(this.key, typeof this.children, typeof newElement.children);
