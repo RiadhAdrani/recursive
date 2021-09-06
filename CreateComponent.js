@@ -238,6 +238,10 @@ class CreateComponent {
                old.src = newElement.src;
           }
 
+          if (this.value !== newElement.value) {
+               old.value = newElement.value;
+          }
+
           if (this.placeholder !== newElement.placeholder) {
                old.placeholder = newElement.placeholder;
           }
@@ -317,18 +321,21 @@ class CreateComponent {
                return;
           }
 
+          // if new children is empty, just remove inner html
+          if (!newElement.children) {
+               old.innerHTML = "";
+               if (newElement.tag === "textarea") {
+                    old.value = "";
+               }
+               return;
+          }
+
           // if old children is empty, just add the children of the new element
           if (!this.children && newElement.children) {
                // console.log("old => ", this.children, "new => ", newElement.children);
                newElement.children.forEach((child) =>
                     old.append(child.render ? child.render() : child)
                );
-               return;
-          }
-
-          // if new children is empty, just remove inner html
-          if (this.children && !newElement.children) {
-               old.innerHTML = "";
                return;
           }
 

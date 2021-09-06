@@ -1,17 +1,18 @@
 import CreateComponent from "../CreateComponent.js";
 
-const template = ({ type, name, value, style, id, className, events, min, max }) =>
+const template = ({ type, name, value, style, id, className, events, min, max, placeholder }) =>
      new CreateComponent({
           tag: "input",
           type: type,
           name: name,
-          vale: value,
+          value: value,
           inlineStyle: style,
           id: id,
           className: className,
           events: events,
           min: min,
           max: max,
+          placeholder: placeholder,
      });
 
 export default {
@@ -51,7 +52,7 @@ export default {
                min: min,
                max: max,
           }),
-     Email: ({ name, value, style, id, className, events, min, max }) =>
+     Email: ({ name, value, style, id, className, events, min, max, placeholder }) =>
           template({
                type: "email",
                name: name,
@@ -62,6 +63,7 @@ export default {
                events: events,
                min: min,
                max: max,
+               placeholder: placeholder,
           }),
      File: ({ name, value, style, id, className, events, min, max }) =>
           template({
@@ -99,7 +101,7 @@ export default {
                min: min,
                max: max,
           }),
-     Number: ({ name, value, style, id, className, events, min, max }) =>
+     Number: ({ name, value, style, id, className, events, min, max, placeholder }) =>
           template({
                type: "number",
                name: name,
@@ -110,8 +112,9 @@ export default {
                events: events,
                min: min,
                max: max,
+               placeholder: placeholder,
           }),
-     Password: ({ name, value, style, id, className, events, min, max }) =>
+     Password: ({ name, value, style, id, className, events, min, max, placeholder }) =>
           template({
                type: "password",
                name: name,
@@ -122,6 +125,7 @@ export default {
                events: events,
                min: min,
                max: max,
+               placeholder: placeholder,
           }),
      Radio: ({ name, value, style, id, className, events, min, max }) =>
           template({
@@ -147,7 +151,7 @@ export default {
                min: min,
                max: max,
           }),
-     Text: ({ name, value, style, id, className, events, min, max }) =>
+     Text: ({ name, value, style, id, className, events, min, max, placeholder }) =>
           template({
                type: "text",
                name: name,
@@ -158,8 +162,9 @@ export default {
                events: events,
                min: min,
                max: max,
+               placeholder: placeholder,
           }),
-     Telephone: ({ name, value, style, id, className, events, min, max }) =>
+     Telephone: ({ name, value, style, id, className, events, min, max, placeholder }) =>
           template({
                type: "telephone",
                name: name,
@@ -170,6 +175,7 @@ export default {
                events: events,
                min: min,
                max: max,
+               placeholder: placeholder,
           }),
      Time: ({ name, value, style, id, className, events, min, max }) =>
           template({
