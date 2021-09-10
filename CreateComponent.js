@@ -81,6 +81,7 @@ class CreateComponent {
                // merge consequetive strings and add other elements
                else {
                     for (let i = 0; i < children.length; i++) {
+                         if (!children[i]) continue;
                          if (typeof children[i] !== "string") {
                               this.children.push(children[i]);
                          } else {
