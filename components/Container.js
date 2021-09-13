@@ -1,6 +1,6 @@
 import CreateComponent from "../CreateComponent.js";
 
-export default ({ children, style, id, className, events }) =>
+export default ({ children, style, id, className, events, onCreated }) =>
      new CreateComponent({
           tag: "div",
           key: "0",
@@ -9,4 +9,5 @@ export default ({ children, style, id, className, events }) =>
           id: id,
           className: className,
           events: events,
+          onCreated,
      });

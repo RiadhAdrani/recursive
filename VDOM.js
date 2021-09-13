@@ -17,6 +17,7 @@ class VDOM {
           this.root.innerHTML = "";
           this.root.append(this.app().render());
           this.oldRender = this.app();
+          this.oldRender.created();
      }
 
      update() {

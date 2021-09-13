@@ -1,6 +1,18 @@
 import CreateComponent from "../CreateComponent.js";
 
-const template = ({ type, name, value, style, id, className, events, min, max, placeholder }) =>
+const template = ({
+     type,
+     name,
+     value,
+     style,
+     id,
+     className,
+     events,
+     min,
+     max,
+     placeholder,
+     onCreated,
+}) =>
      new CreateComponent({
           tag: "input",
           type: type,
@@ -13,10 +25,11 @@ const template = ({ type, name, value, style, id, className, events, min, max, p
           min: min,
           max: max,
           placeholder: placeholder,
+          onCreated,
      });
 
 export default {
-     CheckBox: ({ name, value, style, id, className, events, min, max }) =>
+     CheckBox: ({ name, value, style, id, className, events, min, max, onCreated }) =>
           template({
                type: "checkbox",
                name: name,
@@ -27,8 +40,9 @@ export default {
                events: events,
                min: min,
                max: max,
+               onCreated,
           }),
-     Date: ({ name, value, style, id, className, events, min, max }) =>
+     Date: ({ name, value, style, id, className, events, min, max, onCreated }) =>
           template({
                type: "date",
                name: name,
@@ -39,8 +53,9 @@ export default {
                events: events,
                min: min,
                max: max,
+               onCreated,
           }),
-     DateTimeLocal: ({ name, value, style, id, className, events, min, max }) =>
+     DateTimeLocal: ({ name, value, style, id, className, events, min, max, onCreated }) =>
           template({
                type: "datetime-local",
                name: name,
@@ -51,8 +66,9 @@ export default {
                events: events,
                min: min,
                max: max,
+               onCreated,
           }),
-     Email: ({ name, value, style, id, className, events, min, max, placeholder }) =>
+     Email: ({ name, value, style, id, className, events, min, max, placeholder, onCreated }) =>
           template({
                type: "email",
                name: name,
@@ -64,8 +80,9 @@ export default {
                min: min,
                max: max,
                placeholder: placeholder,
+               onCreated,
           }),
-     File: ({ name, value, style, id, className, events, min, max }) =>
+     File: ({ name, value, style, id, className, events, min, max, onCreated }) =>
           template({
                type: "file",
                name: name,
@@ -76,8 +93,9 @@ export default {
                events: events,
                min: min,
                max: max,
+               onCreated,
           }),
-     Image: ({ name, value, style, id, className, events, min, max }) =>
+     Image: ({ name, value, style, id, className, events, min, max, onCreated }) =>
           template({
                type: "image",
                name: name,
@@ -88,8 +106,10 @@ export default {
                events: events,
                min: min,
                max: max,
+
+               onCreated,
           }),
-     Month: ({ name, value, style, id, className, events, min, max }) =>
+     Month: ({ name, value, style, id, className, events, min, max, onCreated }) =>
           template({
                type: "month",
                name: name,
@@ -100,8 +120,9 @@ export default {
                events: events,
                min: min,
                max: max,
+               onCreated,
           }),
-     Number: ({ name, value, style, id, className, events, min, max, placeholder }) =>
+     Number: ({ name, value, style, id, className, events, min, max, placeholder, onCreated }) =>
           template({
                type: "number",
                name: name,
@@ -113,8 +134,10 @@ export default {
                min: min,
                max: max,
                placeholder: placeholder,
+
+               onCreated,
           }),
-     Password: ({ name, value, style, id, className, events, min, max, placeholder }) =>
+     Password: ({ name, value, style, id, className, events, min, max, placeholder, onCreated }) =>
           template({
                type: "password",
                name: name,
@@ -126,8 +149,10 @@ export default {
                min: min,
                max: max,
                placeholder: placeholder,
+
+               onCreated,
           }),
-     Radio: ({ name, value, style, id, className, events, min, max }) =>
+     Radio: ({ name, value, style, id, className, events, min, onCreated }) =>
           template({
                type: "radio",
                name: name,
@@ -138,8 +163,9 @@ export default {
                events: events,
                min: min,
                max: max,
+               onCreated,
           }),
-     Range: ({ name, value, style, id, className, events, min, max }) =>
+     Range: ({ name, value, style, id, className, events, min, max, onCreated }) =>
           template({
                type: "range",
                name: name,
@@ -150,8 +176,9 @@ export default {
                events: events,
                min: min,
                max: max,
+               onCreated,
           }),
-     Text: ({ name, value, style, id, className, events, min, max, placeholder }) =>
+     Text: ({ name, value, style, id, className, events, min, max, placeholder, onCreated }) =>
           template({
                type: "text",
                name: name,
@@ -163,8 +190,9 @@ export default {
                min: min,
                max: max,
                placeholder: placeholder,
+               onCreated,
           }),
-     Telephone: ({ name, value, style, id, className, events, min, max, placeholder }) =>
+     Telephone: ({ name, value, style, id, className, events, min, max, placeholder, onCreated }) =>
           template({
                type: "telephone",
                name: name,
@@ -176,8 +204,9 @@ export default {
                min: min,
                max: max,
                placeholder: placeholder,
+               onCreated,
           }),
-     Time: ({ name, value, style, id, className, events, min, max }) =>
+     Time: ({ name, value, style, id, className, events, min, max, onCreated }) =>
           template({
                type: "time",
                name: name,
@@ -188,8 +217,9 @@ export default {
                events: events,
                min: min,
                max: max,
+               onCreated,
           }),
-     URL: ({ name, value, style, id, className, events, min, max }) =>
+     URL: ({ name, value, style, id, className, events, min, max, onCreated }) =>
           template({
                type: "url",
                name: name,
@@ -200,6 +230,8 @@ export default {
                events: events,
                min: min,
                max: max,
+
+               onCreated,
           }),
      Week: ({ name, value, style, id, className, events, min, max }) =>
           template({
@@ -212,5 +244,6 @@ export default {
                events: events,
                min: min,
                max: max,
+               onCreated,
           }),
 };

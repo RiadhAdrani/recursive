@@ -28,6 +28,7 @@ class CreateComponent {
           required,
           rows,
           wrap,
+          onCreated,
      }) {
           if (!tag) {
                throw "tag cannot be empty";
@@ -59,6 +60,7 @@ class CreateComponent {
           this.required = required;
           this.rows = rows;
           this.wrap = wrap;
+          this.onCreated = onCreated;
 
           if (style) {
                if (style.className) {
@@ -94,7 +96,6 @@ class CreateComponent {
                                         i++;
                                    }
                               }
-                              // // console.log(textNode);
                               this.children.push(textNode);
                          }
                     }
@@ -128,6 +129,7 @@ class CreateComponent {
           if (this.required) render.required = this.required;
           if (this.rows) render.rows = this.rows;
           if (this.wrap) render.wrap = this.wrap;
+          if (this.onCreated) render.onCreated = this.onCreated;
 
           // add classes
           if (this.className) render.className = this.className;
@@ -198,7 +200,6 @@ class CreateComponent {
                               },
                               onSingleChild: () => {
                                    const childRender = child.render();
-
                                    render.append(childRender);
                               },
                          });
@@ -217,7 +218,6 @@ class CreateComponent {
           // console.log("old => ", old, this.key);
 
           if (!old) {
-               console.log("old =>", old, this.key);
                return;
           }
 
@@ -231,6 +231,14 @@ class CreateComponent {
           if (this.tag !== newElement.tag) {
                // console.log("new component has different tag: ", this.tag, newElement.tag);
                old.replaceWith(newElement.render());
+               newElement.created();
+               return;
+          }
+
+          if (newElement.onCreated) {
+               old.onCreated = newElement.onCreated;
+          } else {
+               old.onCreated = undefined;
           }
 
           this.diffStyle(old.style, this.inlineStyle, newElement.inlineStyle);
@@ -334,9 +342,9 @@ class CreateComponent {
           // if old children is empty, just add the children of the new element
           if (!this.children && newElement.children) {
                // console.log("old => ", this.children, "new => ", newElement.children);
-               newElement.children.forEach((child) =>
-                    old.append(child.render ? child.render() : child)
-               );
+               newElement.children.forEach((child) => {
+                    old.append(child.render ? child.render() : child);
+               });
                return;
           }
 
@@ -344,7 +352,6 @@ class CreateComponent {
           // case children is string, new is string and not equal
           if (typeof this.children === "string" && typeof newElement.children === "string") {
                if (newElement.children.toString() !== this.children.toString()) {
-                    console.log("text diff");
                     old.replaceChildren(newElement.children);
                     return;
                }
@@ -353,7 +360,6 @@ class CreateComponent {
           else if (typeof this.children === "string" && newElement.children.render) {
                // console.log("current is string new is child");
                old.replaceChildren(newElement.children.render());
-               return;
           }
           // case children is child, new is string
           else if (this.children.render && typeof newElement.children === "string") {
@@ -362,8 +368,9 @@ class CreateComponent {
           }
           // case children is string, new is children
           else if (typeof this.children === "string" && Array.isArray(newElement.children)) {
-               // console.log("current is string new is children");
+               // .log("current is string new is children");
                old.replaceChildren(newElement.render());
+               newElement.created();
           }
           // case children is children, new is string
           else if (Array.isArray(this.children) && typeof newElement.children === "string") {
@@ -386,6 +393,7 @@ class CreateComponent {
           else if (Array.isArray(this.children) && newElement.children.render) {
                // console.log("current is children new is child");
                old.replaceChildren(newElement.children.render());
+               newElement.chilren.created();
           }
           // case children is children, new is children
           else if (Array.isArray(this.children) && Array.isArray(newElement.children)) {
@@ -420,7 +428,10 @@ class CreateComponent {
 
                     const n = newElement.children.slice(x, newElement.children.length);
 
-                    n.forEach((child) => old.append(child.render ? child.render() : child));
+                    n.forEach((child) => {
+                         old.append(child.render ? child.render() : child);
+                         if (child.created) child.created();
+                    });
 
                     this.arrayDiff(old, newElement);
                }
@@ -431,7 +442,7 @@ class CreateComponent {
           if (typeof this.children !== "string") {
                if (this.children.render) {
                     this.children.key = `${this.key}0`;
-                    // // console.log(children);
+                    // console.log(children);
                } else {
                     this.children.forEach((child) => {
                          if (typeof child !== "string") {
@@ -465,6 +476,19 @@ class CreateComponent {
                          }
                     }
                }
+          }
+     }
+
+     created() {
+          if (this.onCreated) {
+               this.onCreated();
+          }
+          if (this.children) {
+               this.children.forEach((child) => {
+                    if (child.render) {
+                         child.created();
+                    }
+               });
           }
      }
 
@@ -516,8 +540,11 @@ class CreateComponent {
                     if (this.children[i].toString() !== newElement.children[i].toString()) {
                          //// console.log(`children-${i} are not the same strings`);
 
+                         if (old.childNodes) {
+                              old.childNodes[i].nodeValue = newElement.children[i];
+                         }
+
                          // old.children[i].innerHTML = newElement.children[i];
-                         old.childNodes[i].nodeValue = newElement.children[i];
                     }
                }
                // case children is string, new is child
@@ -526,6 +553,7 @@ class CreateComponent {
                     old.childNodes.forEach((child, key) => {
                          if (key == i) {
                               child.replaceWith(newElement.children[i].render());
+                              child.created();
                          }
                     });
                }

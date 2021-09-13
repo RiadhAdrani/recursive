@@ -1,6 +1,6 @@
 import CreateComponent from "../CreateComponent.js";
 
-export default ({ text, className, id, style, events }) =>
+export default ({ text, className, id, style, events, onCreated }) =>
      new CreateComponent({
           tag: "p",
           children: text,
@@ -8,4 +8,5 @@ export default ({ text, className, id, style, events }) =>
           inlineStyle: style,
           events: events,
           className: className,
+          onCreated,
      });

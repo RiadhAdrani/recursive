@@ -18,10 +18,12 @@ export default ({
      required,
      rows,
      wrap,
+     onCreated,
 }) =>
      new CreateComponent({
           tag: "textarea",
           children: text,
+          onCreated,
           autofocus: autofocus,
           cols: cols,
           dirname: dirname,
