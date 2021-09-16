@@ -1,6 +1,17 @@
 import CreateComponent from "../CreateComponent.js";
 
-export default ({ text, style, id, className, events, onCreated }) =>
+export default ({
+     text,
+     style,
+     id,
+     className,
+     events,
+     onCreated,
+     onDestroyed,
+     onUpdated,
+     beforeCreated,
+     beforeDestroyed,
+}) =>
      new CreateComponent({
           tag: "button",
           children: text,
@@ -9,4 +20,8 @@ export default ({ text, style, id, className, events, onCreated }) =>
           className: className,
           events: events,
           onCreated,
+          onDestroyed,
+          onUpdated,
+          beforeCreated,
+          beforeDestroyed,
      });

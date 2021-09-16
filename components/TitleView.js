@@ -1,8 +1,24 @@
 import CreateComponent from "../CreateComponent.js";
 
-const hn = ({ hn, text, id, style, events, className, onCreated }) =>
+const hn = ({
+     hn,
+     text,
+     id,
+     style,
+     events,
+     className,
+     onCreated,
+     onDestroyed,
+     onUpdated,
+     beforeCreated,
+     beforeDestroyed,
+}) =>
      new CreateComponent({
           tag: hn,
+          onDestroyed,
+          onUpdated,
+          beforeCreated,
+          beforeDestroyed,
           children: text,
           id: id,
           inlineStyle: style,
@@ -12,7 +28,18 @@ const hn = ({ hn, text, id, style, events, className, onCreated }) =>
      });
 
 export default {
-     h1: ({ text, id, style, events, className, onCreated }) =>
+     h1: ({
+          text,
+          id,
+          style,
+          events,
+          className,
+          onCreated,
+          onDestroyed,
+          onUpdated,
+          beforeCreated,
+          beforeDestroyed,
+     }) =>
           hn({
                hn: "h1",
                text: text,
@@ -21,8 +48,23 @@ export default {
                events: events,
                className: className,
                onCreated,
+               onDestroyed,
+               onUpdated,
+               beforeCreated,
+               beforeDestroyed,
           }),
-     h2: ({ text, id, style, events, className, onCreated }) =>
+     h2: ({
+          text,
+          id,
+          style,
+          events,
+          className,
+          onCreated,
+          onDestroyed,
+          onUpdated,
+          beforeCreated,
+          beforeDestroyed,
+     }) =>
           hn({
                hn: "h2",
                text: text,
@@ -31,8 +73,23 @@ export default {
                events: events,
                className: className,
                onCreated,
+               onDestroyed,
+               onUpdated,
+               beforeCreated,
+               beforeDestroyed,
           }),
-     h3: ({ text, id, style, events, className, onCreated }) =>
+     h3: ({
+          text,
+          id,
+          style,
+          events,
+          className,
+          onCreated,
+          onDestroyed,
+          onUpdated,
+          beforeCreated,
+          beforeDestroyed,
+     }) =>
           hn({
                hn: "h3",
                text: text,
@@ -40,10 +97,23 @@ export default {
                style: style,
                events: events,
                className: className,
-
+               onDestroyed,
+               onUpdated,
+               beforeCreated,
+               beforeDestroyed,
                onCreated,
           }),
-     h4: ({ text, id, style, events, className }) =>
+     h4: ({
+          text,
+          id,
+          style,
+          events,
+          className,
+          onDestroyed,
+          onUpdated,
+          beforeCreated,
+          beforeDestroyed,
+     }) =>
           hn({
                hn: "h4",
                text: text,
@@ -52,8 +122,23 @@ export default {
                events: events,
                className: className,
                onCreated,
+               onDestroyed,
+               onUpdated,
+               beforeCreated,
+               beforeDestroyed,
           }),
-     h5: ({ text, id, style, events, className, onCreated }) =>
+     h5: ({
+          text,
+          id,
+          style,
+          events,
+          className,
+          onCreated,
+          onDestroyed,
+          onUpdated,
+          beforeCreated,
+          beforeDestroyed,
+     }) =>
           hn({
                hn: "h5",
                text: text,
@@ -62,8 +147,23 @@ export default {
                events: events,
                className: className,
                onCreated,
+               onDestroyed,
+               onUpdated,
+               beforeCreated,
+               beforeDestroyed,
           }),
-     h6: ({ text, id, style, events, className, onCreated }) =>
+     h6: ({
+          text,
+          id,
+          style,
+          events,
+          className,
+          onCreated,
+          onDestroyed,
+          onUpdated,
+          beforeCreated,
+          beforeDestroyed,
+     }) =>
           hn({
                hn: "h6",
                text: text,
@@ -72,5 +172,9 @@ export default {
                events: events,
                className: className,
                onCreated,
+               onDestroyed,
+               onUpdated,
+               beforeCreated,
+               beforeDestroyed,
           }),
 };

@@ -1,6 +1,18 @@
 import CreateComponent from "../CreateComponent.js";
 
-export default ({ imageURL, style, id, className, events, alt, onCreated }) =>
+export default ({
+     imageURL,
+     style,
+     id,
+     className,
+     events,
+     alt,
+     onCreated,
+     onDestroyed,
+     onUpdated,
+     beforeCreated,
+     beforeDestroyed,
+}) =>
      new CreateComponent({
           tag: "img",
           src: imageURL,
@@ -11,4 +23,8 @@ export default ({ imageURL, style, id, className, events, alt, onCreated }) =>
           events: events,
           alt: alt,
           onCreated,
+          onDestroyed,
+          onUpdated,
+          beforeCreated,
+          beforeDestroyed,
      });

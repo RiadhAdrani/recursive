@@ -28,22 +28,25 @@ class CreateComponent {
           required,
           rows,
           wrap,
+          beforeCreated,
           onCreated,
+          beforeDestroyed,
+          onDestroyed,
+          onUpdated,
      }) {
           if (!tag) {
                throw "tag cannot be empty";
           }
 
+          // HTML Attributes
           this.tag = tag;
           this.className = className;
           this.src = src;
           this.id = id;
           this.inlineStyle = inlineStyle;
           this.style = style;
-          this.events = events;
           this.key = key;
           this.value = value;
-          this.children = [];
           this.alt = alt;
           this.placeholder = placeholder;
           this.type = type;
@@ -60,7 +63,19 @@ class CreateComponent {
           this.required = required;
           this.rows = rows;
           this.wrap = wrap;
+
+          // Children
+          this.children = [];
+
+          // Events
+          this.events = events;
+
+          // Component Lifecycle
           this.onCreated = onCreated;
+          this.onDestroyed = onDestroyed;
+          this.onUpdated = onUpdated;
+          this.beforeCreated = beforeCreated;
+          this.beforeDestroyed = beforeDestroyed;
 
           if (style) {
                if (style.className) {
@@ -130,6 +145,8 @@ class CreateComponent {
           if (this.rows) render.rows = this.rows;
           if (this.wrap) render.wrap = this.wrap;
           if (this.onCreated) render.onCreated = this.onCreated;
+          if (this.onDestroyed) render.onDestroyed = this.onDestroyed;
+          if (this.onUpdated) render.onUpdated = this.onUpdated;
 
           // add classes
           if (this.className) render.className = this.className;
@@ -207,6 +224,12 @@ class CreateComponent {
                },
           });
 
+          // Execute beforeCreated Life Cycle method
+          if (this.beforeCreated) {
+               // this life cycle method is not very useful and may cause weird behaviour when trying to update the UI
+               // this.beforeCreated();
+          }
+
           // console.log(render.key);
           return render;
      }
@@ -229,9 +252,15 @@ class CreateComponent {
           }
           // check if the elements have the same tag
           if (this.tag !== newElement.tag) {
+               // Execute Lifecycle Method
+               this.onBeforeDestroyed();
+
                // console.log("new component has different tag: ", this.tag, newElement.tag);
                old.replaceWith(newElement.render());
                newElement.created();
+
+               // Execute Lifecycle Method
+               this.destroyed();
                return;
           }
 
@@ -363,8 +392,11 @@ class CreateComponent {
           }
           // case children is child, new is string
           else if (this.children.render && typeof newElement.children === "string") {
+               this.children.onBeforeDestroyed();
                // console.log("current is child new is string");
                old.replaceChildren(newElement.children);
+
+               this.children.destroyed();
           }
           // case children is string, new is children
           else if (typeof this.children === "string" && Array.isArray(newElement.children)) {
@@ -386,13 +418,30 @@ class CreateComponent {
           }
           // case children is child, new is children
           else if (this.children.render && Array.isArray(newElement.children)) {
+               this.children.onBeforeDestroyed();
+
                // console.log("current is child new is children");
                old.replaceChildren(newElement.render().innerHTML);
+
+               this.children.destroyed();
           }
           // case children is children, new is child
           else if (Array.isArray(this.children) && newElement.children.render) {
+               this.children.forEach((child) => {
+                    if (child.onBeforeDestroyed) {
+                         child.onBeforeDestroyed();
+                    }
+               });
+
                // console.log("current is children new is child");
                old.replaceChildren(newElement.children.render());
+
+               this.children.forEach((child) => {
+                    if (child.destroyed) {
+                         child.destroyed();
+                    }
+               });
+
                newElement.chilren.created();
           }
           // case children is children, new is children
@@ -410,7 +459,12 @@ class CreateComponent {
 
                     let i = newElement.children.length;
                     while (old.childNodes.length > newElement.children.length) {
+                         if (this.children[i].onBeforeDestroyed)
+                              this.children[i].onBeforeDestroyed();
+
                          old.childNodes.item(i).remove();
+
+                         if (this.children[i].destroyed) this.children[i].destroyed();
                     }
 
                     this.children = [...this.children.slice(0, newElement.children.length)];
@@ -492,6 +546,20 @@ class CreateComponent {
           }
      }
 
+     destroyed() {
+          if (this.onDestroyed) {
+               return this.onDestroyed();
+          }
+          return false;
+     }
+
+     onBeforeDestroyed() {
+          if (this.beforeDestroyed) {
+               return this.beforeDestroyed();
+          }
+          return false;
+     }
+
      onChildren({
           children,
           onPlainText = () => {},
@@ -561,11 +629,16 @@ class CreateComponent {
                else if (this.children[i].render && typeof newElement.children[i] === "string") {
                     //// console.log(`children-${i} are child and string`);
                     //// console.log("child node to be replaced: ");
+
+                    this.children[i].onBeforeDestroyed();
+
                     old.childNodes.forEach((child, key) => {
                          if (key == i) {
                               child.replaceWith(newElement.children[i]);
                          }
                     });
+
+                    this.children[i].destroyed();
                }
                // case children is child, new is child
                else {

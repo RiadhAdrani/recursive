@@ -14,16 +14,18 @@ class VDOM {
      static setState = (value) => new SetState(value);
 
      render() {
+          const newRender = this.app();
           this.root.innerHTML = "";
-          this.root.append(this.app().render());
-          this.oldRender = this.app();
+          this.root.append(newRender.render());
+          this.oldRender = newRender;
           this.oldRender.created();
      }
 
      update() {
           const startTime = new Date().getTime();
-          this.oldRender.update(this.app());
-          this.oldRender = this.app();
+          const newRender = this.app();
+          this.oldRender.update(newRender);
+          this.oldRender = newRender;
           if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
      }
 }
