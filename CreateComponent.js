@@ -235,6 +235,8 @@ class CreateComponent {
      }
 
      update(newElement) {
+          let didUpdate = false;
+
           const old = this.findElementByKey();
 
           // // console.log(newElement.render().key);
@@ -270,73 +272,116 @@ class CreateComponent {
                old.onCreated = undefined;
           }
 
-          this.diffStyle(old.style, this.inlineStyle, newElement.inlineStyle);
+          if (this.diffStyle(old.style, this.inlineStyle, newElement.inlineStyle)) didUpdate = true;
 
           if (this.src !== newElement.src) {
                old.src = newElement.src;
+               didUpdate = true;
           }
 
           if (this.value !== newElement.value) {
                old.value = newElement.value;
+               didUpdate = true;
           }
 
           if (this.placeholder !== newElement.placeholder) {
                old.placeholder = newElement.placeholder;
+               didUpdate = true;
           }
 
           if (this.alt !== newElement.alt) {
                old.alt = newElement.alt;
+               didUpdate = true;
           }
 
           if (this.type !== newElement.type) {
                old.type = newElement.type;
+               didUpdate = true;
           }
 
           if (this.name !== newElement.name) {
                old.name = newElement.name;
+               didUpdate = true;
           }
 
           if (this.max !== newElement.max) {
                old.max = newElement.max;
+               didUpdate = true;
           }
 
           if (this.min !== newElement.min) {
                old.min = newElement.min;
+               didUpdate = true;
           }
 
           if (this.autofocus !== newElement.autofocus) {
                old.autofocus = newElement.autofocus;
+               didUpdate = true;
           }
 
-          if (this.cols !== newElement.cols) old.cols = newElement.cols;
+          if (this.cols !== newElement.cols) {
+               old.cols = newElement.cols;
+               didUpdate = true;
+          }
 
-          if (this.dirname !== newElement.dirname) old.dirname = newElement.dirname;
+          if (this.dirname !== newElement.dirname) {
+               old.dirname = newElement.dirname;
+               didUpdate = true;
+          }
 
-          if (this.disabled !== newElement.disabled) old.disabled = newElement.disabled;
+          if (this.disabled !== newElement.disabled) {
+               old.disabled = newElement.disabled;
+               didUpdate = true;
+          }
 
-          if (this.form !== newElement.form) old.form = newElement.form;
+          if (this.form !== newElement.form) {
+               old.form = newElement.form;
+               didUpdate = true;
+          }
 
-          if (this.maxLength !== newElement.maxLength) old.maxlength = newElement.maxLength;
+          if (this.maxLength !== newElement.maxLength) {
+               old.maxlength = newElement.maxLength;
+               didUpdate = true;
+          }
 
-          if (this.readOnly !== newElement.readOnly) old.readonly = newElement.readOnly;
+          if (this.readOnly !== newElement.readOnly) {
+               old.readonly = newElement.readOnly;
+               didUpdate = true;
+          }
 
-          if (this.required !== newElement.required) old.required = newElement.required;
+          if (this.required !== newElement.required) {
+               old.required = newElement.required;
+               didUpdate = true;
+          }
 
-          if (this.rows !== newElement.rows) old.rows = newElement.rows;
+          if (this.rows !== newElement.rows) {
+               old.rows = newElement.rows;
+               didUpdate = true;
+          }
 
-          if (this.wrap !== newElement.wrap) old.wrap = newElement.wrap;
+          if (this.wrap !== newElement.wrap) {
+               old.wrap = newElement.wrap;
+               didUpdate = true;
+          }
 
           // check if the elements have the same id
           if (this.id !== newElement.id) {
                // console.log("new component has another id");
                old.id = newElement.id;
+               didUpdate = true;
                // old.replaceWith(newElement.render());
           }
           // check if the elements have the same classes
           if (this.className !== newElement.className) {
                // console.log("new component has another class name");
                old.className = newElement.className;
+               didUpdate = true;
                // old.replaceWith(newElement.render());
+          }
+
+          // Execute Update lifecycle method
+          if (didUpdate) {
+               this.updated();
           }
 
           // replace with new element if the events exists
@@ -364,6 +409,10 @@ class CreateComponent {
                old.innerHTML = "";
                if (newElement.tag === "textarea") {
                     old.value = "";
+
+                    if (!didUpdate) {
+                         this.updated();
+                    }
                }
                return;
           }
@@ -373,15 +422,23 @@ class CreateComponent {
                // console.log("old => ", this.children, "new => ", newElement.children);
                newElement.children.forEach((child) => {
                     old.append(child.render ? child.render() : child);
+
+                    if (!didUpdate) {
+                         this.updated();
+                    }
                });
                return;
           }
 
           // console.log(this.key, typeof this.children, typeof newElement.children);
           // case children is string, new is string and not equal
-          if (typeof this.children === "string" && typeof newElement.children === "string") {
+          else if (typeof this.children === "string" && typeof newElement.children === "string") {
                if (newElement.children.toString() !== this.children.toString()) {
                     old.replaceChildren(newElement.children);
+
+                    if (!didUpdate) {
+                         this.updated();
+                    }
                     return;
                }
           }
@@ -389,6 +446,10 @@ class CreateComponent {
           else if (typeof this.children === "string" && newElement.children.render) {
                // console.log("current is string new is child");
                old.replaceChildren(newElement.children.render());
+
+               if (!didUpdate) {
+                    this.updated();
+               }
           }
           // case children is child, new is string
           else if (this.children.render && typeof newElement.children === "string") {
@@ -397,17 +458,31 @@ class CreateComponent {
                old.replaceChildren(newElement.children);
 
                this.children.destroyed();
+
+               if (!didUpdate) {
+                    this.updated();
+               }
           }
           // case children is string, new is children
           else if (typeof this.children === "string" && Array.isArray(newElement.children)) {
                // .log("current is string new is children");
-               old.replaceChildren(newElement.render());
+               old.replaceChildren(
+                    newElement.children.map((child) => (child.render ? child.render() : child))
+               );
                newElement.created();
+
+               if (!didUpdate) {
+                    this.updated();
+               }
           }
           // case children is children, new is string
           else if (Array.isArray(this.children) && typeof newElement.children === "string") {
                // console.log("current is children new is string");
                old.replaceChildren(newElement.children);
+
+               if (!didUpdate) {
+                    this.updated();
+               }
           }
           // case children is child, new is child
           else if (this.children.render && newElement.children.render) {
@@ -415,6 +490,10 @@ class CreateComponent {
                // console.log(this.key, this.children);
                // console.log(newElement.key, newElement.children);
                this.children.update(newElement.children);
+
+               if (!didUpdate) {
+                    this.updated();
+               }
           }
           // case children is child, new is children
           else if (this.children.render && Array.isArray(newElement.children)) {
@@ -424,6 +503,10 @@ class CreateComponent {
                old.replaceChildren(newElement.render().innerHTML);
 
                this.children.destroyed();
+
+               if (!didUpdate) {
+                    this.updated();
+               }
           }
           // case children is children, new is child
           else if (Array.isArray(this.children) && newElement.children.render) {
@@ -443,6 +526,10 @@ class CreateComponent {
                });
 
                newElement.chilren.created();
+
+               if (!didUpdate) {
+                    this.updated();
+               }
           }
           // case children is children, new is children
           else if (Array.isArray(this.children) && Array.isArray(newElement.children)) {
@@ -470,6 +557,10 @@ class CreateComponent {
                     this.children = [...this.children.slice(0, newElement.children.length)];
 
                     this.arrayDiff(old, newElement);
+
+                    if (!didUpdate) {
+                         this.updated();
+                    }
                }
                // if this.children are less than newElement.children
                else {
@@ -488,6 +579,10 @@ class CreateComponent {
                     });
 
                     this.arrayDiff(old, newElement);
+
+                    if (!didUpdate) {
+                         this.updated();
+                    }
                }
           }
      }
@@ -508,6 +603,12 @@ class CreateComponent {
           }
      }
 
+     updated() {
+          if (this.onUpdated) {
+               this.onUpdated();
+          }
+     }
+
      applyStyle(selector, style) {
           for (let prop in selector) {
                if (!["length", "size", "parentRule"].includes(prop)) {
@@ -519,18 +620,24 @@ class CreateComponent {
      }
 
      diffStyle(ComponentStyle, _old, _new) {
+          let didChange = false;
+
           if (!_old) {
                this.applyStyle(_new, ComponentStyle);
+               didChange = true;
           } else {
                for (let prop in _new) {
                     if (!["length", "size", "parentRule"].includes(prop)) {
                          if (_old[`${prop}`] !== _new[`${prop}`]) {
                               // console.log(_old[`${prop}`], _new[`${prop}`]);
                               ComponentStyle[`${prop}`] = _new[`${prop}`];
+                              didChange = true;
                          }
                     }
                }
           }
+
+          return didChange;
      }
 
      created() {
@@ -596,6 +703,8 @@ class CreateComponent {
      }
 
      arrayDiff(old, newElement) {
+          let diff = false;
+
           for (let i = 0; i < this.children.length; i++) {
                //// console.log(this.children[i], newElement.children[i]);
                // case children is string, new is string
@@ -611,6 +720,7 @@ class CreateComponent {
                          if (old.childNodes) {
                               old.childNodes[i].nodeValue = newElement.children[i];
                          }
+                         diff = true;
 
                          // old.children[i].innerHTML = newElement.children[i];
                     }
@@ -622,6 +732,8 @@ class CreateComponent {
                          if (key == i) {
                               child.replaceWith(newElement.children[i].render());
                               child.created();
+
+                              diff = true;
                          }
                     });
                }
@@ -639,12 +751,17 @@ class CreateComponent {
                     });
 
                     this.children[i].destroyed();
+                    diff = true;
                }
                // case children is child, new is child
                else {
                     //// console.log(`children-${i} are child and child`);
                     this.children[i].update(newElement.children[i]);
                }
+          }
+
+          if (diff) {
+               this.updated();
           }
      }
 
