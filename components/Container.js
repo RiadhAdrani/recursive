@@ -3,6 +3,7 @@ import CreateComponent from "../CreateComponent.js";
 export default ({
      children,
      style,
+     styleSheet,
      id,
      className,
      events,
@@ -11,6 +12,7 @@ export default ({
      onUpdated,
      beforeCreated,
      beforeDestroyed,
+     onRefreshed,
 }) =>
      new CreateComponent({
           tag: "div",
@@ -25,4 +27,6 @@ export default ({
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
+          style: styleSheet,
      });

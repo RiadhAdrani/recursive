@@ -183,6 +183,70 @@ class CreateComponent {
                          render.events.onChanged(e);
                     });
                }
+
+               if (this.events.onMouseDown) {
+                    render.events.onMouseDown = this.events.onMouseDown;
+
+                    render.addEventListener("mousedown", (e) => {
+                         render.events.onMouseDown(e);
+                    });
+               }
+
+               if (this.events.onMouseEnter) {
+                    render.events.onMouseEnter = this.events.onMouseEnter;
+
+                    render.addEventListener("mouseenter", (e) => {
+                         render.events.onMouseEnter(e);
+                    });
+               }
+
+               if (this.events.onMouseLeave) {
+                    render.events.onMouseLeave = this.events.onMouseLeave;
+
+                    render.addEventListener("mouseleave", (e) => {
+                         render.events.onMouseLeave(e);
+                    });
+               }
+
+               if (this.events.onMouseMove) {
+                    render.events.onMouseMove = this.events.onMouseMove;
+
+                    render.addEventListener("mousemove", (e) => {
+                         render.events.onMouseMove(e);
+                    });
+               }
+
+               if (this.events.onMouseMove) {
+                    render.events.onMouseMove = this.events.onMouseMove;
+
+                    render.addEventListener("mousemove", (e) => {
+                         render.events.onMouseMove(e);
+                    });
+               }
+
+               if (this.events.onMouseOver) {
+                    render.events.onMouseOver = this.events.onMouseOver;
+
+                    render.addEventListener("mouseover", (e) => {
+                         render.events.onMouseOver(e);
+                    });
+               }
+
+               if (this.events.onMouseOut) {
+                    render.events.onMouseOut = this.events.onMouseOut;
+
+                    render.addEventListener("mouseout", (e) => {
+                         render.events.onMouseOut(e);
+                    });
+               }
+
+               if (this.events.onMouseUp) {
+                    render.events.onMouseUp = this.events.onMouseUp;
+
+                    render.addEventListener("mouseup", (e) => {
+                         render.events.onMouseUp(e);
+                    });
+               }
           }
 
           if (this.value) {
@@ -389,14 +453,62 @@ class CreateComponent {
                // replace with new onClick event
                if (newElement.events.onClick) {
                     old.events.onClick = newElement.events.onClick;
+               } else {
+                    old.events.onClick = () => {};
                }
 
                if (newElement.events.onChange) {
                     old.events.onChange = newElement.events.onChange;
+               } else {
+                    old.events.onChange = () => {};
                }
 
                if (newElement.events.onChanged) {
                     old.events.onChanged = newElement.events.onChanged;
+               } else {
+                    old.events.onChanged = () => {};
+               }
+
+               if (newElement.events.onMouseDown) {
+                    old.events.onMouseDown = newElement.events.onMouseDown;
+               } else {
+                    old.events.onMouseDown = () => {};
+               }
+
+               if (newElement.events.onMouseEnter) {
+                    old.events.onMouseEnter = newElement.events.onMouseEnter;
+               } else {
+                    old.events.onMouseEnter = () => {};
+               }
+
+               if (newElement.events.onMouseLeave) {
+                    old.events.onMouseLeave = newElement.events.onMouseLeave;
+               } else {
+                    old.events.onMouseLeave = () => {};
+               }
+
+               if (newElement.events.onMouseMove) {
+                    old.events.onMouseMove = newElement.events.onMouseMove;
+               } else {
+                    old.events.onMouseMove = () => {};
+               }
+
+               if (newElement.events.onMouseOver) {
+                    old.events.onMouseOver = newElement.events.onMouseOver;
+               } else {
+                    old.events.onMouseOver = () => {};
+               }
+
+               if (newElement.events.onMouseOut) {
+                    old.events.onMouseOut = newElement.events.onMouseOut;
+               } else {
+                    old.events.onMouseOut = () => {};
+               }
+
+               if (newElement.events.onMouseUp) {
+                    old.events.onMouseUp = newElement.events.onMouseUp;
+               } else {
+                    old.events.onMouseUp = () => {};
                }
           }
 
@@ -409,10 +521,6 @@ class CreateComponent {
                old.innerHTML = "";
                if (newElement.tag === "textarea") {
                     old.value = "";
-
-                    if (!didUpdate) {
-                         this.updated();
-                    }
                }
                return;
           }
@@ -422,10 +530,6 @@ class CreateComponent {
                // console.log("old => ", this.children, "new => ", newElement.children);
                newElement.children.forEach((child) => {
                     old.append(child.render ? child.render() : child);
-
-                    if (!didUpdate) {
-                         this.updated();
-                    }
                });
                return;
           }
@@ -436,9 +540,6 @@ class CreateComponent {
                if (newElement.children.toString() !== this.children.toString()) {
                     old.replaceChildren(newElement.children);
 
-                    if (!didUpdate) {
-                         this.updated();
-                    }
                     return;
                }
           }
@@ -557,10 +658,6 @@ class CreateComponent {
                     this.children = [...this.children.slice(0, newElement.children.length)];
 
                     this.arrayDiff(old, newElement);
-
-                    if (!didUpdate) {
-                         this.updated();
-                    }
                }
                // if this.children are less than newElement.children
                else {
@@ -579,10 +676,6 @@ class CreateComponent {
                     });
 
                     this.arrayDiff(old, newElement);
-
-                    if (!didUpdate) {
-                         this.updated();
-                    }
                }
           }
      }
@@ -653,6 +746,19 @@ class CreateComponent {
           }
      }
 
+     refreshed() {
+          if (this.onRefreshed) {
+               this.onRefreshed();
+          }
+          if (this.children) {
+               this.children.forEach((child) => {
+                    if (child.render) {
+                         child.refreshed();
+                    }
+               });
+          }
+     }
+
      destroyed() {
           if (this.onDestroyed) {
                return this.onDestroyed();
@@ -685,6 +791,7 @@ class CreateComponent {
 
      findElementByKey(key) {
           var elems = document.querySelector("#app").getElementsByTagName("*");
+
           // // console.log(elems);
           for (let i = 0; i < elems.length; i++) {
                if (key) {
@@ -703,8 +810,6 @@ class CreateComponent {
      }
 
      arrayDiff(old, newElement) {
-          let diff = false;
-
           for (let i = 0; i < this.children.length; i++) {
                //// console.log(this.children[i], newElement.children[i]);
                // case children is string, new is string
@@ -720,7 +825,6 @@ class CreateComponent {
                          if (old.childNodes) {
                               old.childNodes[i].nodeValue = newElement.children[i];
                          }
-                         diff = true;
 
                          // old.children[i].innerHTML = newElement.children[i];
                     }
@@ -732,8 +836,6 @@ class CreateComponent {
                          if (key == i) {
                               child.replaceWith(newElement.children[i].render());
                               child.created();
-
-                              diff = true;
                          }
                     });
                }
@@ -751,7 +853,6 @@ class CreateComponent {
                     });
 
                     this.children[i].destroyed();
-                    diff = true;
                }
                // case children is child, new is child
                else {
@@ -759,21 +860,16 @@ class CreateComponent {
                     this.children[i].update(newElement.children[i]);
                }
           }
-
-          if (diff) {
-               this.updated();
-          }
      }
 
      addExternalStyle() {
           if (this.style) {
                if (this.style.className) {
                     const arrayOfStyles = [];
-                    const sheet = document.styleSheets[0];
 
                     const styleObject = (selector, content) => {
                          return {
-                              selector: `.${this.style.className}${selector}`,
+                              selector: `.${this.style.className.trim()}${selector.trim()}`,
                               content: content,
                          };
                     };
@@ -791,20 +887,22 @@ class CreateComponent {
                          arrayOfStyles.push(styleObject(":active", this.style.active));
                     }
 
-                    arrayOfStyles.forEach((item) => {
-                         for (let i = 0; i < sheet.cssRules.length; i++) {
-                              if (sheet.cssRules.item(i).selectorText == item.selector) {
-                                   sheet.deleteRule(i);
-                                   break;
-                              }
-                         }
-                         sheet.insertRule(`${item.selector}{${item.content}}`);
+                    arrayOfStyles.forEach((style) => {
+                         vDOM.style.push(style);
                     });
                } else {
                     console.warn(
                          "MISSING STYLE CLASS: cannot apply the style without the styleClass. Add styleClass into your component.style object"
                     );
                }
+          }
+
+          if (this.children) {
+               this.children.forEach((child) => {
+                    if (child.render) {
+                         child.addExternalStyle();
+                    }
+               });
           }
      }
 }

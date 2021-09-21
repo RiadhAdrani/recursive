@@ -12,6 +12,7 @@ const hn = ({
      onUpdated,
      beforeCreated,
      beforeDestroyed,
+     onRefreshed,
 }) =>
      new CreateComponent({
           tag: hn,
@@ -25,6 +26,7 @@ const hn = ({
           events: events,
           className: className,
           onCreated,
+          onRefreshed,
      });
 
 export default {
@@ -39,6 +41,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           hn({
                hn: "h1",
@@ -52,6 +55,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      h2: ({
           text,
@@ -64,6 +68,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           hn({
                hn: "h2",
@@ -77,6 +82,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      h3: ({
           text,
@@ -89,6 +95,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           hn({
                hn: "h3",
@@ -102,6 +109,7 @@ export default {
                beforeCreated,
                beforeDestroyed,
                onCreated,
+               onRefreshed,
           }),
      h4: ({
           text,
@@ -113,6 +121,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           hn({
                hn: "h4",
@@ -126,6 +135,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      h5: ({
           text,
@@ -138,6 +148,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           hn({
                hn: "h5",
@@ -151,6 +162,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      h6: ({
           text,
@@ -163,6 +175,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           hn({
                hn: "h6",
@@ -176,5 +189,6 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
 };

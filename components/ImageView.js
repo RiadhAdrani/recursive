@@ -1,7 +1,7 @@
 import CreateComponent from "../CreateComponent.js";
 
 export default ({
-     imageURL,
+     src,
      style,
      id,
      className,
@@ -12,10 +12,11 @@ export default ({
      onUpdated,
      beforeCreated,
      beforeDestroyed,
+     onRefreshed,
 }) =>
      new CreateComponent({
           tag: "img",
-          src: imageURL,
+          src: src,
           inlineStyle: style,
           id: id,
           children: null,
@@ -27,4 +28,5 @@ export default ({
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      });

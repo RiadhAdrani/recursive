@@ -11,6 +11,7 @@ export default ({
      onUpdated,
      beforeCreated,
      beforeDestroyed,
+     onRefreshed,
 }) =>
      new CreateComponent({
           tag: "p",
@@ -24,4 +25,5 @@ export default ({
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      });

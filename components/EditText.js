@@ -23,6 +23,7 @@ export default ({
      onUpdated,
      beforeCreated,
      beforeDestroyed,
+     onRefreshed,
 }) =>
      new CreateComponent({
           tag: "textarea",
@@ -48,4 +49,5 @@ export default ({
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      });

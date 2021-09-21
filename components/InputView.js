@@ -16,6 +16,7 @@ const template = ({
      onUpdated,
      beforeCreated,
      beforeDestroyed,
+     onRefreshed,
 }) =>
      new CreateComponent({
           tag: "input",
@@ -34,6 +35,7 @@ const template = ({
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      });
 
 export default {
@@ -51,6 +53,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "checkbox",
@@ -67,6 +70,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      Date: ({
           name,
@@ -82,6 +86,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "date",
@@ -98,6 +103,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      DateTimeLocal: ({
           name,
@@ -113,6 +119,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "datetime-local",
@@ -129,6 +136,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      Email: ({
           name,
@@ -145,6 +153,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "email",
@@ -162,6 +171,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      File: ({
           name,
@@ -177,6 +187,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "file",
@@ -193,6 +204,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      Image: ({
           name,
@@ -208,6 +220,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "image",
@@ -224,6 +237,7 @@ export default {
                beforeCreated,
                beforeDestroyed,
                onCreated,
+               onRefreshed,
           }),
      Month: ({
           name,
@@ -239,6 +253,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "month",
@@ -255,6 +270,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      Number: ({
           name,
@@ -271,6 +287,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "number",
@@ -288,6 +305,7 @@ export default {
                beforeCreated,
                beforeDestroyed,
                onCreated,
+               onRefreshed,
           }),
      Password: ({
           name,
@@ -304,6 +322,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "password",
@@ -321,6 +340,7 @@ export default {
                beforeCreated,
                beforeDestroyed,
                onCreated,
+               onRefreshed,
           }),
      Radio: ({
           name,
@@ -335,6 +355,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "radio",
@@ -351,6 +372,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      Range: ({
           name,
@@ -366,6 +388,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "range",
@@ -382,6 +405,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      Text: ({
           name,
@@ -398,6 +422,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "text",
@@ -415,6 +440,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      Telephone: ({
           name,
@@ -431,6 +457,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "telephone",
@@ -448,6 +475,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      Time: ({
           name,
@@ -463,6 +491,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "time",
@@ -479,6 +508,7 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
      URL: ({
           name,
@@ -494,6 +524,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "url",
@@ -510,6 +541,7 @@ export default {
                beforeCreated,
                beforeDestroyed,
                onCreated,
+               onRefreshed,
           }),
      Week: ({
           name,
@@ -524,6 +556,7 @@ export default {
           onUpdated,
           beforeCreated,
           beforeDestroyed,
+          onRefreshed,
      }) =>
           template({
                type: "week",
@@ -540,5 +573,6 @@ export default {
                onUpdated,
                beforeCreated,
                beforeDestroyed,
+               onRefreshed,
           }),
 };
