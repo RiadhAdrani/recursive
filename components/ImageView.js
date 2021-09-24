@@ -3,6 +3,7 @@ import CreateComponent from "../CreateComponent.js";
 export default ({
      src,
      style,
+     styleSheet,
      id,
      className,
      events,
@@ -18,6 +19,7 @@ export default ({
           tag: "img",
           src: src,
           inlineStyle: style,
+          style: styleSheet,
           id: id,
           children: null,
           className: className,

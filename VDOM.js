@@ -1,22 +1,57 @@
+import ConvertCssToText from "./ConvertCssToText.js";
 import SetState from "./SetState.js";
 
-function initStyle() {
-     const appStyle = document.createElement("div");
-     appStyle.id = "app-style";
-     document.getElementsByTagName("html").namedItem().appendChild(appStyle);
+function handleSameSelector(newS, oldS) {
+     for (var attr of Object.keys(oldS)) {
+          if (!newS[attr]) {
+               newS[attr] = oldS[attr];
+          }
+     }
+     return newS;
+}
+
+function toText(css) {
+     let output = "\n";
+     css.forEach((s) => {
+          output += `\n${s.selector}{\n${ConvertCssToText(s.content)}}`;
+     });
+     return output;
+}
+
+function handleCSS(css, root) {
+     let output = [];
+
+     for (let i in css) {
+          let found = false;
+
+          for (let j in output) {
+               if (output[j].selector === css[i].selector) {
+                    found = true;
+                    handleSameSelector(output[j].content, css[i].content);
+                    break;
+               }
+          }
+
+          if (!found) {
+               output.push(css[i]);
+          }
+     }
+
+     root.innerHTML = toText(output);
 }
 
 class VDOM {
-     constructor({ appFunction, root, devMode = false }) {
+     constructor({ appFunction, root, styleRoot, devMode = false }) {
           this.app = () => {
                return appFunction();
           };
           this.oldRender = appFunction();
 
           this.style = [];
-          this.oldStyle = [];
 
           this.root = root;
+
+          this.styleRoot = styleRoot;
 
           this.devMode = devMode;
 
@@ -32,9 +67,8 @@ class VDOM {
           this.oldRender = newRender;
           this.oldRender.created();
 
-          this.style = [];
           this.oldRender.addExternalStyle();
-          this.oldStyle = this.style;
+          handleCSS(this.style, this.styleRoot);
      }
 
      update() {
@@ -45,9 +79,7 @@ class VDOM {
 
           this.style = [];
           this.oldRender.addExternalStyle();
-          console.log(this.style);
-          this.oldStyle = this.style;
-          this.style = [];
+          handleCSS(this.style, this.styleRoot);
 
           if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
      }
