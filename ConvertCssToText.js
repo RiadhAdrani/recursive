@@ -28,6 +28,7 @@ export default (json) => {
      if (json.backgroundBlendMode)
           output += `\tbackground-blend-mode:${json.backgroundBlendMode};\n`;
      if (json.backgroundClip) output += `\tbackground-clip:${json.backgroundClip};\n`;
+     if (json.backgroundColor) output += `\tbackground-color:${json.backgroundColor};\n`;
      if (json.backgroundImage) output += `\tbackground-image:${json.backgroundImage};\n`;
      if (json.backgroundOrigin) output += `\tbackground-origin:${json.backgroundOrigin};\n`;
      if (json.backgroundPosition) output += `\tbackground-position:${json.backgroundPosition};\n`;

@@ -339,108 +339,200 @@ class CreateComponent {
           if (this.diffStyle(old.style, this.inlineStyle, newElement.inlineStyle)) didUpdate = true;
 
           if (this.src !== newElement.src) {
-               old.src = newElement.src;
+               if (newElement.src) {
+                    old.src = newElement.src;
+               } else {
+                    old.removeAttribute("src");
+               }
                didUpdate = true;
           }
 
           if (this.value !== newElement.value) {
-               old.value = newElement.value;
+               if (newElement.value) {
+                    old.value = newElement.value;
+               } else {
+                    old.removeAttribute("value");
+               }
                didUpdate = true;
           }
 
           if (this.placeholder !== newElement.placeholder) {
-               old.placeholder = newElement.placeholder;
+               if (newElement.placeholder) {
+                    old.placeholder = newElement.placeholder;
+               } else {
+                    old.removeAttribute("placeholder");
+               }
+
                didUpdate = true;
           }
 
           if (this.alt !== newElement.alt) {
-               old.alt = newElement.alt;
+               if (newElement.alt) {
+                    old.alt = newElement.alt;
+               } else {
+                    old.removeAttribute("alt");
+               }
+
                didUpdate = true;
           }
 
           if (this.type !== newElement.type) {
-               old.type = newElement.type;
+               if (newElement.type) {
+                    old.type = newElement.type;
+               } else {
+                    old.removeAttribute("type");
+               }
                didUpdate = true;
           }
 
           if (this.name !== newElement.name) {
-               old.name = newElement.name;
+               if (newElement.name) {
+                    old.name = newElement.name;
+               } else {
+                    old.removeAttribute("name");
+               }
                didUpdate = true;
           }
 
           if (this.max !== newElement.max) {
-               old.max = newElement.max;
+               if (newElement.max) {
+                    old.max = newElement.max;
+               } else {
+                    old.removeAttribute("max");
+               }
+
                didUpdate = true;
           }
 
           if (this.min !== newElement.min) {
-               old.min = newElement.min;
+               if (newElement.min) {
+                    old.min = newElement.min;
+               } else {
+                    old.removeAttribute("min");
+               }
+
                didUpdate = true;
           }
 
           if (this.autofocus !== newElement.autofocus) {
-               old.autofocus = newElement.autofocus;
+               if (newElement.autofocus) {
+                    old.autofocus = newElement.autofocus;
+               } else {
+                    old.removeAttribute("autofocus");
+               }
+
                didUpdate = true;
           }
 
           if (this.cols !== newElement.cols) {
-               old.cols = newElement.cols;
+               if (newElement.cols) {
+                    old.cols = newElement.cols;
+               } else {
+                    old.removeAttribute("cols");
+               }
+
                didUpdate = true;
           }
 
           if (this.dirname !== newElement.dirname) {
-               old.dirname = newElement.dirname;
+               if (newElement.dirname) {
+                    old.dirname = newElement.dirname;
+               } else {
+                    old.removeAttribute("dirname");
+               }
+
                didUpdate = true;
           }
 
           if (this.disabled !== newElement.disabled) {
-               old.disabled = newElement.disabled;
+               if (newElement.disabled) {
+                    old.disabled = newElement.disabled;
+               } else {
+                    old.removeAttribute("disabled");
+               }
+
                didUpdate = true;
           }
 
           if (this.form !== newElement.form) {
-               old.form = newElement.form;
+               if (newElement.form) {
+                    old.form = newElement.form;
+               } else {
+                    old.removeAttribute("form");
+               }
+
                didUpdate = true;
           }
 
           if (this.maxLength !== newElement.maxLength) {
-               old.maxlength = newElement.maxLength;
+               if (newElement.maxLength) {
+                    old.maxlength = newElement.maxLength;
+               } else {
+                    old.removeAttribute("maxlength");
+               }
+
                didUpdate = true;
           }
 
           if (this.readOnly !== newElement.readOnly) {
-               old.readonly = newElement.readOnly;
+               if (newElement.readOnly) {
+                    old.readonly = newElement.readOnly;
+               } else {
+                    old.removeAttribute("readonly");
+               }
+
                didUpdate = true;
           }
 
           if (this.required !== newElement.required) {
-               old.required = newElement.required;
+               if (newElement.required) {
+                    old.required = newElement.required;
+               } else {
+                    old.removeAttribute("required");
+               }
+
                didUpdate = true;
           }
 
           if (this.rows !== newElement.rows) {
-               old.rows = newElement.rows;
+               if (newElement.rows) {
+                    old.rows = newElement.rows;
+               } else {
+                    old.removeAttribute("rows");
+               }
+
                didUpdate = true;
           }
 
           if (this.wrap !== newElement.wrap) {
-               old.wrap = newElement.wrap;
+               if (newElement.wrap) {
+                    old.wrap = newElement.wrap;
+               } else {
+                    old.removeAttribute("wrap");
+               }
+
                didUpdate = true;
           }
 
           // check if the elements have the same id
           if (this.id !== newElement.id) {
-               // console.log("new component has another id");
-               old.id = newElement.id;
+               if (newElement.id) {
+                    old.id = newElement.id;
+               } else {
+                    old.removeAttribute("id");
+               }
+
                didUpdate = true;
-               // old.replaceWith(newElement.render());
           }
           // check if the elements have the same classes
           if (this.className !== newElement.className) {
-               // console.log("new component has another class name");
-               old.className = newElement.className;
+               if (newElement.className) {
+                    old.className = newElement.className;
+               } else {
+                    old.removeAttribute("class");
+               }
+
                didUpdate = true;
-               // old.replaceWith(newElement.render());
           }
 
           // Execute Update lifecycle method

@@ -2,10 +2,16 @@ import ConvertCssToText from "./ConvertCssToText.js";
 import SetState from "./SetState.js";
 
 function handleSameSelector(newS, oldS) {
+     let alert = false;
      for (var attr of Object.keys(oldS)) {
           if (!newS[attr]) {
                newS[attr] = oldS[attr];
+               alert = true;
           }
+     }
+
+     if (alert) {
+          console.warn("CSS: found two selectors with same name but with different attributes");
      }
      return newS;
 }
@@ -18,7 +24,7 @@ function toText(css) {
      return output;
 }
 
-function handleCSS(css, root) {
+function handleCSS(css, root, oldStyleText) {
      let output = [];
 
      for (let i in css) {
@@ -37,7 +43,13 @@ function handleCSS(css, root) {
           }
      }
 
-     root.innerHTML = toText(output);
+     const ss = toText(output);
+
+     if (oldStyleText !== ss) {
+          root.innerHTML = ss;
+     }
+
+     return ss;
 }
 
 class VDOM {
@@ -48,6 +60,7 @@ class VDOM {
           this.oldRender = appFunction();
 
           this.style = [];
+          this.sst = "";
 
           this.root = root;
 
@@ -68,7 +81,7 @@ class VDOM {
           this.oldRender.created();
 
           this.oldRender.addExternalStyle();
-          handleCSS(this.style, this.styleRoot);
+          this.sst = handleCSS(this.style, this.styleRoot, this.sst);
      }
 
      update() {
@@ -79,7 +92,7 @@ class VDOM {
 
           this.style = [];
           this.oldRender.addExternalStyle();
-          handleCSS(this.style, this.styleRoot);
+          this.sst = handleCSS(this.style, this.styleRoot, this.sst);
 
           if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
      }

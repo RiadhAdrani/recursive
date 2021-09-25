@@ -26,6 +26,7 @@ export default (attrs) => {
      if (attrs.backgroundAttachment) output.backgroundAttachment = attrs.backgroundAttachment;
      if (attrs.backgroundBlendMode) output.backgroundBlendMode = attrs.backgroundBlendMode;
      if (attrs.backgroundClip) output.backgroundClip = attrs.backgroundClip;
+     if (attrs.backgroundColor) output.backgroundColor = attrs.backgroundColor;
      if (attrs.backgroundImage) output.backgroundImage = attrs.backgroundImage;
      if (attrs.backgroundOrigin) output.backgroundOrigin = attrs.backgroundOrigin;
      if (attrs.backgroundPosition) output.backgroundPosition = attrs.backgroundPosition;
