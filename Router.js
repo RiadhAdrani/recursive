@@ -21,19 +21,23 @@ class Router {
                const x = this.stack.pop();
                routes.forEach((r) => {
                     if (x.name === r.name) {
+                         x.onExit();
                          this.current = r;
                          vDOM.update();
+                         this.current.onLoad();
                          return;
                     }
                });
           });
      }
 
-     static Route = ({ name, component, title }) => {
+     static Route = ({ name, component, title, onLoad = () => {}, onExit = () => {} }) => {
           return {
                name,
                title,
                component,
+               onLoad,
+               onExit,
           };
      };
 
@@ -46,8 +50,10 @@ class Router {
                if (name === r.name && name !== this.current.name) {
                     history.pushState({}, this.current.title, `${name}`);
                     this.stack.push(this.current);
+                    this.current.onExit();
                     this.current = r;
                     vDOM.update();
+                    this.current.onLoad();
                     return;
                }
           });
