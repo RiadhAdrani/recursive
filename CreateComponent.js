@@ -89,8 +89,8 @@ class CreateComponent {
 
           if (children) {
                // if children is child or string
-               if (typeof children === "string" || children.render) {
-                    this.children = [children];
+               if (["number", "string", "boolean"].includes(typeof children) && !children.render) {
+                    this.children = [`${children}`];
                } else if (children.render) {
                     this.children = [children];
                }
@@ -99,12 +99,12 @@ class CreateComponent {
                else {
                     for (let i = 0; i < children.length; i++) {
                          if (!children[i]) continue;
-                         if (typeof children[i] !== "string") {
+                         if (!["number", "string", "boolean"].includes(typeof children[i])) {
                               this.children.push(children[i]);
                          } else {
                               let textNode = children[i];
                               for (let j = i + 1; j < children.length; j++) {
-                                   if (typeof children[j] !== "string") {
+                                   if (["number", "string", "boolean"].includes(typeof children)) {
                                         break;
                                    } else {
                                         textNode += children[j];
