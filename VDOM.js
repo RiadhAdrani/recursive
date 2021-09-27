@@ -1,4 +1,4 @@
-import ConvertCssToText from "./ConvertCssToText.js";
+import ConvertCssToText from "./createcomponent/csstotext.js";
 import SetState from "./SetState.js";
 
 function handleSameSelector(newS, oldS) {

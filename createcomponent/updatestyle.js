@@ -15,7 +15,7 @@ export default (renderStyle, oldStyle, newStyle) => {
                if (!["length", "size", "parentRule"].includes(prop)) {
                     if (oldStyle[`${prop}`] !== newStyle[`${prop}`]) {
                          // console.log(_old[`${prop}`], _new[`${prop}`]);
-                         ComponentStyle[`${prop}`] = newStyle[`${prop}`];
+                         renderStyle[`${prop}`] = newStyle[`${prop}`];
                          didChange = true;
                     }
                }
