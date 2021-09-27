@@ -1,16 +1,16 @@
 import applystylesheet from "./createcomponent/applystylesheet.js";
-import attributes from "./createcomponent/attributes.js";
-import events from "./createcomponent/events.js";
+import InlineSelector from "./InlineSelector.js";
 import findElementByKey from "./createcomponent/findElementByKey.js";
 import initchildren from "./createcomponent/initchildren.js";
 import initstyle from "./createcomponent/initstyle.js";
 import keying from "./createcomponent/keying.js";
-import renderchildren from "./createcomponent/renderchildren.js";
 import updateattributes from "./createcomponent/updateattributes.js";
 import updatechildren from "./createcomponent/updatechildren.js";
 import updateevents from "./createcomponent/updateevents.js";
 import updatestyle from "./createcomponent/updatestyle.js";
-import InlineSelector from "./InlineSelector.js";
+import renderattributes from "./createcomponent/renderattributes.js";
+import renderevents from "./createcomponent/renderevents.js";
+import renderchildren from "./createcomponent/renderchildren.js";
 
 class CreateComponent {
      constructor({
@@ -40,6 +40,13 @@ class CreateComponent {
           required,
           rows,
           wrap,
+          title,
+          href,
+          autoplay,
+          controls,
+          loop,
+          muted,
+          preload,
           beforeCreated,
           onCreated,
           beforeDestroyed,
@@ -65,16 +72,23 @@ class CreateComponent {
           this.name = name;
           this.min = min;
           this.max = max;
+          this.title = title;
           this.autofocus = autofocus;
           this.cols = cols;
           this.dirname = dirname;
           this.disabled = disabled;
           this.form = form;
-          this.maxLength = maxLength;
-          this.readOnly = readOnly;
+          this.maxlength = maxLength;
+          this.readonly = readOnly;
           this.required = required;
           this.rows = rows;
           this.wrap = wrap;
+          this.href = href;
+          this.autoplay = autoplay;
+          this.controls = controls;
+          this.loop = loop;
+          this.muted = muted;
+          this.preload = preload;
 
           // Children
           this.children = [];
@@ -100,10 +114,10 @@ class CreateComponent {
           const render = document.createElement(this.tag);
 
           // add attributes
-          attributes(this, render);
+          renderattributes(this, render);
 
           // add events
-          events(this, render);
+          renderevents(this, render);
 
           // inject children inside the rendered element
           renderchildren(this.children, render);
