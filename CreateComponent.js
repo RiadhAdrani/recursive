@@ -36,6 +36,7 @@ class CreateComponent {
           disabled,
           form,
           maxLength,
+          minLength,
           readOnly,
           required,
           rows,
@@ -44,14 +45,47 @@ class CreateComponent {
           href,
           autoplay,
           controls,
+          dateTime,
+          target,
+          span,
           loop,
           muted,
           preload,
+          list,
+          isFor,
+          open,
           beforeCreated,
           onCreated,
           beforeDestroyed,
           onDestroyed,
           onUpdated,
+          cite,
+          allow,
+          allowFullScreen,
+          allowPaymentRequest,
+          loading,
+          referrerPolicy,
+          sandbox,
+          srcdoc,
+          crossOrigin,
+          isMap,
+          longDesc,
+          sizes,
+          srcSet,
+          useMap,
+          accept,
+          autoComplete,
+          checked,
+          formAction,
+          formEncType,
+          formMethod,
+          formNoValidate,
+          formTarget,
+          pattern,
+          step,
+          multiple,
+          shape,
+          coords,
      }) {
           if (!tag) {
                throw "tag cannot be empty";
@@ -89,6 +123,40 @@ class CreateComponent {
           this.loop = loop;
           this.muted = muted;
           this.preload = preload;
+          this.target = target;
+          this.cite = cite;
+          this.span = span;
+          this.list = list;
+          this.datetime = dateTime;
+          this.open = open;
+          this.for = isFor;
+          this.allow = allow;
+          this.allowfullscreen = allowFullScreen;
+          this.allowpaymentrequest = allowPaymentRequest;
+          this.loading = loading;
+          this.referrerpolicy = referrerPolicy;
+          this.sandbox = sandbox;
+          this.srcdoc = srcdoc;
+          this.crossorigin = crossOrigin;
+          this.ismap = isMap;
+          this.longdesc = longDesc;
+          this.sizes = sizes;
+          this.usemap = useMap;
+          this.srcset = srcSet;
+          this.accept = accept;
+          this.autocomplete = autoComplete;
+          this.checked = checked;
+          this.formaction = formAction;
+          this.formenctype = formEncType;
+          this.formmethod = formMethod;
+          this.formnovalidate = formNoValidate;
+          this.formtarget = formTarget;
+          this.multiple = multiple;
+          this.step = step;
+          this.pattern = pattern;
+          this.shape = shape;
+          this.coords = coords;
+          this.minlength = minLength;
 
           // Children
           this.children = [];

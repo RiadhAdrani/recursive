@@ -74,6 +74,7 @@ class VDOM {
      static setState = (value) => new SetState(value);
 
      render() {
+          const startTime = new Date().getTime();
           const newRender = this.app();
           this.root.innerHTML = "";
           this.root.append(newRender.render());
@@ -82,6 +83,7 @@ class VDOM {
 
           this.oldRender.addExternalStyle();
           this.sst = handleCSS(this.style, this.styleRoot, this.sst);
+          if (this.devMode) console.log(`UI rendered in ${new Date().getTime() - startTime}ms`);
      }
 
      update() {

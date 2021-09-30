@@ -4,8 +4,8 @@ class SetState {
      }
 
      setValue(newVal) {
-          this.value = newVal;
-          window.vDOM.update();
+          if (newVal) this.value = newVal;
+          vDOM.update();
      }
 }
 

@@ -1,3 +1,5 @@
+import styleselectors from "./styleselectors.js";
+
 export default (component) => {
      if (!vDOM) throw "Unable to find the VDOM";
 
@@ -12,18 +14,19 @@ export default (component) => {
                     };
                };
 
-               if (component.style.normal) {
-                    arrayOfStyles.push(styleObject("", component.style.normal));
-               }
-               if (component.style.hover) {
-                    arrayOfStyles.push(styleObject(":hover", component.style.hover));
-               }
-               if (component.style.focus) {
-                    arrayOfStyles.push(styleObject(":focus", component.style.focus));
-               }
-               if (component.style.active) {
-                    arrayOfStyles.push(styleObject(":active", component.style.active));
-               }
+               styleselectors.forEach((style) => {
+                    if (component.style[`${style.prop}`]) {
+                         if (style.type === "selector") {
+                              arrayOfStyles.push(
+                                   styleObject(style.name, component.style[`${style.prop}`])
+                              );
+                         }
+                         if (style.type === "animation") {
+                         }
+                         if (style.type === "media") {
+                         }
+                    }
+               });
 
                arrayOfStyles.forEach((style) => {
                     vDOM.style.push(style);
