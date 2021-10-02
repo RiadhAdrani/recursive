@@ -1,56 +1,5 @@
-import ConvertCssToText from "./createcomponent/csstotext.js";
 import SetState from "./SetState.js";
-
-function handleSameSelector(newS, oldS) {
-     let alert = false;
-     for (var attr of Object.keys(oldS)) {
-          if (!newS[attr]) {
-               newS[attr] = oldS[attr];
-               alert = true;
-          }
-     }
-
-     if (alert) {
-          console.warn("CSS: found two selectors with same name but with different attributes");
-     }
-     return newS;
-}
-
-function toText(css) {
-     let output = "\n";
-     css.forEach((s) => {
-          output += `\n${s.selector}{\n${ConvertCssToText(s.content)}}`;
-     });
-     return output;
-}
-
-function handleCSS(css, root, oldStyleText) {
-     let output = [];
-
-     for (let i in css) {
-          let found = false;
-
-          for (let j in output) {
-               if (output[j].selector === css[i].selector) {
-                    found = true;
-                    handleSameSelector(output[j].content, css[i].content);
-                    break;
-               }
-          }
-
-          if (!found) {
-               output.push(css[i]);
-          }
-     }
-
-     const ss = toText(output);
-
-     if (oldStyleText !== ss) {
-          root.innerHTML = ss;
-     }
-
-     return ss;
-}
+import handlecss from "./vdom/handlecss.js";
 
 class VDOM {
      constructor({ appFunction, root, styleRoot, devMode = false }) {
@@ -60,6 +9,8 @@ class VDOM {
           this.oldRender = appFunction();
 
           this.style = [];
+          this.animations = [];
+          this.mediaQueries = [];
           this.sst = "";
 
           this.root = root;
@@ -82,8 +33,14 @@ class VDOM {
           this.oldRender.created();
 
           this.oldRender.addExternalStyle();
-          this.sst = handleCSS(this.style, this.styleRoot, this.sst);
-          if (this.devMode) console.log(`UI rendered in ${new Date().getTime() - startTime}ms`);
+          this.sst = handlecss(
+               this.style,
+               this.animations,
+               this.mediaQueries,
+               this.styleRoot,
+               this.sst
+          );
+          if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
      }
 
      update() {
@@ -94,8 +51,9 @@ class VDOM {
 
           this.style = [];
           this.oldRender.addExternalStyle();
-          this.sst = handleCSS(this.style, this.styleRoot, this.sst);
+          this.sst = handlecss(this.style, this.styleRoot, this.sst);
 
+          console.log("hello");
           if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
      }
 }

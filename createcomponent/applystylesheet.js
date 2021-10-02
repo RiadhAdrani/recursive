@@ -5,8 +5,6 @@ export default (component) => {
 
      if (component.style) {
           if (component.style.className) {
-               const arrayOfStyles = [];
-
                const styleObject = (selector, content) => {
                     return {
                          selector: `.${component.style.className.trim()}${selector.trim()}`,
@@ -17,19 +15,21 @@ export default (component) => {
                styleselectors.forEach((style) => {
                     if (component.style[`${style.prop}`]) {
                          if (style.type === "selector") {
-                              arrayOfStyles.push(
+                              vDOM.style.push(
                                    styleObject(style.name, component.style[`${style.prop}`])
                               );
                          }
                          if (style.type === "animation") {
+                              component.style[`${style.prop}`].forEach((animation) => {
+                                   vDOM.animations.push(animation);
+                              });
                          }
                          if (style.type === "media") {
+                              component.style[`${style.prop}`].forEach((media) => {
+                                   vDOM.mediaQueries.push(media);
+                              });
                          }
                     }
-               });
-
-               arrayOfStyles.forEach((style) => {
-                    vDOM.style.push(style);
                });
           } else {
                console.warn(
