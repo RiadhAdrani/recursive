@@ -40,7 +40,8 @@ class VDOM {
                this.styleRoot,
                this.sst
           );
-          if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
+          if (this.devMode)
+               console.log(`First render done in ${new Date().getTime() - startTime}ms`);
      }
 
      update() {
@@ -50,10 +51,16 @@ class VDOM {
           this.oldRender = newRender;
 
           this.style = [];
+          this.animations = [];
+          this.mediaQueries = [];
           this.oldRender.addExternalStyle();
-          this.sst = handlecss(this.style, this.styleRoot, this.sst);
-
-          console.log("hello");
+          this.sst = handlecss(
+               this.style,
+               this.animations,
+               this.mediaQueries,
+               this.styleRoot,
+               this.sst
+          );
           if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
      }
 }

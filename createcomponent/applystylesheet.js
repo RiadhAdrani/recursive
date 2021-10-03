@@ -25,8 +25,9 @@ export default (component) => {
                               });
                          }
                          if (style.type === "media") {
-                              component.style[`${style.prop}`].forEach((media) => {
-                                   vDOM.mediaQueries.push(media);
+                              vDOM.mediaQueries.push({
+                                   queries: component.style[`${style.prop}`],
+                                   className: component.style.className,
                               });
                          }
                     }

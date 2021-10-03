@@ -3,7 +3,9 @@ import attributes from "./attributes.js";
 
 export default (component, render) => {
      function renderAttr(attr) {
-          if (component[attr]) render[attr] = component[attr];
+          if (component[attr]) {
+               render[attr] = component[attr];
+          }
      }
 
      attributes.forEach((attr) => {

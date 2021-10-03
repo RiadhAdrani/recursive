@@ -4,7 +4,7 @@ class SetState {
      }
 
      setValue(newVal) {
-          if (newVal) this.value = newVal;
+          this.value = newVal;
           vDOM.update();
      }
 }

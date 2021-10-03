@@ -127,6 +127,7 @@ export default {
           styleSheet,
           className,
           onDestroyed,
+          onCreated,
           onUpdated,
           beforeCreated,
           beforeDestroyed,

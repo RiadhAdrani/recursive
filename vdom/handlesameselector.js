@@ -6,9 +6,5 @@ export default (newS, oldS) => {
                alert = true;
           }
      }
-
-     if (alert) {
-          console.warn("CSS: found two selectors with same name but with different attributes");
-     }
      return newS;
 };
