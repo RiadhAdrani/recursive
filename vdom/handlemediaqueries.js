@@ -1,5 +1,9 @@
 import solveduplicateselectors from "./solveduplicateselectors.js";
 
+/**
+ * Handle and Translate mediaQueries to be processed by the VDOM.
+ * @param {Array} mediaQueries an array of media queries
+ */
 export default (mediaQueries) => {
      const mqs = {};
      if (mediaQueries.length > 0) {

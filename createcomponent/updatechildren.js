@@ -1,5 +1,12 @@
 import arraydiff from "./arraydiff.js";
+import childrentype from "./childrentype.js";
 
+/**
+ * Update component's children
+ * @param component old component
+ * @param newComponent new component
+ * @param render rendered htmlElement
+ */
 export default (component, newComponent, render) => {
      if (!component.children && !newComponent.children) {
           return;
@@ -23,7 +30,7 @@ export default (component, newComponent, render) => {
      }
 
      // case children is string, new is string and not equal
-     else if (typeof component.children === "string" && typeof newComponent.children === "string") {
+     else if (!childrentype(component.children) && !childrentype(newComponent.children)) {
           if (newComponent.children.toString() !== component.children.toString()) {
                render.replaceChildren(newComponent.children);
 
@@ -31,7 +38,7 @@ export default (component, newComponent, render) => {
           }
      }
      // case children is string, new is child
-     else if (typeof component.children === "string" && newComponent.children.render) {
+     else if (!childrentype(component.children) && newComponent.children.render) {
           render.replaceChildren(newComponent.children.render());
 
           if (!didUpdate) {
@@ -39,9 +46,8 @@ export default (component, newComponent, render) => {
           }
      }
      // case children is child, new is string
-     else if (component.children.render && typeof newComponent.children === "string") {
+     else if (component.children.render && typeof !childrentype(newComponent.children)) {
           component.children.onBeforeDestroyed();
-          // console.log("current is child new is string");
           render.replaceChildren(newComponent.children);
 
           component.children.destroyed();
@@ -51,8 +57,7 @@ export default (component, newComponent, render) => {
           }
      }
      // case children is string, new is children
-     else if (typeof component.children === "string" && Array.isArray(newComponent.children)) {
-          // .log("current is string new is children");
+     else if (!childrentype(component.children) && Array.isArray(newComponent.children)) {
           render.replaceChildren(
                newComponent.children.map((child) => (child.render ? child.render() : child))
           );
@@ -63,8 +68,7 @@ export default (component, newComponent, render) => {
           }
      }
      // case children is children, new is string
-     else if (Array.isArray(component.children) && typeof newComponent.children === "string") {
-          // console.log("current is children new is string");
+     else if (Array.isArray(component.children) && !childrentype(newComponent.children)) {
           render.replaceChildren(newComponent.children);
 
           if (!didUpdate) {
@@ -73,9 +77,6 @@ export default (component, newComponent, render) => {
      }
      // case children is child, new is child
      else if (component.children.render && newComponent.children.render) {
-          // console.log("current is child new is child");
-          // console.log(component.key, component.children);
-          // console.log(newComponent.key, newComponent.children);
           component.children.update(newComponent.children);
 
           if (!didUpdate) {
@@ -86,7 +87,6 @@ export default (component, newComponent, render) => {
      else if (component.children.render && Array.isArray(newComponent.children)) {
           component.children.onBeforeDestroyed();
 
-          // console.log("current is child new is children");
           render.replaceChildren(newComponent.render().innerHTML);
 
           component.children.destroyed();
@@ -103,7 +103,6 @@ export default (component, newComponent, render) => {
                }
           });
 
-          // console.log("current is children new is child");
           render.replaceChildren(newComponent.children.render());
 
           component.children.forEach((child) => {
@@ -120,17 +119,12 @@ export default (component, newComponent, render) => {
      }
      // case children is children, new is children
      else if (Array.isArray(component.children) && Array.isArray(newComponent.children)) {
-          //// console.log("current is children new is child");
           // if children have the same length
           if (component.children.length === newComponent.children.length) {
                arraydiff(component, newComponent, render);
           }
           // if component.children are greater than newComponent.children
           else if (component.children.length > newComponent.children.length) {
-               // console.log("render children are more");
-               // console.log(newComponent.children.length);
-               // console.log(render.childNodes.length);
-
                let i = newComponent.children.length;
                while (render.childNodes.length > newComponent.children.length) {
                     if (component.children[i].onBeforeDestroyed)
@@ -147,7 +141,6 @@ export default (component, newComponent, render) => {
           }
           // if component.children are less than newComponent.children
           else {
-               // console.log("render children are less");
                const x = component.children.length;
                component.children = [
                     ...component.children,

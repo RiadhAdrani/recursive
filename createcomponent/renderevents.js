@@ -1,5 +1,10 @@
 import events from "./events.js";
 
+/**
+ * Apply events to the rendered element
+ * @param component CreateComponent
+ * @param htmlElement rendered element
+ */
 export default (component, htmlElement) => {
      if (component.events) {
           function addEvent(prop, event) {

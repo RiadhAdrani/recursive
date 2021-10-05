@@ -1,5 +1,9 @@
 import styleselectors from "./styleselectors.js";
 
+/**
+ * Push styles, animations and media queries into the Virtual DOM to be processed and then applied.
+ * @param component this (can't be called outside CreateComponent)
+ */
 export default (component) => {
      if (!vDOM) throw "Unable to find the VDOM";
 

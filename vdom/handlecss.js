@@ -1,9 +1,14 @@
-import csstotext from "../createcomponent/csstotext.js";
 import handlesameselector from "./handlesameselector.js";
-import proptoselector from "./proptoselector.js";
-import solveduplicateselectors from "./solveduplicateselectors.js";
 import stylejsontotext from "./stylejsontotext.js";
 
+/**
+ * CSS Handler for the VDOM
+ * @param css css style
+ * @param animations css animations
+ * @param mediaQueries css media queries
+ * @param root style element inside the html document <style></style>
+ * @param oldStyleText old style
+ */
 export default (css, animations, mediaQueries, root, oldStyleText) => {
      let output = [];
 
@@ -64,17 +69,21 @@ export default (css, animations, mediaQueries, root, oldStyleText) => {
           root.innerHTML = ss;
      }
 
-     animationDup.forEach((dup) => {
+     if (animationDup.length > 0) {
           console.warn(
-               `DUPLICATE ANIMATION: animation name (${dup}) is found more than once. The last iteration will be used instead.`
+               `DUPLICATE ANIMATION${
+                    animationDup.length > 1 ? "S" : ""
+               }: (${animationDup}) => found more than once`
           );
-     });
+     }
 
-     styleDup.forEach((dup) => {
+     if (styleDup.length > 0) {
           console.warn(
-               `DUPLICATE style: selector (${dup}) is found more than once. Styles will be merged together with the newest value overriding the oldest.`
+               `DUPLICATE STYLE${
+                    styleDup.length > 1 ? "S" : ""
+               }: (${styleDup}) => found more than once.`
           );
-     });
+     }
 
      return ss;
 };

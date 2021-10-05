@@ -1,5 +1,9 @@
 import csstotext from "../createcomponent/csstotext.js";
 
+/**
+ * Convert media Queries to css format
+ * @param {JSON} mediaQueries processed media queries
+ */
 export default (mediaQueries) => {
      let mediaQueryText = "";
      for (var cond in mediaQueries) {

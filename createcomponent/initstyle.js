@@ -1,3 +1,8 @@
+/**
+ * Add style className to the classList
+ * @param component CreateComponent
+ * @param style style object
+ */
 export default (component, style) => {
      if (style) {
           if (style.className) {

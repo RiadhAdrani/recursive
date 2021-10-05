@@ -1,5 +1,11 @@
 import attributes from "./attributes.js";
 
+/**
+ * Update component's attributes
+ * @param component old component
+ * @param newComponent new component
+ * @param render rendered htmlElement
+ */
 export default (component, newComponent, render) => {
      let didUpdate = false;
 

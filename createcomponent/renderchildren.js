@@ -1,5 +1,13 @@
+import childrentype from "./childrentype.js";
+import childtype from "./childtype.js";
+
+/**
+ * Render children into the htmlElement
+ * @param children children to be injected
+ * @param render htmlElement
+ */
 export default (children, render) => {
-     if (["number", "string", "boolean"].includes(typeof children) && !children.render) {
+     if (!childrentype(children) && !children.render) {
           render.innerText = children;
      } else if (children.render) {
           render.append(children.render());
@@ -10,7 +18,7 @@ export default (children, render) => {
                );
           }
           children.forEach((child) => {
-               if (["number", "string", "boolean"].includes(typeof child) && !child.render) {
+               if (!childtype(child) && !child.render) {
                     render.innerHTML += child;
                } else {
                     const r = child.render();

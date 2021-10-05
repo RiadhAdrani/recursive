@@ -1,3 +1,9 @@
+/**
+ * Update component's inline style
+ * @param renderStyle rendered htmlElement
+ * @param oldStyle current component style : component.style
+ * @param newStyle new component style : newComponent.style
+ */
 export default (renderStyle, oldStyle, newStyle) => {
      let didChange = false;
 
@@ -14,7 +20,6 @@ export default (renderStyle, oldStyle, newStyle) => {
           for (let prop in newStyle) {
                if (!["length", "size", "parentRule"].includes(prop)) {
                     if (oldStyle[`${prop}`] !== newStyle[`${prop}`]) {
-                         // console.log(_old[`${prop}`], _new[`${prop}`]);
                          renderStyle[`${prop}`] = newStyle[`${prop}`];
                          didChange = true;
                     }

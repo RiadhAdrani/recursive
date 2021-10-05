@@ -1,3 +1,7 @@
+/**
+ * Convert a json into text
+ * @param json style as json.
+ */
 export default (json) => {
      let output = "";
 

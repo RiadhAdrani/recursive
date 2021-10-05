@@ -1,6 +1,10 @@
 import handlesameselector from "./handlesameselector.js";
 import proptoselector from "./proptoselector.js";
 
+/**
+ * Solve duplicate selectors inside a media query
+ * @param {Array} array styles
+ */
 export default (array) => {
      const output = {};
 

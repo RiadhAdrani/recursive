@@ -1,6 +1,11 @@
 import applyinlinestyle from "./applyinlinestyle.js";
 import attributes from "./attributes.js";
 
+/**
+ * Apply component attributes into the rendered element.
+ * @param component CreateComponent
+ * @param render htmlElement
+ */
 export default (component, render) => {
      function renderAttr(attr) {
           if (component[attr]) {
