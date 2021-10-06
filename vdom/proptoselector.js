@@ -5,6 +5,7 @@ export default {
      active: ":active",
      after: "::after",
      checked: ":checked",
+     placeholder: "::placeholder",
      default: "default",
      disabled: "disabled",
      empty: "empty",

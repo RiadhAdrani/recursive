@@ -1,4 +1,5 @@
 import childrentype from "./childrentype.js";
+import childtype from "./childtype.js";
 
 /**
  * Initialize children
@@ -13,8 +14,9 @@ export default (component, children) => {
                component.children = [children];
           } else {
                for (let i = 0; i < children.length; i++) {
+                    if (Array.isArray(children[i])) throw `Recursive: Child cannot be an array`;
                     if (!children[i]) continue;
-                    if (childrentype(children)) {
+                    if (childtype(children)) {
                          component.children.push(children[i]);
                     } else {
                          let textNode = children[i];

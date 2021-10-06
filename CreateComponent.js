@@ -1,8 +1,7 @@
 import applystylesheet from "./createcomponent/applystylesheet.js";
-import InlineSelector from "./InlineSelector.js";
 import findElementByKey from "./createcomponent/findElementByKey.js";
 import initchildren from "./createcomponent/initchildren.js";
-import initstyle from "./createcomponent/initstyle.js";
+import initstyle from "./createcomponent/initclassname.js";
 import keying from "./createcomponent/keying.js";
 import updateattributes from "./createcomponent/updateattributes.js";
 import updatechildren from "./createcomponent/updatechildren.js";
@@ -18,7 +17,7 @@ class CreateComponent {
           children,
           className,
           id,
-          inlineStyle = InlineSelector({}),
+          inlineStyle,
           events,
           key,
           value,

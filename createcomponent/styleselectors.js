@@ -4,6 +4,7 @@ export default [
      { name: ":focus", prop: "focus", type: "selector" },
      { name: ":active", prop: "active", type: "selector" },
      { name: "::after", prop: "after", type: "selector" },
+     { name: "::placeholder", prop: "placeholder", type: "selector" },
      { name: ":checked", prop: "checked", type: "selector" },
      { name: ":default", prop: "default", type: "selector" },
      { name: ":disabled", prop: "disabled", type: "selector" },
