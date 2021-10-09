@@ -1,3 +1,4 @@
+import childrentype from "./childrentype.js";
 import childtype from "./childtype.js";
 
 /**
@@ -5,16 +6,12 @@ import childtype from "./childtype.js";
  * @param component CreateComponent
  */
 export default (component) => {
-     if (typeof component.children !== "string") {
-          if (component.children.render) {
-               component.children.key = `${component.key}0`;
-          } else {
-               component.children.forEach((child) => {
-                    if (childtype(child)) {
-                         child.key = `${component.key}${component.children.indexOf(child)}`;
-                         child.keying();
-                    }
-               });
+     let index = 0;
+     component.children.forEach((child) => {
+          if (child.$$createcomponent) {
+               child.key = `${component.key}${index}`;
+               child.keying();
           }
-     }
+          index++;
+     });
 };

@@ -11,9 +11,7 @@ export default ({
      onCreated,
      onDestroyed,
      onUpdated,
-     beforeCreated,
      beforeDestroyed,
-     onRefreshed,
 }) =>
      new CreateComponent({
           tag: "img",
@@ -21,14 +19,12 @@ export default ({
           inlineStyle: style,
           style: styleSheet,
           id: id,
-          children: null,
+          children: [],
           className: className,
           events: events,
           alt: alt,
           onCreated,
           onDestroyed,
           onUpdated,
-          beforeCreated,
           beforeDestroyed,
-          onRefreshed,
      });

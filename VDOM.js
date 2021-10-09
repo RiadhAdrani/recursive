@@ -31,7 +31,6 @@ class VDOM {
           this.root.append(newRender.render());
           this.oldRender = newRender;
           this.oldRender.created();
-
           this.oldRender.addExternalStyle();
           this.sst = handlecss(
                this.style,
@@ -40,6 +39,7 @@ class VDOM {
                this.styleRoot,
                this.sst
           );
+
           if (this.devMode)
                console.log(`First render done in ${new Date().getTime() - startTime}ms`);
      }
@@ -48,6 +48,7 @@ class VDOM {
           const startTime = new Date().getTime();
           const newRender = this.app();
           this.oldRender.update(newRender);
+
           this.oldRender = newRender;
 
           this.style = [];

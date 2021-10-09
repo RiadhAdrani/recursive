@@ -7,23 +7,11 @@ import childtype from "./childtype.js";
  * @param render htmlElement
  */
 export default (children, render) => {
-     if (!childrentype(children) && !children.render) {
-          render.innerText = children;
-     } else if (children.render) {
-          render.append(children.render());
-     } else {
-          if (children.length > 100) {
-               console.warn(
-                    `TOO MANY CHILDREN (${children.length}): improve performance by reducing the number of children using array.slice()`
-               );
-          }
+     if (childrentype(children)) {
           children.forEach((child) => {
-               if (!childtype(child) && !child.render) {
-                    render.innerHTML += child;
-               } else {
-                    const r = child.render();
-                    render.append(r);
-               }
+               render.append(child.$$createcomponent ? child.render() : child);
           });
+     } else {
+          render.append(children.$$createcomponent ? children.render() : children);
      }
 };

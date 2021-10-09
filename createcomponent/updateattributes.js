@@ -1,4 +1,5 @@
 import attributes from "./attributes.js";
+import updateinlinestyle from "./updateinlinestyle.js";
 
 /**
  * Update component's attributes
@@ -10,9 +11,9 @@ export default (component, newComponent, render) => {
      let didUpdate = false;
 
      function updateAttr(attr) {
-          if (component[`${attr}`] !== newComponent[`${attr}`]) {
-               if (newComponent[`${attr}`]) {
-                    render[`${attr}`] = newComponent[`${attr}`];
+          if (component[attr] !== newComponent[attr]) {
+               if (newComponent[attr]) {
+                    render[attr] = newComponent[attr];
                } else {
                     render.removeAttribute(`${attr}`);
                }
@@ -23,6 +24,8 @@ export default (component, newComponent, render) => {
      attributes.forEach((attr) => {
           updateAttr(attr);
      });
+
+     updateinlinestyle(newComponent.style, component.style, render);
 
      return didUpdate;
 };

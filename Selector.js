@@ -68,6 +68,7 @@ export default function ({
      caretColor,
      clear,
      clip,
+     clipPath,
      color,
      columnCount,
      columnFill,

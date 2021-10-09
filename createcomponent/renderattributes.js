@@ -17,8 +17,6 @@ export default (component, render) => {
           renderAttr(attr);
      });
 
-     if (component.key) render.key = component.key;
-
      if (component.inlineStyle) {
           applyinlinestyle(component.inlineStyle, render.style);
      }

@@ -1,7 +1,6 @@
 import applystylesheet from "./createcomponent/applystylesheet.js";
 import findElementByKey from "./createcomponent/findElementByKey.js";
 import initchildren from "./createcomponent/initchildren.js";
-import initstyle from "./createcomponent/initclassname.js";
 import keying from "./createcomponent/keying.js";
 import updateattributes from "./createcomponent/updateattributes.js";
 import updatechildren from "./createcomponent/updatechildren.js";
@@ -10,6 +9,7 @@ import updatestyle from "./createcomponent/updatestyle.js";
 import renderattributes from "./createcomponent/renderattributes.js";
 import renderevents from "./createcomponent/renderevents.js";
 import renderchildren from "./createcomponent/renderchildren.js";
+import initclassname from "./createcomponent/initclassname.js";
 
 class CreateComponent {
      constructor({
@@ -19,7 +19,6 @@ class CreateComponent {
           id,
           inlineStyle,
           events,
-          key,
           value,
           style,
           src,
@@ -90,6 +89,8 @@ class CreateComponent {
                throw "tag cannot be empty";
           }
 
+          this.$$createcomponent = "create-component";
+
           // HTML Attributes
           this.tag = tag;
           this.className = className;
@@ -97,7 +98,7 @@ class CreateComponent {
           this.id = id;
           this.inlineStyle = inlineStyle;
           this.style = style;
-          this.key = key;
+          this.key = "0";
           this.value = value;
           this.alt = alt;
           this.placeholder = placeholder;
@@ -160,6 +161,10 @@ class CreateComponent {
           // Children
           this.children = [];
 
+          initclassname(this, style);
+
+          initchildren(this, children);
+
           // Events
           this.events = events;
 
@@ -170,15 +175,11 @@ class CreateComponent {
           this.beforeCreated = beforeCreated;
           this.beforeDestroyed = beforeDestroyed;
 
-          initstyle(this, style);
-
-          initchildren(this, children);
-
           this.keying();
      }
 
      render() {
-          const render = document.createElement(this.tag);
+          let render = document.createElement(this.tag);
 
           // add attributes
           renderattributes(this, render);
@@ -189,9 +190,10 @@ class CreateComponent {
           // inject children inside the rendered element
           renderchildren(this.children, render);
 
-          if (this.beforeCreated) {
-               // this life cycle method is not very useful and may cause weird behaviour when trying to update the UI
-               // this.beforeCreated();
+          render.key = this.key;
+
+          if (this.key === "0100") {
+               render.aFuckingKey = this.key;
           }
 
           return render;
@@ -200,9 +202,10 @@ class CreateComponent {
      update(newComponent) {
           let didUpdate = false;
 
-          const htmlElement = findElementByKey(this, null);
+          const htmlElement = findElementByKey(this);
 
           if (!htmlElement) {
+               console.log(this.key);
                throw "Component not found inside document: Report a bug to https://github.com/RiadhAdrani/recursive";
           }
 

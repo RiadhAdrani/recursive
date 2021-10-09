@@ -1,3 +1,5 @@
+import CreateComponent from "../CreateComponent.js";
+
 /**
  * Return whether a child is a component or plain text
  * @param child child
