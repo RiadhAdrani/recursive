@@ -8,21 +8,17 @@ import childtype from "./childtype.js";
  */
 export default (component, children) => {
      if (children) {
-          if (!childtype(children)) {
-               component.children = [`${children}`];
-          } else if (children.render) {
-               component.children = [children];
-          } else {
+          if (Array.isArray(children)) {
                for (let i = 0; i < children.length; i++) {
-                    if (childrentype(children[i])) throw `Recursive: Child cannot be an array`;
                     if (!children[i]) continue;
-                    if (childtype(children[i])) {
+                    if (childrentype(children[i])) throw `Recursive: Child cannot be an array`;
+                    if (children[i].$$createcomponent) {
                          component.children.push(children[i]);
                     } else {
                          let textNode = children[i];
 
                          for (let j = i + 1, l = children.length; j < l; j++) {
-                              if (childtype(children[j])) {
+                              if (children[j].$$createcomponent) {
                                    break;
                               } else {
                                    textNode += children[j];
@@ -32,6 +28,8 @@ export default (component, children) => {
                          component.children.push(textNode);
                     }
                }
+          } else {
+               component.children = [children];
           }
      } else component.children = [];
 };

@@ -229,20 +229,28 @@ class CreateComponent {
                return;
           }
 
-          // update inline style
-          didUpdate = updatestyle(htmlElement.style, this.inlineStyle, newComponent.inlineStyle);
-
-          // update element attribute
-          didUpdate = updateattributes(this, newComponent, htmlElement);
-
-          // Execute update lifecycle method
-          if (didUpdate) this.updated();
-
           // update events
           updateevents(newComponent, htmlElement);
 
-          // update children
-          updatechildren(this, newComponent, htmlElement);
+          // update inline style
+          const inlineStyleDidUpdate = updatestyle(
+               htmlElement.style,
+               this.inlineStyle,
+               newComponent.inlineStyle
+          );
+
+          // update attributes
+          const attributesDidUpdate = updateattributes(this, newComponent, htmlElement);
+
+          const childrenDidChange = updatechildren(this, newComponent, htmlElement);
+
+          didUpdate =
+               inlineStyleDidUpdate || attributesDidUpdate || childrenDidChange ? true : false;
+
+          // Execute update lifecycle method
+          if (didUpdate) this.updated(this, newComponent);
+
+          return didUpdate;
      }
 
      // apply keys to elements

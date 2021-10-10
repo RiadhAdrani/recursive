@@ -6,5 +6,5 @@ import CreateComponent from "../CreateComponent.js";
  * @returns true if child is a component, false otherwise.
  */
 export default (child) => {
-     return !["number", "string", "boolean"].includes(typeof child);
+     return child.$$createcomponent;
 };

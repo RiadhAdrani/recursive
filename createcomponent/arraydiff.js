@@ -7,25 +7,40 @@ import childtype from "./childtype.js";
  * @param render component inside the DOM
  */
 export default (component, newComponent, render) => {
+     let didUpdate = false;
+
+     const dupdate = () => {
+          if (!didUpdate) didUpdate = true;
+     };
+
      for (let i = 0; i < component.children.length; i++) {
           if (!childtype(component.children[i]) && !childtype(newComponent.children[i])) {
                // case not equal strings
                if (component.children[i].toString() !== newComponent.children[i].toString()) {
                     if (render.childNodes) {
                          render.childNodes[i].nodeValue = newComponent.children[i];
+                         dupdate();
                     }
                }
           }
           // case children is string, new is child
-          else if (typeof component.children[i] === "string" && newComponent.children[i].render) {
+          else if (
+               !component.children[i].$$createcomponent &&
+               newComponent.children[i].$$createcomponent
+          ) {
                render.childNodes.forEach((child, key) => {
                     if (key == i) {
                          child.replaceWith(newComponent.children[i].render());
+                         newComponent.children[i].created();
                     }
                });
+               dupdate();
           }
           // case children is child, new is string
-          else if (component.children[i].render && typeof newComponent.children[i] === "string") {
+          else if (
+               component.children[i].$$createcomponent &&
+               !newComponent.children[i].$$createcomponent
+          ) {
                component.children[i].onBeforeDestroyed();
 
                render.childNodes.forEach((child, key) => {
@@ -35,10 +50,13 @@ export default (component, newComponent, render) => {
                });
 
                component.children[i].destroyed();
+               dupdate();
           }
           // case children is child, new is child
           else {
-               component.children[i].update(newComponent.children[i]);
+               if (component.children[i].update(newComponent.children[i])) dupdate();
           }
      }
+
+     return didUpdate;
 };

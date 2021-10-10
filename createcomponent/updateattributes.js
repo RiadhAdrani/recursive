@@ -15,6 +15,7 @@ export default (component, newComponent, render) => {
                if (newComponent[attr]) {
                     render[attr] = newComponent[attr];
                } else {
+                    render[attr] = "";
                     render.removeAttribute(`${attr}`);
                }
                didUpdate = true;
