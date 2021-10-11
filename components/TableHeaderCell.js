@@ -1,27 +1,26 @@
 import CreateComponent from "../CreateComponent.js";
 
-export default ({
-     text,
+export default (
+     rows,
      className,
      id,
-     style,
      events,
      styleSheet,
      onCreated,
      onDestroyed,
      onUpdated,
-     beforeDestroyed,
-}) =>
-     new CreateComponent({
-          tag: "p",
-          children: text,
-          id: id,
-          inlineStyle: style,
+     beforeDestroyed
+) => {
+     return new CreateComponent({
+          tag: "th",
+          children: rows,
+          className,
+          id,
+          events,
           style: styleSheet,
-          events: events,
-          className: className,
           onCreated,
           onDestroyed,
           onUpdated,
           beforeDestroyed,
      });
+};

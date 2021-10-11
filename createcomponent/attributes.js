@@ -60,4 +60,5 @@ export default [
      "step",
      "shape",
      "coords",
+     "start",
 ];

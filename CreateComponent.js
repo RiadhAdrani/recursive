@@ -52,11 +52,6 @@ class CreateComponent {
           list,
           isFor,
           open,
-          beforeCreated,
-          onCreated,
-          beforeDestroyed,
-          onDestroyed,
-          onUpdated,
           cite,
           allow,
           allowFullScreen,
@@ -84,6 +79,11 @@ class CreateComponent {
           multiple,
           shape,
           coords,
+          start,
+          onCreated,
+          beforeDestroyed,
+          onDestroyed,
+          onUpdated,
      }) {
           if (!tag) {
                throw "tag cannot be empty";
@@ -143,6 +143,7 @@ class CreateComponent {
           this.sizes = sizes;
           this.usemap = useMap;
           this.srcset = srcSet;
+          this.start = start;
           this.accept = accept;
           this.autocomplete = autoComplete;
           this.checked = checked;
