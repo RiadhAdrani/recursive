@@ -9,9 +9,10 @@ export default ({
      events,
      alt,
      onCreated,
+     beforeDestroyed,
      onDestroyed,
      onUpdated,
-     beforeDestroyed,
+     onStateUpdated,
 }) =>
      new CreateComponent({
           tag: "img",
@@ -24,7 +25,8 @@ export default ({
           events: events,
           alt: alt,
           onCreated,
+          beforeDestroyed,
           onDestroyed,
           onUpdated,
-          beforeDestroyed,
+          onStateUpdated,
      });

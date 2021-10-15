@@ -8,9 +8,10 @@ export default ({
      events,
      styleSheet,
      onCreated,
+     beforeDestroyed,
      onDestroyed,
      onUpdated,
-     beforeDestroyed,
+     onStateUpdated,
 }) =>
      new CreateComponent({
           tag: "p",
@@ -21,7 +22,8 @@ export default ({
           events: events,
           className: className,
           onCreated,
+          beforeDestroyed,
           onDestroyed,
           onUpdated,
-          beforeDestroyed,
+          onStateUpdated,
      });

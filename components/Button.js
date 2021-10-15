@@ -8,11 +8,10 @@ export default ({
      className,
      events,
      onCreated,
+     beforeDestroyed,
      onDestroyed,
      onUpdated,
-     beforeCreated,
-     beforeDestroyed,
-     onRefreshed,
+     onStateUpdated,
 }) =>
      new CreateComponent({
           tag: "button",
@@ -23,9 +22,8 @@ export default ({
           className: className,
           events: events,
           onCreated,
+          beforeDestroyed,
           onDestroyed,
           onUpdated,
-          beforeCreated,
-          beforeDestroyed,
-          onRefreshed,
+          onStateUpdated,
      });

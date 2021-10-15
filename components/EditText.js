@@ -20,11 +20,10 @@ export default ({
      rows,
      wrap,
      onCreated,
+     beforeDestroyed,
      onDestroyed,
      onUpdated,
-     beforeCreated,
-     beforeDestroyed,
-     onRefreshed,
+     onStateUpdated,
 }) =>
      new CreateComponent({
           tag: "textarea",
@@ -47,9 +46,9 @@ export default ({
           id: id,
           className: className,
           events: events,
+          onCreated,
+          beforeDestroyed,
           onDestroyed,
           onUpdated,
-          beforeCreated,
-          beforeDestroyed,
-          onRefreshed,
+          onStateUpdated,
      });

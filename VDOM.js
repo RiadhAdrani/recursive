@@ -8,6 +8,8 @@ class VDOM {
           };
           this.oldRender = appFunction();
 
+          this.renderState = false;
+
           this.style = [];
           this.animations = [];
           this.mediaQueries = [];
@@ -26,19 +28,34 @@ class VDOM {
 
      render() {
           const startTime = new Date().getTime();
-          const newRender = this.app();
-          this.root.innerHTML = "";
-          this.root.append(newRender.render());
-          this.oldRender = newRender;
-          this.oldRender.created();
-          this.oldRender.addExternalStyle();
-          this.sst = handlecss(
-               this.style,
-               this.animations,
-               this.mediaQueries,
-               this.styleRoot,
-               this.sst
-          );
+
+          try {
+               this.renderState = true;
+
+               const newRender = this.app();
+               this.root.innerHTML = "";
+               this.root.append(newRender.render());
+               this.oldRender = newRender;
+               this.oldRender.created();
+               this.oldRender.addExternalStyle();
+               this.sst = handlecss(
+                    this.style,
+                    this.animations,
+                    this.mediaQueries,
+                    this.styleRoot,
+                    this.sst
+               );
+
+               this.renderState = false;
+
+               this.oldRender.stateUpdated();
+
+               console.log(this.oldRender);
+          } catch (e) {
+               if (e.name === "RangeError") {
+                    throw `VDOM : infinite Rerendering : Make sure to update state only when needed.`;
+               }
+          }
 
           if (this.devMode)
                console.log(`First render done in ${new Date().getTime() - startTime}ms`);
@@ -46,22 +63,33 @@ class VDOM {
 
      update() {
           const startTime = new Date().getTime();
-          const newRender = this.app();
-          this.oldRender.update(newRender);
 
-          this.oldRender = newRender;
+          try {
+               this.renderState = true;
+               const newRender = this.app();
+               this.oldRender.update(newRender);
 
-          this.style = [];
-          this.animations = [];
-          this.mediaQueries = [];
-          this.oldRender.addExternalStyle();
-          this.sst = handlecss(
-               this.style,
-               this.animations,
-               this.mediaQueries,
-               this.styleRoot,
-               this.sst
-          );
+               this.oldRender = newRender;
+
+               this.style = [];
+               this.animations = [];
+               this.mediaQueries = [];
+               this.oldRender.addExternalStyle();
+               this.sst = handlecss(
+                    this.style,
+                    this.animations,
+                    this.mediaQueries,
+                    this.styleRoot,
+                    this.sst
+               );
+               this.renderState = false;
+          } catch (e) {
+               if (e.name === "RangeError") {
+                    throw `VDOM : infinite Rerendering : Make sure to update state only when needed.`;
+               }
+          }
+
+          this.oldRender.stateUpdated();
           if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
      }
 }

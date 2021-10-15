@@ -12,6 +12,7 @@ export default ({
      beforeDestroyed,
      onDestroyed,
      onUpdated,
+     onStateUpdated,
 }) => {
      return new CreateComponent({
           tag: "ol",
@@ -26,5 +27,6 @@ export default ({
           beforeDestroyed,
           onDestroyed,
           onUpdated,
+          onStateUpdated,
      });
 };

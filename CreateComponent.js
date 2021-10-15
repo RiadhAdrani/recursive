@@ -84,6 +84,7 @@ class CreateComponent {
           beforeDestroyed,
           onDestroyed,
           onUpdated,
+          onStateUpdated,
      }) {
           if (!tag) {
                throw "tag cannot be empty";
@@ -173,8 +174,8 @@ class CreateComponent {
           this.onCreated = onCreated;
           this.onDestroyed = onDestroyed;
           this.onUpdated = onUpdated;
-          this.beforeCreated = beforeCreated;
           this.beforeDestroyed = beforeDestroyed;
+          this.onStateUpdated = onStateUpdated;
 
           this.keying();
      }
@@ -192,10 +193,6 @@ class CreateComponent {
           renderchildren(this.children, render);
 
           render.key = this.key;
-
-          if (this.key === "0100") {
-               render.aFuckingKey = this.key;
-          }
 
           return render;
      }
@@ -270,8 +267,19 @@ class CreateComponent {
 
           if (this.children) {
                this.children.forEach((child) => {
-                    if (child.render) {
+                    if (child.$$createcomponent) {
                          child.created();
+                    }
+               });
+          }
+     }
+
+     stateUpdated() {
+          if (this.onStateUpdated) this.onStateUpdated();
+          if (this.children) {
+               this.children.forEach((child) => {
+                    if (child.$$createcomponent) {
+                         child.stateUpdated();
                     }
                });
           }

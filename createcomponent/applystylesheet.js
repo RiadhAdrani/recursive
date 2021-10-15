@@ -17,14 +17,14 @@ export default (component) => {
                };
 
                styleselectors.forEach((style) => {
-                    if (component.style[`${style.prop}`]) {
+                    if (component.style[style.prop]) {
                          if (style.type === "selector") {
                               vDOM.style.push(
                                    styleObject(style.name, component.style[`${style.prop}`])
                               );
                          }
                          if (style.type === "animation") {
-                              component.style[`${style.prop}`].forEach((animation) => {
+                              component.style[style.prop].forEach((animation) => {
                                    vDOM.animations.push(animation);
                               });
                          }

@@ -7,9 +7,10 @@ export default (
      events,
      styleSheet,
      onCreated,
+     beforeDestroyed,
      onDestroyed,
      onUpdated,
-     beforeDestroyed
+     onStateUpdated
 ) => {
      return new CreateComponent({
           tag: "table",
@@ -19,8 +20,9 @@ export default (
           events,
           style: styleSheet,
           onCreated,
+          beforeDestroyed,
           onDestroyed,
           onUpdated,
-          beforeDestroyed,
+          onStateUpdated,
      });
 };
