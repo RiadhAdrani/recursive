@@ -13,7 +13,9 @@ export default (component, children) => {
                     if (!children[i]) continue;
                     if (childrentype(children[i])) throw `Recursive: Child cannot be an array`;
                     if (children[i].$$createcomponent) {
-                         component.children.push(children[i]);
+                         if (children[i].renderIf) {
+                              component.children.push(children[i]);
+                         }
                     } else {
                          let textNode = children[i];
 
@@ -29,7 +31,13 @@ export default (component, children) => {
                     }
                }
           } else {
-               component.children = [children];
+               if (children.$$createcomponent) {
+                    if (children.renderIf) {
+                         component.children = [children];
+                    }
+               } else {
+                    component.children = [children];
+               }
           }
      } else component.children = [];
 };

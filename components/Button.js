@@ -7,6 +7,7 @@ export default ({
      id,
      className,
      events,
+     renderIf = true,
      onCreated,
      beforeDestroyed,
      onDestroyed,
@@ -16,6 +17,7 @@ export default ({
      new CreateComponent({
           tag: "button",
           children: text,
+          renderIf,
           inlineStyle: style,
           style: styleSheet,
           id: id,

@@ -7,6 +7,7 @@ export default (
      events,
      styleSheet,
      onCreated,
+     renderIf = true,
      beforeDestroyed,
      onDestroyed,
      onUpdated,
@@ -15,6 +16,7 @@ export default (
      return new CreateComponent({
           tag: "table",
           children: rows,
+          renderIf,
           className,
           id,
           events,

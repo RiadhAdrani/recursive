@@ -55,6 +55,8 @@ export default function ({
      overflowX,
      overflowY,
      resize,
+     growthFactor,
+     shrinkFactor,
 }) {
      return { ...arguments[0] };
 }

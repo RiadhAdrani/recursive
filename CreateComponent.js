@@ -14,6 +14,7 @@ import initclassname from "./createcomponent/initclassname.js";
 class CreateComponent {
      constructor({
           tag,
+          renderIf = true,
           children,
           className,
           id,
@@ -160,6 +161,8 @@ class CreateComponent {
           this.coords = coords;
           this.minlength = minLength;
 
+          this.renderIf = renderIf;
+
           // Children
           this.children = [];
 
@@ -287,14 +290,12 @@ class CreateComponent {
 
      // execute onDestroyed lifecycle method
      destroyed() {
-          if (this.onDestroyed) return this.onDestroyed();
-          else return false;
+          if (this.onDestroyed) this.onDestroyed();
      }
 
      // execute beforedestroyed lifecycle method
      onBeforeDestroyed() {
-          if (this.beforeDestroyed) return this.beforeDestroyed();
-          return false;
+          if (this.beforeDestroyed) this.beforeDestroyed();
      }
 
      // add external style

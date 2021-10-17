@@ -7,6 +7,7 @@ export default ({
      id,
      className,
      events,
+     renderIf = true,
      alt,
      onCreated,
      beforeDestroyed,
@@ -17,6 +18,7 @@ export default ({
      new CreateComponent({
           tag: "img",
           src: src,
+          renderIf,
           inlineStyle: style,
           style: styleSheet,
           id: id,

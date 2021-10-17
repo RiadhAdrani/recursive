@@ -1,4 +1,4 @@
-import absinitstyle from "./abstractedcomponent/absinitstyle.js";
+import absinitstyle from "./abstractedcomponent/absinit/absinitstyle.js";
 import CreateComponent from "./CreateComponent.js";
 
 class AbstractedComponent extends CreateComponent {
@@ -22,7 +22,7 @@ class AbstractedComponent extends CreateComponent {
           },
           events = {},
      }) {
-          super({ tag, ...props, ...hooks, ...events, children });
+          super({ tag, ...props, ...hooks, events, children });
 
           absinitstyle(this, style);
      }

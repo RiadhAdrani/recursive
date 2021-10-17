@@ -6,6 +6,7 @@ export default ({
      className,
      events,
      id,
+     renderIf = true,
      onCreated,
      beforeDestroyed,
      onDestroyed,
@@ -15,6 +16,7 @@ export default ({
      return new CreateComponent({
           tag: "li",
           children: content,
+          renderIf,
           style: styleSheet,
           className,
           events,

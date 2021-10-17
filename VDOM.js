@@ -8,8 +8,6 @@ class VDOM {
           };
           this.oldRender = appFunction();
 
-          this.renderState = false;
-
           this.style = [];
           this.animations = [];
           this.mediaQueries = [];
@@ -30,8 +28,6 @@ class VDOM {
           const startTime = new Date().getTime();
 
           try {
-               this.renderState = true;
-
                const newRender = this.app();
                this.root.innerHTML = "";
                this.root.append(newRender.render());
@@ -46,11 +42,7 @@ class VDOM {
                     this.sst
                );
 
-               this.renderState = false;
-
                this.oldRender.stateUpdated();
-
-               console.log(this.oldRender);
           } catch (e) {
                if (e.name === "RangeError") {
                     throw `VDOM : infinite Rerendering : Make sure to update state only when needed.`;

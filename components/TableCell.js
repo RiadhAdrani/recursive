@@ -9,12 +9,14 @@ export default (
      onCreated,
      beforeDestroyed,
      onDestroyed,
+     renderIf = true,
      onUpdated,
      onStateUpdated
 ) => {
      return new CreateComponent({
           tag: "td",
           children: rows,
+          renderIf,
           className,
           id,
           events,
