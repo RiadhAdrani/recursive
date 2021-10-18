@@ -11,6 +11,7 @@ const list = {
      maxWidth: "maxWidth",
      cursor: "cursor",
      scrollBehavior: "scrollBehavior",
+     filter: "filter",
      transform: "transform",
      overflow: "overflow",
      overflowX: "overflowX",
@@ -101,7 +102,7 @@ export default (Box) => {
                     if (margin[b]) {
                          if (b === "vertical") {
                               textCss["paddingTop"] = Box.padding[b];
-                              textCss["paddingLeft"] = Box.padding[b];
+                              textCss["paddingBottom"] = Box.padding[b];
                          } else if (b === "horizontal") {
                               textCss["paddingLeft"] = Box.padding[b];
                               textCss["paddingRight"] = Box.padding[b];

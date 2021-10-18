@@ -34,7 +34,7 @@ export default (Position) => {
                     if (margin[b]) {
                          if (b === "vertical") {
                               textCss["marginTop"] = Position.margin[b];
-                              textCss["marginLeft"] = Position.margin[b];
+                              textCss["marginBottom"] = Position.margin[b];
                          } else if (b === "horizontal") {
                               textCss["marginLeft"] = Position.margin[b];
                               textCss["marginRight"] = Position.margin[b];

@@ -21,7 +21,5 @@ export default (component, style) => {
 
           component.style = output;
           initstyle(component, output);
-
-          console.log(component.style);
      }
 };
