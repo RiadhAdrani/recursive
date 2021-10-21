@@ -3,8 +3,10 @@ import AbstractedComponent from "../../AbstractedComponent.js";
 export default ({
      className,
      style,
-     renderIf,
      children,
+     url,
+     target,
+     renderIf,
      hooks = {
           onCreated: null,
           beforeDestroyed: null,
@@ -15,11 +17,11 @@ export default ({
      events = {},
 }) => {
      return new AbstractedComponent({
-          tag: "div",
-          props: { className: className, renderIf },
+          tag: "a",
+          props: { className: className, renderIf, href: url ? url : "", target },
           events: events,
           hooks: hooks,
-          children: children,
+          children,
           style: style,
      });
 };

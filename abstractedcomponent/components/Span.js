@@ -3,6 +3,7 @@ import AbstractedComponent from "../../AbstractedComponent.js";
 export default ({
      className,
      style,
+     renderIf,
      text,
      hooks = {
           onCreated: null,
@@ -15,7 +16,7 @@ export default ({
 }) => {
      return new AbstractedComponent({
           tag: "span",
-          props: { className: className },
+          props: { className: className, renderIf },
           events: events,
           hooks: hooks,
           children: text,

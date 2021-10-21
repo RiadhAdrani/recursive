@@ -3,8 +3,8 @@ import AbstractedComponent from "../../AbstractedComponent.js";
 export default ({
      className,
      style,
+     text,
      renderIf,
-     children,
      hooks = {
           onCreated: null,
           beforeDestroyed: null,
@@ -15,11 +15,11 @@ export default ({
      events = {},
 }) => {
      return new AbstractedComponent({
-          tag: "div",
+          tag: "textarea",
           props: { className: className, renderIf },
           events: events,
           hooks: hooks,
-          children: children,
+          children: text,
           style: style,
      });
 };

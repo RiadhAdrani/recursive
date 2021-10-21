@@ -4,6 +4,7 @@ export default ({
      className,
      style,
      text,
+     renderIf,
      hooks = {
           onCreated: null,
           beforeDestroyed: null,
@@ -15,7 +16,7 @@ export default ({
 }) => {
      return new AbstractedComponent({
           tag: "p",
-          props: { className: className },
+          props: { className: className, renderIf },
           events: events,
           hooks: hooks,
           children: text,

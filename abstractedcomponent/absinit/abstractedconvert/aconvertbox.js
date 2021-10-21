@@ -10,6 +10,8 @@ const list = {
      minWidth: "minWidth",
      maxWidth: "maxWidth",
      cursor: "cursor",
+     opacity: "opacity",
+     resizable: "resize",
      scrollBehavior: "scrollBehavior",
      filter: "filter",
      transform: "transform",

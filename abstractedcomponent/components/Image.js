@@ -4,6 +4,7 @@ export default ({
      className,
      style,
      src,
+     renderIf,
      altText,
      hooks = {
           onCreated: null,
@@ -16,7 +17,7 @@ export default ({
 }) => {
      return new AbstractedComponent({
           tag: "img",
-          props: { className: className, src, alt: altText },
+          props: { className: className, src, alt: altText, renderIf },
           events: events,
           hooks: hooks,
           style: style,
