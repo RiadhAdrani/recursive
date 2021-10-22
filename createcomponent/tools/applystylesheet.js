@@ -1,4 +1,4 @@
-import styleselectors from "./styleselectors.js";
+import styleselectors from "../../vdom/props/styleselectors.js";
 
 /**
  * Push styles, animations and media queries into the Virtual DOM to be processed and then applied.

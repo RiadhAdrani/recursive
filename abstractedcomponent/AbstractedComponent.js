@@ -1,5 +1,5 @@
-import absinitstyle from "./abstractedcomponent/absinit/absinitstyle.js";
-import CreateComponent from "./CreateComponent.js";
+import absinitstyle from "./absinit/absinitstyle.js";
+import CreateComponent from "../createcomponent/CreateComponent.js";
 
 class AbstractedComponent extends CreateComponent {
      constructor({

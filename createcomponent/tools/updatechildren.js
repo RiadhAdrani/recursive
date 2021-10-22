@@ -1,4 +1,4 @@
-import arraydiff from "./arraydiff.js";
+import arraydiff from "./diffing/arraydiff.js";
 import childrentype from "./childrentype.js";
 
 /**
@@ -14,13 +14,7 @@ export default (component, newComponent, render) => {
      // if new children is empty, just remove inner html
      else if (component.children && !newComponent.children) {
           render.innerHTML = "";
-
           return true;
-          // to be tested even more.
-          //
-          // if (newComponent.tag === "textarea") {
-          //     render.value = "";
-          // }
      }
      // if render children is empty, just add the children of the new element
      else if (!component.children && newComponent.children) {

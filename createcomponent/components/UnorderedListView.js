@@ -1,4 +1,4 @@
-import CreateComponent from "../CreateComponent.js";
+import CreateComponent from "../../CreateComponent.js";
 
 export default ({
      children,

@@ -1,4 +1,4 @@
-import attributes from "./attributes.js";
+import attributes from "../../vdom/props/attributes.js";
 import updateinlinestyle from "./updateinlinestyle.js";
 
 /**

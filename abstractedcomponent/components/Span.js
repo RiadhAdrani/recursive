@@ -1,4 +1,4 @@
-import AbstractedComponent from "../../AbstractedComponent.js";
+import AbstractedComponent from "../AbstractedComponent.js";
 
 export default ({
      className,

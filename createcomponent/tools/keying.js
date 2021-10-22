@@ -1,6 +1,3 @@
-import childrentype from "./childrentype.js";
-import childtype from "./childtype.js";
-
 /**
  * Apply keys to children so they are accessible by the VDOM
  * @param component CreateComponent

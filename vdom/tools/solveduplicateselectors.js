@@ -1,5 +1,5 @@
 import handlesameselector from "./handlesameselector.js";
-import proptoselector from "./proptoselector.js";
+import proptoselector from "../props/proptoselector.js";
 
 /**
  * Solve duplicate selectors inside a media query

@@ -1,4 +1,4 @@
-import childtype from "./childtype.js";
+import childtype from "../childtype.js";
 
 /**
  * Compute the difference between the children of two components.

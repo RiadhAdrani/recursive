@@ -1,4 +1,4 @@
-import events from "./events.js";
+import events from "../../vdom/props/events.js";
 
 /**
  * Apply events to the rendered element

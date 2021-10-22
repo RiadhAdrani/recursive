@@ -1,4 +1,4 @@
-import proptoselector from "../../../vdom/proptoselector.js";
+import proptoselector from "../../../vdom/props/proptoselector.js";
 import aconvert from "./aconvert.js";
 
 export default (queries) => {

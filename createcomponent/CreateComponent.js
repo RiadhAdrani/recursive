@@ -1,15 +1,15 @@
-import applystylesheet from "./createcomponent/applystylesheet.js";
-import findElementByKey from "./createcomponent/findElementByKey.js";
-import initchildren from "./createcomponent/initchildren.js";
-import keying from "./createcomponent/keying.js";
-import updateattributes from "./createcomponent/updateattributes.js";
-import updatechildren from "./createcomponent/updatechildren.js";
-import updateevents from "./createcomponent/updateevents.js";
-import updatestyle from "./createcomponent/updatestyle.js";
-import renderattributes from "./createcomponent/renderattributes.js";
-import renderevents from "./createcomponent/renderevents.js";
-import renderchildren from "./createcomponent/renderchildren.js";
-import initclassname from "./createcomponent/initclassname.js";
+import applystylesheet from "./tools/applystylesheet.js";
+import findElementByKey from "./tools/findElementByKey.js";
+import initchildren from "./tools/initchildren.js";
+import keying from "./tools/keying.js";
+import updateattributes from "./tools/updateattributes.js";
+import updatechildren from "./tools/updatechildren.js";
+import updateevents from "./tools/updateevents.js";
+import updatestyle from "./tools/updatestyle.js";
+import renderattributes from "./tools/renderattributes.js";
+import renderevents from "./tools/renderevents.js";
+import renderchildren from "./tools/renderchildren.js";
+import initclassname from "./tools/initclassname.js";
 
 class CreateComponent {
      constructor({
@@ -91,7 +91,10 @@ class CreateComponent {
                throw "tag cannot be empty";
           }
 
+          // CreateComponent specific props
           this.$$createcomponent = "create-component";
+          this.key = "0";
+          this.renderIf = renderIf;
 
           // HTML Attributes
           this.tag = tag;
@@ -100,7 +103,6 @@ class CreateComponent {
           this.id = id;
           this.inlineStyle = inlineStyle;
           this.style = style;
-          this.key = "0";
           this.value = value;
           this.alt = alt;
           this.placeholder = placeholder;
@@ -160,8 +162,6 @@ class CreateComponent {
           this.shape = shape;
           this.coords = coords;
           this.minlength = minLength;
-
-          this.renderIf = renderIf;
 
           // Children
           this.children = [];

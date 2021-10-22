@@ -1,5 +1,5 @@
-import SetState from "./SetState.js";
-import handlecss from "./vdom/handlecss.js";
+import SetState from "./vdom/SetState.js";
+import handlecss from "./vdom/tools/handlecss.js";
 
 class VDOM {
      constructor({ appFunction, root, styleRoot, devMode = false }) {

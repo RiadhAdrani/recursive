@@ -1,5 +1,5 @@
-import csstotext from "../createcomponent/csstotext.js";
-import animationtotext from "../createcomponent/animationtotext.js";
+import csstotext from "../../createcomponent/tools/csstotext.js";
+import animationtotext from "./animationtotext.js";
 import mediatotext from "./mediatotext.js";
 import handlemediaqueries from "./handlemediaqueries.js";
 

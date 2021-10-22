@@ -1,4 +1,4 @@
-import csstotext from "../createcomponent/csstotext.js";
+import csstotext from "../../createcomponent/tools/csstotext.js";
 
 /**
  * Convert media Queries to css format

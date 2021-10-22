@@ -1,4 +1,4 @@
-import cssattributes from "./cssattributes.js";
+import cssattributes from "../../vdom/props/cssattributes.js";
 
 /**
  * Convert a json into text

@@ -1,5 +1,5 @@
-import initstyle from "../../createcomponent/initstyle.js";
-import proptoselector from "../../vdom/proptoselector.js";
+import initstyle from "../../createcomponent/tools/initstyle.js";
+import proptoselector from "../../vdom/props/proptoselector.js";
 import aconvert from "./abstractedconvert/aconvert.js";
 import aconvertmediaqueries from "./abstractedconvert/aconvertmediaqueries.js";
 

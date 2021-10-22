@@ -1,5 +1,5 @@
 import applyinlinestyle from "./applyinlinestyle.js";
-import attributes from "./attributes.js";
+import attributes from "../../vdom/props/attributes.js";
 
 /**
  * Apply component attributes into the rendered element.
