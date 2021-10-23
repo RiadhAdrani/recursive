@@ -1,0 +1,102 @@
+export default {
+     autoFocus: "autofocus",
+     align: "align",
+     alt: "alt",
+     allow: "allow",
+     allowFullScreen: "allowfullscreen",
+     allowPaymentRequest: "allowpaymentrequest",
+     accept: "accept",
+     autoComplete: "autocomplete",
+     autoplay: "autoplay",
+
+     cols: "cols",
+     color: "color",
+     className: "className",
+     controls: "controls",
+     cite: "cite",
+     crossOrigin: "crossorigin",
+     coords: "coords",
+
+     checked: "checked",
+     charSet: "charset",
+     dirName: "dirname",
+     dir: "dir",
+     disabled: "disabled",
+     dateTime: "datetime",
+     download: "download",
+     decoding: "decoding",
+     default: "default",
+
+     form: "form",
+     formAction: "formaction",
+     formEncType: "formenctype",
+     formMethod: "formmethod",
+     formNoValidate: "formnovalidate",
+     formTarget: "formtarget",
+     isFor: "for",
+
+     href: "href",
+     hrefLang: "hreflang",
+     height: "height",
+
+     id: "id",
+     isMap: "ismap",
+
+     kind: "kind",
+
+     loop: "loop",
+     list: "list",
+     loading: "loading",
+     longDesc: "longdesc",
+
+     max: "max",
+     min: "min",
+     media: "media",
+     maxLength: "maxlength",
+     minLength: "minlength",
+     muted: "muted",
+     multiple: "multiple",
+
+     name: "name",
+     noWrap: "nowrap",
+     noShade: "noshade",
+
+     open: "open",
+
+     placeholder: "placeholder",
+     ping: "ping",
+     preload: "preload",
+     pattern: "pattern",
+     playsInline: "playsinline",
+     poster: "poster",
+
+     rel: "rel",
+     rev: "rev",
+     readOnly: "readonly",
+     required: "required",
+     rows: "rows",
+     referrerPolicy: "referrerpolicy",
+
+     src: "src",
+     span: "span",
+     sandbox: "sandbox",
+     srcDoc: "srcdoc",
+     sizes: "sizes",
+     srcSet: "srcset",
+     srcLang: "srclang",
+     step: "step",
+     shape: "shape",
+     start: "start",
+     size: "size",
+
+     type: "type",
+     title: "title",
+     target: "target",
+
+     useMap: "usemap",
+
+     value: "value",
+
+     wrap: "wrap",
+     width: "width",
+};

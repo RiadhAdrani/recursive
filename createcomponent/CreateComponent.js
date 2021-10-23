@@ -10,82 +10,101 @@ import renderattributes from "./tools/renderattributes.js";
 import renderevents from "./tools/renderevents.js";
 import renderchildren from "./tools/renderchildren.js";
 import initclassname from "./tools/initclassname.js";
+import initprops from "./tools/initprops.js";
+import inithooks from "./tools/inithooks.js";
 
 class CreateComponent {
      constructor({
           tag,
-          renderIf = true,
           children,
-          className,
-          id,
-          inlineStyle,
           events,
-          value,
+          renderIf = true,
+          className,
           style,
-          src,
-          alt,
-          placeholder,
-          type,
-          name,
-          min,
-          max,
-          autofocus,
-          cols,
-          dirname,
-          disabled,
-          form,
-          maxLength,
-          minLength,
-          readOnly,
-          required,
-          rows,
-          wrap,
-          title,
-          href,
-          autoplay,
-          controls,
-          dateTime,
-          target,
-          span,
-          loop,
-          muted,
-          preload,
-          list,
-          isFor,
-          open,
-          cite,
-          allow,
-          allowFullScreen,
-          allowPaymentRequest,
-          loading,
-          referrerPolicy,
-          sandbox,
-          srcdoc,
-          crossOrigin,
-          isMap,
-          longDesc,
-          sizes,
-          srcSet,
-          useMap,
-          accept,
-          autoComplete,
-          checked,
-          formAction,
-          formEncType,
-          formMethod,
-          formNoValidate,
-          formTarget,
-          pattern,
-          step,
-          multiple,
-          shape,
-          coords,
-          start,
-          onCreated,
-          beforeDestroyed,
-          onDestroyed,
-          onUpdated,
-          onStateUpdated,
+          inlineStyle,
+          props = {
+               id: undefined,
+               value: undefined,
+               src: undefined,
+               srcLang: undefined,
+               alt: undefined,
+               placeholder: undefined,
+               poster: undefined,
+               type: undefined,
+               name: undefined,
+               rev: undefined,
+               min: undefined,
+               download: undefined,
+               playsInline: undefined,
+               max: undefined,
+               decoding: undefined,
+               autofocus: undefined,
+               cols: undefined,
+               dirname: undefined,
+               dir: undefined,
+               disabled: undefined,
+               form: undefined,
+               maxLength: undefined,
+               minLength: undefined,
+               readOnly: undefined,
+               required: undefined,
+               ping: undefined,
+               rows: undefined,
+               wrap: undefined,
+               title: undefined,
+               href: undefined,
+               hrefLang: undefined,
+               autoplay: undefined,
+               controls: undefined,
+               dateTime: undefined,
+               target: undefined,
+               span: undefined,
+               loop: undefined,
+               muted: undefined,
+               preload: undefined,
+               rel: undefined,
+               list: undefined,
+               isFor: undefined,
+               open: undefined,
+               cite: undefined,
+               allow: undefined,
+               allowFullScreen: undefined,
+               allowPaymentRequest: undefined,
+               loading: undefined,
+               referrerPolicy: undefined,
+               sandbox: undefined,
+               srcdoc: undefined,
+               crossOrigin: undefined,
+               isMap: undefined,
+               longDesc: undefined,
+               sizes: undefined,
+               srcSet: undefined,
+               useMap: undefined,
+               accept: undefined,
+               kind: undefined,
+               default: undefined,
+               autoComplete: undefined,
+               checked: undefined,
+               formAction: undefined,
+               formEncType: undefined,
+               formMethod: undefined,
+               height: undefined,
+               width: undefined,
+               formNoValidate: undefined,
+               formTarget: undefined,
+               pattern: undefined,
+               step: undefined,
+               multiple: undefined,
+               shape: undefined,
+               coords: undefined,
+               start: undefined,
+          },
+          hooks = {
+               onCreated: undefined,
+               beforeDestroyed: undefined,
+               onDestroyed: undefined,
+               onUpdated: undefined,
+          },
      }) {
           if (!tag) {
                throw "tag cannot be empty";
@@ -98,70 +117,12 @@ class CreateComponent {
 
           // HTML Attributes
           this.tag = tag;
-          this.className = className;
-          this.src = src;
-          this.id = id;
-          this.inlineStyle = inlineStyle;
-          this.style = style;
-          this.value = value;
-          this.alt = alt;
-          this.placeholder = placeholder;
-          this.type = type;
-          this.name = name;
-          this.min = min;
-          this.max = max;
-          this.title = title;
-          this.autofocus = autofocus;
-          this.cols = cols;
-          this.dirname = dirname;
-          this.disabled = disabled;
-          this.form = form;
-          this.maxlength = maxLength;
-          this.readonly = readOnly;
-          this.required = required;
-          this.rows = rows;
-          this.wrap = wrap;
-          this.href = href;
-          this.autoplay = autoplay;
-          this.controls = controls;
-          this.loop = loop;
-          this.muted = muted;
-          this.preload = preload;
-          this.target = target;
-          this.cite = cite;
-          this.span = span;
-          this.list = list;
-          this.datetime = dateTime;
-          this.open = open;
-          this.for = isFor;
-          this.allow = allow;
-          this.allowfullscreen = allowFullScreen;
-          this.allowpaymentrequest = allowPaymentRequest;
-          this.loading = loading;
-          this.referrerpolicy = referrerPolicy;
-          this.sandbox = sandbox;
-          this.srcdoc = srcdoc;
-          this.crossorigin = crossOrigin;
-          this.ismap = isMap;
-          this.longdesc = longDesc;
-          this.sizes = sizes;
-          this.usemap = useMap;
-          this.srcset = srcSet;
-          this.start = start;
-          this.accept = accept;
-          this.autocomplete = autoComplete;
-          this.checked = checked;
-          this.formaction = formAction;
-          this.formenctype = formEncType;
-          this.formmethod = formMethod;
-          this.formnovalidate = formNoValidate;
-          this.formtarget = formTarget;
-          this.multiple = multiple;
-          this.step = step;
-          this.pattern = pattern;
-          this.shape = shape;
-          this.coords = coords;
-          this.minlength = minLength;
+
+          if (className) this.className = className;
+          if (style) this.style = style;
+          if (inlineStyle) this.inlineStyle = inlineStyle;
+
+          initprops(this, props);
 
           // Children
           this.children = [];
@@ -174,11 +135,7 @@ class CreateComponent {
           this.events = events;
 
           // Component Lifecycle
-          this.onCreated = onCreated;
-          this.onDestroyed = onDestroyed;
-          this.onUpdated = onUpdated;
-          this.beforeDestroyed = beforeDestroyed;
-          this.onStateUpdated = onStateUpdated;
+          inithooks(this, hooks);
 
           this.keying();
      }

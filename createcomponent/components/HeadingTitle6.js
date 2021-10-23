@@ -1,30 +1,30 @@
 import CreateComponent from "../CreateComponent.js";
 
 export default ({
-     children,
-     className,
-     id,
+     text,
+     style,
      styleSheet,
+     id,
+     className,
      events,
      renderIf = true,
      onCreated,
      beforeDestroyed,
      onDestroyed,
      onUpdated,
-     onStateUpdated,
-}) => {
-     return new CreateComponent({
-          tag: "span",
-          children,
-          className,
-          id,
-          style: styleSheet,
+}) =>
+     new CreateComponent({
+          tag: "h6",
+          children: text,
+          inlineStyle: style,
+          id: id,
           renderIf,
-          events,
+          className: className,
+          events: events,
+          onCreated,
           onCreated,
           beforeDestroyed,
           onDestroyed,
           onUpdated,
-          onStateUpdated,
+          style: styleSheet,
      });
-};

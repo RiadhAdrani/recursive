@@ -1,14 +1,13 @@
 import CreateComponent from "../CreateComponent.js";
 
 export default ({
-     src,
+     children,
      style,
      styleSheet,
      id,
      className,
      events,
      renderIf = true,
-     alt,
      onCreated,
      beforeDestroyed,
      onDestroyed,
@@ -16,19 +15,18 @@ export default ({
      onStateUpdated,
 }) =>
      new CreateComponent({
-          tag: "img",
-          src: src,
-          renderIf,
+          tag: "option",
+          children: children,
           inlineStyle: style,
-          style: styleSheet,
           id: id,
-          children: [],
+          renderIf,
           className: className,
           events: events,
-          alt: alt,
+          onCreated,
           onCreated,
           beforeDestroyed,
           onDestroyed,
           onUpdated,
           onStateUpdated,
+          style: styleSheet,
      });

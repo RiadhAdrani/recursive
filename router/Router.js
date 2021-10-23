@@ -41,6 +41,11 @@ class Router {
           };
      };
 
+     // TODO
+     addRoute() {
+          throw "Feature is not yet implemented";
+     }
+
      render() {
           return this.current.component();
      }

@@ -1,4 +1,4 @@
-import CreateComponent from "../CreateComponent.js";
+import CreateComponent from "../../CreateComponent.js";
 
 export default ({
      children,
@@ -8,25 +8,19 @@ export default ({
      className,
      events,
      renderIf = true,
-     onCreated,
-     beforeDestroyed,
-     onDestroyed,
-     onUpdated,
-     onStateUpdated,
+     hooks,
+     cols,
+     width,
+     wrap,
 }) =>
      new CreateComponent({
-          tag: "div",
+          tag: "pre",
           children: children,
           inlineStyle: style,
-          id: id,
+          props: { id, cols, width, wrap },
           renderIf,
           className: className,
           events: events,
-          onCreated,
-          onCreated,
-          beforeDestroyed,
-          onDestroyed,
-          onUpdated,
-          onStateUpdated,
+          hooks,
           style: styleSheet,
      });

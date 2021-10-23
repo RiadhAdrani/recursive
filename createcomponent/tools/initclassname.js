@@ -8,6 +8,9 @@ import isvalidclassname from "./isvalidclassname.js";
 export default (component, style) => {
      if (style) {
           if (style.className) {
+               if (!isvalidclassname(style.className)) {
+                    throw `Recursive: invalid classname (${style.className})`;
+               }
                if (!component.className) {
                     component.className = style.className;
                } else {

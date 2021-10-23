@@ -12,15 +12,15 @@ export default (component, children) => {
                for (let i = 0; i < children.length; i++) {
                     if (!children[i]) continue;
                     if (childrentype(children[i])) throw `Recursive: Child cannot be an array`;
-                    if (children[i].$$createcomponent) {
-                         if (children[i].renderIf) {
+                    if (childtype(children[i])) {
+                         if (children[i].renderIf === true) {
                               component.children.push(children[i]);
                          }
                     } else {
                          let textNode = children[i];
 
                          for (let j = i + 1, l = children.length; j < l; j++) {
-                              if (children[j].$$createcomponent) {
+                              if (childtype(children[j])) {
                                    break;
                               } else {
                                    textNode += children[j];
@@ -32,7 +32,7 @@ export default (component, children) => {
                }
           } else {
                if (children.$$createcomponent) {
-                    if (children.renderIf) {
+                    if (children.renderIf === true) {
                          component.children = [children];
                     }
                } else {
