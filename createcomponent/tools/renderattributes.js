@@ -10,6 +10,9 @@ export default (component, render) => {
      function renderAttr(attr) {
           if (component[attr]) {
                render[attr] = component[attr];
+               if (attr === "maxlength") {
+                    console.log({ render });
+               }
           }
      }
 

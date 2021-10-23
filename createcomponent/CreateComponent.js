@@ -24,10 +24,27 @@ class CreateComponent {
           inlineStyle,
           props = {
                id: undefined,
+               optimum: undefined,
+               high: undefined,
+               low: undefined,
+               label: undefined,
+               selected: undefined,
+               acceptCharSet: undefined,
+               action: undefined,
+               encType: undefined,
+               noValidate: undefined,
+               method: undefined,
+               abbreviation: undefined,
+               scope: undefined,
+               size: undefined,
+               spellCheck: undefined,
                value: undefined,
                src: undefined,
                srcLang: undefined,
                alt: undefined,
+               colSpan: undefined,
+               headers: undefined,
+               rowSpan: undefined,
                placeholder: undefined,
                poster: undefined,
                type: undefined,
@@ -57,6 +74,7 @@ class CreateComponent {
                autoplay: undefined,
                controls: undefined,
                dateTime: undefined,
+               data: undefined,
                target: undefined,
                span: undefined,
                loop: undefined,
@@ -132,7 +150,9 @@ class CreateComponent {
           initchildren(this, children);
 
           // Events
-          this.events = events;
+          if (events) {
+               this.events = events;
+          }
 
           // Component Lifecycle
           inithooks(this, hooks);

@@ -1,30 +1,26 @@
-import CreateComponent from "../CreateComponent.js";
+import CreateComponent from "../../CreateComponent.js";
 
 export default ({
      text,
      style,
      styleSheet,
      id,
+     isFor,
+     form,
+     name,
      className,
      events,
      renderIf = true,
-     onCreated,
-     beforeDestroyed,
-     onDestroyed,
-     onUpdated,
+     hooks,
 }) =>
      new CreateComponent({
-          tag: "h6",
           children: text,
+          tag: "optgroup",
           inlineStyle: style,
-          id: id,
           renderIf,
+          props: { id, isFor, form, name },
           className: className,
           events: events,
-          onCreated,
-          onCreated,
-          beforeDestroyed,
-          onDestroyed,
-          onUpdated,
+          hooks,
           style: styleSheet,
      });

@@ -1,5 +1,6 @@
 export default {
      autoFocus: "autofocus",
+     abbreviation: "abbr",
      align: "align",
      alt: "alt",
      allow: "allow",
@@ -8,6 +9,8 @@ export default {
      accept: "accept",
      autoComplete: "autocomplete",
      autoplay: "autoplay",
+     acceptCharSet: "acceptcharset",
+     action: "action",
 
      cols: "cols",
      color: "color",
@@ -16,9 +19,11 @@ export default {
      cite: "cite",
      crossOrigin: "crossorigin",
      coords: "coords",
-
      checked: "checked",
      charSet: "charset",
+     colSpan: "colSpan",
+
+     data: "data",
      dirName: "dirname",
      dir: "dir",
      disabled: "disabled",
@@ -26,6 +31,8 @@ export default {
      download: "download",
      decoding: "decoding",
      default: "default",
+
+     encType: "enctype",
 
      form: "form",
      formAction: "formaction",
@@ -38,6 +45,8 @@ export default {
      href: "href",
      hrefLang: "hreflang",
      height: "height",
+     high: "high",
+     headers: "headers",
 
      id: "id",
      isMap: "ismap",
@@ -48,20 +57,25 @@ export default {
      list: "list",
      loading: "loading",
      longDesc: "longdesc",
+     low: "low",
+     label: "label",
 
      max: "max",
      min: "min",
      media: "media",
-     maxLength: "maxlength",
-     minLength: "minlength",
+     maxLength: "maxLength",
+     minLength: "minLength",
      muted: "muted",
      multiple: "multiple",
+     method: "method",
 
      name: "name",
+     noValidate: "novalidate",
      noWrap: "nowrap",
      noShade: "noshade",
 
      open: "open",
+     optimum: "optimum",
 
      placeholder: "placeholder",
      ping: "ping",
@@ -88,6 +102,10 @@ export default {
      shape: "shape",
      start: "start",
      size: "size",
+     rowSpan: "rowspan",
+     scope: "scope",
+     selected: "selected",
+     spellCheck: "spellcheck",
 
      type: "type",
      title: "title",
