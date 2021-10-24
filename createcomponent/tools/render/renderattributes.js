@@ -1,5 +1,5 @@
-import applyinlinestyle from "./applyinlinestyle.js";
-import attributes from "../../vdom/props/attributes.js";
+import applyinlinestyle from "../applyinlinestyle.js";
+import attributes from "../../../vdom/props/attributes.js";
 
 /**
  * Apply component attributes into the rendered element.
@@ -10,9 +10,6 @@ export default (component, render) => {
      function renderAttr(attr) {
           if (component[attr]) {
                render[attr] = component[attr];
-               if (attr === "maxlength") {
-                    console.log({ render });
-               }
           }
      }
 

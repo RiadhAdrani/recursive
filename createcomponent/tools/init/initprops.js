@@ -1,4 +1,4 @@
-import propstoattributes from "../../vdom/props/propstoattributes.js";
+import propstoattributes from "../../../vdom/props/propstoattributes.js";
 
 /**
  * @param component component to be initi

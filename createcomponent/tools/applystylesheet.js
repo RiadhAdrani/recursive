@@ -16,26 +16,31 @@ export default (component) => {
                     };
                };
 
-               styleselectors.forEach((style) => {
-                    if (component.style[style.prop]) {
-                         if (style.type === "selector") {
-                              vDOM.style.push(
-                                   styleObject(style.name, component.style[`${style.prop}`])
-                              );
-                         }
-                         if (style.type === "animation") {
-                              component.style[style.prop].forEach((animation) => {
+               for (var selector in component.style) {
+                    if (styleselectors[selector]) {
+                         if (styleselectors[selector].type === "animation") {
+                              component.style.animations.forEach((animation) => {
                                    vDOM.animations.push(animation);
                               });
-                         }
-                         if (style.type === "media") {
+                         } else if (styleselectors[selector].type === "media") {
                               vDOM.mediaQueries.push({
-                                   queries: component.style[`${style.prop}`],
+                                   queries: component.style.mediaQueries,
                                    className: component.style.className,
                               });
+                         } else {
+                              vDOM.style.push(
+                                   styleObject(
+                                        styleselectors[selector].name,
+                                        component.style[selector]
+                                   )
+                              );
+                         }
+                    } else {
+                         if (!["className"].includes(selector)) {
+                              console.warn(`[STYLE]: "${selector}" is not a valid selector.`);
                          }
                     }
-               });
+               }
           } else {
                console.warn(
                     "MISSING STYLE CLASS: cannot apply the style without the styleClass. Add className into your component.styleSheet object"

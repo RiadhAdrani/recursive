@@ -1,5 +1,5 @@
-import arraydiff from "./diffing/arraydiff.js";
-import childrentype from "./childrentype.js";
+import arraydiff from "./arraydiff.js";
+import childrentype from "../childrentype.js";
 
 /**
  * Update component's children

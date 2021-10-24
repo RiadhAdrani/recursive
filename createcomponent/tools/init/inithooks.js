@@ -1,4 +1,4 @@
-import hooksList from "../../vdom/props/hooks.js";
+import hooksList from "../../../vdom/props/hooks.js";
 
 /**
  * @param component component to be initi

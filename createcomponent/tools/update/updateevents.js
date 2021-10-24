@@ -1,18 +1,11 @@
-import events from "../../vdom/props/events.js";
-
 /**
  * Update component's Events
- * @param component old component
  * @param newComponent new component
  * @param render rendered htmlElement
  */
 export default (newComponent, render) => {
      function updateEvent(prop) {
-          if (newComponent.events[prop]) {
-               render.events[prop] = newComponent.events[prop];
-          } else {
-               render.events[prop] = () => {};
-          }
+          render.events[prop] = newComponent.events[prop];
      }
 
      if (newComponent.events) {
@@ -20,9 +13,15 @@ export default (newComponent, render) => {
                render.events = {};
           }
 
-          events.forEach((event) => {
-               updateEvent(event.prop);
-          });
+          for (let event in render.events) {
+               if (!newComponent.events[event]) {
+                    render.events[event] = () => {};
+               }
+          }
+
+          for (let event in newComponent.events) {
+               updateEvent(event);
+          }
      } else {
           render.events = {};
      }

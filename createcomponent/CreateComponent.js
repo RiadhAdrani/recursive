@@ -1,17 +1,22 @@
-import applystylesheet from "./tools/applystylesheet.js";
 import findElementByKey from "./tools/findElementByKey.js";
-import initchildren from "./tools/initchildren.js";
+
+import applystylesheet from "./tools/applystylesheet.js";
+
 import keying from "./tools/keying.js";
-import updateattributes from "./tools/updateattributes.js";
-import updatechildren from "./tools/updatechildren.js";
-import updateevents from "./tools/updateevents.js";
-import updatestyle from "./tools/updatestyle.js";
-import renderattributes from "./tools/renderattributes.js";
-import renderevents from "./tools/renderevents.js";
-import renderchildren from "./tools/renderchildren.js";
-import initclassname from "./tools/initclassname.js";
-import initprops from "./tools/initprops.js";
-import inithooks from "./tools/inithooks.js";
+
+import initchildren from "./tools/init/initchildren.js";
+import initclassname from "./tools/init/initclassname.js";
+import initprops from "./tools/init/initprops.js";
+import inithooks from "./tools/init/inithooks.js";
+
+import renderattributes from "./tools/render/renderattributes.js";
+import renderevents from "./tools/render/renderevents.js";
+import renderchildren from "./tools/render/renderchildren.js";
+
+import updateattributes from "./tools/update/updateattributes.js";
+import updatechildren from "./tools/update/updatechildren.js";
+import updateevents from "./tools/update/updateevents.js";
+import updatestyle from "./tools/update/updatestyle.js";
 
 class CreateComponent {
      constructor({

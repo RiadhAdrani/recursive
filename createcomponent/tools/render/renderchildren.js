@@ -1,5 +1,5 @@
-import childrentype from "./childrentype.js";
-import childtype from "./childtype.js";
+import childrentype from "../childrentype.js";
+import childtype from "../childtype.js";
 
 /**
  * Render children into the htmlElement
