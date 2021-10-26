@@ -1,4 +1,4 @@
-import applyinlinestyle from "../applyinlinestyle.js";
+import applyinlinestyle from "../applystyle/applyinlinestyle.js";
 import attributes from "../../../vdom/props/attributes.js";
 
 /**

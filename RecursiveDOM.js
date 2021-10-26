@@ -1,7 +1,24 @@
 import SetState from "./vdom/SetState.js";
 import handlecss from "./vdom/tools/handlecss.js";
+import CreateComponent from "./createcomponent/CreateComponent.js";
 
-class VDOM {
+/**
+ * ## RecursiveDOM
+ * The heart of the Recursive library that play the role of the VDOM
+ * (Virtual Document Object Model)
+ * and the CSSOM (Cascading Style Sheet Object Model).
+ * @global The VDOM will be injected automatically in the `window` object.
+ * @see{@link CreateComponent}
+ */
+class RecursiveDOM {
+     /**
+      * @constructor
+      * @param {Object} params deconstructed paramaters
+      * @param {Function} params.appFunction application UI tree
+      * @param {HTMLElement} params.root html element that will host the app
+      * @param {HTMLElement} params.styleRoot style tag that will host the app style.
+      * @param {boolean} params.devMode allow infos about the state of tbe app to be logged into the console.
+      */
      constructor({ appFunction, root, styleRoot, devMode = false }) {
           this.app = () => {
                return appFunction();
@@ -22,8 +39,19 @@ class VDOM {
           window.vDOM = this;
      }
 
+     /**
+      * Initialize a stateful object
+      * @param {any} value initial value
+      * @returns stateful object
+      * @function
+      * @see {@link SetState}
+      */
      static setState = (value) => new SetState(value);
 
+     /**
+      * Render the app
+      * @function
+      */
      render() {
           const startTime = new Date().getTime();
 
@@ -53,6 +81,11 @@ class VDOM {
                console.log(`First render done in ${new Date().getTime() - startTime}ms`);
      }
 
+     /**
+      * Update the UI whenever a stateful object has been modified using the `setValue` method.
+      * @see {@link SetState.setValue}
+      * @function
+      */
      update() {
           const startTime = new Date().getTime();
 
@@ -86,4 +119,4 @@ class VDOM {
      }
 }
 
-export default VDOM;
+export default RecursiveDOM;

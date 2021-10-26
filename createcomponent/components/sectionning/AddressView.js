@@ -1,14 +1,27 @@
 import CreateComponent from "../../CreateComponent.js";
 
-export default ({ children, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
-     new CreateComponent({
+/**
+ * ## AddressView `<address>`
+ * *from MDN Docs*
+ * ### The Contact Address element
+ * The `address` HTML element indicates that the enclosed HTML provides contact information for a person or people, or for an organization.
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address
+ */
+export default (
+     param = {
+          children: "",
+          style: {},
+          styleSheet: {},
+          id: "",
+          className: "",
+          events: {},
+          renderIf: true,
+          hooks: {},
+     }
+) => {
+     return new CreateComponent({
           tag: "address",
-          children: children,
-          inlineStyle: style,
-          renderIf,
-          props: { id },
-          className: className,
-          events: events,
-          hooks,
-          style: styleSheet,
+          ...param,
+          props: { id: param.id },
      });
+};

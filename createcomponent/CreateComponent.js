@@ -1,6 +1,6 @@
 import findElementByKey from "./tools/findElementByKey.js";
 
-import applystylesheet from "./tools/applystylesheet.js";
+import applystylesheet from "./tools/applystyle/applystylesheet.js";
 
 import keying from "./tools/keying.js";
 
@@ -18,7 +18,31 @@ import updatechildren from "./tools/update/updatechildren.js";
 import updateevents from "./tools/update/updateevents.js";
 import updatestyle from "./tools/update/updatestyle.js";
 
+import RecursiveDOM from "../RecursiveDOM.js";
+
+/**
+ * ## CreateComponent
+ * Create Web Components for the RecursiveDOM.
+ * @see {@link RecursiveDOM}
+ */
 class CreateComponent {
+     /**
+      * Initiate a new component
+      * @param {Object} param
+      * @param {string} param.tag "Html tag"
+      * @param {Array} param.children an array of children. A child can be of type `CreateComponent`, `string`, `boolean`, `number`. `null` value will be ignored.
+      * @param {JSON} param.events event handlers.
+      * @param {boolean} param.renderIf determine if the component should be rendered or not.
+      * @param {string} param.className the equivalent of html classes
+      * @param {JSON} param.style external style sheet
+      * @param {JSON} param.inlineStyle component inline style
+      * @param {JSON} param.props the equivalent of html attributes
+      * @param {JSON} param.hooks define lifecycle methods for the component.
+      * @param {Function} param.hooks.onCreated executes when the component is rendered in the DOM.
+      * @param {Function} param.hooks.onUpdated executes when the component has been partially changed.
+      * @param {Function} param.hooks.onDestroyed executes when the component has been destroyed.
+      * @param {Function} param.hooks.beforeDestroyed executed before the component get destroyed.
+      */
      constructor({
           tag,
           children,

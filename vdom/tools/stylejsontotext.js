@@ -1,4 +1,4 @@
-import csstotext from "../../createcomponent/tools/csstotext.js";
+import csstotext from "./csstotext.js";
 import animationtotext from "./animationtotext.js";
 import mediatotext from "./mediatotext.js";
 import handlemediaqueries from "./handlemediaqueries.js";

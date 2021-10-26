@@ -1,4 +1,4 @@
-import csstotext from "../../createcomponent/tools/csstotext.js";
+import csstotext from "./csstotext.js";
 
 /**
  * Convert an animation json into css format.
