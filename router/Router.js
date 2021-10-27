@@ -57,6 +57,12 @@ class Router {
                     this.stack.push(this.current);
                     this.current.onExit();
                     this.current = r;
+                    if (r.title) {
+                         const titleTag = document.getElementsByTagName("title");
+                         if (titleTag[0]) {
+                              titleTag[0].innerHTML = r.title;
+                         }
+                    }
                     vDOM.update();
                     this.current.onLoad();
                     return;
