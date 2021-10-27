@@ -1,5 +1,13 @@
 import isvalidclassname from "../isvalidclassname.js";
 
+function InvalidClassName(className, message) {
+     throw (() => {
+          const error = new Error(`${className} ${message}`);
+          error.name = "STYLE";
+          return error;
+     })();
+}
+
 /**
  * Add style className to the classList
  * @param component CreateComponent
@@ -10,10 +18,7 @@ export default (component, style) => {
      if (style) {
           // check if className is valid
           if (style.className) {
-               if (!isvalidclassname(style.className)) {
-                    throw `[STYLE]: invalid classname (${style.className})`;
-               }
-
+               isvalidclassname(style.className);
                if (!component.className) {
                     component.className = style.className;
                } else {
@@ -25,8 +30,7 @@ export default (component, style) => {
      if (component.className) {
           const classList = component.className.split(" ");
           for (var i = 0, j = classList.length; i < j; i++) {
-               if (!isvalidclassname(classList[i]))
-                    throw `[STYLE]: invalid classname (${classList[i]})`;
+               isvalidclassname(classList[i]);
           }
      }
 };

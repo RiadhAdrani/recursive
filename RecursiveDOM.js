@@ -19,11 +19,11 @@ class RecursiveDOM {
       * @param {HTMLElement} params.styleRoot style tag that will host the app style.
       * @param {boolean} params.devMode allow infos about the state of tbe app to be logged into the console.
       */
-     constructor({ appFunction, root, styleRoot, devMode = false }) {
+     constructor({ app, root, styleRoot, devMode = false }) {
           this.app = () => {
-               return appFunction();
+               return app();
           };
-          this.oldRender = appFunction();
+          this.oldRender = app();
 
           this.style = [];
           this.animations = [];
@@ -49,8 +49,18 @@ class RecursiveDOM {
      static setState = (value) => new SetState(value);
 
      /**
+      * init the Recursive DOM
+      * @param {Object} params deconstructed paramaters
+      * @param {HTMLElement} params.root html element that will host the app
+      * @param {HTMLElement} params.styleRoot style tag that will host the app style.
+      */
+     static init(root, styleRoot) {
+          window.vDOM = new RecursiveDOM({ root, styleRoot, app: () => {} });
+          window.setState = this.setState;
+     }
+
+     /**
       * Render the app
-      * @function
       */
      render() {
           const startTime = new Date().getTime();

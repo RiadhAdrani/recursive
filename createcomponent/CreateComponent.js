@@ -19,6 +19,7 @@ import updateevents from "./tools/update/updateevents.js";
 import updatestyle from "./tools/update/updatestyle.js";
 
 import RecursiveDOM from "../RecursiveDOM.js";
+import initevents from "./tools/init/initevents.js";
 
 /**
  * ## CreateComponent
@@ -153,8 +154,13 @@ class CreateComponent {
                onUpdated: undefined,
           },
      }) {
+          // tag cannot be
           if (!tag) {
-               throw "tag cannot be empty";
+               throw (() => {
+                    const error = new Error(`component tag cannot be empty.`);
+                    error.name = "CREATE-COMPONENT";
+                    return error;
+               })();
           }
 
           // CreateComponent specific props
@@ -179,9 +185,8 @@ class CreateComponent {
           initchildren(this, children);
 
           // Events
-          if (events) {
-               this.events = events;
-          }
+          this.events = {};
+          initevents(this, events);
 
           // Component Lifecycle
           inithooks(this, hooks);
