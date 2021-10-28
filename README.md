@@ -1,4 +1,4 @@
-# [Project : Recursive](https://reactjs.org/)
+# [Project : Recursive](https://riadhadrani.github.io/recursive-website/)
 
 Project Recursive is an ongoing project to build a functional, component-based, Javascript only tool to build beautiful and interactive Web applications.
 
