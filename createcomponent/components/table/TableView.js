@@ -1,5 +1,13 @@
 import CreateComponent from "../../CreateComponent.js";
 
+/**
+ * ## TableView `<table>`
+ * *from MDN Docs*
+ * ### The Table element
+ * The ``<table>`` HTML element represents tabular data — that is,
+ * information presented in a two-dimensional table comprised of rows and columns of cells containing data.
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table
+ */
 export default ({ children, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
      new CreateComponent({
           children,
