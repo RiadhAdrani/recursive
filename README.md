@@ -1,12 +1,12 @@
 # [Project : Recursive](https://riadhadrani.github.io/recursive-website/)
 
-Project Recursive is an ongoing project to build a functional, component-based, Javascript only tool to build beautiful and interactive Web applications.
+Project Recursive is an ongoing project to build a functional, component-based, Javascript only, beautiful and interactive Web applications.
 
 ## Installation & Getting Started
 
-Drag and drop this repo into your working directory, where your index.js is located, and import the library, your
+Drag and drop this repo into your working directory, where your `index.js` is located, and import the library, and make the changes needed so your `index.html` looks like this :
 
-```js
+```html
 <!DOCTYPE html>
 <html lang="en">
      <head>
@@ -14,10 +14,8 @@ Drag and drop this repo into your working directory, where your index.js is loca
 
           // Style will be injected here
           <style id="app-style"></style>
-
      </head>
      <body>
-
           // UI will be injected here
           <div id="app"></div>
 
@@ -32,12 +30,11 @@ Drag and drop this repo into your working directory, where your index.js is loca
 
           // This is your starting point
           <script src="index.js" type="module"></script>
-
      </body>
 </html>
 ```
 
-Now, in your `index.js`:
+Now, in `index.js`:
 
 ```js
 import App from "./App.js";
@@ -46,17 +43,34 @@ vDOM.app = () => App();
 vDOM.render();
 ```
 
-in `App.js`, start the party :)
+in `App.js`, we will write our "Hello World" app:
 
 ```js
 import ParagraphView from "./recursivejs/createcomponent/components/text/ParagraphView.js";
 
-export default () => {
-     return ParagraphView({ text: "Hello World" });
-};
+export default () =>
+     ButtonView({
+          text: "Say 'Hello World'",
+          style: {
+               color: "white",
+               backgroundColor: "red",
+               textAlign: "center",
+               fontSize: "2em",
+               padding: "10px",
+               alignSelf: "center",
+               margin: "auto",
+          },
+          events: {
+               onClick: () => {
+                    alert("Hello World");
+               },
+          },
+     });
 ```
 
-And that's it ! Your "Hello World" app using Project:Recursive, You should start creating your Facebook or Youtube clone now !
+The code above will render a red button containing a white text "Say'Hello World'" that will display an alert saying "Hello World".
+
+And that's it for your first app! You should be on your way to create the new Facebook or Youtube !
 
 ## Documentation
 
