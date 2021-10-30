@@ -1,13 +1,5 @@
 import isvalidclassname from "../isvalidclassname.js";
 
-function InvalidClassName(className, message) {
-     throw (() => {
-          const error = new Error(`${className} ${message}`);
-          error.name = "STYLE";
-          return error;
-     })();
-}
-
 /**
  * Add style className to the classList
  * @param component CreateComponent

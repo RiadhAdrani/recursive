@@ -1,11 +1,10 @@
 import hooksList from "../../../vdom/props/hooks.js";
 
 function InvalidHook(hook, message) {
-     throw (() => {
-          const error = new Error(`${hook} ${message}`);
-          error.name = "HOOKS";
-          return error;
-     })();
+     const error = new Error(`${hook} ${message}`);
+     error.name = "HOOKS";
+     console.warn(`${hook} ${message}`);
+     throw error;
 }
 
 /**

@@ -35,8 +35,6 @@ class RecursiveDOM {
           this.styleRoot = styleRoot;
 
           this.devMode = devMode;
-
-          window.vDOM = this;
      }
 
      /**
@@ -79,8 +77,6 @@ class RecursiveDOM {
                     this.styleRoot,
                     this.sst
                );
-
-               this.oldRender.stateUpdated();
           } catch (e) {
                if (e.name === "RangeError") {
                     throw `VDOM : infinite Rerendering : Make sure to update state only when needed.`;
@@ -121,6 +117,8 @@ class RecursiveDOM {
           } catch (e) {
                if (e.name === "RangeError") {
                     throw `VDOM : infinite Rerendering : Make sure to update state only when needed.`;
+               } else {
+                    throw e;
                }
           }
 

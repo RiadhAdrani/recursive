@@ -5,6 +5,7 @@ function InvalidEvent(event, message) {
      throw (() => {
           const error = new Error(`${event} ${message}`);
           error.name = "EVENTS";
+          `${event} ${message}`;
           return error;
      })();
 }

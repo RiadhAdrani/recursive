@@ -17,7 +17,10 @@ export default (component, children) => {
                     if (children[i] === null) continue;
 
                     // throw an error if a child is an array
-                    if (childrentype(children[i])) throw `[RENDER]: Child cannot be an array`;
+                    if (childrentype(children[i])) {
+                         console.log("Child cannot be an array");
+                         throw `[RENDER]: Child cannot be an array`;
+                    }
 
                     // if child is a component.
                     if (childtype(children[i])) {
