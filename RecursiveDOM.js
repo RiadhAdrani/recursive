@@ -80,6 +80,8 @@ class RecursiveDOM {
           } catch (e) {
                if (e.name === "RangeError") {
                     throw `VDOM : infinite Rerendering : Make sure to update state only when needed.`;
+               } else {
+                    console.error(e);
                }
           }
 

@@ -8,6 +8,7 @@ import initchildren from "./tools/init/initchildren.js";
 import initclassname from "./tools/init/initclassname.js";
 import initprops from "./tools/init/initprops.js";
 import inithooks from "./tools/init/inithooks.js";
+import initevents from "./tools/init/initevents.js";
 
 import renderattributes from "./tools/render/renderattributes.js";
 import renderevents from "./tools/render/renderevents.js";
@@ -17,9 +18,6 @@ import updateattributes from "./tools/update/updateattributes.js";
 import updatechildren from "./tools/update/updatechildren.js";
 import updateevents from "./tools/update/updateevents.js";
 import updatestyle from "./tools/update/updatestyle.js";
-
-import RecursiveDOM from "../RecursiveDOM.js";
-import initevents from "./tools/init/initevents.js";
 
 /**
  * ## CreateComponent
@@ -251,11 +249,22 @@ class CreateComponent {
                newComponent.inlineStyle
           );
 
+          // update class names
+          if (this.className !== newComponent.className) {
+               if (newComponent.className) {
+                    htmlElement.className = newComponent.className;
+               } else {
+                    htmlElement.className = "";
+               }
+          }
+
           // update attributes
           const attributesDidUpdate = updateattributes(this, newComponent, htmlElement);
 
+          // update children
           const childrenDidChange = updatechildren(this, newComponent, htmlElement);
 
+          // check if there is any change
           didUpdate =
                inlineStyleDidUpdate || attributesDidUpdate || childrenDidChange ? true : false;
 
