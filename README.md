@@ -1,4 +1,4 @@
-# [Project : Recursive](https://riadhadrani.github.io/recursive-website/)
+# [Project : Recursive || "Kompose" in the making](https://riadhadrani.github.io/recursive-website/)
 
 Project Recursive is an ongoing project to build a functional, component-based, Javascript only, beautiful and interactive Web applications.
 
@@ -20,18 +20,20 @@ Drop this repo into your working directory, where your `index.js` is located, an
           <div id="app"></div>
 
           // Initializing global variables and methods
-          <script type="module">
-               import RecursiveDOM from "./recursivejs/RecursiveDOM.js";
-               RecursiveDOM.init(
-                    document.getElementById("app"),
-                    document.getElementById("app-style")
-               );
-          </script>
+          <script src="init.js" type="module"></script>
 
           // This is your starting point
           <script src="index.js" type="module"></script>
      </body>
 </html>
+```
+
+In `init.js`, we will initiate the Virtual DOM:
+
+```js
+import RecursiveDOM from "./recursivejs/RecursiveDOM.js";
+
+RecursiveDOM.init(document.getElementById("app"), document.getElementById("app-style"));
 ```
 
 Now, in `index.js`:
@@ -43,7 +45,7 @@ vDOM.app = () => App();
 vDOM.render();
 ```
 
-in `App.js`, we will write our "Hello World" app:
+Finally, in `App.js`, we will write our "Hello World" app:
 
 ```js
 import ButtonView from "./recursivejs/createcomponent/components/forms/ButtonView.js";
@@ -556,12 +558,16 @@ ButtonView({
 });
 ```
 
-`onCreated` hook will display `the buttpn was created` in the console.
+`onCreated` hook will display `the button was created` in the console.
+
+#### Something to consider
+
+While working with `hooks`, you should avoid calling `setValue` from any stateful object, it could lead to an infinite loop, you won't like it and neither do the Browser.
 
 ## Documentation
 
-Website is under construction.
+[Website is under construction](https://riadhadrani.github.io/recursive-website/)
 
 ## Examples
 
-Coming soon ...
+[Coming soon ...](https://riadhadrani.github.io/recursive-website/)
