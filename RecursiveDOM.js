@@ -68,7 +68,7 @@ class RecursiveDOM {
                this.root.innerHTML = "";
                this.root.append(newRender.render());
                this.oldRender = newRender;
-               this.oldRender.created();
+               this.oldRender.$onCreated();
                this.oldRender.addExternalStyle();
                this.sst = handlecss(
                     this.style,
@@ -124,7 +124,6 @@ class RecursiveDOM {
                }
           }
 
-          this.oldRender.stateUpdated();
           if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
      }
 }

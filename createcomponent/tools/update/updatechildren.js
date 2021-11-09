@@ -1,5 +1,6 @@
 import arraydiff from "./arraydiff.js";
 import childrentype from "../childrentype.js";
+import childtype from "../childtype.js";
 
 /**
  * Update component's children
@@ -20,8 +21,8 @@ export default (component, newComponent, render) => {
      else if (!component.children && newComponent.children) {
           newComponent.children.forEach((child) => {
                render.append(child.render ? child.render() : child);
-               if (child.$$createcomponent) {
-                    child.onCreated();
+               if (childtype(child)) {
+                    child.$onCreated();
                }
           });
           return true;
@@ -33,69 +34,69 @@ export default (component, newComponent, render) => {
                return true;
           }
      }
-     // case children is string, new is child
-     else if (!childrentype(component.children) && newComponent.children.$$createcomponent) {
+     // case children is string, new is component
+     else if (!childrentype(component.children) && childtype(newComponent.children)) {
           render.replaceChildren(newComponent.children.render());
-          children.created();
+          children.$onCreated();
           return true;
      }
      // case children is child, new is string
-     else if (component.children.$$createcomponent && typeof !childrentype(newComponent.children)) {
-          component.children.onBeforeDestroyed();
+     else if (childtype(component.children) && typeof !childrentype(newComponent.children)) {
+          component.children.$beforeDestroyed();
           render.replaceChildren(newComponent.children);
-          component.children.destroyed();
+          component.children.$onDestroyed();
           return true;
      }
      // case children is string, new is children
      else if (!childrentype(component.children) && Array.isArray(newComponent.children)) {
-          component.onBeforeDestroyed();
+          component.$beforeDestroyed();
           render.replaceChildren(
                newComponent.children.map((child) => (child.render ? child.render() : child))
           );
-          newComponent.created();
-          component.destroyed();
+          newComponent.$onCreated();
+          component.$onDestroyed();
           return true;
      }
      // case children is children, new is string
      else if (Array.isArray(component.children) && !childrentype(newComponent.children)) {
-          component.children.onBeforeDestroyed();
+          component.children.$beforeDestroyed();
           render.replaceChildren(newComponent.children);
-          component.children.destroyed();
+          component.children.$onDestroyed();
           return true;
      }
      // case children is child, new is child
-     else if (component.children.$$createcomponent && newComponent.children.$$createcomponent) {
+     else if (childtype(component.children) && childtype(newComponent.children)) {
           return component.children.update(newComponent.children);
      }
      // case children is child, new is children
-     else if (component.children.$$createcomponent && Array.isArray(newComponent.children)) {
-          component.children.onBeforeDestroyed();
+     else if (childtype(component.children) && Array.isArray(newComponent.children)) {
+          component.children.$beforeDestroyed();
 
           render.replaceChildren(newComponent.render().innerHTML);
           newComponent.children.forEach((child) => {
-               if (child.$$createcomponent) {
-                    child.created();
+               if (childtype(child)) {
+                    child.$onCreated();
                }
           });
 
-          component.children.destroyed();
+          component.children.$onDestroyed();
           return true;
      }
      // case children is children, new is child
      else if (Array.isArray(component.children) && newComponent.children.$$createcomponent) {
           component.children.forEach((child) => {
-               if (child.$$createcomponent) {
-                    child.onBeforeDestroyed();
+               if (childtype(child)) {
+                    child.$beforeDestroyed();
                }
           });
 
           render.replaceChildren(newComponent.children.render());
 
-          newComponent.chilren.created();
+          newComponent.chilren.$onCreated();
 
           component.children.forEach((child) => {
-               if (child.destroyed) {
-                    child.destroyed();
+               if (childtype(child)) {
+                    child.$onDestroyed();
                }
           });
 
@@ -111,12 +112,11 @@ export default (component, newComponent, render) => {
           else if (component.children.length > newComponent.children.length) {
                let i = newComponent.children.length;
                while (render.childNodes.length > newComponent.children.length) {
-                    if (component.children[i].onBeforeDestroyed)
-                         component.children[i].onBeforeDestroyed();
+                    if (childtype(component.children[i])) component.children[i].$beforeDestroyed();
 
                     render.childNodes.item(i).remove();
 
-                    if (component.children[i].destroyed) component.children[i].destroyed();
+                    if (childtype(component.children[i])) component.children[i].$onDestroyed();
                }
 
                component.children = [...component.children.slice(0, newComponent.children.length)];
@@ -136,8 +136,8 @@ export default (component, newComponent, render) => {
                const n = newComponent.children.slice(x, newComponent.children.length);
 
                n.forEach((child) => {
-                    render.append(child.render ? child.render() : child);
-                    if (child.created) child.created();
+                    render.append(childtype(child) ? child.render() : child);
+                    if (childtype(child)) child.$onCreated();
                });
 
                arraydiff(component, newComponent, render);

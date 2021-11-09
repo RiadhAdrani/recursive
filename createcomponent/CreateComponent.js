@@ -221,21 +221,21 @@ class CreateComponent {
 
           // check if the element to compare with is a string
           if (typeof newComponent === "string") {
-               this.onBeforeDestroyed();
+               this.$beforeDestroyed();
                htmlElement.replaceWith(newComponent);
-               this.onDestroyed();
+               this.$onDestroyed();
                return;
           }
 
           // check if the elements have the same tag
           if (this.tag !== newComponent.tag) {
                // Execute Lifecycle Method
-               this.onBeforeDestroyed();
+               this.$beforeDestroyed();
                htmlElement.replaceWith(newComponent.render());
-               newComponent.created();
+               newComponent.$onCreated();
 
                // Execute Lifecycle Method
-               this.destroyed();
+               this.$onDestroyed();
                return;
           }
 
@@ -269,7 +269,7 @@ class CreateComponent {
                inlineStyleDidUpdate || attributesDidUpdate || childrenDidChange ? true : false;
 
           // Execute update lifecycle method
-          if (didUpdate) this.updated(this, newComponent);
+          if (didUpdate) this.$onUpdated(this, newComponent);
 
           return didUpdate;
      }
@@ -280,41 +280,30 @@ class CreateComponent {
      }
 
      // execute onUpdate lifecycle method
-     updated() {
-          if (this.onUpdated) this.onUpdated();
+     $onUpdated(oldComponent, newComponent) {
+          if (this.onUpdated) this.onUpdated(oldComponent, newComponent);
      }
 
      // execute onCreated lifecycle methid
-     created() {
+     $onCreated() {
           if (this.onCreated) this.onCreated();
 
           if (this.children) {
                this.children.forEach((child) => {
                     if (child.$$createcomponent) {
-                         child.created();
-                    }
-               });
-          }
-     }
-
-     stateUpdated() {
-          if (this.onStateUpdated) this.onStateUpdated();
-          if (this.children) {
-               this.children.forEach((child) => {
-                    if (child.$$createcomponent) {
-                         child.stateUpdated();
+                         child.$onCreated();
                     }
                });
           }
      }
 
      // execute onDestroyed lifecycle method
-     destroyed() {
+     $onDestroyed() {
           if (this.onDestroyed) this.onDestroyed();
      }
 
      // execute beforedestroyed lifecycle method
-     onBeforeDestroyed() {
+     $beforeDestroyed() {
           if (this.beforeDestroyed) this.beforeDestroyed();
      }
 

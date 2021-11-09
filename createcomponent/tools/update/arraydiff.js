@@ -24,24 +24,18 @@ export default (component, newComponent, render) => {
                }
           }
           // case children is string, new is child
-          else if (
-               !component.children[i].$$createcomponent &&
-               newComponent.children[i].$$createcomponent
-          ) {
+          else if (!childtype(component.children[i]) && childtype(newComponent.children[i])) {
                render.childNodes.forEach((child, key) => {
                     if (key == i) {
                          child.replaceWith(newComponent.children[i].render());
-                         newComponent.children[i].created();
+                         newComponent.children[i].$onCreated();
                     }
                });
                dupdate();
           }
           // case children is child, new is string
-          else if (
-               component.children[i].$$createcomponent &&
-               !newComponent.children[i].$$createcomponent
-          ) {
-               component.children[i].onBeforeDestroyed();
+          else if (childtype(component.children[i]) && childtype(!newComponent.children[i])) {
+               component.children[i].$beforeDestroyed();
 
                render.childNodes.forEach((child, key) => {
                     if (key == i) {
@@ -49,7 +43,7 @@ export default (component, newComponent, render) => {
                     }
                });
 
-               component.children[i].destroyed();
+               component.children[i].$onDestroyed();
                dupdate();
           }
           // case children is child, new is child
