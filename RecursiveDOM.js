@@ -55,6 +55,7 @@ class RecursiveDOM {
      static init(root, styleRoot) {
           window.vDOM = new RecursiveDOM({ root, styleRoot, app: () => {} });
           window.setState = this.setState;
+          window.updateAfter = SetState.updateAfter;
      }
 
      /**

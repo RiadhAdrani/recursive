@@ -24,6 +24,13 @@ class SetState {
           this.value = newVal;
           vDOM.update();
      }
+
+     static updateAfter(actions) {
+          try {
+               actions();
+               vDOM.update();
+          } catch (e) {}
+     }
 }
 
 export default SetState;
