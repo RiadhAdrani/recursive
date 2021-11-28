@@ -1,6 +1,8 @@
 import SetState from "./vdom/SetState.js";
 import handlecss from "./vdom/tools/handlecss.js";
 import CreateComponent from "./createcomponent/CreateComponent.js";
+import staticcsshandler from "./vdom/tools/staticcsstotext.js";
+import handleevents from "./vdom/tools/handleevents.js";
 
 /**
  * ## RecursiveDOM
@@ -19,7 +21,7 @@ class RecursiveDOM {
       * @param {HTMLElement} params.styleRoot style tag that will host the app style.
       * @param {boolean} params.devMode allow infos about the state of tbe app to be logged into the console.
       */
-     constructor({ app, root, styleRoot, devMode = false }) {
+     constructor({ app, root, styleRoot, staticStyle, staticStyleRoot, events, devMode = false }) {
           this.app = () => {
                return app();
           };
@@ -29,9 +31,11 @@ class RecursiveDOM {
           this.animations = [];
           this.mediaQueries = [];
           this.sst = "";
+          this.staticStyle = staticStyle;
+          this.events = events;
 
           this.root = root;
-
+          this.staticStyleRoot = staticStyleRoot;
           this.styleRoot = styleRoot;
 
           this.devMode = devMode;
@@ -51,9 +55,15 @@ class RecursiveDOM {
       * @param {Object} params deconstructed paramaters
       * @param {HTMLElement} params.root html element that will host the app
       * @param {HTMLElement} params.styleRoot style tag that will host the app style.
+      * @param {HTMLElement} params.staticStyleRoot style tag that will host the static app style.
       */
-     static init(root, styleRoot) {
-          window.vDOM = new RecursiveDOM({ root, styleRoot, app: () => {} });
+     static init(root, styleRoot, staticStyleRoot) {
+          window.vDOM = new RecursiveDOM({
+               root,
+               styleRoot,
+               staticStyleRoot: staticStyleRoot,
+               app: () => {},
+          });
           window.setState = this.setState;
           window.updateAfter = SetState.updateAfter;
      }
@@ -67,9 +77,9 @@ class RecursiveDOM {
           try {
                const newRender = this.app();
                this.root.innerHTML = "";
+               handleevents(this.events);
                this.root.append(newRender.render());
                this.oldRender = newRender;
-               this.oldRender.$onCreated();
                this.oldRender.addExternalStyle();
                this.sst = handlecss(
                     this.style,
@@ -78,6 +88,8 @@ class RecursiveDOM {
                     this.styleRoot,
                     this.sst
                );
+               this.staticStyleRoot.innerHTML = staticcsshandler(this.staticStyle);
+               this.oldRender.$onCreated();
           } catch (e) {
                if (e.name === "RangeError") {
                     throw `VDOM : infinite Rerendering : Make sure to update state only when needed.`;
@@ -102,9 +114,7 @@ class RecursiveDOM {
                this.renderState = true;
                const newRender = this.app();
                this.oldRender.update(newRender);
-
                this.oldRender = newRender;
-
                this.style = [];
                this.animations = [];
                this.mediaQueries = [];
