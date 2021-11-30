@@ -19,7 +19,7 @@ Drop this repo into your working directory, where your `index.js` is located, an
           // UI will be injected here
           <div id="app"></div>
 
-          // Initializing global variables and methods // Initializing global variables and methods
+          // Initializing global variables and methods //
           <script src="init.js" type="module"></script>
 
           // This is your starting point

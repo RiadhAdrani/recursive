@@ -14,7 +14,7 @@ export default (component, style) => {
                if (!component.className) {
                     component.className = style.className;
                } else {
-                    component.className = `${className} ${style.className}`;
+                    component.className = `${component.className} ${style.className}`;
                }
           }
      }
