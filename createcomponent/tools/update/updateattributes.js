@@ -11,24 +11,24 @@ export default (component, newComponent, render) => {
      let didUpdate = false;
 
      function updateAttr(attr) {
-          if (newComponent[attr]) {
-               render[attr] = newComponent[attr];
+          if (newComponent.props[attr]) {
+               render[attr] = newComponent.props[attr];
           } else {
                render[attr] = "";
           }
           didUpdate = true;
      }
 
-     for (let prop in newComponent) {
+     for (let prop in newComponent.props) {
           if (attributes[prop]) {
-               if (component[prop] !== newComponent[prop]) {
+               if (component.props[prop] !== newComponent.props[prop]) {
                     updateAttr(prop);
                }
           }
      }
 
      for (let prop in component) {
-          if (attributes[prop] && !newComponent[prop]) {
+          if (attributes[prop] && !newComponent.props[prop]) {
                render[prop] = "";
           }
      }

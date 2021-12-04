@@ -7,18 +7,9 @@ import attributes from "../../../vdom/props/attributes.js";
  * @param render htmlElement
  */
 export default (component, render) => {
-     function renderAttr(attr) {
-          if (component[attr]) {
-               render[attr] = component[attr];
-          }
+     for (let p in component.props) {
+          render[attributes[p]] = component.props[p];
      }
-
-     attributes.forEach((attr) => {
-          if (attr === "id") {
-               console.log(component.id);
-          }
-          renderAttr(attr);
-     });
 
      if (component.inlineStyle) {
           applyinlinestyle(component.inlineStyle, render.style);

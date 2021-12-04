@@ -1,5 +1,3 @@
-import findElementByKey from "./tools/findElementByKey.js";
-
 import applystylesheet from "./tools/applystyle/applystylesheet.js";
 
 import keying from "./tools/keying.js";
@@ -82,12 +80,13 @@ class CreateComponent {
           if (style) this.style = style;
           if (inlineStyle) this.inlineStyle = inlineStyle;
 
-          initprops(this, props);
+          initclassname(this, style);
+
+          this.props = {};
+          initprops(this, { ...props, className: this.className });
 
           // Children
           this.children = [];
-
-          initclassname(this, style);
 
           initchildren(this, children);
 

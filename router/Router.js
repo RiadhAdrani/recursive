@@ -14,6 +14,9 @@ class Router {
 
           window.addEventListener("popstate", (e) => {
                if (this.stack.length === 1) {
+                    // scroll to top
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+
                     this.current = routes[0];
                     vDOM.update();
                     return;
@@ -64,6 +67,9 @@ class Router {
                          }
                     }
                     vDOM.update();
+
+                    // scroll to top
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                     this.current.onLoad();
                     return;
                }
