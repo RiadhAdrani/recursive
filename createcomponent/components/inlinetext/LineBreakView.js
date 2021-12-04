@@ -8,7 +8,7 @@ import CreateComponent from "../../CreateComponent.js";
  * It is useful for writing a poem or an address, where the division of lines is significant.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/br
  */
-export default ({ style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({ style, styleSheet, id, className, events, renderIf = true, hooks, flags }) =>
      new CreateComponent({
           tag: "br",
           inlineStyle: style,
@@ -18,4 +18,5 @@ export default ({ style, styleSheet, id, className, events, renderIf = true, hoo
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

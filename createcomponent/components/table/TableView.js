@@ -8,7 +8,17 @@ import CreateComponent from "../../CreateComponent.js";
  * information presented in a two-dimensional table comprised of rows and columns of cells containing data.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table
  */
-export default ({ children, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     children,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     flags,
+     hooks,
+}) =>
      new CreateComponent({
           children,
           tag: "table",
@@ -19,4 +29,5 @@ export default ({ children, style, styleSheet, id, className, events, renderIf =
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

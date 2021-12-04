@@ -10,7 +10,17 @@ import CreateComponent from "../../CreateComponent.js";
  * using its default monospace font, although this is not mandated by the HTML standard.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd
  */
-export default ({ text, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     text,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     hooks,
+     flags,
+}) =>
      new CreateComponent({
           tag: "kdb",
           children: text,
@@ -21,4 +31,5 @@ export default ({ text, style, styleSheet, id, className, events, renderIf = tru
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

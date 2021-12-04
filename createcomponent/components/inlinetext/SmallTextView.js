@@ -9,7 +9,17 @@ import CreateComponent from "../../CreateComponent.js";
  * By default, it renders text within it one font-size smaller, such as from small to x-small.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small
  */
-export default ({ text, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     text,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     hooks,
+     flags,
+}) =>
      new CreateComponent({
           tag: "small",
           children: text,
@@ -20,4 +30,5 @@ export default ({ text, style, styleSheet, id, className, events, renderIf = tru
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

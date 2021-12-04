@@ -29,6 +29,7 @@ export default ({
      hooks,
      value,
      type,
+     flags,
 }) => {
      return new CreateComponent({
           tag: "li",
@@ -39,5 +40,6 @@ export default ({
           events,
           props: { id, value, type },
           hooks,
+          flags,
      });
 };

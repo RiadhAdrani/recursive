@@ -8,7 +8,17 @@ import CreateComponent from "../../CreateComponent.js";
  * Clicking the ``<summary>`` element toggles the state of the parent`` <details>`` element open and closed.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/summary
  */
-export default ({ text, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     text,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     hooks,
+     flags,
+}) =>
      new CreateComponent({
           children: text,
           tag: "summary",
@@ -19,4 +29,5 @@ export default ({ text, style, styleSheet, id, className, events, renderIf = tru
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

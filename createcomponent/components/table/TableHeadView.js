@@ -7,7 +7,17 @@ import CreateComponent from "../../CreateComponent.js";
  * The ``<thead>`` HTML element defines a set of rows defining the head of the columns of the table.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/thead
  */
-export default ({ children, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     children,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     flags,
+     hooks,
+}) =>
      new CreateComponent({
           children,
           tag: "thead",
@@ -18,4 +28,5 @@ export default ({ children, style, styleSheet, id, className, events, renderIf =
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

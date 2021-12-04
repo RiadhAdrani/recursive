@@ -26,6 +26,7 @@ export default ({
      size,
      width,
      hooks,
+     flags,
 }) =>
      new CreateComponent({
           tag: "hr",
@@ -37,4 +38,5 @@ export default ({
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

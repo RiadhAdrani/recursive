@@ -7,21 +7,27 @@ import CreateComponent from "../../CreateComponent.js";
  * The `address` HTML element indicates that the enclosed HTML provides contact information for a person or people, or for an organization.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address
  */
-export default (
-     param = {
-          children: "",
-          style: {},
-          styleSheet: {},
-          id: "",
-          className: "",
-          events: {},
-          renderIf: true,
-          hooks: {},
-     }
-) => {
+export default ({
+     children,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     hooks,
+     flags,
+}) => {
      return new CreateComponent({
           tag: "address",
-          ...param,
-          props: { id: param.id },
+          children: children,
+          inlineStyle: style,
+          props: { id },
+          renderIf,
+          className: className,
+          events: events,
+          hooks,
+          style: styleSheet,
+          flags,
      });
 };

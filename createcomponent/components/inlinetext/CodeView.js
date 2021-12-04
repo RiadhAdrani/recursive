@@ -9,7 +9,17 @@ import CreateComponent from "../../CreateComponent.js";
  * By default, the content text is displayed using the user agent's default monospace font.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/code
  */
-export default ({ text, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     text,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     hooks,
+     flags,
+}) =>
      new CreateComponent({
           tag: "code",
           children: text,
@@ -20,4 +30,5 @@ export default ({ text, style, styleSheet, id, className, events, renderIf = tru
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

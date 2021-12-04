@@ -8,7 +8,17 @@ import CreateComponent from "../../CreateComponent.js";
  * the permissible or recommended options available to choose from within other controls.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist
  */
-export default ({ children, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     children,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     hooks,
+     flags,
+}) =>
      new CreateComponent({
           children,
           tag: "datalist",
@@ -19,4 +29,5 @@ export default ({ children, style, styleSheet, id, className, events, renderIf =
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

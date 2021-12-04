@@ -31,6 +31,7 @@ export default ({
      events,
      renderIf = true,
      hooks,
+     flags,
 }) =>
      new CreateComponent({
           tag: "object",
@@ -41,4 +42,5 @@ export default ({
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

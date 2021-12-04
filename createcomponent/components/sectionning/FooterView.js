@@ -7,7 +7,17 @@ import CreateComponent from "../../CreateComponent.js";
  * The ``<footer>`` HTML element represents a footer for its nearest sectioning content or sectioning root element. A <footer> typically contains information about the author of the section, copyright data or links to related documents.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/footer
  */
-export default ({ children, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     children,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     hooks,
+     flags,
+}) =>
      new CreateComponent({
           tag: "footer",
           children: children,
@@ -18,4 +28,5 @@ export default ({ children, style, styleSheet, id, className, events, renderIf =
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

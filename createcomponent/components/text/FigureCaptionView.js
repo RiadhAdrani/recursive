@@ -8,7 +8,17 @@ import CreateComponent from "../../CreateComponent.js";
  * of its parent ``<figure>`` element.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figcaption
  */
-export default ({ text, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     text,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     flags,
+     hooks,
+}) =>
      new CreateComponent({
           tag: "figcaption",
           children: text,
@@ -19,4 +29,5 @@ export default ({ text, style, styleSheet, id, className, events, renderIf = tru
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

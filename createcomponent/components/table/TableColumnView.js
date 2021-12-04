@@ -22,6 +22,7 @@ export default ({
      events,
      renderIf = true,
      hooks,
+     flags,
 }) =>
      new CreateComponent({
           children,
@@ -33,4 +34,5 @@ export default ({
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

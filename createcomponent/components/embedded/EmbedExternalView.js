@@ -25,6 +25,7 @@ export default ({
      events,
      renderIf = true,
      hooks,
+     flags,
 }) =>
      new CreateComponent({
           tag: "embed",
@@ -35,4 +36,5 @@ export default ({
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

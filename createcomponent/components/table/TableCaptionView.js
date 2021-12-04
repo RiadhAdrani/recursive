@@ -7,7 +7,17 @@ import CreateComponent from "../../CreateComponent.js";
  * The ``<caption>`` HTML element specifies the caption (or title) of a table.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption
  */
-export default ({ text, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     text,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     flags,
+     hooks,
+}) =>
      new CreateComponent({
           children: text,
           tag: "caption",
@@ -18,4 +28,5 @@ export default ({ text, style, styleSheet, id, className, events, renderIf = tru
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

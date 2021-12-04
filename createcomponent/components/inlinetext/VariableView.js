@@ -10,7 +10,17 @@ import CreateComponent from "../../CreateComponent.js";
  * although that behavior is browser-dependent.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/var
  */
-export default ({ text, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     text,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     hooks,
+     flags,
+}) =>
      new CreateComponent({
           tag: "var",
           children: text,
@@ -21,4 +31,5 @@ export default ({ text, style, styleSheet, id, className, events, renderIf = tru
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

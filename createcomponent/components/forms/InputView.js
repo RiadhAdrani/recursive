@@ -77,6 +77,7 @@ export default ({
      type,
      value,
      width,
+     flags,
 }) =>
      new CreateComponent({
           tag: "input",
@@ -121,4 +122,5 @@ export default ({
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

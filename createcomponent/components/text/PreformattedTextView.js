@@ -32,6 +32,7 @@ export default ({
      cols,
      width,
      wrap,
+     flags,
 }) =>
      new CreateComponent({
           tag: "pre",
@@ -43,4 +44,5 @@ export default ({
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

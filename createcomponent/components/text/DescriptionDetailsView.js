@@ -17,6 +17,7 @@ export default ({
      renderIf = true,
      hooks,
      noWrap,
+     flags,
 }) =>
      new CreateComponent({
           tag: "dd",
@@ -28,4 +29,5 @@ export default ({
           events,
           hooks,
           style: styleSheet,
+          flags,
      });

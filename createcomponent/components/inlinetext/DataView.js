@@ -18,6 +18,7 @@ export default ({
      events,
      renderIf = true,
      hooks,
+     flags,
 }) =>
      new CreateComponent({
           tag: "data",
@@ -29,4 +30,5 @@ export default ({
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

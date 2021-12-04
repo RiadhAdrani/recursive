@@ -18,6 +18,7 @@ import updateattributes from "./tools/update/updateattributes.js";
 import updatechildren from "./tools/update/updatechildren.js";
 import updateevents from "./tools/update/updateevents.js";
 import updatestyle from "./tools/update/updatestyle.js";
+import initflags from "./tools/init/initflags.js";
 
 /**
  * ## CreateComponent
@@ -50,101 +51,8 @@ class CreateComponent {
           className,
           style,
           inlineStyle,
-          props = {
-               id: undefined,
-               optimum: undefined,
-               high: undefined,
-               low: undefined,
-               label: undefined,
-               selected: undefined,
-               acceptCharSet: undefined,
-               action: undefined,
-               encType: undefined,
-               noValidate: undefined,
-               method: undefined,
-               abbreviation: undefined,
-               scope: undefined,
-               size: undefined,
-               spellCheck: undefined,
-               value: undefined,
-               src: undefined,
-               srcLang: undefined,
-               alt: undefined,
-               colSpan: undefined,
-               headers: undefined,
-               rowSpan: undefined,
-               placeholder: undefined,
-               poster: undefined,
-               type: undefined,
-               name: undefined,
-               rev: undefined,
-               min: undefined,
-               download: undefined,
-               playsInline: undefined,
-               max: undefined,
-               decoding: undefined,
-               autofocus: undefined,
-               cols: undefined,
-               dirname: undefined,
-               dir: undefined,
-               disabled: undefined,
-               form: undefined,
-               maxLength: undefined,
-               minLength: undefined,
-               readOnly: undefined,
-               required: undefined,
-               ping: undefined,
-               rows: undefined,
-               wrap: undefined,
-               title: undefined,
-               href: undefined,
-               hrefLang: undefined,
-               autoplay: undefined,
-               controls: undefined,
-               dateTime: undefined,
-               data: undefined,
-               target: undefined,
-               span: undefined,
-               loop: undefined,
-               muted: undefined,
-               preload: undefined,
-               rel: undefined,
-               list: undefined,
-               isFor: undefined,
-               open: undefined,
-               cite: undefined,
-               allow: undefined,
-               allowFullScreen: undefined,
-               allowPaymentRequest: undefined,
-               loading: undefined,
-               referrerPolicy: undefined,
-               sandbox: undefined,
-               srcdoc: undefined,
-               crossOrigin: undefined,
-               isMap: undefined,
-               longDesc: undefined,
-               sizes: undefined,
-               srcSet: undefined,
-               useMap: undefined,
-               accept: undefined,
-               kind: undefined,
-               default: undefined,
-               autoComplete: undefined,
-               checked: undefined,
-               formAction: undefined,
-               formEncType: undefined,
-               formMethod: undefined,
-               height: undefined,
-               width: undefined,
-               formNoValidate: undefined,
-               formTarget: undefined,
-               pattern: undefined,
-               step: undefined,
-               multiple: undefined,
-               shape: undefined,
-               coords: undefined,
-               start: undefined,
-          },
+          props,
+          flags,
           hooks = {
                onCreated: undefined,
                beforeDestroyed: undefined,
@@ -169,6 +77,7 @@ class CreateComponent {
           // HTML Attributes
           this.tag = tag;
 
+          // props
           if (className) this.className = className;
           if (style) this.style = style;
           if (inlineStyle) this.inlineStyle = inlineStyle;
@@ -182,14 +91,23 @@ class CreateComponent {
 
           initchildren(this, children);
 
+          // dom instance
+          this.domInstance = undefined;
+
           // Events
           this.events = {};
           initevents(this, events);
 
-          // Component Lifecycle
+          // Lifecycle Hooks
+          this.flags = {};
           inithooks(this, hooks);
 
-          this.keying();
+          // Rendering Flags
+          initflags(this, flags);
+
+          // Keying
+          // will be removed after testing domInstance
+          // this.keying();
      }
 
      render() {
@@ -206,17 +124,28 @@ class CreateComponent {
 
           render.key = this.key;
 
+          this.domInstance = render;
+
           return render;
      }
 
      update(newComponent) {
           let didUpdate = false;
 
-          const htmlElement = findElementByKey(this);
+          const htmlElement = this.domInstance;
 
           if (!htmlElement) {
-               console.log(this.key);
                throw "Component not found inside document: Report a bug to https://github.com/RiadhAdrani/recursive";
+          }
+
+          if (this.flags.forceRerender === true) {
+               this.$beforeDestroyed();
+               htmlElement.replaceWith(
+                    newComponent.$$createcomponent ? newComponent.render() : newComponent
+               );
+               this.$onDestroyed();
+               newComponent?.$onCreated();
+               return;
           }
 
           // check if the element to compare with is a string
@@ -270,6 +199,8 @@ class CreateComponent {
 
           // Execute update lifecycle method
           if (didUpdate) this.$onUpdated(this, newComponent);
+
+          newComponent.domInstance = this.domInstance;
 
           return didUpdate;
      }

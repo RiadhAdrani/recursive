@@ -40,6 +40,7 @@ export default ({
      events,
      renderIf = true,
      hooks,
+     flags,
 }) =>
      new CreateComponent({
           tag: "audio",
@@ -51,4 +52,5 @@ export default ({
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

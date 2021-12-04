@@ -20,6 +20,7 @@ export default ({
      events,
      renderIf = true,
      hooks,
+     flags,
 }) =>
      new CreateComponent({
           tag: "portal",
@@ -29,5 +30,6 @@ export default ({
           className: className,
           events: events,
           hooks,
+          flags,
           style: styleSheet,
      });

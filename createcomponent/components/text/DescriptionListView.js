@@ -11,7 +11,17 @@ import CreateComponent from "../../CreateComponent.js";
  * (a list of key-value pairs).
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl
  */
-export default ({ children, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     children,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     flags,
+     hooks,
+}) =>
      new CreateComponent({
           tag: "dl",
           children: children,
@@ -22,4 +32,5 @@ export default ({ children, style, styleSheet, id, className, events, renderIf =
           events,
           hooks,
           style: styleSheet,
+          flags,
      });

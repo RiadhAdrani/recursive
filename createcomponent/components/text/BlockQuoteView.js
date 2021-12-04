@@ -8,7 +8,18 @@ import CreateComponent from "../../CreateComponent.js";
  * @param param.cite A URL that designates a source document or message for the information quoted. This attribute is intended to point to information explaining the context or the reference for the quote.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote
  */
-export default ({ text, style, cite, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     text,
+     style,
+     cite,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     flags,
+     hooks,
+}) =>
      new CreateComponent({
           tag: "blockquote",
           children: text,
@@ -19,4 +30,5 @@ export default ({ text, style, cite, styleSheet, id, className, events, renderIf
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

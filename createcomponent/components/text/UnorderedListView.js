@@ -24,6 +24,7 @@ export default ({
      hooks,
      type,
      compact,
+     flags,
 }) => {
      return new CreateComponent({
           tag: "ul",
@@ -34,5 +35,6 @@ export default ({
           events,
           props: { id, type, compact },
           hooks,
+          flags,
      });
 };

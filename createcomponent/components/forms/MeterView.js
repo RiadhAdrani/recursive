@@ -29,6 +29,7 @@ export default ({
      events,
      renderIf = true,
      hooks,
+     flags,
 }) =>
      new CreateComponent({
           tag: "meter",
@@ -39,4 +40,5 @@ export default ({
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

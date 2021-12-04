@@ -20,6 +20,7 @@ export default ({
      events,
      renderIf = true,
      hooks,
+     flags,
 }) =>
      new CreateComponent({
           tag: "dfn",
@@ -31,4 +32,5 @@ export default ({
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

@@ -26,6 +26,7 @@ export default ({
      reversed,
      start,
      type,
+     flags,
 }) => {
      return new CreateComponent({
           tag: "ol",
@@ -37,5 +38,6 @@ export default ({
           renderIf,
           props: { id, reversed, start, type },
           hooks,
+          flags,
      });
 };

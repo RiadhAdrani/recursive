@@ -8,7 +8,17 @@ import CreateComponent from "../../CreateComponent.js";
  * Browsers typically render the contents in bold type.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong
  */
-export default ({ text, style, styleSheet, id, className, events, renderIf = true, hooks }) =>
+export default ({
+     text,
+     style,
+     styleSheet,
+     id,
+     className,
+     events,
+     renderIf = true,
+     hooks,
+     flags,
+}) =>
      new CreateComponent({
           tag: "strong",
           children: text,
@@ -19,4 +29,5 @@ export default ({ text, style, styleSheet, id, className, events, renderIf = tru
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

@@ -42,6 +42,7 @@ export default ({
      events,
      renderIf = true,
      hooks,
+     flags,
 }) =>
      new CreateComponent({
           tag: "img",
@@ -65,4 +66,5 @@ export default ({
           events: events,
           hooks,
           style: styleSheet,
+          flags,
      });

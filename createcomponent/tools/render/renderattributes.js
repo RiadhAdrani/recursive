@@ -14,6 +14,9 @@ export default (component, render) => {
      }
 
      attributes.forEach((attr) => {
+          if (attr === "id") {
+               console.log(component.id);
+          }
           renderAttr(attr);
      });
 
