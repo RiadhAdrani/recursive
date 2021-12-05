@@ -1,15 +1,12 @@
+import Route from "./Route.js";
+
 class Router {
      constructor(routes) {
           this.routes = [];
-          this.current = null;
-          if (Array.isArray(routes)) {
-               routes.forEach((r) => {
-                    if (!r.name) throw `Invalid name`;
-                    if (!r.component) throw `Invalid component`;
-               });
-               this.routes = routes;
-          }
-          this.current = routes[0];
+
+          routes.flatten(this.routes);
+
+          this.current = this.routes[0];
           this.stack = [routes[0]];
 
           window.addEventListener("popstate", (e) => {
@@ -24,24 +21,25 @@ class Router {
                const x = this.stack.pop();
                routes.forEach((r) => {
                     if (x.name === r.name) {
-                         x.onExit();
+                         x?.onExit();
                          this.current = r;
                          vDOM.update();
-                         this.current.onLoad();
+                         this.current?.onLoad();
                          return;
                     }
                });
           });
      }
 
-     static Route = ({ name, component, title, onLoad = () => {}, onExit = () => {} }) => {
-          return {
-               name,
-               title,
-               component,
-               onLoad,
-               onExit,
-          };
+     static Route = ({
+          name,
+          component,
+          title,
+          subRoutes,
+          onLoad = () => {},
+          onExit = () => {},
+     }) => {
+          return new Route({ name, title, component, subRoutes, onExit, onLoad });
      };
 
      // TODO
@@ -58,7 +56,7 @@ class Router {
                if (name === r.name && name !== this.current.name) {
                     history.pushState({}, this.current.title, `${name}`);
                     this.stack.push(this.current);
-                    this.current.onExit();
+                    this.current?.onExit();
                     this.current = r;
                     if (r.title) {
                          const titleTag = document.getElementsByTagName("title");
@@ -70,7 +68,7 @@ class Router {
 
                     // scroll to top
                     window.scrollTo({ top: 0, behavior: "smooth" });
-                    this.current.onLoad();
+                    this.current?.onLoad();
                     return;
                }
           });

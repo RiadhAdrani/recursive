@@ -69,20 +69,22 @@ export default (css, animations, mediaQueries, root, oldStyleText) => {
           root.innerHTML = ss;
      }
 
-     if (animationDup.length > 0) {
-          console.warn(
-               `DUPLICATE ANIMATION${
-                    animationDup.length > 1 ? "S" : ""
-               }: (${animationDup}) => found more than once`
-          );
-     }
+     if (vDOM.devMode) {
+          if (animationDup.length > 0) {
+               console.warn(
+                    `DUPLICATE ANIMATION${
+                         animationDup.length > 1 ? "S" : ""
+                    }: (${animationDup}) => found more than once`
+               );
+          }
 
-     if (styleDup.length > 0) {
-          console.warn(
-               `DUPLICATE STYLE${
-                    styleDup.length > 1 ? "S" : ""
-               }: (${styleDup}) => found more than once.`
-          );
+          if (styleDup.length > 0) {
+               console.warn(
+                    `DUPLICATE STYLE${
+                         styleDup.length > 1 ? "S" : ""
+                    }: (${styleDup}) => found more than once.`
+               );
+          }
      }
 
      return ss;
