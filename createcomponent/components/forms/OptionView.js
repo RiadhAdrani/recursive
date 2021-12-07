@@ -24,7 +24,6 @@ export default ({
      selected,
      value,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -32,7 +31,6 @@ export default ({
           children: text,
           tag: "option",
           inlineStyle: style,
-          renderIf,
           props: { id, disabled, label, selected, value },
           className: className,
           events: events,

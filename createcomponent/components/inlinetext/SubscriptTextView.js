@@ -9,22 +9,11 @@ import CreateComponent from "../../CreateComponent.js";
  * Subscripts are typically rendered with a lowered baseline using smaller text.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sub
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "sub",
           children: text,
           inlineStyle: style,
-          renderIf,
           props: { id },
           className: className,
           events: events,

@@ -17,23 +17,11 @@ import CreateComponent from "../../CreateComponent.js";
  * By default this attribute is absent which means the details are not visible
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details
  */
-export default ({
-     children,
-     style,
-     styleSheet,
-     id,
-     open,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ children, style, styleSheet, id, open, className, events, hooks, flags }) =>
      new CreateComponent({
           children,
           tag: "details",
           inlineStyle: style,
-          renderIf,
           props: { id, open },
           className: className,
           events: events,

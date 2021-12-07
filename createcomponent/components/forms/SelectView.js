@@ -31,7 +31,6 @@ export default ({
      size,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -39,7 +38,6 @@ export default ({
           children,
           tag: "select",
           inlineStyle: style,
-          renderIf,
           props: { id, autoComplete, autofocus, disabled, form, multiple, required, size },
           className: className,
           events: events,

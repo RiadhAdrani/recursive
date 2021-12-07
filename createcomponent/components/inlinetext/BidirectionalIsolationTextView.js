@@ -10,23 +10,11 @@ import CreateComponent from "../../CreateComponent.js";
  * and doesn't know the directionality of the text being inserted.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdi
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     direction,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, direction, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "bdi",
           children: text,
           inlineStyle: style,
-          renderIf,
           props: { dir: direction, id },
           className: className,
           events: events,

@@ -27,14 +27,12 @@ export default ({
      optimum,
      form,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
      new CreateComponent({
           tag: "meter",
           inlineStyle: style,
-          renderIf,
           props: { id, value, min, max, low, high, optimum, form },
           className: className,
           events: events,

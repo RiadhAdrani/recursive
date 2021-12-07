@@ -8,23 +8,12 @@ import CreateComponent from "../../CreateComponent.js";
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
 
-export default ({
-     children,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ children, style, styleSheet, id, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "header",
           children: children,
           inlineStyle: style,
           props: { id },
-          renderIf,
           className: className,
           events: events,
           hooks,

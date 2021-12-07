@@ -9,22 +9,11 @@ import CreateComponent from "../../CreateComponent.js";
  * This is rendered by default as a simple solid underline, but may be altered using CSS.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/u
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "u",
           children: text,
           inlineStyle: style,
-          renderIf,
           props: { id },
           className: className,
           events: events,

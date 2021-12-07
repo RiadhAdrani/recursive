@@ -13,23 +13,12 @@ import CreateComponent from "../../CreateComponent.js";
  * or other related text associated with the term specified using ``<dt>``.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dt
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     flags,
-     hooks,
-}) =>
+export default ({ text, style, styleSheet, id, className, events, flags, hooks }) =>
      new CreateComponent({
           tag: "dt",
           children: text,
           inlineStyle: style,
           props: { id },
-          renderIf,
           className,
           events,
           hooks,

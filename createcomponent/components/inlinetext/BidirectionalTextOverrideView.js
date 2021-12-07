@@ -8,23 +8,11 @@ import CreateComponent from "../../CreateComponent.js";
  * so that the text within is rendered in a different direction.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdo
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     direction,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, direction, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "bdo",
           children: text,
           inlineStyle: style,
-          renderIf,
           props: { dir: direction, id },
           className: className,
           events: events,

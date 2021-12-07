@@ -22,7 +22,6 @@ export default ({
      rowSpan,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -30,7 +29,6 @@ export default ({
           children,
           tag: "td",
           inlineStyle: style,
-          renderIf,
           props: { id, colSpan, headers, rowSpan },
           className: className,
           events: events,

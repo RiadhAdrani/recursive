@@ -10,22 +10,11 @@ import CreateComponent from "../../CreateComponent.js";
  * which is the original source of the ``<i>`` naming of this element.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "i",
           children: text,
           inlineStyle: style,
-          renderIf,
           props: { id },
           className: className,
           events: events,

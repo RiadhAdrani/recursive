@@ -25,7 +25,7 @@ export default (component, children) => {
                     // if child is a component.
                     if (childtype(children[i])) {
                          // check renderIf value
-                         if (children[i].renderIf !== false) {
+                         if (children[i].flags.renderIf !== false) {
                               component.children.push(children[i]);
                          }
                     }
@@ -51,7 +51,7 @@ export default (component, children) => {
           // children is a single node
           else if (children !== undefined) {
                if (children.$$createcomponent) {
-                    if (children.renderIf !== false) {
+                    if (children.flags.renderIf !== false) {
                          component.children = [children];
                     }
                }

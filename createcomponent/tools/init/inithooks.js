@@ -16,7 +16,7 @@ export default (component, hooks) => {
           if (hooks[hook] !== undefined) {
                if (hooksList[hook]) {
                     if (typeof hooks[hook] === "function") {
-                         component[hook] = hooks[hook];
+                         component.hooks[hook] = hooks[hook];
                     } else {
                          InvalidHook(hook, "is not a function.");
                     }

@@ -43,7 +43,6 @@ export default ({
      id,
      className,
      events,
-     renderIf = true,
      hooks,
      accept,
      alt,
@@ -82,7 +81,6 @@ export default ({
      new CreateComponent({
           tag: "input",
           inlineStyle: style,
-          renderIf,
           props: {
                id,
                type,

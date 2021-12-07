@@ -26,7 +26,6 @@ export default ({
      id,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -34,7 +33,6 @@ export default ({
           children,
           tag: "th",
           inlineStyle: style,
-          renderIf,
           props: { id, abbreviation, colSpan, headers, rowSpan, scope },
           className: className,
           events: events,

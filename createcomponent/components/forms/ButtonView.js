@@ -45,7 +45,6 @@ export default ({
      value,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -53,7 +52,6 @@ export default ({
           children: text,
           tag: "button",
           inlineStyle: style,
-          renderIf,
           props: {
                id,
                autofocus,

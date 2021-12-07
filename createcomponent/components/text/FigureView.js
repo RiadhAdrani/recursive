@@ -9,23 +9,12 @@ import CreateComponent from "../../CreateComponent.js";
  * The figure, its caption, and its contents are referenced as a single unit.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure
  */
-export default ({
-     children,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     flags,
-     hooks,
-}) =>
+export default ({ children, style, styleSheet, id, className, events, flags, hooks }) =>
      new CreateComponent({
           tag: "figure",
           children,
           inlineStyle: style,
           props: { id },
-          renderIf,
           className,
           events,
           hooks,

@@ -13,22 +13,11 @@ import CreateComponent from "../../CreateComponent.js";
  * or the ``<strong>`` element to indicate that text is of special importance.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b
  */
-export default ({
-     children,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ children, style, styleSheet, id, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "b",
           children,
           inlineStyle: style,
-          renderIf,
           props: { id },
           className: className,
           events: events,

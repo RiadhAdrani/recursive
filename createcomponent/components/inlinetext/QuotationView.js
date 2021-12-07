@@ -13,23 +13,11 @@ import CreateComponent from "../../CreateComponent.js";
  * explaining the context or the reference for the quote.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/q
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     cite,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, cite, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "q",
           children: text,
           inlineStyle: style,
-          renderIf,
           props: { id, cite },
           className: className,
           events: events,

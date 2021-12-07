@@ -33,7 +33,6 @@ export default ({
      target,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -41,7 +40,6 @@ export default ({
           children,
           tag: "form",
           inlineStyle: style,
-          renderIf,
           props: {
                id,
                acceptCharSet,

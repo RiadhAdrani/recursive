@@ -23,14 +23,12 @@ export default ({
      width,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
      new CreateComponent({
           tag: "embed",
           inlineStyle: style,
-          renderIf,
           props: { id, height, src, type, width },
           className: className,
           events: events,

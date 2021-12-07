@@ -44,7 +44,6 @@ export default ({
      wrap,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -52,7 +51,6 @@ export default ({
           children: text,
           tag: "textarea",
           inlineStyle: style,
-          renderIf,
           props: {
                id,
                autoComplete,

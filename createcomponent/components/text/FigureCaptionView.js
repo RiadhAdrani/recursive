@@ -8,23 +8,12 @@ import CreateComponent from "../../CreateComponent.js";
  * of its parent ``<figure>`` element.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figcaption
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     flags,
-     hooks,
-}) =>
+export default ({ text, style, styleSheet, id, className, events, flags, hooks }) =>
      new CreateComponent({
           tag: "figcaption",
           children: text,
           inlineStyle: style,
           props: { id },
-          renderIf,
           className,
           events: events,
           hooks,

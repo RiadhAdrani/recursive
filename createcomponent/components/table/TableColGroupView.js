@@ -9,23 +9,11 @@ import CreateComponent from "../../CreateComponent.js";
  * consecutive columns the ``<colgroup>`` element spans.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/colgroup
  */
-export default ({
-     children,
-     style,
-     styleSheet,
-     id,
-     span,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ children, style, styleSheet, id, span, className, events, hooks, flags }) =>
      new CreateComponent({
           children,
           tag: "colgroup",
           inlineStyle: style,
-          renderIf,
           props: { id, span },
           className: className,
           events: events,

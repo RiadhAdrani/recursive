@@ -13,22 +13,11 @@ import CreateComponent from "../../CreateComponent.js";
  * but ``<div>`` is a block-level element whereas a ``<span>`` is an inline element.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/span
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "span",
           children: text,
           inlineStyle: style,
-          renderIf,
           props: { id },
           className: className,
           events: events,

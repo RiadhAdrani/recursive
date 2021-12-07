@@ -8,22 +8,11 @@ import CreateComponent from "../../CreateComponent.js";
  * indicating that they comprise the body of the table (``<table>``).
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody
  */
-export default ({
-     children,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     flags,
-     hooks,
-}) =>
+export default ({ children, style, styleSheet, id, className, events, flags, hooks }) =>
      new CreateComponent({
           children,
           tag: "tbody",
           inlineStyle: style,
-          renderIf,
           props: { id },
           className: className,
           events: events,

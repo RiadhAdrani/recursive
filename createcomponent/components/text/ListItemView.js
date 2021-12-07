@@ -19,22 +19,10 @@ import CreateComponent from "../../CreateComponent.js";
  * ``I``: uppercase Roman numerals, ``1``: numbers
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/li
  */
-export default ({
-     children,
-     styleSheet,
-     className,
-     events,
-     id,
-     renderIf = true,
-     hooks,
-     value,
-     type,
-     flags,
-}) => {
+export default ({ children, styleSheet, className, events, id, hooks, value, type, flags }) => {
      return new CreateComponent({
           tag: "li",
           children,
-          renderIf,
           style: styleSheet,
           className,
           events,

@@ -13,21 +13,10 @@ import CreateComponent from "../../CreateComponent.js";
  * if another block-level element is parsed before the closing ``</p>`` tag.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
  */
-export default ({
-     text,
-     className,
-     id,
-     style,
-     events,
-     styleSheet,
-     renderIf = true,
-     flags,
-     hooks,
-}) =>
+export default ({ text, className, id, style, events, styleSheet, flags, hooks }) =>
      new CreateComponent({
           tag: "p",
           children: text,
-          renderIf,
           inlineStyle: style,
           style: styleSheet,
           events: events,

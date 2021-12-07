@@ -10,23 +10,11 @@ import CreateComponent from "../../CreateComponent.js";
  * So, any given label element can be associated with only one form control.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     isFor,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, isFor, className, events, hooks, flags }) =>
      new CreateComponent({
           children: text,
           tag: "label",
           inlineStyle: style,
-          renderIf,
           props: { id, isFor },
           className: className,
           events: events,

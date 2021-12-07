@@ -10,23 +10,12 @@ import CreateComponent from "../../CreateComponent.js";
  * or some kind of layout model like Flexbox is applied to its parent element).
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div
  */
-export default ({
-     children,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ children, style, styleSheet, id, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "div",
           children: children,
           inlineStyle: style,
           props: { id },
-          renderIf,
           className: className,
           events,
           style: styleSheet,

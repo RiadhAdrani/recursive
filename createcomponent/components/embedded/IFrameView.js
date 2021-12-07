@@ -34,7 +34,6 @@ export default ({
      width,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -42,7 +41,6 @@ export default ({
           children,
           tag: "iframe",
           inlineStyle: style,
-          renderIf,
           props: {
                id,
                allow,

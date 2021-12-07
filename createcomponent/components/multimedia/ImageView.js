@@ -40,14 +40,12 @@ export default ({
      useMap,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
      new CreateComponent({
           tag: "img",
           inlineStyle: style,
-          renderIf,
           props: {
                id,
                alt,

@@ -31,14 +31,12 @@ export default ({
      srcLang,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
      new CreateComponent({
           tag: "track",
           inlineStyle: style,
-          renderIf,
           props: { id, kind, label, src, srcLang, default: defaultTrack },
           className: className,
           events: events,

@@ -10,22 +10,11 @@ import CreateComponent from "../../CreateComponent.js";
  * The ``<rt>`` element must always be contained within a <ruby> element.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/rt
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "rt",
           children: text,
           inlineStyle: style,
-          renderIf,
           props: { id },
           className: className,
           events: events,

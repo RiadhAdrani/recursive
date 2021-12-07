@@ -22,7 +22,6 @@ export default ({
      label,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -30,7 +29,6 @@ export default ({
           children,
           tag: "optgroup",
           inlineStyle: style,
-          renderIf,
           props: { id, disabled, label },
           className: className,
           events: events,

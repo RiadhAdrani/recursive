@@ -10,22 +10,10 @@ import CreateComponent from "../../CreateComponent.js";
  * @param param.src The URL of the page to embed.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/portal
  */
-export default ({
-     style,
-     styleSheet,
-     id,
-     referrerPolicy,
-     src,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ style, styleSheet, id, referrerPolicy, src, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "portal",
           inlineStyle: style,
-          renderIf,
           props: { id, referrerPolicy, src },
           className: className,
           events: events,

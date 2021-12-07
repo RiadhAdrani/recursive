@@ -53,7 +53,6 @@ export default ({
      target,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -61,7 +60,6 @@ export default ({
           tag: "area",
           children,
           inlineStyle: style,
-          renderIf,
           props: {
                id,
                alt,

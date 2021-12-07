@@ -51,7 +51,6 @@ export default ({
      shape,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -75,7 +74,6 @@ export default ({
                name,
                shape,
           },
-          renderIf,
           className: className,
           events: events,
           hooks,

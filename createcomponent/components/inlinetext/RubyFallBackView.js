@@ -10,22 +10,11 @@ import CreateComponent from "../../CreateComponent.js";
  * that wrap the <rt> element that contains the annotation's text.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/rp
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "rp",
           children: text,
           inlineStyle: style,
-          renderIf,
           props: { id },
           className: className,
           events: events,

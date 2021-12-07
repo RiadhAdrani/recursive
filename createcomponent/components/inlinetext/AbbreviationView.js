@@ -10,23 +10,11 @@ import CreateComponent from "../../CreateComponent.js";
  * @param param.title contain a full human-readable description or expansion of the abbreviation
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr
  */
-export default ({
-     text,
-     style,
-     title,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, title, styleSheet, id, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "abbr",
           children: text,
           inlineStyle: style,
-          renderIf,
           props: { title, id },
           className: className,
           events: events,

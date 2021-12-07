@@ -29,14 +29,12 @@ export default ({
      useMap,
      width,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
      new CreateComponent({
           tag: "object",
           inlineStyle: style,
-          renderIf,
           props: { id, data, form, height, name, type, useMap, width },
           className: className,
           events: events,

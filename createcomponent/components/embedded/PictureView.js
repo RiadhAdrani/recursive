@@ -13,22 +13,11 @@ import CreateComponent from "../../CreateComponent.js";
  * a nested browsing context, or a resource to be handled by a plugin.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/picture
  */
-export default ({
-     children,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ children, style, styleSheet, id, className, events, hooks, flags }) =>
      new CreateComponent({
           children,
-          tag: "param",
+          tag: "picture",
           inlineStyle: style,
-          renderIf,
           props: { id },
           className: className,
           events: events,

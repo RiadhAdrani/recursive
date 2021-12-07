@@ -10,24 +10,11 @@ import CreateComponent from "../../CreateComponent.js";
  * @param param.value This attribute specifies how much of the task that has been completed.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     className,
-     max,
-     value,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, className, max, value, events, hooks, flags }) =>
      new CreateComponent({
           children: text,
           tag: "progress",
           inlineStyle: style,
-          renderIf,
           props: { id, max, value },
           className: className,
           events: events,

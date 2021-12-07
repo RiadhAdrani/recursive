@@ -24,7 +24,6 @@ export default ({
      name,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -32,7 +31,6 @@ export default ({
           children,
           tag: "fieldset",
           inlineStyle: style,
-          renderIf,
           props: { id, disabled, form, name },
           className: className,
           events: events,

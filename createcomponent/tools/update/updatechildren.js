@@ -1,6 +1,7 @@
 import arraydiff from "./arraydiff.js";
-import childrentype from "../childrentype.js";
-import childtype from "../childtype.js";
+import _addchildrenindom from "./_addchildrenindom.js";
+import _removenodefromdom from "./_removenodefromdom.js";
+import _appendnodeindom from "./_appendnodeindom.js";
 
 /**
  * Update component's children
@@ -9,6 +10,12 @@ import childtype from "../childtype.js";
  * @param render rendered htmlElement
  */
 export default (component, newComponent, render) => {
+     // LEGACY CODE
+     // code that will be deleted
+     /*
+     if (!Array.isArray(component.children) || !Array.isArray(newComponent.children)) {
+          throw "Children is not an arry !";
+     }
      if (!component.children && !newComponent.children) {
           return false;
      }
@@ -19,12 +26,7 @@ export default (component, newComponent, render) => {
      }
      // if render children is empty, just add the children of the new element
      else if (!component.children && newComponent.children) {
-          newComponent.children.forEach((child) => {
-               render.append(child.render ? child.render() : child);
-               if (childtype(child)) {
-                    child.$onCreated();
-               }
-          });
+          _addchildrenindom(component, newComponent);
           return true;
      }
      // case children is string, new is string and not equal
@@ -102,47 +104,60 @@ export default (component, newComponent, render) => {
 
           return true;
      }
-     // case children is children, new is children
-     else if (Array.isArray(component.children) && Array.isArray(newComponent.children)) {
-          // if children have the same length
-          if (component.children.length === newComponent.children.length) {
-               return arraydiff(component, newComponent, render);
-          }
-          // if component.children are greater than newComponent.children
-          else if (component.children.length > newComponent.children.length) {
-               let i = newComponent.children.length;
-               while (render.childNodes.length > newComponent.children.length) {
-                    if (childtype(component.children[i])) component.children[i].$beforeDestroyed();
-
-                    render.childNodes.item(i).remove();
-
-                    if (childtype(component.children[i])) component.children[i].$onDestroyed();
-               }
-
-               component.children = [...component.children.slice(0, newComponent.children.length)];
-
-               arraydiff(component, newComponent, render);
-
-               return true;
-          }
-          // if component.children are less than newComponent.children
-          else {
-               const x = component.children.length;
-               component.children = [
-                    ...component.children,
-                    ...newComponent.children.slice(component.children.length),
-               ];
-
-               const n = newComponent.children.slice(x, newComponent.children.length);
-
-               n.forEach((child) => {
-                    render.append(childtype(child) ? child.render() : child);
-                    if (childtype(child)) child.$onCreated();
-               });
-
-               arraydiff(component, newComponent, render);
-               return true;
-          }
+     */
+     // if children have the same length
+     if (component.children.length === newComponent.children.length) {
+          return arraydiff(component, newComponent, render);
      }
-     return false;
+     // if component.children are greater than newComponent.children
+     else if (component.children.length > newComponent.children.length) {
+          while (component.domInstance.childNodes.length > newComponent.children.length) {
+               _removenodefromdom(newComponent.children.length, component);
+               component.children.pop();
+          }
+
+          // component.children = [...component.children.slice(0, newComponent.children.length)];
+
+          /*
+          let i = newComponent.children.length;
+          while (render.childNodes.length > newComponent.children.length) {
+               if (childtype(component.children[i])) component.children[i].$beforeDestroyed();
+
+               render.childNodes.item(i).remove();
+
+               if (childtype(component.children[i])) component.children[i].$onDestroyed();
+          }
+
+          component.children = [...component.children.slice(0, newComponent.children.length)];
+          */
+
+          arraydiff(component, newComponent, render);
+
+          return true;
+     }
+     // if component.children are less than newComponent.children
+     else {
+          /*
+          const x = component.children.length;
+          component.children = [
+               ...component.children,
+               ...newComponent.children.slice(component.children.length),
+          ];
+
+          
+
+          const n = newComponent.children.slice(x, newComponent.children.length);
+
+          n.forEach((child) => {
+               render.append(childtype(child) ? child.render() : child);
+               if (childtype(child)) child.$onCreated();
+          });
+          */
+
+          for (let i = component.children.length; i < newComponent.children.length; i++) {
+               _appendnodeindom(i, component, newComponent);
+          }
+
+          return arraydiff(component, newComponent, render);
+     }
 };

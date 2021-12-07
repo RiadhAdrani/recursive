@@ -19,8 +19,12 @@ class Router {
                     return;
                }
                const x = this.stack.pop();
-               routes.forEach((r) => {
+
+               this.routes.forEach((r) => {
                     if (x.name === r.name) {
+                         // scroll to top
+                         window.scrollTo({ top: 0, behavior: "smooth" });
+
                          x?.onExit();
                          this.current = r;
                          vDOM.update();

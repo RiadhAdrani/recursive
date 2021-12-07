@@ -28,14 +28,12 @@ export default ({
      type,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
      new CreateComponent({
           tag: "source",
           inlineStyle: style,
-          renderIf,
           props: { id, media, sizes, src, srcSet, type },
           className: className,
           events: events,

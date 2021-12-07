@@ -12,23 +12,11 @@ import CreateComponent from "../../CreateComponent.js";
  * If the id attribute is also specified, both attributes must have the same value.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/map
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     name,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, name, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "map",
           children: text,
           inlineStyle: style,
-          renderIf,
           props: { id, name },
           className: className,
           events: events,

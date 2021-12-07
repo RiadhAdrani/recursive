@@ -10,23 +10,11 @@ import CreateComponent from "../../CreateComponent.js";
  * which is the nearest ancestor of the ``<dfn>`` is considered to be the definition of the term.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dfn
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     title,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, title, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "dfn",
           children: text,
           inlineStyle: style,
-          renderIf,
           props: { id, title },
           className: className,
           events: events,

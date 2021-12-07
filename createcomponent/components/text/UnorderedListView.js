@@ -14,23 +14,11 @@ import CreateComponent from "../../CreateComponent.js";
  * the user agent selects a bullet type depending on the nesting level of the list.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul
  */
-export default ({
-     children,
-     styleSheet,
-     className,
-     events,
-     id,
-     renderIf = true,
-     hooks,
-     type,
-     compact,
-     flags,
-}) => {
+export default ({ children, styleSheet, className, events, id, hooks, type, compact, flags }) => {
      return new CreateComponent({
           tag: "ul",
           children,
           style: styleSheet,
-          renderIf,
           className,
           events,
           props: { id, type, compact },

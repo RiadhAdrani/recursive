@@ -49,7 +49,6 @@ export default ({
      width,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -57,7 +56,6 @@ export default ({
           children,
           tag: "video",
           inlineStyle: style,
-          renderIf,
           props: {
                id,
                autoplay,

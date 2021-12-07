@@ -9,18 +9,7 @@ import CreateComponent from "../../CreateComponent.js";
  * @param param.value Specifies the value of the parameter.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/param
  */
-export default ({
-     style,
-     styleSheet,
-     id,
-     name,
-     value,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ style, styleSheet, id, name, value, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "param",
           inlineStyle: style,

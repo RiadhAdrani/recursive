@@ -18,6 +18,8 @@ import updateevents from "./tools/update/updateevents.js";
 import updatestyle from "./tools/update/updatestyle.js";
 import initflags from "./tools/init/initflags.js";
 
+import replaceindom from "./tools/update/_replaceindom.js";
+
 /**
  * ## CreateComponent
  * Create Web Components for the RecursiveDOM.
@@ -36,6 +38,7 @@ class CreateComponent {
       * @param {JSON} param.inlineStyle component inline style
       * @param {JSON} param.props the equivalent of html attributes
       * @param {JSON} param.hooks define lifecycle methods for the component.
+      * @param {JSON} param.flags define flags for component updating.
       * @param {Function} param.hooks.onCreated executes when the component is rendered in the DOM.
       * @param {Function} param.hooks.onUpdated executes when the component has been partially changed.
       * @param {Function} param.hooks.onDestroyed executes when the component has been destroyed.
@@ -45,18 +48,12 @@ class CreateComponent {
           tag,
           children,
           events,
-          renderIf = true,
           className,
           style,
           inlineStyle,
           props,
           flags,
-          hooks = {
-               onCreated: undefined,
-               beforeDestroyed: undefined,
-               onDestroyed: undefined,
-               onUpdated: undefined,
-          },
+          hooks = {},
      }) {
           // tag cannot be
           if (!tag) {
@@ -70,7 +67,7 @@ class CreateComponent {
           // CreateComponent specific props
           this.$$createcomponent = "create-component";
           this.key = "0";
-          this.renderIf = renderIf;
+          // this.renderIf = renderIf;
 
           // HTML Attributes
           this.tag = tag;
@@ -85,11 +82,6 @@ class CreateComponent {
           this.props = {};
           initprops(this, { ...props, className: this.className });
 
-          // Children
-          this.children = [];
-
-          initchildren(this, children);
-
           // dom instance
           this.domInstance = undefined;
 
@@ -98,11 +90,16 @@ class CreateComponent {
           initevents(this, events);
 
           // Lifecycle Hooks
-          this.flags = {};
+          this.hooks = {};
           inithooks(this, hooks);
 
           // Rendering Flags
+          this.flags = {};
           initflags(this, flags);
+
+          // Children
+          this.children = [];
+          initchildren(this, children);
 
           // Keying
           // will be removed after testing domInstance
@@ -131,39 +128,31 @@ class CreateComponent {
      update(newComponent) {
           let didUpdate = false;
 
+          // get the dom instance of the component
           const htmlElement = this.domInstance;
 
           if (!htmlElement) {
                throw "Component not found inside document: Report a bug to https://github.com/RiadhAdrani/recursive";
           }
 
+          // FLAGS
+
+          // flags.forceRerender
+          // Just rerender the component
           if (this.flags.forceRerender === true) {
-               this.$beforeDestroyed();
-               htmlElement.replaceWith(
-                    newComponent.$$createcomponent ? newComponent.render() : newComponent
-               );
-               this.$onDestroyed();
-               newComponent?.$onCreated();
+               replaceindom(this, newComponent);
                return;
           }
 
           // check if the element to compare with is a string
           if (typeof newComponent === "string") {
-               this.$beforeDestroyed();
-               htmlElement.replaceWith(newComponent);
-               this.$onDestroyed();
+               replaceindom(this, newComponent);
                return;
           }
 
-          // check if the elements have the same tag
+          // check if the new element have a different tag
           if (this.tag !== newComponent.tag) {
-               // Execute Lifecycle Method
-               this.$beforeDestroyed();
-               htmlElement.replaceWith(newComponent.render());
-               newComponent.$onCreated();
-
-               // Execute Lifecycle Method
-               this.$onDestroyed();
+               replaceindom(this, newComponent);
                return;
           }
 
@@ -216,7 +205,7 @@ class CreateComponent {
 
      // execute onCreated lifecycle methid
      $onCreated() {
-          if (this.onCreated) this.onCreated();
+          if (this.hooks.onCreated) this.hooks.onCreated();
 
           if (this.children) {
                this.children.forEach((child) => {
@@ -229,12 +218,12 @@ class CreateComponent {
 
      // execute onDestroyed lifecycle method
      $onDestroyed() {
-          if (this.onDestroyed) this.onDestroyed();
+          if (this.hooks.onDestroyed) this.hooks.onDestroyed();
      }
 
      // execute beforedestroyed lifecycle method
      $beforeDestroyed() {
-          if (this.beforeDestroyed) this.beforeDestroyed();
+          if (this.hooks.beforeDestroyed) this.hooks.beforeDestroyed();
      }
 
      // add external style

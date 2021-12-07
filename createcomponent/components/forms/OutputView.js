@@ -22,15 +22,13 @@ export default ({
      name,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
      new CreateComponent({
           children: text,
-          tag: "optgroup",
+          tag: "output",
           inlineStyle: style,
-          renderIf,
           props: { id, isFor, form, name },
           className: className,
           events: events,

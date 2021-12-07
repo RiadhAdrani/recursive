@@ -7,23 +7,12 @@ import CreateComponent from "../../CreateComponent.js";
  * The `<h1>` to `<h6>` HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
-export default ({
-     text,
-     style,
-     styleSheet,
-     id,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ text, style, styleSheet, id, className, events, hooks, flags }) =>
      new CreateComponent({
           tag: "h1",
           children: text,
           inlineStyle: style,
           props: { id },
-          renderIf,
           className: className,
           events: events,
           hooks,

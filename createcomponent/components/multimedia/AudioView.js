@@ -38,7 +38,6 @@ export default ({
      src,
      className,
      events,
-     renderIf = true,
      hooks,
      flags,
 }) =>
@@ -46,7 +45,6 @@ export default ({
           tag: "audio",
           children,
           inlineStyle: style,
-          renderIf,
           props: { id, autoplay, controls, crossOrigin, loop, muted, preload, src },
           className: className,
           events: events,

@@ -12,23 +12,11 @@ import CreateComponent from "../../CreateComponent.js";
  * If not present, its default value is 1.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col
  */
-export default ({
-     children,
-     style,
-     styleSheet,
-     id,
-     span,
-     className,
-     events,
-     renderIf = true,
-     hooks,
-     flags,
-}) =>
+export default ({ children, style, styleSheet, id, span, className, events, hooks, flags }) =>
      new CreateComponent({
           children,
           tag: "col",
           inlineStyle: style,
-          renderIf,
           props: { id, span },
           className: className,
           events: events,
