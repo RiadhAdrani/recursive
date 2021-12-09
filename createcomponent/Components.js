@@ -91,8 +91,10 @@ import FigureCaptionView from "./components/text/FigureCaptionView.js";
 import DescriptionTermView from "./components/text/DescriptionTermView.js";
 import DescriptionListView from "./components/text/DescriptionListView.js";
 import DescriptionDetailsView from "./components/text/DescriptionDetailsView.js";
+import LinkView from "./components/inlinetext/LinkView.js";
 
 export {
+     LinkView as Link,
      DescriptionDetailsView as Dd,
      DescriptionListView as Dl,
      DescriptionTermView as Dt,

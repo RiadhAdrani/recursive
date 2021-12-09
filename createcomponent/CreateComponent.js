@@ -1,3 +1,5 @@
+import RecursiveDOM from "../RecursiveDOM.js";
+
 import applystylesheet from "./tools/applystyle/applystylesheet.js";
 
 import keying from "./tools/keying.js";
@@ -7,6 +9,7 @@ import initclassname from "./tools/init/initclassname.js";
 import initprops from "./tools/init/initprops.js";
 import inithooks from "./tools/init/inithooks.js";
 import initevents from "./tools/init/initevents.js";
+import initflags from "./tools/init/initflags.js";
 
 import renderattributes from "./tools/render/renderattributes.js";
 import renderevents from "./tools/render/renderevents.js";
@@ -16,18 +19,21 @@ import updateattributes from "./tools/update/updateattributes.js";
 import updatechildren from "./tools/update/updatechildren.js";
 import updateevents from "./tools/update/updateevents.js";
 import updatestyle from "./tools/update/updatestyle.js";
-import initflags from "./tools/init/initflags.js";
 
 import replaceindom from "./tools/update/_replaceindom.js";
 
 /**
  * ## CreateComponent
- * Create Web Components for the RecursiveDOM.
+ * ### The modular unit to build a Recursive Web App.
+ * CreateComponent is a representation of an HTML element,
+ * it can update, destroy and update itself according the need of the developer.
+ * Children component can be injected too, which have the same abilities as their parent,
+ * and like that, the library got its name.
  * @see {@link RecursiveDOM}
  */
 class CreateComponent {
      /**
-      * Initiate a new component
+      * Create a new component
       * @param {Object} param
       * @param {string} param.tag "Html tag"
       * @param {Array} param.children an array of children. A child can be of type `CreateComponent`, `string`, `boolean`, `number`. `null` value will be ignored.
@@ -39,10 +45,7 @@ class CreateComponent {
       * @param {JSON} param.props the equivalent of html attributes
       * @param {JSON} param.hooks define lifecycle methods for the component.
       * @param {JSON} param.flags define flags for component updating.
-      * @param {Function} param.hooks.onCreated executes when the component is rendered in the DOM.
-      * @param {Function} param.hooks.onUpdated executes when the component has been partially changed.
-      * @param {Function} param.hooks.onDestroyed executes when the component has been destroyed.
-      * @param {Function} param.hooks.beforeDestroyed executed before the component get destroyed.
+      * @param {Function} param.hooks define lifecycle methods.
       */
      constructor({
           tag,
@@ -106,6 +109,10 @@ class CreateComponent {
           // this.keying();
      }
 
+     /**
+      * Convert the Recursive representation into a DOM element.
+      * @returns {HTMLElement} DOM element.
+      */
      render() {
           let render = document.createElement(this.tag);
 
@@ -118,13 +125,18 @@ class CreateComponent {
           // inject children inside the rendered element
           renderchildren(this.children, render);
 
-          render.key = this.key;
+          // render.key = this.key;
 
           this.domInstance = render;
 
           return render;
      }
 
+     /**
+      * Compare the current component with another given one and update the `DOM` if needed.
+      * @param {CreateComponent | string} newComponent
+      * @returns {boolean} - indicates weather the component did change or not.
+      */
      update(newComponent) {
           let didUpdate = false;
 
@@ -136,7 +148,6 @@ class CreateComponent {
           }
 
           // FLAGS
-
           // flags.forceRerender
           // Just rerender the component
           if (this.flags.forceRerender === true) {
@@ -193,17 +204,26 @@ class CreateComponent {
           return didUpdate;
      }
 
-     // apply keys to elements
+     /**
+      * @deprecated
+      * assign a key to the current component, and its children.
+      */
      keying() {
           keying(this);
      }
 
-     // execute onUpdate lifecycle method
+     /**
+      * Allow the user to execute custom actions if the current component was just updated.
+      * @param {CreateComponent| string} oldComponent - current component
+      * @param {CreateComponent | string} newComponent - the new component
+      */
      $onUpdated(oldComponent, newComponent) {
           if (this.onUpdated) this.onUpdated(oldComponent, newComponent);
      }
 
-     // execute onCreated lifecycle methid
+     /**
+      * Allow the user to execute custom actions when the component has been created.
+      */
      $onCreated() {
           if (this.hooks.onCreated) this.hooks.onCreated();
 
@@ -216,17 +236,23 @@ class CreateComponent {
           }
      }
 
-     // execute onDestroyed lifecycle method
+     /**
+      * Allow the user to execute custom actions when the component has been destroyed.
+      */
      $onDestroyed() {
           if (this.hooks.onDestroyed) this.hooks.onDestroyed();
      }
 
-     // execute beforedestroyed lifecycle method
+     /**
+      * Allow the user to execute custom actions just before the destruction of the component.
+      */
      $beforeDestroyed() {
           if (this.hooks.beforeDestroyed) this.hooks.beforeDestroyed();
      }
 
-     // add external style
+     /**
+      * Send the `styleSheet` object to the RecursiveDOM to be processed.
+      */
      addExternalStyle() {
           applystylesheet(this);
      }

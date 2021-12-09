@@ -6,7 +6,7 @@ import handleevents from "./vdom/tools/handleevents.js";
 
 /**
  * ## RecursiveDOM
- * The heart of the Recursive library that play the role of the VDOM
+ * The Engine of the Recursive library that play the role of the VDOM
  * (Virtual Document Object Model)
  * and the CSSOM (Cascading Style Sheet Object Model).
  * @global The VDOM will be injected automatically in the `window` object.
@@ -69,7 +69,7 @@ class RecursiveDOM {
      }
 
      /**
-      * Render the app
+      * Render the app for the first time.
       */
      render() {
           const startTime = new Date().getTime();
