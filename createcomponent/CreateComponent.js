@@ -20,7 +20,7 @@ import updatechildren from "./tools/update/updatechildren.js";
 import updateevents from "./tools/update/updateevents.js";
 import updatestyle from "./tools/update/updatestyle.js";
 
-import replaceindom from "./tools/update/_replaceindom.js";
+import replaceindom from "./tools/update/doreplaceindom.js";
 
 /**
  * ## CreateComponent

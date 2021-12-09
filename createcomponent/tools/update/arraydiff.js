@@ -1,5 +1,5 @@
 import childtype from "../childtype.js";
-import _replacenodeindom from "./_replacenodeindom.js";
+import _replacenodeindom from "./doreplacenodeindom.js";
 
 /**
  * Compute the difference between the children of two components.

@@ -1,7 +1,7 @@
 import arraydiff from "./arraydiff.js";
-import _addchildrenindom from "./_addchildrenindom.js";
-import _removenodefromdom from "./_removenodefromdom.js";
-import _appendnodeindom from "./_appendnodeindom.js";
+import _addchildrenindom from "./doaddchildrenindom.js";
+import _removenodefromdom from "./doremovenodefromdom.js";
+import _appendnodeindom from "./doappendnodeindom.js";
 
 /**
  * Update component's children
