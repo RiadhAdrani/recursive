@@ -1,9 +1,9 @@
-import list from "../props/events.js";
+import PropList from "../PropList.js";
 
 export default (events) => {
      for (let e in events) {
-          if (list[e]) {
-               window.addEventListener(list[e], () => {
+          if (PropList.Events[e]) {
+               window.addEventListener(PropList.Events[e], () => {
                     vDOM.events[e]();
                });
           }

@@ -2,25 +2,11 @@ import RecursiveDOM from "../RecursiveDOM.js";
 
 import applystylesheet from "./tools/applystyle/applystylesheet.js";
 
-import keying from "./tools/keying.js";
-
-import initchildren from "./tools/init/initchildren.js";
-import initclassname from "./tools/init/initclassname.js";
-import initprops from "./tools/init/initprops.js";
-import inithooks from "./tools/init/inithooks.js";
-import initevents from "./tools/init/initevents.js";
-import initflags from "./tools/init/initflags.js";
-
-import renderattributes from "./tools/render/renderattributes.js";
-import renderevents from "./tools/render/renderevents.js";
-import renderchildren from "./tools/render/renderchildren.js";
-
-import updateattributes from "./tools/update/updateattributes.js";
-import updatechildren from "./tools/update/updatechildren.js";
-import updateevents from "./tools/update/updateevents.js";
 import updatestyle from "./tools/update/updatestyle.js";
-
-import replaceindom from "./tools/update/doreplaceindom.js";
+import Init from "./tools/Init.js";
+import Render from "./tools/Render.js";
+import Update from "./tools/Update.js";
+import HandleDOM from "./tools/HandleDOM.js";
 
 /**
  * ## CreateComponent
@@ -80,33 +66,29 @@ class CreateComponent {
           if (style) this.style = style;
           if (inlineStyle) this.inlineStyle = inlineStyle;
 
-          initclassname(this, style);
+          Init.className(this, style);
 
           this.props = {};
-          initprops(this, { ...props, className: this.className });
+          Init.attributes(this, { ...props, className: this.className });
 
           // dom instance
           this.domInstance = undefined;
 
           // Events
           this.events = {};
-          initevents(this, events);
+          Init.events(this, events);
 
           // Lifecycle Hooks
           this.hooks = {};
-          inithooks(this, hooks);
+          Init.hooks(this, hooks);
 
           // Rendering Flags
           this.flags = {};
-          initflags(this, flags);
+          Init.flags(this, flags);
 
           // Children
           this.children = [];
-          initchildren(this, children);
-
-          // Keying
-          // will be removed after testing domInstance
-          // this.keying();
+          Init.children(this, children);
      }
 
      /**
@@ -117,13 +99,16 @@ class CreateComponent {
           let render = document.createElement(this.tag);
 
           // add attributes
-          renderattributes(this, render);
+          Render.attributes(this, render);
+          // renderattributes(this, render);
 
           // add events
-          renderevents(this, render);
+          // renderevents(this, render);
+          Render.events(this, render);
 
           // inject children inside the rendered element
-          renderchildren(this.children, render);
+          // renderchildren(this.children, render);
+          Render.children(this, render);
 
           // render.key = this.key;
 
@@ -151,24 +136,28 @@ class CreateComponent {
           // flags.forceRerender
           // Just rerender the component
           if (this.flags.forceRerender === true) {
-               replaceindom(this, newComponent);
+               HandleDOM.replaceComponentInDOM(this, newComponent);
+               // replaceindom(this, newComponent);
                return;
           }
 
           // check if the element to compare with is a string
           if (typeof newComponent === "string") {
-               replaceindom(this, newComponent);
+               HandleDOM.replaceComponentInDOM(this, newComponent);
+               //replaceindom(this, newComponent);
                return;
           }
 
           // check if the new element have a different tag
           if (this.tag !== newComponent.tag) {
-               replaceindom(this, newComponent);
+               HandleDOM.replaceComponentInDOM(this, newComponent);
+               // replaceindom(this, newComponent);
                return;
           }
 
           // update events
-          updateevents(newComponent, htmlElement);
+          Update.events(newComponent, htmlElement);
+          // updateevents(newComponent, htmlElement);
 
           // update inline style
           const inlineStyleDidUpdate = updatestyle(
@@ -187,10 +176,10 @@ class CreateComponent {
           }
 
           // update attributes
-          const attributesDidUpdate = updateattributes(this, newComponent, htmlElement);
+          const attributesDidUpdate = Update.attributes(this, newComponent, htmlElement); //updateattributes(this, newComponent, htmlElement);
 
           // update children
-          const childrenDidChange = updatechildren(this, newComponent, htmlElement);
+          const childrenDidChange = Update.children(this, newComponent, htmlElement); //updatechildren(this, newComponent, htmlElement);
 
           // check if there is any change
           didUpdate =
@@ -209,7 +198,7 @@ class CreateComponent {
       * assign a key to the current component, and its children.
       */
      keying() {
-          keying(this);
+          // keying(this);
      }
 
      /**
