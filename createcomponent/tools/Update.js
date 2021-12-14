@@ -1,7 +1,7 @@
 import PropList from "../../vdom/PropList.js";
 import ArrayDiffing from "./ArrayDiffing.js";
 import HandleDOM from "./HandleDOM.js";
-import updateinlinestyle from "./update/updateinlinestyle.js";
+import Style from "./Style.js";
 
 export default {
      /**
@@ -36,7 +36,7 @@ export default {
                }
           }
 
-          updateinlinestyle(newComponent.style, component.style, render);
+          Style.updateInline(newComponent.style, component.style, render);
 
           return didUpdate;
      },
@@ -53,13 +53,11 @@ export default {
           // if component.children are greater than newComponent.children
           else if (component.children.length > newComponent.children.length) {
                while (component.domInstance.childNodes.length > newComponent.children.length) {
-                    // _removenodefromdom(newComponent.children.length, component);
                     HandleDOM.removeIndexedChildFromDOM(newComponent.children.length, component);
                     component.children.pop();
                }
 
                ArrayDiffing(component, newComponent, render);
-               // arraydiff(component, newComponent, render);
 
                return true;
           }
@@ -67,7 +65,6 @@ export default {
           else {
                for (let i = component.children.length; i < newComponent.children.length; i++) {
                     HandleDOM.appendIndexedChildInDOM(i, component, newComponent);
-                    // _appendnodeindom(i, component, newComponent);
                }
 
                return ArrayDiffing(component, newComponent, render);

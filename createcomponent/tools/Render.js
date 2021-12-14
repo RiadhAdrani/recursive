@@ -1,5 +1,5 @@
 import PropList from "../../vdom/PropList.js";
-import applyinlinestyle from "./applystyle/applyinlinestyle.js";
+import Style from "./Style.js";
 
 export default {
      /**
@@ -13,7 +13,8 @@ export default {
           }
 
           if (component.inlineStyle) {
-               applyinlinestyle(component.inlineStyle, render.style);
+               Style.applyInline(component.inlineStyle, render.style);
+               // applyinlinestyle(component.inlineStyle, render.style);
           }
      },
      /**

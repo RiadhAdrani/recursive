@@ -1,12 +1,10 @@
 import RecursiveDOM from "../RecursiveDOM.js";
 
-import applystylesheet from "./tools/applystyle/applystylesheet.js";
-
-import updatestyle from "./tools/update/updatestyle.js";
 import Init from "./tools/Init.js";
 import Render from "./tools/Render.js";
 import Update from "./tools/Update.js";
 import HandleDOM from "./tools/HandleDOM.js";
+import Style from "./tools/Style.js";
 
 /**
  * ## CreateComponent
@@ -160,7 +158,7 @@ class CreateComponent {
           // updateevents(newComponent, htmlElement);
 
           // update inline style
-          const inlineStyleDidUpdate = updatestyle(
+          const inlineStyleDidUpdate = Style.updateInlineExcept(
                htmlElement.style,
                this.inlineStyle,
                newComponent.inlineStyle
@@ -243,7 +241,7 @@ class CreateComponent {
       * Send the `styleSheet` object to the RecursiveDOM to be processed.
       */
      addExternalStyle() {
-          applystylesheet(this);
+          Style.applySheet(this);
      }
 }
 

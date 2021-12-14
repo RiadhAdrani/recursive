@@ -1,8 +1,7 @@
 import SetState from "./vdom/SetState.js";
-import handlecss from "./vdom/tools/handlecss.js";
 import CreateComponent from "./createcomponent/CreateComponent.js";
-import staticcsshandler from "./vdom/tools/staticcsstotext.js";
-import handleevents from "./vdom/tools/handleevents.js";
+import HandleStyle from "./vdom/HandleStyle.js";
+import HandleWindow from "./vdom/HandleWindow.js";
 
 /**
  * ## RecursiveDOM
@@ -77,18 +76,18 @@ class RecursiveDOM {
           try {
                const newRender = this.app();
                this.root.innerHTML = "";
-               handleevents(this.events);
+               HandleWindow.events(this.events);
                this.root.append(newRender.render());
                this.oldRender = newRender;
                this.oldRender.addExternalStyle();
-               this.sst = handlecss(
+               this.sst = HandleStyle.export(
                     this.style,
                     this.animations,
                     this.mediaQueries,
                     this.styleRoot,
                     this.sst
                );
-               this.staticStyleRoot.innerHTML = staticcsshandler(this.staticStyle);
+               this.staticStyleRoot.innerHTML = HandleStyle.exportStatic(this.staticStyle);
                this.oldRender.$onCreated();
           } catch (e) {
                if (e.name === "RangeError") {
@@ -119,7 +118,7 @@ class RecursiveDOM {
                this.animations = [];
                this.mediaQueries = [];
                this.oldRender.addExternalStyle();
-               this.sst = handlecss(
+               this.sst = HandleStyle.export(
                     this.style,
                     this.animations,
                     this.mediaQueries,
