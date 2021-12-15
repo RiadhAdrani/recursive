@@ -13,8 +13,7 @@ export default {
           }
 
           if (component.inlineStyle) {
-               Style.applyInline(component.inlineStyle, render.style);
-               // applyinlinestyle(component.inlineStyle, render.style);
+               Style.applyInline(component.inlineStyle, element.style);
           }
      },
      /**

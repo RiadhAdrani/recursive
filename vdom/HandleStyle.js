@@ -67,6 +67,8 @@ export default {
       * @param {JSON} cssobject static style object
       */
      exportStatic: function (cssobject) {
+          if (!cssobject) return;
+
           let output = "\n";
 
           if (cssobject["import"]) {
