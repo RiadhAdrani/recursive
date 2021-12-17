@@ -5,7 +5,7 @@ Project Recursive is an ongoing project to build a functional, component-based, 
 ## Getting Started
 
 To get started, we need first to make the library works.
-First, Create your `index.html` and `index.js` in a folder, then, download and drop this repo in the same location. Second, we need to import the library, and make the changes needed so your `index.html` recognize it corretly, your `index.html` should look something like this:
+First, Create your `index.html` and `index.js` in a folder, then, download and drop this repo in the same location. Second, we need to import the library, and make the changes needed so your `index.html` recognize it correctly, your `index.html` should look something like this:
 
 ```html
 <!DOCTYPE html>
@@ -113,7 +113,7 @@ vDOM.staticStyle = {
 vDOM.render();
 ```
 
-And as its name suggest, the style written is `static` and will be injected when the app fist load, just like an external `css` file.
+And as its name suggest, the style written is `static` and will be injected when the app first load, just like an external `css` file.
 
 #### `Component's inline style`
 
@@ -307,7 +307,7 @@ Let's create an `About` page:
 3. We need to initialize the routing system. Just before the export statement, add this line:
 
      ```js
-     const router = new Router();
+     window.router = new Router();
      ```
 
      `Router` constructor accepts one parameter, which is the root `Route`; a `Route` is like a directory in your web app. to create one, `Router` already have a premade function for them:
@@ -330,6 +330,7 @@ Let's create an `About` page:
 
      ```js
      import { Button, P, Div, Link } from "./recursivejs/createcomponent/Components.js";
+     import Router from "./recursivejs/router/Router.js";
 
      const iteration = setState(0);
 

@@ -693,6 +693,7 @@ export default {
           fileSelectorButton: "::file-selector-button",
           placeholder: "::placeholder",
           selection: "::selection",
+          marker: "::marker",
      },
      // Style Sheet keys
      StyleSheet: {
@@ -736,6 +737,7 @@ export default {
           after: { name: "::after" },
           before: { name: "::before" },
           cue: { name: "::cue" },
+          marker: { name: "::marker" },
           cueRegion: { name: "::cue-region" },
           firstLetter: { name: "::first-letter" },
           firstLine: { name: "::first-line" },
