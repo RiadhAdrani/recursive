@@ -36,8 +36,10 @@ class RecursiveDOM {
           this.root = root;
           this.staticStyleRoot = staticStyleRoot;
           this.styleRoot = styleRoot;
+          this.renderingIteration = 0;
 
           this.devMode = devMode;
+          this.multiThreading = true;
      }
 
      /**
@@ -55,16 +57,62 @@ class RecursiveDOM {
       * @param {HTMLElement} params.root html element that will host the app
       * @param {HTMLElement} params.styleRoot style tag that will host the app style.
       * @param {HTMLElement} params.staticStyleRoot style tag that will host the static app style.
+      * @param {JSON} params.options initialize RecursiveDOM dev parameters
       */
-     static init(root, styleRoot, staticStyleRoot) {
+     static init(
+          root,
+          styleRoot,
+          staticStyleRoot,
+          options = { devMode: true, multiThreading: true }
+     ) {
           window.vDOM = new RecursiveDOM({
                root,
                styleRoot,
                staticStyleRoot: staticStyleRoot,
                app: () => {},
           });
+
+          window.vDOM.devMode = options.devMode;
+          window.vDOM.multiThreading = options.multiThreading;
+
           window.setState = this.setState;
           window.updateAfter = SetState.updateAfter;
+     }
+
+     styleThread() {
+          this.style = [];
+          this.animations = [];
+          this.mediaQueries = [];
+
+          this.renderingIteration++;
+          this.app().addExternalStyle();
+
+          if (this.multiThreading && window.Worker) {
+               let worker = new Worker("../recursivejs/vdom/StyleThread.js", { type: "module" });
+
+               worker.postMessage({
+                    selectors: this.style,
+                    animations: this.animations,
+                    media: this.mediaQueries,
+                    old: this.sst,
+                    devMode: this.devMode,
+                    iteration: this.renderingIteration,
+               });
+
+               worker.addEventListener("message", (e) => {
+                    if (e.data.didchange && e.data.iteration === this.renderingIteration) {
+                         this.styleRoot.innerHTML = e.data.text;
+                    }
+               });
+          } else {
+               this.styleRoot.innerHTML = HandleStyle.export(
+                    this.style,
+                    this.animations,
+                    this.mediaQueries,
+                    this.sst,
+                    this.devMode
+               );
+          }
      }
 
      /**
@@ -74,19 +122,13 @@ class RecursiveDOM {
           const startTime = new Date().getTime();
 
           try {
-               const newRender = this.app();
+               this.styleThread();
+
+               this.oldRender = this.app();
                this.root.innerHTML = "";
                HandleWindow.events(this.events);
-               this.root.append(newRender.render());
-               this.oldRender = newRender;
-               this.oldRender.addExternalStyle();
-               this.sst = HandleStyle.export(
-                    this.style,
-                    this.animations,
-                    this.mediaQueries,
-                    this.styleRoot,
-                    this.sst
-               );
+               this.root.append(this.oldRender.render());
+
                this.staticStyleRoot.innerHTML = HandleStyle.exportStatic(this.staticStyle);
                this.oldRender.$onCreated();
           } catch (e) {
@@ -110,22 +152,11 @@ class RecursiveDOM {
           const startTime = new Date().getTime();
 
           try {
-               this.renderState = true;
+               this.styleThread();
+
                const newRender = this.app();
                this.oldRender.update(newRender);
                this.oldRender = newRender;
-               this.style = [];
-               this.animations = [];
-               this.mediaQueries = [];
-               this.oldRender.addExternalStyle();
-               this.sst = HandleStyle.export(
-                    this.style,
-                    this.animations,
-                    this.mediaQueries,
-                    this.styleRoot,
-                    this.sst
-               );
-               this.renderState = false;
           } catch (e) {
                if (e.name === "RangeError") {
                     throw `VDOM : infinite Rerendering : Make sure to update state only when needed.`;

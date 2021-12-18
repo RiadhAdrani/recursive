@@ -30,7 +30,7 @@ export default {
                }
           }
 
-          for (let prop in component) {
+          for (let prop in component.props) {
                if (PropList.Attributes[prop] && !newComponent.props[prop]) {
                     render[prop] = "";
                }

@@ -210,7 +210,7 @@ export default {
       * @param root style element inside the html document <style></style>
       * @param oldStyleText old style
       */
-     export: function (css, animations, mediaQueries, root, oldStyleText) {
+     export: function (css, animations, mediaQueries, oldStyleText, devMode) {
           let output = [];
 
           let outputAnimations = [];
@@ -266,11 +266,7 @@ export default {
 
           const ss = this.convertStyle(output, outputAnimations, mediaQueries);
 
-          if (oldStyleText !== ss) {
-               root.innerHTML = ss;
-          }
-
-          if (vDOM.devMode) {
+          if (devMode) {
                if (animationDup.length > 0) {
                     console.warn(
                          `DUPLICATE ANIMATION${

@@ -23,16 +23,10 @@ export default (component, newComponent) => {
           }
           // case children is string, new is child
           else if (
-               !Check.isComponent(component.children[i]) &&
-               Check.isComponent(newComponent.children[i])
-          ) {
-               HandleDOM.replaceIndexedChildInDOM(i, component, newComponent);
-               didUpdate = true;
-          }
-          // case children is child, new is string
-          else if (
-               Check.isComponent(component.children[i]) &&
-               Check.isComponent(!newComponent.children[i])
+               (!Check.isComponent(component.children[i]) &&
+                    Check.isComponent(newComponent.children[i])) ||
+               (Check.isComponent(component.children[i]) &&
+                    Check.isComponent(!newComponent.children[i]))
           ) {
                HandleDOM.replaceIndexedChildInDOM(i, component, newComponent);
                didUpdate = true;
