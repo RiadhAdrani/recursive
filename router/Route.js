@@ -39,7 +39,9 @@ export default class Route {
       * @param {Array} output an Array that will host the routes.
       */
      flatten(output) {
-          output?.push(this);
+          // output?.push(this);
+
+          output[this.name] = this;
 
           this.subRoutes?.forEach((element) => {
                if (this.name !== "/") {

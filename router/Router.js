@@ -14,36 +14,43 @@ class Router {
       * @param {Route} routes Define the main route for the App.
       */
      constructor(routes) {
-          this.routes = [];
+          this.routes = {};
 
           routes.flatten(this.routes);
 
-          this.current = this.routes[0];
-          this.stack = [routes[0]];
+          this.current = (() => {
+               for (let r in this.routes) {
+                    return this.routes[r];
+               }
+          })();
+
+          this.stack = [];
 
           window.addEventListener("popstate", (e) => {
-               if (this.stack.length === 1) {
-                    // scroll to top
-                    window.scrollTo({ top: 0, behavior: "smooth" });
+               let newRoute = {};
 
-                    this.current = routes[0];
-                    vDOM.update();
-                    return;
+               if (e.state) {
+                    newRoute = (() => {
+                         for (let r in this.routes) {
+                              if (this.routes[r].name === e.state.route) {
+                                   return this.routes[r];
+                              }
+                         }
+                         throw new Error(`Invalid Route name : ${e.state}`);
+                    })();
+               } else {
+                    newRoute = (() => {
+                         for (let r in this.routes) {
+                              return this.routes[r];
+                         }
+                    })();
                }
-               const x = this.stack.pop();
 
-               this.routes.forEach((r) => {
-                    if (x.name === r.name) {
-                         // scroll to top
-                         window.scrollTo({ top: 0, behavior: "smooth" });
-
-                         x?.onExit();
-                         this.current = r;
-                         vDOM.update();
-                         this.current?.onLoad();
-                         return;
-                    }
-               });
+               this.current?.onExit();
+               window.scrollTo({ top: 0, behavior: "smooth" });
+               this.current = newRoute;
+               vDOM.update();
+               this.current?.onLoad();
           });
      }
 
@@ -64,7 +71,7 @@ class Router {
 
      /**
       * Add a temporary route.
-      * @not_implemented_yet
+      * @not_implemented
       */
      addRoute() {
           throw "Feature is not yet implemented";
@@ -83,23 +90,19 @@ class Router {
       * @param {string} name Route exact name.
       */
      goTo(name) {
-          this.routes.forEach((r) => {
-               if (name === r.name && name !== this.current.name) {
-                    history.pushState({}, this.current.title, `${name}`);
-                    this.stack.push(this.current);
+          if (this.routes[name]) {
+               if (this.routes[name].name !== this.current.name) {
                     this.current?.onExit();
-                    this.current = r;
+                    this.current = this.routes[name];
                     if (this.current.title) {
                          document.title = this.current.title;
                     }
                     vDOM.update();
-
-                    // scroll to top
+                    history.pushState({ route: this.current.name }, this.current.title, `${name}`);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                     this.current?.onLoad();
-                    return;
                }
-          });
+          }
      }
 }
 
