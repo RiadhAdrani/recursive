@@ -1,4 +1,17 @@
 import CreateComponent from "./CreateComponent.js";
+import Check from "./tools/Check.js";
+
+/**
+ * Define custom elements
+ */
+
+class HTMLContainer extends HTMLElement {
+     constructor() {
+          super();
+     }
+}
+
+customElements.define("html-container", HTMLContainer, { extends: "div" });
 
 /**
  * ## EmbedExternalView `<embed>`
@@ -2901,7 +2914,45 @@ const Dd = ({ text, style, styleSheet, id, className, events, hooks, noWrap, fla
           flags,
      });
 
+class RawHTML extends CreateComponent {
+     constructor({ children }) {
+          super({
+               tag: "html-container",
+               children: `${children}`,
+          });
+          this.flags.forceRerender = true;
+     }
+
+     render() {
+          let render = document.createElement(this.tag);
+
+          render.innerHTML = this.children[0];
+
+          this.domInstance = render;
+
+          return render;
+     }
+
+     update(newComponent) {
+          this.domInstance.replaceWith(
+               Check.isComponent(newComponent) ? newComponent.render() : newComponent
+          );
+          return true;
+     }
+}
+
+/**
+ * ## HTML Container `<html-container>`
+ * Custom element used to render raw html.
+ */
+const Raw = ({ html }) => {
+     return new RawHTML({
+          children: html,
+     });
+};
+
 export {
+     Raw,
      Main,
      Dd,
      Dl,
