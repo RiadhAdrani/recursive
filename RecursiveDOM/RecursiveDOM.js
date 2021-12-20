@@ -73,6 +73,14 @@ class RecursiveDOM {
                app: () => {},
           });
 
+          class HTMLContainer extends HTMLElement {
+               constructor() {
+                    super();
+               }
+          }
+
+          customElements.define("html-container", HTMLContainer, { extends: "div" });
+
           window.vDOM.devMode = options.devMode;
           window.vDOM.multiThreading = options.multiThreading;
 

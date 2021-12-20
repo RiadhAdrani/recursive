@@ -2,18 +2,6 @@ import CreateComponent from "./CreateComponent.js";
 import Check from "./tools/Check.js";
 
 /**
- * Define custom elements
- */
-
-class HTMLContainer extends HTMLElement {
-     constructor() {
-          super();
-     }
-}
-
-customElements.define("html-container", HTMLContainer, { extends: "div" });
-
-/**
  * ## EmbedExternalView `<embed>`
  * *from MDN Docs*
  * ### The Embed External Content element
