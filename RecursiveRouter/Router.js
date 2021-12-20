@@ -1,5 +1,5 @@
 import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
-import CreateComponent from "../createcomponent/CreateComponent.js";
+import CreateComponent from "../CreateComponent/CreateComponent.js";
 import Route from "./Route.js";
 
 /**
