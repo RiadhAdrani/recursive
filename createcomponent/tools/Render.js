@@ -1,4 +1,4 @@
-import PropList from "../../vdom/PropList.js";
+import PropList from "../../RecursiveDOM/PropList.js";
 import Style from "./Style.js";
 
 export default {

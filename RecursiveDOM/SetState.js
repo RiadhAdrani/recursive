@@ -1,4 +1,4 @@
-import RecursiveDOM from "../RecursiveDOM.js";
+import RecursiveDOM from "./RecursiveDOM.js";
 
 /**
  * ### SetState

@@ -1,7 +1,8 @@
-import SetState from "./vdom/SetState.js";
-import CreateComponent from "./createcomponent/CreateComponent.js";
-import HandleStyle from "./vdom/HandleStyle.js";
-import HandleWindow from "./vdom/HandleWindow.js";
+import CreateComponent from "../CreateComponent/CreateComponent.js";
+
+import HandleStyle from "./HandleStyle.js";
+import HandleWindow from "./HandleWindow.js";
+import SetState from "./SetState.js";
 
 /**
  * ## RecursiveDOM

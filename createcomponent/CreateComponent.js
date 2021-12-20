@@ -1,4 +1,4 @@
-import RecursiveDOM from "../RecursiveDOM.js";
+import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
 
 import Init from "./tools/Init.js";
 import Render from "./tools/Render.js";

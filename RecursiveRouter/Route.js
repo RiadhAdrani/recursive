@@ -1,4 +1,4 @@
-import CreateComponent from "../createcomponent/CreateComponent.js";
+import CreateComponent from "../CreateComponent/CreateComponent.js";
 import Router from "./Router.js";
 
 /**

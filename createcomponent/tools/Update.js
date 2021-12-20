@@ -1,4 +1,4 @@
-import PropList from "../../vdom/PropList.js";
+import PropList from "../../RecursiveDOM/PropList.js";
 import ArrayDiffing from "./ArrayDiffing.js";
 import HandleDOM from "./HandleDOM.js";
 import Style from "./Style.js";

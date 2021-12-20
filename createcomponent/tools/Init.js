@@ -1,4 +1,4 @@
-import PropList from "../../vdom/PropList.js";
+import PropList from "../../RecursiveDOM/PropList.js";
 import Check from "./Check.js";
 
 export default {
