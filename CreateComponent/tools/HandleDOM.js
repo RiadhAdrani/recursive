@@ -25,6 +25,7 @@ export default {
                     : newComponent.children[index]
           );
 
+          // execute onCreated hook
           if (newComponent.children[index].$$createcomponent)
                newComponent.children[index].$onCreated();
      },
@@ -34,12 +35,14 @@ export default {
       * @param {number} index - the index of the component's child to be removed
       */
      removeIndexedChildFromDOM: (index, component) => {
+          // execute beforeDestroyed hook
           if (component.children[index].$beforeDestroyed) {
                component.children[index].$beforeDestroyed();
           }
 
           component.domInstance.childNodes[index].remove();
 
+          // execute onDestroyed hook
           if (component.children[index].$onDestroyed) {
                component.children[index].$onDestroyed();
           }
@@ -51,6 +54,7 @@ export default {
       * @param {number} index - the index of new component's child to be replaced
       */
      replaceIndexedChildInDOM: (index, component, newComponent) => {
+          // execute beforeDestroyed hook
           if (component.children[index].$beforeDestroyed)
                component.children[index]?.$beforeDestroyed();
 
@@ -60,8 +64,10 @@ export default {
                     : newComponent.children[index]
           );
 
+          // execute onDestroyed hook
           if (component.children[index].$onDestroyed) component.children[index].$onDestroyed();
 
+          // execute onCreated hook
           if (newComponent.children[index].$onCreated) newComponent.children[index]?.$onCreated();
      },
      /**
@@ -71,14 +77,17 @@ export default {
       * @used {@link CreateComponent}
       */
      replaceComponentInDOM: (component, newComponent) => {
+          // execute beforeDestroyed hook
           if (component.$beforeDestroyed) component?.$beforeDestroyed();
 
           component.domInstance.replaceWith(
                newComponent.$$createcomponent ? newComponent.render() : newComponent
           );
 
+          // execute onDestroyed hook
           if (component.$onDestroyed) component?.$onDestroyed();
 
+          // execute onCreated hook
           if (newComponent.$onCreated) newComponent?.$onCreated();
      },
 };

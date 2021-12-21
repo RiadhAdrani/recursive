@@ -1,4 +1,5 @@
 import CreateComponent from "../CreateComponent/CreateComponent.js";
+import CustomComponents from "../CreateComponent/CustomComponents.js";
 
 import HandleStyle from "./HandleStyle.js";
 import HandleWindow from "./HandleWindow.js";
@@ -13,6 +14,9 @@ import SetState from "./SetState.js";
  * @see{@link CreateComponent}
  */
 class RecursiveDOM {
+     // private fields
+     #oldRender;
+
      /**
       * @constructor
       * @param {Object} params deconstructed paramaters
@@ -25,7 +29,7 @@ class RecursiveDOM {
           this.app = () => {
                return app();
           };
-          this.oldRender = app();
+          this.#oldRender = app();
 
           this.style = [];
           this.animations = [];
@@ -40,17 +44,8 @@ class RecursiveDOM {
           this.renderingIteration = 0;
 
           this.devMode = devMode;
-          this.multiThreading = true;
+          this.multiThreading = false;
      }
-
-     /**
-      * Initialize a stateful object
-      * @param {any} value initial value
-      * @returns stateful object
-      * @function
-      * @see {@link SetState}
-      */
-     static setState = (value) => new SetState(value);
 
      /**
       * init the Recursive DOM
@@ -60,35 +55,31 @@ class RecursiveDOM {
       * @param {HTMLElement} params.staticStyleRoot style tag that will host the static app style.
       * @param {JSON} params.options initialize RecursiveDOM dev parameters
       */
-     static init(
+     static Init({
           root,
           styleRoot,
           staticStyleRoot,
-          options = { devMode: true, multiThreading: true }
-     ) {
-          window.vDOM = new RecursiveDOM({
+          options = { devMode: true, multiThreading: true },
+     }) {
+          window.RecursiveDOM = new RecursiveDOM({
                root,
                styleRoot,
                staticStyleRoot: staticStyleRoot,
                app: () => {},
           });
 
-          class HTMLContainer extends HTMLElement {
-               constructor() {
-                    super();
-               }
+          CustomComponents();
+
+          if (options) {
+               window.RecursiveDOM.devMode = options.devMode;
+               window.RecursiveDOM.multiThreading = options.multiThreading;
           }
 
-          customElements.define("html-container", HTMLContainer, { extends: "div" });
-
-          window.vDOM.devMode = options.devMode;
-          window.vDOM.multiThreading = options.multiThreading;
-
-          window.setState = this.setState;
+          window.setState = (value) => new SetState(value);
           window.updateAfter = SetState.updateAfter;
      }
 
-     styleThread() {
+     #styleThread() {
           this.style = [];
           this.animations = [];
           this.mediaQueries = [];
@@ -131,15 +122,15 @@ class RecursiveDOM {
           const startTime = new Date().getTime();
 
           try {
-               this.styleThread();
+               this.#styleThread();
 
-               this.oldRender = this.app();
+               this.#oldRender = this.app();
                this.root.innerHTML = "";
                HandleWindow.events(this.events);
-               this.root.append(this.oldRender.render());
+               this.root.append(this.#oldRender.render());
 
                this.staticStyleRoot.innerHTML = HandleStyle.exportStatic(this.staticStyle);
-               this.oldRender.$onCreated();
+               this.#oldRender.$onCreated();
           } catch (e) {
                if (e.name === "RangeError") {
                     throw `VDOM : infinite Rerendering : Make sure to update state only when needed.`;
@@ -161,11 +152,11 @@ class RecursiveDOM {
           const startTime = new Date().getTime();
 
           try {
-               this.styleThread();
+               this.#styleThread();
 
                const newRender = this.app();
-               this.oldRender.update(newRender);
-               this.oldRender = newRender;
+               this.#oldRender.update(newRender);
+               this.#oldRender = newRender;
           } catch (e) {
                if (e.name === "RangeError") {
                     throw `VDOM : infinite Rerendering : Make sure to update state only when needed.`;

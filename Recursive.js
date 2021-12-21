@@ -4,4 +4,6 @@ import RecursiveDOM from "./RecursiveDOM/RecursiveDOM.js";
 import Router from "./RecursiveRouter/Router.js";
 import Route from "./RecursiveRouter/Route.js";
 
-export { Components, CreateComponent, RecursiveDOM, Route, Router };
+const Init = RecursiveDOM.Init;
+
+export { Components, CreateComponent, Init, Route, Router };

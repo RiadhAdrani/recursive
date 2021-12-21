@@ -18,7 +18,7 @@ export default {
       * @param component this (can't be called outside CreateComponent)
       */
      applySheet: (component) => {
-          if (!vDOM) throw "Unable to find the VDOM";
+          if (!RecursiveDOM) throw "Unable to find the RecursiveDOM";
 
           if (component.style) {
                if (component.style.className) {
@@ -33,15 +33,15 @@ export default {
                          if (PropList.StyleSheet[selector]) {
                               if (PropList.StyleSheet[selector].type === "animation") {
                                    component.style.animations.forEach((animation) => {
-                                        vDOM.animations.push(animation);
+                                        RecursiveDOM.animations.push(animation);
                                    });
                               } else if (PropList.StyleSheet[selector].type === "media") {
-                                   vDOM.mediaQueries.push({
+                                   RecursiveDOM.mediaQueries.push({
                                         queries: component.style.mediaQueries,
                                         className: component.style.className,
                                    });
                               } else {
-                                   vDOM.style.push(
+                                   RecursiveDOM.style.push(
                                         styleObject(
                                              PropList.StyleSheet[selector].name,
                                              component.style[selector]

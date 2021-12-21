@@ -20,15 +20,15 @@ class SetState {
       * @param {any} newVal new value
       */
      setValue(newVal) {
-          if (!vDOM) throw "[VDOM] no VirtualDOM in the current document.";
+          if (!window.RecursiveDOM) throw "[VDOM] no VirtualDOM in the current document.";
           this.value = newVal;
-          vDOM.update();
+          window.RecursiveDOM.update();
      }
 
      static updateAfter(actions) {
           try {
                actions();
-               vDOM.update();
+               window.RecursiveDOM.update();
           } catch (e) {}
      }
 }

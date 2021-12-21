@@ -33,6 +33,7 @@ export default {
           download: "download",
           decoding: "decoding",
           default: "default",
+          draggable: "draggable",
 
           encType: "enctype",
 
@@ -694,6 +695,11 @@ export default {
           placeholder: "::placeholder",
           selection: "::selection",
           marker: "::marker",
+          webkitScrollbar: "::-webkit-scrollbar",
+          webkitScrollbarTrack: "::-webkit-scrollbar-track",
+          webkitScrollbarThumb: "::-webkit-scrollbar-thumb",
+          webkitScrollbarThumbHover: "::-webkit-scrollbar-thumb:hover",
+          webkitScrollbarThumbActive: "::-webkit-scrollbar-thumb:active",
      },
      // Style Sheet keys
      StyleSheet: {

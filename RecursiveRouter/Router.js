@@ -49,7 +49,7 @@ class Router {
                this.current?.onExit();
                window.scrollTo({ top: 0, behavior: "smooth" });
                this.current = newRoute;
-               vDOM.update();
+               window.RecursiveDOM.update();
                this.current?.onLoad();
           });
      }
@@ -97,7 +97,7 @@ class Router {
                     if (this.current.title) {
                          document.title = this.current.title;
                     }
-                    vDOM.update();
+                    window.RecursiveDOM.update();
                     history.pushState({ route: this.current.name }, this.current.title, `${name}`);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                     this.current?.onLoad();
