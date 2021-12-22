@@ -88,7 +88,7 @@ class RecursiveDOM {
           this.app().addExternalStyle();
 
           if (this.multiThreading && window.Worker) {
-               let worker = new Worker("../recursivejs/vdom/StyleThread.js", { type: "module" });
+               let worker = new Worker("./StyleThread.js", { type: "module" });
 
                worker.postMessage({
                     selectors: this.style,
