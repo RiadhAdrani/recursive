@@ -85,14 +85,19 @@ export default {
                     render.events = {};
                }
 
+               for (let event in newComponent.events) {
+                    if (!render.events[event]) {
+                         render.addEventListener(PropList.Events[event], (e) => {
+                              render.events[event](e);
+                         });
+                    }
+                    updateEvent(event);
+               }
+
                for (let event in render.events) {
                     if (!newComponent.events[event]) {
                          render.events[event] = () => {};
                     }
-               }
-
-               for (let event in newComponent.events) {
-                    updateEvent(event);
                }
           } else {
                render.events = {};

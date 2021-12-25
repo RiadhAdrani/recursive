@@ -695,6 +695,9 @@ export default {
           placeholder: "::placeholder",
           selection: "::selection",
           marker: "::marker",
+
+          // webkit
+
           webkitScrollbar: "::-webkit-scrollbar",
           webkitScrollbarTrack: "::-webkit-scrollbar-track",
           webkitScrollbarThumb: "::-webkit-scrollbar-thumb",
@@ -751,7 +754,17 @@ export default {
           placeholder: { name: "::placeholder" },
           selection: { name: "::selection" },
 
+          // webkit
+          webkitScrollbar: { name: "::-webkit-scrollbar" },
+          webkitScrollbarTrack: { name: "::-webkit-scrollbar-track" },
+          webkitScrollbarThumb: { name: "::-webkit-scrollbar-thumb" },
+          webkitScrollbarThumbHover: { name: "::-webkit-scrollbar-thumb:hover" },
+          webkitScrollbarThumbActive: { name: "::-webkit-scrollbar-thumb:active" },
+
+          // animations
           animations: { type: "animation" },
+
+          // media queries
           mediaQueries: { type: "media" },
      },
 };
