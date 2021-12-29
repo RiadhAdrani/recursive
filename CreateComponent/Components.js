@@ -1,5 +1,7 @@
 import CreateComponent from "./CreateComponent.js";
 import Check from "./tools/Check.js";
+import Init from "./tools/Init.js";
+import Render from "./tools/Render.js";
 
 /**
  * ## EmbedExternalView `<embed>`
@@ -3126,11 +3128,20 @@ const Dd = ({ text, style, styleSheet, id, draggable, className, events, hooks, 
           flags,
      });
 
+/**
+ * @class RawHTML
+ * @extends CreateComponent create a Raw component object.
+ */
 class RawHTML extends CreateComponent {
-     constructor({ children }) {
+     constructor({ html, id, draggable, className, events, hooks, flags }) {
           super({
                tag: "html-container",
-               children: `${children}`,
+               children: `${html}`,
+               className,
+               events,
+               hooks,
+               flags,
+               props: { id, draggable },
           });
           this.flags.forceRerender = true;
      }
@@ -3154,16 +3165,181 @@ class RawHTML extends CreateComponent {
 }
 
 /**
- * ## HTML Container `<html-container>`
- * Custom element used to render raw html.
+ * ## Raw `<html-container>`
+ * ### The raw HTML container
+ * Provide a way to render raw html inside of it.
  */
-const Raw = ({ html }) => {
+const Raw = ({ html, id, draggable, className, events, hooks, flags }) => {
      return new RawHTML({
           children: html,
+          id,
+          draggable,
+          className,
+          events,
+          hooks,
+          flags,
+     });
+};
+
+/**
+ * ## EmptyBox `<empty-box>`
+ * ### The spacing element
+ * Could be used instead of margin and padding
+ * @param props.height view height
+ * @param props.width view width
+ */
+const EmptyBox = ({ height, width, id, draggable, events, hooks, flags }) => {
+     return new CreateComponent({
+          tag: "empty-box",
+          inlineStyle: { height, width },
+          events,
+          hooks,
+          flags,
+          props: { id, draggable },
+     });
+};
+
+/**
+ * @class ListViewer
+ * @extends CreateComponent create a list view with an end observer.
+ */
+class ListViewer extends CreateComponent {
+     constructor({
+          children,
+          id,
+          draggable,
+          className,
+          onObserved,
+          events,
+          hooks,
+          flags,
+          style,
+          styleSheet,
+     }) {
+          super({
+               tag: "list-view",
+               children,
+               props: { id, draggable },
+               className,
+               events,
+               hooks,
+               flags,
+               style: styleSheet,
+               inlineStyle: style,
+          });
+
+          if (!this.hooks) {
+               this.hooks = {};
+          }
+          this.hooks.onCreated = () => {
+               if (this.children.length === 0 || typeof onObserved !== "function") return;
+
+               var observer = new IntersectionObserver(
+                    (entries) => {
+                         if (entries[0].isIntersecting === true) {
+                              onObserved(this.domInstance);
+                              observer.observe(this.domInstance.lastChild);
+                         }
+                    },
+                    { threshold: [0] }
+               );
+
+               observer.observe(this.domInstance.lastChild);
+
+               if (hooks) {
+                    if (hooks.onCreated) {
+                         hooks.onCreated();
+                    }
+               }
+          };
+     }
+}
+
+/**
+ * ## ListView `<list-view>`
+ * ### The list view
+ * Flexible component allowing for progressive/infine rendering of large lists
+ * @param props.onObserved execute an action when the last child of the component became visible.
+ */
+const List = ({
+     children,
+     id,
+     draggable,
+     className,
+     events,
+     hooks,
+     flags,
+     style,
+     styleSheet,
+     onObserved,
+}) => {
+     return new ListViewer({
+          children,
+          id,
+          draggable,
+          className,
+          events,
+          onObserved,
+          hooks,
+          flags,
+          style,
+          styleSheet,
+     });
+};
+
+/**
+ * ## Column `<column-view>`
+ * ### The vertical flexbox
+ * Flexbox displaying items vertically.
+ */
+const Column = ({
+     children,
+     style,
+     styleSheet,
+     id,
+     draggable,
+     className,
+     events,
+     hooks,
+     flags,
+}) => {
+     return new CreateComponent({
+          tag: "column-view",
+          children,
+          inlineStyle: style,
+          style: styleSheet,
+          props: { id, draggable },
+          className,
+          events,
+          hooks,
+          flags,
+     });
+};
+
+/**
+ * ## Row `<row-view>`
+ * ### The horizontal flexbox
+ * Flexbox displaying items horizontally.
+ */
+const Row = ({ children, style, styleSheet, id, draggable, className, events, hooks, flags }) => {
+     return new CreateComponent({
+          tag: "row-view",
+          children,
+          inlineStyle: style,
+          style: styleSheet,
+          props: { id, draggable },
+          className,
+          events,
+          hooks,
+          flags,
      });
 };
 
 export {
+     Row,
+     Column,
+     List,
+     EmptyBox,
      Raw,
      Main,
      Dd,

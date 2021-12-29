@@ -6,6 +6,11 @@ import Update from "./tools/Update.js";
 import HandleDOM from "./tools/HandleDOM.js";
 import Style from "./tools/Style.js";
 
+function ThrowComponentError(msg) {
+     const e = new Error(`Failed to create component => ${msg}`);
+     throw e;
+}
+
 /**
  * ## CreateComponent
  * ### The modular unit to build a Recursive Web App.
@@ -44,20 +49,16 @@ class CreateComponent {
      }) {
           // tag cannot be
           if (!tag) {
-               throw (() => {
-                    const error = new Error(`component tag cannot be empty.`);
-                    error.name = "CREATE-COMPONENT";
-                    return error;
-               })();
+               ThrowComponentError("tag property is missing.");
           }
 
           // CreateComponent specific props
           this.$$createcomponent = "create-component";
-          this.key = "0";
-          // this.renderIf = renderIf;
 
           // HTML Attributes
           this.tag = tag;
+
+          this.props = {};
 
           // props
           if (className) this.className = className;
@@ -66,7 +67,6 @@ class CreateComponent {
 
           Init.className(this, style);
 
-          this.props = {};
           Init.attributes(this, { ...props, className: this.className });
 
           // dom instance
@@ -126,8 +126,10 @@ class CreateComponent {
           // get the dom instance of the component
           const htmlElement = this.domInstance;
 
-          if (!htmlElement) {
-               throw "Component not found inside document: Report a bug to https://github.com/RiadhAdrani/recursive";
+          if (!htmlElement.tagName) {
+               ThrowComponentError(
+                    "Component not found inside document : This error should not happen : Report a bug to https://github.com/RiadhAdrani/recursive"
+               );
           }
 
           // FLAGS
@@ -142,20 +144,17 @@ class CreateComponent {
           // check if the element to compare with is a string
           if (typeof newComponent === "string") {
                HandleDOM.replaceComponentInDOM(this, newComponent);
-               //replaceindom(this, newComponent);
                return;
           }
 
           // check if the new element have a different tag
           if (this.tag !== newComponent.tag) {
                HandleDOM.replaceComponentInDOM(this, newComponent);
-               // replaceindom(this, newComponent);
                return;
           }
 
           // update events
           Update.events(newComponent, htmlElement);
-          // updateevents(newComponent, htmlElement);
 
           // update inline style
           const inlineStyleDidUpdate = Style.updateInlineExcept(
@@ -192,16 +191,8 @@ class CreateComponent {
      }
 
      /**
-      * @deprecated
-      * assign a key to the current component, and its children.
-      */
-     keying() {
-          // keying(this);
-     }
-
-     /**
       * Allow the user to execute custom actions if the current component was just updated.
-      * @param {CreateComponent| string} oldComponent - current component
+      * @param {CreateComponent | string} oldComponent - current component
       * @param {CreateComponent | string} newComponent - the new component
       */
      $onUpdated(oldComponent, newComponent) {
@@ -212,7 +203,7 @@ class CreateComponent {
       * Allow the user to execute custom actions when the component has been created.
       */
      $onCreated() {
-          if (this.hooks.onCreated) this.hooks.onCreated();
+          if (this.hooks.onCreated) this.hooks.onCreated(this.domInstance);
 
           if (this.children) {
                this.children.forEach((child) => {
@@ -227,14 +218,14 @@ class CreateComponent {
       * Allow the user to execute custom actions when the component has been destroyed.
       */
      $onDestroyed() {
-          if (this.hooks.onDestroyed) this.hooks.onDestroyed();
+          if (this.hooks.onDestroyed) this.hooks.onDestroyed(this);
      }
 
      /**
       * Allow the user to execute custom actions just before the destruction of the component.
       */
      $beforeDestroyed() {
-          if (this.hooks.beforeDestroyed) this.hooks.beforeDestroyed();
+          if (this.hooks.beforeDestroyed) this.hooks.beforeDestroyed(this.domInstance);
      }
 
      /**

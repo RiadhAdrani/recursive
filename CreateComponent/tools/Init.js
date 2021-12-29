@@ -1,6 +1,11 @@
 import PropList from "../../RecursiveDOM/PropList.js";
 import Check from "./Check.js";
 
+function ThrowInitError(msg) {
+     const e = new Error(`Failed to initialize component => ${msg}`);
+     throw e;
+}
+
 export default {
      /**
       * Initialize children
@@ -19,7 +24,7 @@ export default {
 
                          // throw an error if a child is an array
                          if (Check.isArrayOfComponents(children[i])) {
-                              throw `[RENDER]: Child cannot be an array`;
+                              ThrowInitError("Child cannot be an array.");
                          }
 
                          // if child is a component.
@@ -35,8 +40,10 @@ export default {
 
                               // merge all consecutive non-component child into one text node
                               for (let j = i + 1, l = children.length; j < l; j++) {
-                                   if (Check.isComponent(children[j])) {
+                                   if (Check.isComponent(children[j]) && children[j] !== null) {
                                         break;
+                                   } else if (Check.isArrayOfComponents(children[j])) {
+                                        ThrowInitError("Child cannot be an array.");
                                    } else {
                                         textNode += children[j];
                                         i++;
@@ -87,7 +94,7 @@ export default {
           }
 
           if (component.className) {
-               const classList = component.className.split(" ");
+               const classList = component.className.toString().split(" ");
                for (var i = 0, j = classList.length; i < j; i++) {
                     Check.isValidClassName(classList[i]);
                }
@@ -99,24 +106,15 @@ export default {
       * @throws an error whenever an event is not a function or doesn't have a valid name
       */
      events: (component, events) => {
-          function InvalidEvent(event, message) {
-               throw (() => {
-                    const error = new Error(`${event} ${message}`);
-                    error.name = "EVENTS";
-                    `${event} ${message}`;
-                    return error;
-               })();
-          }
-
           for (var event in events) {
                if (PropList.Events[event]) {
                     if (typeof events[event] === "function") {
                          component.events[event] = events[event];
                     } else {
-                         InvalidEvent(event, "is not a function");
+                         ThrowInitError(`${event} is not a function.`);
                     }
                } else {
-                    InvalidEvent(event, "is not a valid event name.");
+                    ThrowInitError(`${event} is not a valid event name.`);
                }
           }
      },
@@ -136,23 +134,16 @@ export default {
       * @param hooks
       */
      hooks: (component, hooks) => {
-          function InvalidHook(hook, message) {
-               const error = new Error(`${hook} ${message}`);
-               error.name = "HOOKS";
-               console.warn(`${hook} ${message}`);
-               throw error;
-          }
-
           for (var hook in hooks) {
                if (hooks[hook] !== undefined) {
                     if (PropList.Hooks[hook]) {
                          if (typeof hooks[hook] === "function") {
                               component.hooks[hook] = hooks[hook];
                          } else {
-                              InvalidHook(hook, "is not a function.");
+                              ThrowInitError(`${hook} is not a function.`);
                          }
                     } else {
-                         InvalidHook(hook, "is not a valid hook name.");
+                         ThrowInitError(`${hook} is not a valid hook.`);
                     }
                }
           }
@@ -163,8 +154,10 @@ export default {
       */
      attributes: (component, attributes) => {
           for (var attr in attributes) {
-               if (PropList.Attributes[attr] && attributes[attr]) {
-                    component.props[attr] = attributes[attr];
+               if (PropList.Attributes[attr]) {
+                    if (attributes[attr]) {
+                         component.props[attr] = attributes[attr];
+                    }
                }
           }
      },

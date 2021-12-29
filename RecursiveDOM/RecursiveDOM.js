@@ -25,11 +25,22 @@ class RecursiveDOM {
       * @param {HTMLElement} params.styleRoot style tag that will host the app style.
       * @param {boolean} params.devMode allow infos about the state of tbe app to be logged into the console.
       */
-     constructor({ app, root, styleRoot, staticStyle, staticStyleRoot, events, devMode = false }) {
+     constructor({ staticStyle, app, events, devMode = false }) {
           this.app = () => {
                return app();
           };
           this.#oldRender = app();
+
+          CustomComponents();
+
+          const appRoot = document.createElement("div");
+          appRoot.id = "app-root";
+          const appStyle = document.createElement("style");
+          const appStaticStyle = document.createElement("style");
+
+          document.querySelector("body").append(appRoot);
+          document.querySelector("head").append(appStaticStyle);
+          document.querySelector("head").append(appStyle);
 
           this.style = [];
           this.animations = [];
@@ -38,9 +49,9 @@ class RecursiveDOM {
           this.staticStyle = staticStyle;
           this.events = events;
 
-          this.root = root;
-          this.staticStyleRoot = staticStyleRoot;
-          this.styleRoot = styleRoot;
+          this.root = appRoot;
+          this.staticStyleRoot = appStaticStyle;
+          this.styleRoot = appStyle;
           this.renderingIteration = 0;
 
           this.devMode = devMode;
@@ -55,20 +66,10 @@ class RecursiveDOM {
       * @param {HTMLElement} params.staticStyleRoot style tag that will host the static app style.
       * @param {JSON} params.options initialize RecursiveDOM dev parameters
       */
-     static Init({
-          root,
-          styleRoot,
-          staticStyleRoot,
-          options = { devMode: true, multiThreading: true },
-     }) {
+     static Init({ options = { devMode: true, multiThreading: true } }) {
           window.RecursiveDOM = new RecursiveDOM({
-               root,
-               styleRoot,
-               staticStyleRoot: staticStyleRoot,
                app: () => {},
           });
-
-          CustomComponents();
 
           if (options) {
                window.RecursiveDOM.devMode = options.devMode;
@@ -79,6 +80,51 @@ class RecursiveDOM {
           window.updateAfter = SetState.updateAfter;
      }
 
+     #handleError(execute) {
+          try {
+               execute();
+          } catch (e) {
+               this.app = () => {
+                    return new CreateComponent({
+                         tag: "div",
+                         inlineStyle: {
+                              padding: "20px 20px 40px 20px",
+                              background: "#992222",
+                              color: "white",
+                              position: "absolute",
+                              fontSize: "20px",
+                              width: "-webkit-fill-available",
+                         },
+                         children: [
+                              new CreateComponent({
+                                   tag: "p",
+                                   children: `${e}`,
+                                   inlineStyle: {
+                                        fontSize: "20px",
+                                        fontWeight: "Trebuchet MS",
+                                        padding: "10px",
+                                   },
+                              }),
+                              new CreateComponent({
+                                   tag: "p",
+                                   children: `Stack: ${e.stack}`,
+                                   inlineStyle: {
+                                        padding: "20px",
+                                        fontSize: "16px",
+                                        lineHeight: "1.5em",
+                                        whiteSpace: "break-spaces",
+                                        fontFamily: "monospace",
+                                        background: "#551111",
+                                   },
+                              }),
+                         ],
+                    });
+               };
+               this.render();
+               console.error(e);
+          }
+     }
+
      #styleThread() {
           this.style = [];
           this.animations = [];
@@ -87,8 +133,8 @@ class RecursiveDOM {
           this.renderingIteration++;
           this.app().addExternalStyle();
 
-          if (this.multiThreading && window.Worker) {
-               let worker = new Worker("./StyleThread.js", { type: "module" });
+          if (false) {
+               const worker = new Worker("./StyleThread.js", { type: "module" });
 
                worker.postMessage({
                     selectors: this.style,
@@ -103,7 +149,10 @@ class RecursiveDOM {
                     if (e.data.didchange && e.data.iteration === this.renderingIteration) {
                          this.styleRoot.innerHTML = e.data.text;
                     }
+                    worker.terminate();
                });
+
+               console.log(worker);
           } else {
                this.styleRoot.innerHTML = HandleStyle.export(
                     this.style,
@@ -119,28 +168,21 @@ class RecursiveDOM {
       * Render the app for the first time.
       */
      render() {
-          const startTime = new Date().getTime();
-
-          try {
-               this.#styleThread();
+          this.#handleError(() => {
+               const startTime = new Date().getTime();
 
                this.#oldRender = this.app();
+               this.#styleThread();
                this.root.innerHTML = "";
                HandleWindow.events(this.events);
                this.root.append(this.#oldRender.render());
 
                this.staticStyleRoot.innerHTML = HandleStyle.exportStatic(this.staticStyle);
                this.#oldRender.$onCreated();
-          } catch (e) {
-               if (e.name === "RangeError") {
-                    throw `VDOM : infinite Rerendering : Make sure to update state only when needed.`;
-               } else {
-                    console.error(e);
-               }
-          }
 
-          if (this.devMode)
-               console.log(`First render done in ${new Date().getTime() - startTime}ms`);
+               if (this.devMode)
+                    console.log(`First paint done in ${new Date().getTime() - startTime}ms`);
+          });
      }
 
      /**
@@ -149,23 +191,16 @@ class RecursiveDOM {
       * @function
       */
      update() {
-          const startTime = new Date().getTime();
-
-          try {
-               this.#styleThread();
+          this.#handleError(() => {
+               const startTime = new Date().getTime();
 
                const newRender = this.app();
                this.#oldRender.update(newRender);
+               this.#styleThread();
                this.#oldRender = newRender;
-          } catch (e) {
-               if (e.name === "RangeError") {
-                    throw `VDOM : infinite Rerendering : Make sure to update state only when needed.`;
-               } else {
-                    throw e;
-               }
-          }
 
-          if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
+               if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
+          });
      }
 }
 

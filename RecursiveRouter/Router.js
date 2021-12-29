@@ -50,6 +50,9 @@ class Router {
                window.scrollTo({ top: 0, behavior: "smooth" });
                this.current = newRoute;
                window.RecursiveDOM.update();
+               if (this.current.title) {
+                    document.title = this.current.title;
+               }
                this.current?.onLoad();
           });
      }

@@ -1,5 +1,7 @@
 import HandleStyle from "./HandleStyle.js";
 
+console.log("working...");
+
 // listen for data from the main window
 self.addEventListener("message", (e) => {
      // store style data
@@ -23,3 +25,5 @@ self.addEventListener("message", (e) => {
      // send generated style to the main window
      self.postMessage({ didchange: data !== input.old, text: data, iteration: input.iteration });
 });
+
+export default () => {};

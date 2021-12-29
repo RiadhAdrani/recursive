@@ -46,8 +46,6 @@ export default {
                for (var event in component.events) {
                     if (PropList.Events[event]) {
                          addEvent(event, component.events[event]);
-                    } else {
-                         console.warn(`[EVENT]: ${event} is not a valid event name.`);
                     }
                }
           }

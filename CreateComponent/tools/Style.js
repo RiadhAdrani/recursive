@@ -1,5 +1,10 @@
 import PropList from "../../RecursiveDOM/PropList.js";
 
+function ThrowStyleError(msg) {
+     const e = new Error(`Failed to compute style => ${msg}`);
+     throw e;
+}
+
 export default {
      /**
       * apply inline style to a component.
@@ -18,7 +23,7 @@ export default {
       * @param component this (can't be called outside CreateComponent)
       */
      applySheet: (component) => {
-          if (!RecursiveDOM) throw "Unable to find the RecursiveDOM";
+          if (!RecursiveDOM) ThrowStyleError("RecursiveDOM is not initialized.");
 
           if (component.style) {
                if (component.style.className) {
@@ -55,8 +60,8 @@ export default {
                          }
                     }
                } else {
-                    console.warn(
-                         "MISSING STYLE CLASS: cannot apply the style without the styleClass. Add className into your component.styleSheet object"
+                    ThrowStyleError(
+                         "Unable to apply style, className is missing from the styleSheet."
                     );
                }
           }

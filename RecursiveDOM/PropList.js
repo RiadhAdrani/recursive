@@ -567,7 +567,7 @@ export default {
           onHashChange: "hashchange",
           onChange: "input",
           onInvalid: "invalid",
-          onKeydown: "keydown",
+          onKeyDown: "keydown",
           onKeyPress: "keypress",
           onKeyUp: "keyup",
           onLoad: "load",

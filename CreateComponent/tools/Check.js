@@ -1,5 +1,10 @@
 import CreateComponent from "../CreateComponent.js";
 
+function ThrowCheckError(msg) {
+     const e = new Error(`Check Failed => ${msg}`);
+     throw e;
+}
+
 export default {
      /**
       * Return whether a component is a create-component or plain text
@@ -33,6 +38,6 @@ export default {
                ? true
                : /^[a-zA-Z]([a-zA-Z0-9]|(-))+$/.test(classname)
                ? true
-               : InvalidClassName(classname, "is not a valid class name.");
+               : ThrowCheckError(`"${classname}" is not a valid className.`);
      },
 };

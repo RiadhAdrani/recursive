@@ -30,8 +30,12 @@ export default class Route {
           this.component = component;
           this.title = title;
           this.subRoutes = subRoutes;
-          this.onLoad = onLoad;
-          this.onExit = onExit;
+          this.onLoad = () => {
+               if (typeof onLoad === "function") onLoad();
+          };
+          this.onExit = () => {
+               if (typeof onExit === "function") onExit();
+          };
      }
 
      /**
