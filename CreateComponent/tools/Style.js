@@ -34,29 +34,38 @@ export default {
                          };
                     };
 
+                    if (component.style.mediaQueries) {
+                         RecursiveDOM.style.mediaQueries.push({
+                              queries: component.style.mediaQueries,
+                              className: component.style.className,
+                         });
+                    }
+
+                    if (component.style.animations) {
+                         component.style.animations.forEach((animation) => {
+                              RecursiveDOM.style.push(animation);
+                         });
+                    }
+
                     for (var selector in component.style) {
-                         if (PropList.StyleSheet[selector]) {
-                              if (PropList.StyleSheet[selector].type === "animation") {
-                                   component.style.animations.forEach((animation) => {
-                                        RecursiveDOM.animations.push(animation);
-                                   });
-                              } else if (PropList.StyleSheet[selector].type === "media") {
-                                   RecursiveDOM.mediaQueries.push({
-                                        queries: component.style.mediaQueries,
-                                        className: component.style.className,
-                                   });
-                              } else {
-                                   RecursiveDOM.style.push(
-                                        styleObject(
-                                             PropList.StyleSheet[selector].name,
-                                             component.style[selector]
-                                        )
-                                   );
-                              }
+                         if (
+                              selector === "mediaQueries" ||
+                              selector === "animations" ||
+                              selector === "className"
+                         )
+                              continue;
+
+                         if (PropList.CssSelectors[selector] || selector === "normal") {
+                              RecursiveDOM.style.selectors.push(
+                                   styleObject(
+                                        PropList.CssSelectors[selector],
+                                        component.style[selector]
+                                   )
+                              );
                          } else {
-                              if (!["className"].includes(selector)) {
-                                   console.warn(`[STYLE]: "${selector}" is not a valid selector.`);
-                              }
+                              ThrowStyleError(
+                                   `${selector} is not a valid CSS selector, or is still not implemented in the library.`
+                              );
                          }
                     }
                } else {

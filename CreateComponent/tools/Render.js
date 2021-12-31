@@ -36,7 +36,7 @@ export default {
                function addEvent(prop, event) {
                     element.events[prop] = event;
 
-                    element.addEventListener(PropList.Events[prop], (e) => {
+                    element.addEventListener(PropList.Events[prop].listener, (e) => {
                          element.events[prop](e);
                     });
                }

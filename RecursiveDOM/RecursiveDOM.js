@@ -25,7 +25,7 @@ class RecursiveDOM {
       * @param {HTMLElement} params.styleRoot style tag that will host the app style.
       * @param {boolean} params.devMode allow infos about the state of tbe app to be logged into the console.
       */
-     constructor({ staticStyle, app, events, devMode = false }) {
+     constructor({ app, events }) {
           this.app = () => {
                return app();
           };
@@ -42,19 +42,26 @@ class RecursiveDOM {
           document.querySelector("head").append(appStaticStyle);
           document.querySelector("head").append(appStyle);
 
-          this.style = [];
-          this.animations = [];
-          this.mediaQueries = [];
-          this.sst = "";
-          this.staticStyle = staticStyle;
+          this.style = {
+               selectors: [],
+               animations: [],
+               mediaQueries: [],
+               static: [],
+               exported: "",
+          };
+
+          this.roots = {
+               app: appRoot,
+               style: appStyle,
+               staticStyle: appStaticStyle,
+          };
+
           this.events = events;
 
-          this.root = appRoot;
-          this.staticStyleRoot = appStaticStyle;
-          this.styleRoot = appStyle;
           this.renderingIteration = 0;
 
-          this.devMode = devMode;
+          this.devMode = false;
+
           this.multiThreading = false;
      }
 
@@ -126,9 +133,9 @@ class RecursiveDOM {
      }
 
      #styleThread() {
-          this.style = [];
-          this.animations = [];
-          this.mediaQueries = [];
+          this.style.selectors = [];
+          this.style.animations = [];
+          this.style.mediaQueries = [];
 
           this.renderingIteration++;
           this.app().addExternalStyle();
@@ -154,11 +161,11 @@ class RecursiveDOM {
 
                console.log(worker);
           } else {
-               this.styleRoot.innerHTML = HandleStyle.export(
-                    this.style,
-                    this.animations,
-                    this.mediaQueries,
-                    this.sst,
+               this.roots.style.innerHTML = HandleStyle.export(
+                    this.style.selectors,
+                    this.style.animations,
+                    this.style.mediaQueries,
+                    this.style.exported,
                     this.devMode
                );
           }
@@ -173,11 +180,11 @@ class RecursiveDOM {
 
                this.#oldRender = this.app();
                this.#styleThread();
-               this.root.innerHTML = "";
+               this.roots.app.innerHTML = "";
                HandleWindow.events(this.events);
-               this.root.append(this.#oldRender.render());
+               this.roots.app.append(this.#oldRender.render());
 
-               this.staticStyleRoot.innerHTML = HandleStyle.exportStatic(this.staticStyle);
+               this.roots.staticStyle.innerHTML = HandleStyle.exportStatic(this.style.static);
                this.#oldRender.$onCreated();
 
                if (this.devMode)

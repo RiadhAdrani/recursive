@@ -52,6 +52,16 @@ export default () => {
      defaultStyles.push("row-view{display:flex;flex-direction:row}");
 
      // -------------------------------------------------------------------------------------------------------------------
+     // BORDER SPINNER
+     class BorderSpinnerView extends HTMLDivElement {
+          constructor() {
+               super();
+          }
+     }
+     customElements.define("border-spinner", BorderSpinnerView, { extends: "div" });
+     defaultStyles.push("border-spinner{display:block;}");
+
+     // -------------------------------------------------------------------------------------------------------------------
      // DEFAULT STYLES
      const customElementStyle = document.createElement("style");
      defaultStyles.forEach((rule) => {

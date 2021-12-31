@@ -3335,7 +3335,59 @@ const Row = ({ children, style, styleSheet, id, draggable, className, events, ho
      });
 };
 
+/**
+ * ## BorderSpinner `<border-spinner>`
+ * ### The spinning element
+ * Used to show a loading state.
+ */
+const BorderSpinner = ({
+     color = "black",
+     size = "30px",
+     thickness = "5px",
+     duration = "1.5s",
+     timingFunction = "ease",
+     flags,
+}) => {
+     function className() {
+          function transform(str) {
+               return str.toString().replace(/[^a-z0-9+]+/gi, "-");
+          }
+
+          return `border-spinner-${transform(color)}-${transform(thickness)}-${transform(
+               duration
+          )}-${transform(timingFunction)}`;
+     }
+
+     return new CreateComponent({
+          tag: "border-spinner",
+          children: [],
+          style: {
+               className: className(),
+               normal: {
+                    border: `solid ${thickness} ${color}`,
+                    borderRadius: "50%",
+                    borderTopColor: "transparent",
+                    height: size,
+                    width: size,
+                    animation: `${className()}-animation ${duration} infinite`,
+                    animationTimingFunction: timingFunction,
+               },
+               animations: [
+                    {
+                         name: `${className()}-animation`,
+                         steps: {
+                              "0%": { transform: "rotate(0deg)" },
+                              "100%": { transform: "rotate(360deg)" },
+                         },
+                    },
+               ],
+          },
+          flags,
+     });
+};
+
 export {
+     BorderSpinner,
      Row,
      Column,
      List,
