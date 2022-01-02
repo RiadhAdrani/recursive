@@ -62,6 +62,26 @@ export default () => {
      defaultStyles.push("border-spinner{display:block;}");
 
      // -------------------------------------------------------------------------------------------------------------------
+     // SPAWNER VIEW
+     class SpawnerView extends HTMLDivElement {
+          constructor() {
+               super();
+          }
+     }
+     customElements.define("spawner-view", SpawnerView, { extends: "div" });
+     defaultStyles.push("spawner-view{display:block;position:absolute}");
+
+     // -------------------------------------------------------------------------------------------------------------------
+     // APP VIEW
+     class AppView extends HTMLDivElement {
+          constructor() {
+               super();
+          }
+     }
+     customElements.define("app-view", AppView, { extends: "div" });
+     defaultStyles.push("app-view{display:block;}");
+
+     // -------------------------------------------------------------------------------------------------------------------
      // DEFAULT STYLES
      const customElementStyle = document.createElement("style");
      defaultStyles.forEach((rule) => {

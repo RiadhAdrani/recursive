@@ -1,9 +1,16 @@
-import * as Components from "./CreateComponent/Components.js";
 import CreateComponent from "./CreateComponent/CreateComponent.js";
 import RecursiveDOM from "./RecursiveDOM/RecursiveDOM.js";
-import Router from "./RecursiveRouter/Router.js";
-import Route from "./RecursiveRouter/Route.js";
+import CustomComponents from "./CreateComponent/CustomComponents.js";
+import RecursiveCSSOM from "./RecursiveCCSOM/RecursiveCSSOM.js";
 
-const Init = RecursiveDOM.Init;
+CustomComponents();
 
-export { Components, CreateComponent, Init, Route, Router };
+new RecursiveCSSOM();
+const RDOM = new RecursiveDOM();
+
+function Render(App) {
+     RDOM.app = App;
+     RDOM.render();
+}
+
+export { CreateComponent, Render };

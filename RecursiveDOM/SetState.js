@@ -1,4 +1,5 @@
 import RecursiveDOM from "./RecursiveDOM.js";
+import RecursiveEvents from "./RecursiveEvents.js";
 
 /**
  * ### SetState
@@ -20,15 +21,14 @@ class SetState {
       * @param {any} newVal new value
       */
      setValue(newVal) {
-          if (!window.RecursiveDOM) throw "[VDOM] no VirtualDOM in the current document.";
           this.value = newVal;
-          window.RecursiveDOM.update();
+          RecursiveEvents.update();
      }
 
      static updateAfter(actions) {
           try {
                actions();
-               window.RecursiveDOM.update();
+               RecursiveEvents.update();
           } catch (e) {}
      }
 }

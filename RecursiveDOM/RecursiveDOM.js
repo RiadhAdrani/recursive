@@ -1,9 +1,6 @@
 import CreateComponent from "../CreateComponent/CreateComponent.js";
-import CustomComponents from "../CreateComponent/CustomComponents.js";
-
-import HandleStyle from "./HandleStyle.js";
 import HandleWindow from "./HandleWindow.js";
-import SetState from "./SetState.js";
+import RecursiveEvents from "./RecursiveEvents.js";
 
 /**
  * ## RecursiveDOM
@@ -17,157 +14,65 @@ class RecursiveDOM {
      // private fields
      #oldRender;
 
+     static devMode = true;
+
      /**
       * @constructor
       * @param {Object} params deconstructed paramaters
       * @param {Function} params.appFunction application UI tree
-      * @param {HTMLElement} params.root html element that will host the app
-      * @param {HTMLElement} params.styleRoot style tag that will host the app style.
-      * @param {boolean} params.devMode allow infos about the state of tbe app to be logged into the console.
       */
-     constructor({ app, events }) {
-          this.app = () => {
-               return app();
-          };
-          this.#oldRender = app();
+     constructor() {
+          this.root = document.createElement("app-view");
 
-          CustomComponents();
+          document.querySelector("body").append(this.root);
 
-          const appRoot = document.createElement("div");
-          appRoot.id = "app-root";
-          const appStyle = document.createElement("style");
-          const appStaticStyle = document.createElement("style");
-
-          document.querySelector("body").append(appRoot);
-          document.querySelector("head").append(appStaticStyle);
-          document.querySelector("head").append(appStyle);
-
-          this.style = {
-               selectors: [],
-               animations: [],
-               mediaQueries: [],
-               static: [],
-               exported: "",
-          };
-
-          this.roots = {
-               app: appRoot,
-               style: appStyle,
-               staticStyle: appStaticStyle,
-          };
-
-          this.events = events;
-
-          this.renderingIteration = 0;
-
-          this.devMode = false;
-
-          this.multiThreading = false;
-     }
-
-     /**
-      * init the Recursive DOM
-      * @param {Object} params deconstructed paramaters
-      * @param {HTMLElement} params.root html element that will host the app
-      * @param {HTMLElement} params.styleRoot style tag that will host the app style.
-      * @param {HTMLElement} params.staticStyleRoot style tag that will host the static app style.
-      * @param {JSON} params.options initialize RecursiveDOM dev parameters
-      */
-     static Init({ options = { devMode: true, multiThreading: true } }) {
-          window.RecursiveDOM = new RecursiveDOM({
-               app: () => {},
+          addEventListener("recursive-update", () => {
+               this.#update();
           });
-
-          if (options) {
-               window.RecursiveDOM.devMode = options.devMode;
-               window.RecursiveDOM.multiThreading = options.multiThreading;
-          }
-
-          window.setState = (value) => new SetState(value);
-          window.updateAfter = SetState.updateAfter;
      }
 
      #handleError(execute) {
           try {
                execute();
           } catch (e) {
-               this.app = () => {
-                    return new CreateComponent({
-                         tag: "div",
-                         inlineStyle: {
-                              padding: "20px 20px 40px 20px",
-                              background: "#992222",
-                              color: "white",
-                              position: "absolute",
-                              fontSize: "20px",
-                              width: "-webkit-fill-available",
-                         },
-                         children: [
-                              new CreateComponent({
-                                   tag: "p",
-                                   children: `${e}`,
-                                   inlineStyle: {
-                                        fontSize: "20px",
-                                        fontWeight: "Trebuchet MS",
-                                        padding: "10px",
-                                   },
-                              }),
-                              new CreateComponent({
-                                   tag: "p",
-                                   children: `Stack: ${e.stack}`,
-                                   inlineStyle: {
-                                        padding: "20px",
-                                        fontSize: "16px",
-                                        lineHeight: "1.5em",
-                                        whiteSpace: "break-spaces",
-                                        fontFamily: "monospace",
-                                        background: "#551111",
-                                   },
-                              }),
-                         ],
-                    });
-               };
-               this.render();
+               const error = new CreateComponent({
+                    tag: "div",
+                    inlineStyle: {
+                         padding: "20px 20px 40px 20px",
+                         background: "#992222",
+                         color: "white",
+                         position: "absolute",
+                         fontSize: "20px",
+                         width: "-webkit-fill-available",
+                    },
+                    children: [
+                         new CreateComponent({
+                              tag: "p",
+                              children: `${e}`,
+                              inlineStyle: {
+                                   fontSize: "20px",
+                                   fontWeight: "Trebuchet MS",
+                                   padding: "10px",
+                              },
+                         }),
+                         new CreateComponent({
+                              tag: "p",
+                              children: `${e.stack}`,
+                              inlineStyle: {
+                                   padding: "20px",
+                                   fontSize: "16px",
+                                   lineHeight: "1.5em",
+                                   whiteSpace: "break-spaces",
+                                   fontFamily: "monospace",
+                                   background: "#551111",
+                              },
+                         }),
+                    ],
+               });
+
+               this.root.innerHTML = "";
+               this.root.append(error.render());
                console.error(e);
-          }
-     }
-
-     #styleThread() {
-          this.style.selectors = [];
-          this.style.animations = [];
-          this.style.mediaQueries = [];
-
-          this.renderingIteration++;
-          this.app().addExternalStyle();
-
-          if (false) {
-               const worker = new Worker("./StyleThread.js", { type: "module" });
-
-               worker.postMessage({
-                    selectors: this.style,
-                    animations: this.animations,
-                    media: this.mediaQueries,
-                    old: this.sst,
-                    devMode: this.devMode,
-                    iteration: this.renderingIteration,
-               });
-
-               worker.addEventListener("message", (e) => {
-                    if (e.data.didchange && e.data.iteration === this.renderingIteration) {
-                         this.styleRoot.innerHTML = e.data.text;
-                    }
-                    worker.terminate();
-               });
-
-               console.log(worker);
-          } else {
-               this.roots.style.innerHTML = HandleStyle.export(
-                    this.style.selectors,
-                    this.style.animations,
-                    this.style.mediaQueries,
-                    this.style.exported,
-                    this.devMode
-               );
           }
      }
 
@@ -179,35 +84,58 @@ class RecursiveDOM {
                const startTime = new Date().getTime();
 
                this.#oldRender = this.app();
-               this.#styleThread();
-               this.roots.app.innerHTML = "";
-               HandleWindow.events(this.events);
-               this.roots.app.append(this.#oldRender.render());
 
-               this.roots.staticStyle.innerHTML = HandleStyle.exportStatic(this.style.static);
+               this.app().addExternalStyle();
+
+               RecursiveEvents.computeStyle();
+
+               this.root.innerHTML = "";
+
+               HandleWindow.events(this.events);
+
+               RecursiveEvents.willRender();
+
+               this.root.append(this.#oldRender.render());
+
                this.#oldRender.$onCreated();
 
-               if (this.devMode)
+               RecursiveEvents.didRender();
+
+               if (RecursiveDOM.devMode)
                     console.log(`First paint done in ${new Date().getTime() - startTime}ms`);
           });
      }
 
      /**
-      * Update the UI whenever a stateful object has been modified using the `setValue` method.
+      * Update the UI whenever a stateful object has been modified using the `setValue` or `updateAfter` method.
       * @see {@link SetState.setValue}
       * @function
       */
-     update() {
+     #update() {
           this.#handleError(() => {
                const startTime = new Date().getTime();
 
+               this.app().addExternalStyle();
+
+               RecursiveEvents.willUpdate();
+
                const newRender = this.app();
+
                this.#oldRender.update(newRender);
-               this.#styleThread();
+
                this.#oldRender = newRender;
 
-               if (this.devMode) console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
+               RecursiveEvents.computeStyle();
+
+               RecursiveEvents.didUpdate();
+
+               if (RecursiveDOM.devMode)
+                    console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
           });
+     }
+
+     destroy() {
+          this.roots.app.remove();
      }
 }
 

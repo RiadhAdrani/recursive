@@ -43,7 +43,7 @@ export default {
 
                     if (component.style.animations) {
                          component.style.animations.forEach((animation) => {
-                              RecursiveDOM.style.push(animation);
+                              RecursiveDOM.style.animations.push(animation);
                          });
                     }
 

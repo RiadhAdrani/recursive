@@ -5,6 +5,7 @@ import Render from "./tools/Render.js";
 import Update from "./tools/Update.js";
 import HandleDOM from "./tools/HandleDOM.js";
 import Style from "./tools/Style.js";
+import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
 
 function ThrowComponentError(msg) {
      const e = new Error(`Failed to create component => ${msg}`);
@@ -137,7 +138,6 @@ class CreateComponent {
           // Just rerender the component
           if (this.flags.forceRerender === true) {
                HandleDOM.replaceComponentInDOM(this, newComponent);
-               // replaceindom(this, newComponent);
                return;
           }
 
@@ -232,7 +232,15 @@ class CreateComponent {
       * Send the `styleSheet` object to the RecursiveDOM to be processed.
       */
      addExternalStyle() {
-          Style.applySheet(this);
+          RecursiveEvents.sendCSSobject({ ...this.style });
+
+          if (this.children) {
+               this.children.forEach((child) => {
+                    if (child.render) {
+                         child.addExternalStyle();
+                    }
+               });
+          }
      }
 }
 

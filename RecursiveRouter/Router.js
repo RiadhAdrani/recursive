@@ -1,6 +1,6 @@
-import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
 import CreateComponent from "../CreateComponent/CreateComponent.js";
 import Route from "./Route.js";
+import { updateAfter } from "../Recursive-State.js";
 
 /**
  * ## Router
@@ -9,6 +9,20 @@ import Route from "./Route.js";
  * @see {@link Route}
  */
 class Router {
+     static router = null;
+
+     static goTo(route) {
+          Router.router.goTo(route);
+     }
+
+     static createRouter(route) {
+          Router.router = new Router(route);
+     }
+
+     static render() {
+          return Router.router.current.component();
+     }
+
      /**
       * Create a Router to manage App directories.
       * @param {Route} routes Define the main route for the App.
@@ -49,7 +63,7 @@ class Router {
                this.current?.onExit();
                window.scrollTo({ top: 0, behavior: "smooth" });
                this.current = newRoute;
-               window.RecursiveDOM.update();
+               updateAfter(() => {});
                if (this.current.title) {
                     document.title = this.current.title;
                }
@@ -100,7 +114,7 @@ class Router {
                     if (this.current.title) {
                          document.title = this.current.title;
                     }
-                    window.RecursiveDOM.update();
+                    updateAfter(() => {});
                     history.pushState({ route: this.current.name }, this.current.title, `${name}`);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                     this.current?.onLoad();

@@ -1,4 +1,4 @@
-import PropList from "./PropList.js";
+import PropList from "../RecursiveDOM/PropList.js";
 
 export default {
      /**
@@ -264,24 +264,21 @@ export default {
 
           const ss = this.convertStyle(output, outputAnimations, mediaQueries);
 
-          if (devMode) {
-               if (animationDup.length > 0) {
-                    console.warn(
-                         `DUPLICATE ANIMATION${
-                              animationDup.length > 1 ? "S" : ""
-                         }: (${animationDup}) => found more than once`
-                    );
-               }
+          const warnings = {
+               animation:
+                    animationDup.length > 0
+                         ? `DUPLICATE ANIMATION${
+                                animationDup.length > 1 ? "S" : ""
+                           }: (${animationDup}) => found more than once`
+                         : false,
+               selectors:
+                    styleDup.length > 0
+                         ? `DUPLICATE STYLE${
+                                styleDup.length > 1 ? "S" : ""
+                           }: (${styleDup}) => found more than once.`
+                         : false,
+          };
 
-               if (styleDup.length > 0) {
-                    console.warn(
-                         `DUPLICATE STYLE${
-                              styleDup.length > 1 ? "S" : ""
-                         }: (${styleDup}) => found more than once.`
-                    );
-               }
-          }
-
-          return ss;
+          return { ss, warnings };
      },
 };
