@@ -36,10 +36,12 @@ export default {
       */
      removeIndexedChildFromDOM: (index, component) => {
           // execute beforeDestroyed hook
+
           if (component.children[index].$beforeDestroyed) {
                component.children[index].$beforeDestroyed();
           }
 
+          // component.children[index].domInstance.remove();
           component.domInstance.childNodes[index].remove();
 
           // execute onDestroyed hook
@@ -89,5 +91,23 @@ export default {
 
           // execute onCreated hook
           if (newComponent.$onCreated) newComponent?.$onCreated();
+     },
+     /**
+      * remove unwanted tags from the dom.
+      * @param {CreateComponent} component component to clean
+      */
+     removeGeneratedElements: (component) => {
+          const unwantedTags = ["lt-mirror", "lt-highlighter", "lt-div"];
+          const unwantedElements = [];
+
+          unwantedTags.forEach((tag) =>
+               unwantedElements.push(component.domInstance.getElementsByTagName(tag))
+          );
+
+          unwantedElements.forEach((tag) => {
+               for (let i = 0; i < tag.length; i++) {
+                    tag[i].remove();
+               }
+          });
      },
 };

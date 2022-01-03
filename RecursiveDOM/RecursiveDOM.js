@@ -14,7 +14,7 @@ class RecursiveDOM {
      // private fields
      #oldRender;
 
-     static devMode = true;
+     static devMode = false;
 
      /**
       * @constructor
@@ -115,11 +115,11 @@ class RecursiveDOM {
           this.#handleError(() => {
                const startTime = new Date().getTime();
 
-               this.app().addExternalStyle();
+               const newRender = this.app();
+
+               newRender.addExternalStyle();
 
                RecursiveEvents.willUpdate();
-
-               const newRender = this.app();
 
                this.#oldRender.update(newRender);
 

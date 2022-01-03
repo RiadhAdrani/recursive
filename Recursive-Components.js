@@ -385,6 +385,7 @@ const Button = ({
  */
 const TextArea = ({
      text,
+     value,
      style,
      styleSheet,
      id,
@@ -413,6 +414,7 @@ const TextArea = ({
           tag: "textarea",
           inlineStyle: style,
           props: {
+               value,
                id,
                draggable,
                autoComplete,

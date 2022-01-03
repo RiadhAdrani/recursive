@@ -25,15 +25,6 @@ export default {
       * @param classname input
       */
      isValidClassName: (classname) => {
-          function InvalidClassName(className, message) {
-               throw (() => {
-                    const error = new Error(`"${className}" ${message}`);
-                    error.name = "STYLE";
-                    console.warn(`"${className}" ${message}`);
-                    return error;
-               })();
-          }
-
           return !classname
                ? true
                : /^[a-zA-Z]([a-zA-Z0-9]|(-))+$/.test(classname)

@@ -72,21 +72,6 @@ class Router {
      }
 
      /**
-      * Create a `Route`
-      * @see {@link Route}
-      */
-     static Route = ({
-          name,
-          component,
-          title,
-          subRoutes,
-          onLoad = () => {},
-          onExit = () => {},
-     }) => {
-          return new Route({ name, title, component, subRoutes, onExit, onLoad });
-     };
-
-     /**
       * Add a temporary route.
       * @not_implemented
       */

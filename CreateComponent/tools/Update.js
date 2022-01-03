@@ -52,7 +52,9 @@ export default {
           }
           // if component.children are greater than newComponent.children
           else if (component.children.length > newComponent.children.length) {
-               while (component.domInstance.childNodes.length > newComponent.children.length) {
+               while (component.children.length > newComponent.children.length) {
+                    HandleDOM.removeGeneratedElements(component);
+
                     HandleDOM.removeIndexedChildFromDOM(newComponent.children.length, component);
                     component.children.pop();
                }

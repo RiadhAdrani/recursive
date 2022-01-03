@@ -13,6 +13,8 @@ export default (component, newComponent) => {
 
      // iterate through component.children and comparing them with newComponent.children
      for (let i = 0; i < component.children.length; i++) {
+          didUpdate = component.children[i].update(newComponent.children[i]);
+          continue;
           // if both children are not Recursive components
           // they are both of type string
           if (

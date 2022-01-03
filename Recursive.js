@@ -13,4 +13,8 @@ function Render(App) {
      RDOM.render();
 }
 
-export { CreateComponent, Render };
+function DevMode(value) {
+     RecursiveDOM.devMode = value;
+}
+
+export { CreateComponent, Render, DevMode };

@@ -4,4 +4,4 @@ const set = (cssobject) => {
      RecursiveCSSOM.setStyle(cssobject);
 };
 
-export { set as setStyle };
+export { set as SetStyle };

@@ -1,4 +1,5 @@
 import PropList from "../../RecursiveDOM/PropList.js";
+import CreateTextNode from "../CreateTextNode.js";
 import Check from "./Check.js";
 
 function ThrowInitError(msg) {
@@ -45,13 +46,13 @@ export default {
                                    } else if (Check.isArrayOfComponents(children[j])) {
                                         ThrowInitError("Child cannot be an array.");
                                    } else {
-                                        textNode += children[j];
+                                        textNode = `${textNode}${children[j]}`;
                                         i++;
                                    }
                               }
 
                               // push text node
-                              component.children.push(textNode);
+                              component.children.push(CreateTextNode(textNode));
                          }
                     }
                }
@@ -64,7 +65,7 @@ export default {
                     }
                     // child is a text node
                     else {
-                         component.children = [children];
+                         component.children = [CreateTextNode(children)];
                     }
                }
                // child is a component
