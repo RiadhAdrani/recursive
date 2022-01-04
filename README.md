@@ -1,4 +1,4 @@
-# [Recursive](https://riadhadrani.github.io/recursive-website/) [![Version](https://img.shields.io/badge/version-v0.4.0--alpha-blue)](https://github.com/RiadhAdrani/recursive/releases/tag/v0.3.0-alpha) [![Version](https://img.shields.io/badge/javascript-100-yellow)](https://github.com/RiadhAdrani/recursive/releases/tag/v0.3.0-alpha) [![Contribute](https://img.shields.io/badge/contribute-not--yet-red)]()
+# [Recursive](https://riadhadrani.github.io/recursive-website/) [![Version](https://img.shields.io/badge/version-v0.4.0--alpha-blue)](https://github.com/RiadhAdrani/recursive/releases) [![Version](https://img.shields.io/badge/javascript-100-yellow)](https://github.com/RiadhAdrani/recursive/releases) [![Contribute](https://img.shields.io/badge/contribute-not--yet-red)](https://github.com/RiadhAdrani/recursive/issues)
 
 Recursive is an ongoing project to build a functional, component-based, Javascript only, beautiful and interactive Web applications.
 
