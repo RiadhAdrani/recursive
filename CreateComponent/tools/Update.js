@@ -1,7 +1,4 @@
 import PropList from "../../RecursiveDOM/PropList.js";
-import ArrayDiffing from "./ArrayDiffing.js";
-import HandleDOM from "./HandleDOM.js";
-import Style from "./Style.js";
 
 export default {
      /**
@@ -36,8 +33,6 @@ export default {
                }
           }
 
-          Style.updateInline(newComponent.style, component.style, render);
-
           return didUpdate;
      },
      /**
@@ -47,29 +42,28 @@ export default {
       * @param render rendered htmlElement
       */
      children: (component, newComponent, render) => {
+          function compareEqualChildren() {
+               for (let i = 0; i < component.children.length; i++) {
+                    component.children[i].update(newComponent.children[i]);
+               }
+          }
+
           if (component.children.length === newComponent.children.length) {
-               return ArrayDiffing(component, newComponent, render);
+               compareEqualChildren();
           }
           // if component.children are greater than newComponent.children
           else if (component.children.length > newComponent.children.length) {
                while (component.children.length > newComponent.children.length) {
-                    HandleDOM.removeGeneratedElements(component);
-
-                    HandleDOM.removeIndexedChildFromDOM(newComponent.children.length, component);
-                    component.children.pop();
+                    component.children.pop().$removeFromDOM();
                }
-
-               ArrayDiffing(component, newComponent, render);
-
-               return true;
+               compareEqualChildren();
           }
           // if component.children are less than newComponent.children
           else {
                for (let i = component.children.length; i < newComponent.children.length; i++) {
-                    HandleDOM.appendIndexedChildInDOM(i, component, newComponent);
+                    newComponent.children[i].$appendInDOM(component);
                }
-
-               return ArrayDiffing(component, newComponent, render);
+               compareEqualChildren();
           }
      },
      /**

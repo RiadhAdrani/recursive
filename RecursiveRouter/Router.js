@@ -38,45 +38,25 @@ class Router {
                }
           })();
 
-          this.stack = [];
-
           window.addEventListener("popstate", (e) => {
-               let newRoute = {};
-
                if (e.state) {
-                    newRoute = (() => {
-                         for (let r in this.routes) {
-                              if (this.routes[r].name === e.state.route) {
-                                   return this.routes[r];
-                              }
-                         }
-                         throw new Error(`Invalid Route name : ${e.state}`);
-                    })();
+                    const data = this.isDynamicRoute(e.state.route);
+
+                    if (data.isDynamic) {
+                         this.loadRoute(data.template);
+                    } else {
+                         this.loadRoute(this.routes[e.state.route]);
+                    }
                } else {
-                    newRoute = (() => {
+                    const root = (() => {
                          for (let r in this.routes) {
-                              return this.routes[r];
+                              return r;
                          }
                     })();
-               }
 
-               this.current?.onExit();
-               window.scrollTo({ top: 0, behavior: "smooth" });
-               this.current = newRoute;
-               updateAfter(() => {});
-               if (this.current.title) {
-                    document.title = this.current.title;
+                    this.loadRoute(this.routes[root]);
                }
-               this.current?.onLoad();
           });
-     }
-
-     /**
-      * Add a temporary route.
-      * @not_implemented
-      */
-     addRoute() {
-          throw "Feature is not yet implemented";
      }
 
      /**
@@ -87,24 +67,95 @@ class Router {
           return this.current.component();
      }
 
+     isDynamicRoute(route) {
+          const regExp = /:[^:;]*;/gm;
+
+          for (let name in this.routes) {
+               const template = name.toString();
+               const tester = "recursive";
+
+               const rm = route.match(regExp);
+               const tm = name.match(regExp);
+
+               if (!tm || !rm) continue;
+
+               try {
+                    if (rm.length === tm.length && tm.length > 0) {
+                         if (route.replace(regExp, tester) === template.replace(regExp, tester)) {
+                              return { isDynamic: true, template: this.routes[name] };
+                         }
+                    }
+               } catch (e) {
+                    console.log(`current route => ${template} vs ${route}`, this.routes, e);
+               }
+          }
+
+          return { isDynamic: false };
+     }
+
+     /**
+      * Load the app route specified with `name` and `template`
+      * @param {String} name the name of target route
+      * @param {Route} template the template of the route
+      */
+     loadRoute(template) {
+          updateAfter(() => {
+               this.current?.onExit();
+               this.current = template;
+               if (this.current.title) {
+                    document.title = this.current.title;
+               }
+          });
+
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          this.current?.onLoad();
+     }
+
      /**
       * Redirect the App to the route with the given name.
       * @param {string} name Route exact name.
       */
      goTo(name) {
-          if (this.routes[name]) {
+          if (!name) return;
+
+          if (history.state) {
+               if (history.state.route === name) return;
+          }
+
+          const data = this.isDynamicRoute(name);
+
+          if (data.isDynamic) {
+               history.pushState({ route: name }, this.current.title, `${name}`);
+               this.loadRoute(data.template);
+          } else if (this.routes[name]) {
                if (this.routes[name].name !== this.current.name) {
-                    this.current?.onExit();
-                    this.current = this.routes[name];
-                    if (this.current.title) {
-                         document.title = this.current.title;
-                    }
-                    updateAfter(() => {});
-                    history.pushState({ route: this.current.name }, this.current.title, `${name}`);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                    this.current?.onLoad();
+                    history.pushState({ route: name }, this.current.title, `${name}`);
+                    this.loadRoute(this.routes[name]);
                }
           }
+     }
+
+     static getParams() {
+          if (!Router.router || !history.state) return {};
+
+          const regExp = /:[^:;]*;/gm;
+
+          const keys = Router.router.current.name.match(regExp) || [];
+          const data = history.state.route.match(regExp) || [];
+
+          if (keys.length === data.length && keys.length > 0) {
+               const comb = {};
+
+               for (let i = 0; i < keys.length; i++) {
+                    comb[keys[i].replace(":", "").replace(";", "")] = data[i]
+                         .replace(":", "")
+                         .replace(";", "");
+               }
+
+               return comb;
+          }
+
+          return {};
      }
 }
 

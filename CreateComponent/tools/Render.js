@@ -1,5 +1,4 @@
 import PropList from "../../RecursiveDOM/PropList.js";
-import Style from "./Style.js";
 
 export default {
      /**
@@ -13,7 +12,11 @@ export default {
           }
 
           if (component.inlineStyle) {
-               Style.applyInline(component.inlineStyle, element.style);
+               for (let prop in component.inlineStyle) {
+                    if (element.style.hasOwnProperty(prop)) {
+                         element.style[prop] = component.inlineStyle[prop];
+                    }
+               }
           }
      },
      /**
@@ -23,7 +26,7 @@ export default {
       */
      children: (component, element) => {
           component.children.forEach((child) => {
-               element.append(child.$$createcomponent ? child.render() : child);
+               element.append(child.render());
           });
      },
      /**

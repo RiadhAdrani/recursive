@@ -1,12 +1,11 @@
 import CreateComponent from "./CreateComponent.js";
-import HandleDOM from "./tools/HandleDOM.js";
 
 const CreateTextNode = (text) => {
      const textnode = new CreateComponent({ tag: "p", children: [] });
 
      textnode.text = text;
 
-     textnode.tag = "a-text-node";
+     textnode.tag = "#text";
 
      textnode.render = () => {
           const htmlElement = document.createTextNode(textnode.text);
@@ -18,7 +17,7 @@ const CreateTextNode = (text) => {
 
      textnode.update = (newComponent) => {
           if (newComponent.tag !== textnode.tag) {
-               HandleDOM.replaceComponentInDOM(textnode, newComponent);
+               textnode.$replaceInDOM(newComponent);
           } else {
                if (textnode.text.toString() !== newComponent.text.toString()) {
                     textnode.domInstance.data = newComponent.text;

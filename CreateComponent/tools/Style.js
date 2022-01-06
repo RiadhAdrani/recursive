@@ -7,18 +7,6 @@ function ThrowStyleError(msg) {
 
 export default {
      /**
-      * apply inline style to a component.
-      * @param style style as JSON.
-      * @param renderStyle style of the htmlElement, basically htmlElement.style.
-      */
-     applyInline: (style, renderStyle) => {
-          for (let prop in style) {
-               if (renderStyle.hasOwnProperty(prop)) {
-                    renderStyle[prop] = style[prop];
-               }
-          }
-     },
-     /**
       * Push styles, animations and media queries into the Virtual DOM to be processed and then applied.
       * @param component this (can't be called outside CreateComponent)
       */
@@ -84,27 +72,41 @@ export default {
           }
      },
      /**
-      * @param {JSON} newStyle new style object
-      * @param {JSON} oldStyle old style object
-      * @param {HTMLElement} render rendered html Element
+      * @param {JSON} newComponent new component
+      * @param {JSON} component current component
       */
-     updateInline: (newStyle, oldStyle, render) => {
-          if (newStyle) {
-               for (let prop in newStyle) {
-                    if (render.style[prop] && newStyle[prop] !== "") {
-                         render.style[prop] = newStyle[prop];
+     updateInline: (component, newComponent) => {
+          let didUpdate = false;
+
+          if (!newComponent.inlineStyle && !component.inlineStyle) return didUpdate;
+
+          if (newComponent.inlineStyle) {
+               for (let newProp in newComponent.inlineStyle) {
+                    if (component.domInstance.style.hasOwnProperty(newProp)) {
+                         component.domInstance.style[newProp] = newComponent.inlineStyle[newProp];
+                         if (component.inlineStyle) {
+                              if (
+                                   component.inlineStyle[newProp] !==
+                                   newComponent.inlineStyle[newProp]
+                              )
+                                   didUpdate = true;
+                         } else didUpdate = true;
                     }
                }
-          }
-
-          if (oldStyle) {
-               for (let prop in oldStyle) {
-                    if (newStyle) {
-                         if (!newStyle.hasOwnProperty(prop)) {
-                              render.style[prop] = "";
+               if (component.inlineStyle) {
+                    for (let prop in component.inlineStyle) {
+                         if (
+                              component.domInstance.style.hasOwnProperty(prop) &&
+                              !newComponent.inlineStyle.hasOwnProperty(prop)
+                         ) {
+                              component.domInstance.style[prop] = "";
                          }
-                    } else {
-                         render.style[prop] = "";
+                    }
+               }
+          } else {
+               for (let prop in component.inlineStyle) {
+                    if (component.domInstance.style.hasOwnProperty(prop)) {
+                         component.domInstance.style[prop] = "";
                     }
                }
           }
@@ -114,6 +116,7 @@ export default {
       * @param renderStyle rendered htmlElement
       * @param oldStyle current component style : component.style
       * @param newStyle new component style : newComponent.style
+      * @deprecated
       */
      updateInlineExcept: (renderStyle, oldStyle, newStyle) => {
           let didChange = false;

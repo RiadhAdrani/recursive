@@ -3,7 +3,6 @@ import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
 import Init from "./tools/Init.js";
 import Render from "./tools/Render.js";
 import Update from "./tools/Update.js";
-import HandleDOM from "./tools/HandleDOM.js";
 import Style from "./tools/Style.js";
 import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
 
@@ -137,19 +136,13 @@ class CreateComponent {
           // flags.forceRerender
           // Just rerender the component
           if (this.flags.forceRerender === true) {
-               HandleDOM.replaceComponentInDOM(this, newComponent);
-               return;
-          }
-
-          // check if the element to compare with is a string
-          if (typeof newComponent === "string") {
-               HandleDOM.replaceComponentInDOM(this, newComponent);
+               this.$replaceInDOM(newComponent);
                return;
           }
 
           // check if the new element have a different tag
           if (this.tag !== newComponent.tag) {
-               HandleDOM.replaceComponentInDOM(this, newComponent);
+               this.$replaceInDOM(newComponent);
                return;
           }
 
@@ -157,11 +150,7 @@ class CreateComponent {
           Update.events(newComponent, htmlElement);
 
           // update inline style
-          const inlineStyleDidUpdate = Style.updateInlineExcept(
-               htmlElement.style,
-               this.inlineStyle,
-               newComponent.inlineStyle
-          );
+          const inlineStyleDidUpdate = Style.updateInline(this, newComponent);
 
           // update class names
           if (this.className !== newComponent.className) {
@@ -173,37 +162,41 @@ class CreateComponent {
           }
 
           // update attributes
-          const attributesDidUpdate = Update.attributes(this, newComponent, htmlElement); //updateattributes(this, newComponent, htmlElement);
+          const attributesDidUpdate = Update.attributes(this, newComponent, htmlElement);
 
           // update children
-          const childrenDidChange = Update.children(this, newComponent, htmlElement); //updatechildren(this, newComponent, htmlElement);
+          Update.children(this, newComponent, htmlElement);
 
           // check if there is any change
-          didUpdate =
-               inlineStyleDidUpdate || attributesDidUpdate || childrenDidChange ? true : false;
+          didUpdate = inlineStyleDidUpdate || attributesDidUpdate ? true : false;
 
           // Execute update lifecycle method
-          if (didUpdate) this.$onUpdated(this, newComponent);
+          didUpdate ? this.$onUpdated() : "";
 
           newComponent.domInstance = this.domInstance;
-
-          return didUpdate;
      }
+
+     // LIFE CYCLE METHODS
+     // ------------------------------------------------------------------------------------------------------
 
      /**
       * Allow the user to execute custom actions if the current component was just updated.
       * @param {CreateComponent | string} oldComponent - current component
       * @param {CreateComponent | string} newComponent - the new component
       */
-     $onUpdated(oldComponent, newComponent) {
-          if (this.onUpdated) this.onUpdated(oldComponent, newComponent);
+     $onUpdated() {
+          if (typeof this.hooks.onUpdated === "function") {
+               this.hooks.onUpdated(this.domInstance);
+          }
      }
 
      /**
       * Allow the user to execute custom actions when the component has been created.
       */
      $onCreated() {
-          if (this.hooks.onCreated) this.hooks.onCreated(this.domInstance);
+          if (typeof this.hooks.onCreated === "function") {
+               this.hooks.onCreated(this.domInstance);
+          }
 
           if (this.children) {
                this.children.forEach((child) => {
@@ -218,15 +211,51 @@ class CreateComponent {
       * Allow the user to execute custom actions when the component has been destroyed.
       */
      $onDestroyed() {
-          if (this.hooks.onDestroyed) this.hooks.onDestroyed(this);
+          if (typeof this.hooks.onDestroyed === "function") this.hooks.onDestroyed(this);
      }
 
      /**
       * Allow the user to execute custom actions just before the destruction of the component.
       */
      $beforeDestroyed() {
-          if (this.hooks.beforeDestroyed) this.hooks.beforeDestroyed(this.domInstance);
+          if (typeof this.hooks.beforeDestroyed === "function")
+               this.hooks.beforeDestroyed(this.domInstance);
      }
+
+     // DOM MANIPULATION METHODS
+     // ------------------------------------------------------------------------------------------------------
+
+     /**
+      * remove the current dom instance
+      */
+     $removeFromDOM() {
+          this.$beforeDestroyed();
+          this.domInstance.remove();
+          this.$onDestroyed();
+     }
+
+     /**
+      * replace the current dom instance with a newly created one
+      * @param {CreateComponent} newComponent component to render
+      */
+     $replaceInDOM(newComponent) {
+          this.$beforeDestroyed();
+          this.domInstance.replaceWith(newComponent.render());
+          this.$onDestroyed();
+          newComponent.$onCreated();
+     }
+
+     /**
+      * inject the recursive component into the
+      * @param {CreateComponent} parentComponent
+      */
+     $appendInDOM(parentComponent) {
+          parentComponent.domInstance.append(this.render());
+          this.$onCreated();
+     }
+
+     // STYLING
+     // ------------------------------------------------------------------------------------------------------
 
      /**
       * Send the `styleSheet` object to the RecursiveDOM to be processed.
