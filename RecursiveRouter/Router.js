@@ -3,22 +3,34 @@ import Route from "./Route.js";
 import { updateAfter } from "../Recursive-State.js";
 
 /**
- * ## Router
- * ### Manage directories in your App.
+ * ### Router
+ * #### Manage directories in your App.
  * @see {@link RecursiveDOM}
  * @see {@link Route}
  */
 class Router {
      static router = null;
 
+     /**
+      * Load a new name-specified route.
+      * @param {string} route the name of the target route.
+      */
      static goTo(route) {
           Router.router.goTo(route);
      }
 
+     /**
+      * Create a global router.
+      * @param {Route} route root entry route. usually named `\`.
+      */
      static createRouter(route) {
           Router.router = new Router(route);
      }
 
+     /**
+      * Return the current route representation as a `component`.
+      * @returns {CreateComponent} component
+      */
      static render() {
           return Router.router.current.component();
      }
@@ -67,6 +79,11 @@ class Router {
           return this.current.component();
      }
 
+     /**
+      * Check if a given route is dynamic or not.
+      * @param {String} route route name.
+      * @returns {JSON} the type of the route, alongside its template if it is `dynamic`.
+      */
      isDynamicRoute(route) {
           const regExp = /:[^:;]*;/gm;
 
@@ -135,6 +152,10 @@ class Router {
           }
      }
 
+     /**
+      * Get the params of the current route if they exist.
+      * @returns {JSON} object containing `key:value`.
+      */
      static getParams() {
           if (!Router.router || !history.state) return {};
 
