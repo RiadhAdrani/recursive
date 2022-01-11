@@ -65,6 +65,21 @@ class StateRegistry {
 
           return [get, set, free];
      }
+
+     /**
+      * Free the provided states. If no name is provided, all states will be removed.
+      * @param  {...any} list the list of states (by name) to be removed.
+      */
+     static freeStates(...list) {
+          if (list && list.length > 0) {
+               list.forEach((s) => delete StateRegistry.globalRegistry.states[s]);
+          } else {
+               for (let s in StateRegistry.globalRegistry.states) {
+                    console.log(s);
+                    delete StateRegistry.globalRegistry.states[s];
+               }
+          }
+     }
 }
 
 export default StateRegistry;

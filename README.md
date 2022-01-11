@@ -14,6 +14,8 @@ Recursive is still not 100% production-ready, but you can help us test features 
 
 For now, you can download the source code, and inside your `index.js` you render your app like this:
 
+##### `Vanilla Javascript`
+
 ```js
 import { Render } from "./recursive-js/Recursive.js";
 import { P } from "./recursive-js/Recursive-Components.js";

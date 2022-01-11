@@ -32,4 +32,12 @@ const getState = (uid) => {
  */
 const updateAfter = (actions) => SetState.updateAfter(actions);
 
-export { setState, updateAfter, getState };
+/**
+ * Free the provided states. If no name is provided, all states will be removed.
+ * @param  {...any} list the list of states (by name) to be removed.
+ */
+const freeStates = (...list) => {
+     StateRegistry.freeStates(list);
+};
+
+export { setState, updateAfter, getState, freeStates };
