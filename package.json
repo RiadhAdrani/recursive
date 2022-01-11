@@ -4,6 +4,10 @@
      "description": "Recursive is a Javascript library to build beautiful component-based web apps.",
      "license": "MIT",
      "main": "index.js",
+     "repository": {
+          "type": "git",
+          "url": "https://github.com/RiadhAdrani/recursive"
+     },
      "keywords": [
           "npm",
           "package",

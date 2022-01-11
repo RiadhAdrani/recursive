@@ -1,18 +1,42 @@
-# [Recursive](https://riadhadrani.github.io/recursive-website/) [![Version](https://img.shields.io/badge/version-v0.4.0--alpha-blue)](https://github.com/RiadhAdrani/recursive/releases) [![Version](https://img.shields.io/badge/javascript-100-yellow)](https://github.com/RiadhAdrani/recursive/releases) [![Contribute](https://img.shields.io/badge/contribute-not--yet-red)](https://github.com/RiadhAdrani/recursive/issues)
+# [Recursive](https://riadhadrani.github.io/recursive-website/) [![Version](https://img.shields.io/npm/v/@riadh-adrani/recursive?color=blue)](https://github.com/RiadhAdrani/recursive/releases) [![Licence](https://img.shields.io/npm/l/@riadh-adrani/recursive)](https://github.com/RiadhAdrani/recursive/issues)
 
-Recursive is an ongoing project to build a functional, component-based, Javascript only, beautiful and interactive Web applications.
+Recursive is a javascript library to build a declarative, component-based, Javascript only web apps.
 
--    **Component-Based** Build encapsulated components, then compose them to make complex UIs. Since component logic is written in JavaScript instead of templates, you can easily pass rich data through your app and keep state out of the DOM, while maintaining high performance
+-    **Component-Based** : Build encapsulated components, and compose them to make complex UIs. Since everything is implemented with Javascript, you can highly customize your app by adding data and states to your UI.
 
--    **Declarative** Recursive.Js makes it easy to create interactive UIs. Design simple views for each state in your application, and Recursive.Js will efficiently update and render just the right components when your data changes. Declarative views make your code more predictable and easier to debug.
+-    **Declarative** : Recursive make the job simpler by abstracting a lot of ambiguities. Declarative components are predictable and easier to debug.
 
--    **Virtual DOM** Recursive.Js is powered by a virtual DOM, which is a representation of the actual Document Object Model (DOM) in Javascript. The VDOM makes it easier to loop over components and compare them to minimally update specific values in the actual HTML document.
+-    **99.9% Javascript** : If you love Javascript and hate HTML, this is the way ! With Recursive, even style sheets could be written with Javascript!
 
 ## Installation
 
 Recursive is still not 100% production-ready, but you can help us test features despite the fact that the library could be drastically changed from version to version.
 
-For now, you can download the source code, and inside your `index.js` you render your app like this:
+##### `Vanilla Javascript`
+
+Clone the repo from github and reference it from your `index.js`
+
+```shell
+git clone https://github.com/RiadhAdrani/recursive.git
+```
+
+##### `Node`
+
+Using `create-recursive-app` to create a fresh project:
+
+```shell
+npx @riadh-adrani/create-recursive-app project-name
+```
+
+Or add to an existing project :
+
+```shell
+npm i @riadh-adrani/recursive
+```
+
+## Hello World
+
+Inside your `index.js` you render your app like this:
 
 ##### `Vanilla Javascript`
 
@@ -22,10 +46,17 @@ import { P } from "./recursive-js/Recursive-Components.js";
 Render(() => P({ text: "Hello World" }));
 ```
 
+##### `Node`
+
+```js
+import { Recursive, Components } from "@riadh-adrani/recursive";
+const { P } = Components;
+Recursive.Render(() => P({ text: "Hello World" }));
+```
+
 ## Documentation
 
 [Website is under construction...](https://riadhadrani.github.io/recursive-website/)
-Detailed documentation will be coming soon
 
 ## Examples
 
