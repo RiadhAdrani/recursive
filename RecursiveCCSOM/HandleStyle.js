@@ -6,12 +6,12 @@ export default {
       * @param {JSON} json style as json.
       * @param {string} indentation add indentation before css declaration
       */
-     convertSelectorContent: function (json, indentation = "\t\t") {
+     convertSelectorContent: function (json, indentation = "") {
           let output = "";
 
           for (let attr in json) {
                if (PropList.CssAttributes[attr])
-                    output += `${indentation}${PropList.CssAttributes[attr]}:${json[attr]};\n`;
+                    output += `${indentation}${PropList.CssAttributes[attr]}:${json[attr]};`;
           }
 
           return output;
@@ -24,26 +24,24 @@ export default {
      convertAnimation: function (animation) {
           let steps = "";
           for (const item in animation.steps) {
-               steps += `\t${item}{\n${this.convertSelectorContent(
-                    animation.steps[`${item}`]
-               )}\t}\n`;
+               steps += `${item}{${this.convertSelectorContent(animation.steps[`${item}`])}}`;
           }
-          return `@keyframes ${animation.name}{\n${steps}}`;
+          return `@keyframes ${animation.name}{${steps}}`;
      },
      /**
       * Convert media Queries to css format
       * @param {JSON} mediaQueries processed media queries
       */
      convertMediaQueries: function (mediaQueries, isClass = true) {
-          let mediaQueryText = "\n";
+          let mediaQueryText = "";
           for (var cond in mediaQueries) {
-               mediaQueryText += `@media ${cond}{\n`;
+               mediaQueryText += `@media ${cond}{`;
                for (var s in mediaQueries[cond]) {
-                    mediaQueryText += `\t${isClass ? "." : ""}${s}{\n${this.convertSelectorContent(
+                    mediaQueryText += `${isClass ? "." : ""}${s}{${this.convertSelectorContent(
                          mediaQueries[cond][s]
-                    )}\t}\n`;
+                    )}}`;
                }
-               mediaQueryText += "}\n\n";
+               mediaQueryText += "}";
           }
 
           return mediaQueryText;
@@ -56,7 +54,7 @@ export default {
 
           for (let prop in ffobject) {
                if (PropList.FontFace[prop]) {
-                    output += `\t${prop}:${ffobject[prop]};\n`;
+                    output += `${prop}:${ffobject[prop]};`;
                }
           }
 
@@ -69,46 +67,46 @@ export default {
      exportStatic: function (cssobject) {
           if (!cssobject) return;
 
-          let output = "\n";
+          let output = "";
 
           if (cssobject["import"]) {
                for (let item in cssobject.import) {
-                    output += `\n@import ${cssobject.import[item]};\n`;
+                    output += `@import ${cssobject.import[item]};`;
                }
           }
 
           if (cssobject["font"]) {
-               output += `@font-face {\n${this.convertFontFace(cssobject.font)}}\n`;
+               output += `@font-face {${this.convertFontFace(cssobject.font)}}`;
           }
 
           if (cssobject["charset"]) {
-               output += "\n";
+               output += "";
                for (let item in cssobject.charset) {
-                    output += `@charset "${cssobject.font[item]}";\n`;
+                    output += `@charset "${cssobject.font[item]}";`;
                }
           }
 
           if (cssobject["selectors"]) {
                for (let rule in cssobject.selectors) {
-                    output += `\n${rule}{\n${this.convertSelectorContent(
+                    output += `${rule}{${this.convertSelectorContent(
                          cssobject.selectors[rule],
-                         "\t"
+                         ""
                     )}}`;
                }
           }
 
           if (cssobject["media"]) {
-               output += "\n";
+               output += "";
                output += this.convertMediaQueries(cssobject.media, false);
           }
 
           if (cssobject["animations"]) {
                output += "\n";
                for (let anim in cssobject.animations) {
-                    output +=
-                         "\n" +
-                         this.convertAnimation({ name: anim, steps: cssobject.animations[anim] }) +
-                         "\n";
+                    output += this.convertAnimation({
+                         name: anim,
+                         steps: cssobject.animations[anim],
+                    });
                }
           }
 
@@ -121,9 +119,9 @@ export default {
       * @param {Array} mediaQueries array of quereis
       */
      convertStyle: function (css, animations, mediaQueries) {
-          let output = "\n";
+          let output = "";
           css.forEach((s) => {
-               output += `\n${s.selector}{\n${this.convertSelectorContent(s.content)}}\n`;
+               output += `${s.selector}{${this.convertSelectorContent(s.content)}}`;
           });
           animations.forEach((a) => {
                output += this.convertAnimation(a);

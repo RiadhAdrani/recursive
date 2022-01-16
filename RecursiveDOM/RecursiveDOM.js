@@ -11,9 +11,6 @@ import RecursiveEvents from "./RecursiveEvents.js";
  * @see{@link CreateComponent}
  */
 class RecursiveDOM {
-     // private fields
-     #oldRender;
-
      static devMode = false;
 
      /**
@@ -27,11 +24,11 @@ class RecursiveDOM {
           document.querySelector("body").append(this.root);
 
           addEventListener("recursive-update", () => {
-               this.#update();
+               this.update();
           });
      }
 
-     #handleError(execute) {
+     handleError(execute) {
           try {
                execute();
           } catch (e) {
@@ -80,10 +77,10 @@ class RecursiveDOM {
       * Render the app for the first time.
       */
      render() {
-          this.#handleError(() => {
+          this.handleError(() => {
                const startTime = new Date().getTime();
 
-               this.#oldRender = this.app();
+               this.oldRender = this.app();
 
                this.app().addExternalStyle();
 
@@ -95,9 +92,9 @@ class RecursiveDOM {
 
                RecursiveEvents.willRender();
 
-               this.root.append(this.#oldRender.render());
+               this.root.append(this.oldRender.render());
 
-               this.#oldRender.$onCreated();
+               this.oldRender.$onCreated();
 
                RecursiveEvents.didRender();
 
@@ -111,8 +108,8 @@ class RecursiveDOM {
       * @see {@link SetState.setValue}
       * @function
       */
-     #update() {
-          this.#handleError(() => {
+     update() {
+          this.handleError(() => {
                const startTime = new Date().getTime();
 
                const newRender = this.app();
@@ -121,9 +118,9 @@ class RecursiveDOM {
 
                RecursiveEvents.willUpdate();
 
-               this.#oldRender.update(newRender);
+               this.oldRender.update(newRender);
 
-               this.#oldRender = newRender;
+               this.oldRender = newRender;
 
                RecursiveEvents.computeStyle();
 
