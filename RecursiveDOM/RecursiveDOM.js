@@ -94,12 +94,12 @@ class RecursiveDOM {
 
                this.root.append(this.oldRender.render());
 
+               if (RecursiveDOM.devMode)
+                    console.log(`First paint done in ${new Date().getTime() - startTime}ms`);
+
                this.oldRender.$onCreated();
 
                RecursiveEvents.didRender();
-
-               if (RecursiveDOM.devMode)
-                    console.log(`First paint done in ${new Date().getTime() - startTime}ms`);
           });
      }
 

@@ -4,8 +4,16 @@ const willRender = new Event("recursive-will-render");
 const didRender = new Event("recursive-did-render");
 const willUpdate = new Event("recursive-will-update");
 const didUpdate = new Event("recursive-did-update");
+const eventIsExecuting = new Event("recursive-event-is-executing");
+const eventFinished = new Event("recursive-event-finished");
 
 export default {
+     startEvent: function () {
+          dispatchEvent(eventIsExecuting);
+     },
+     endEvent: function () {
+          dispatchEvent(eventFinished);
+     },
      sendCSSobject: function (csso) {
           dispatchEvent(new CustomEvent("recursive-component-style", { detail: csso }));
      },

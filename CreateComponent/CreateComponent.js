@@ -186,7 +186,9 @@ class CreateComponent {
       */
      $onUpdated() {
           if (typeof this.hooks.onUpdated === "function") {
+               RecursiveEvents.startEvent();
                this.hooks.onUpdated(this.domInstance);
+               RecursiveEvents.endEvent();
           }
      }
 
@@ -195,7 +197,9 @@ class CreateComponent {
       */
      $onCreated() {
           if (typeof this.hooks.onCreated === "function") {
+               RecursiveEvents.startEvent();
                this.hooks.onCreated(this.domInstance);
+               RecursiveEvents.endEvent();
           }
 
           if (this.children) {
@@ -211,15 +215,22 @@ class CreateComponent {
       * Allow the user to execute custom actions when the component has been destroyed.
       */
      $onDestroyed() {
-          if (typeof this.hooks.onDestroyed === "function") this.hooks.onDestroyed(this);
+          if (typeof this.hooks.onDestroyed === "function") {
+               RecursiveEvents.startEvent();
+               this.hooks.onDestroyed(this);
+               RecursiveEvents.endEvent();
+          }
      }
 
      /**
       * Allow the user to execute custom actions just before the destruction of the component.
       */
      $beforeDestroyed() {
-          if (typeof this.hooks.beforeDestroyed === "function")
+          if (typeof this.hooks.beforeDestroyed === "function") {
+               RecursiveEvents.startEvent();
                this.hooks.beforeDestroyed(this.domInstance);
+               RecursiveEvents.endEvent();
+          }
      }
 
      // DOM MANIPULATION METHODS

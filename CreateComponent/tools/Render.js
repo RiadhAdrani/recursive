@@ -1,3 +1,4 @@
+import RecursiveEvents from "@riadh-adrani/recursive/RecursiveDOM/RecursiveEvents";
 import PropList from "../../RecursiveDOM/PropList.js";
 
 export default {
@@ -40,7 +41,11 @@ export default {
                     element.events[prop] = event;
 
                     element.addEventListener(PropList.Events[prop].listener, (e) => {
+                         RecursiveEvents.startEvent();
+
                          element.events[prop](e);
+
+                         RecursiveEvents.endEvent();
                     });
                }
 

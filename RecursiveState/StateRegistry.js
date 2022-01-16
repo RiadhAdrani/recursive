@@ -1,3 +1,5 @@
+import RecursiveEvents from "@riadh-adrani/recursive/RecursiveDOM/RecursiveEvents";
+
 function ThrowStateError(msg) {
      const e = new Error(`Failed to compute states => ${msg}`);
      throw e;
@@ -11,6 +13,10 @@ function ThrowStateError(msg) {
 class StateRegistry {
      static globalRegistry = undefined;
 
+     static eventIsExecuting = false;
+
+     static batched = false;
+
      /**
       * Create a new state registry.
       * Do not create your own `StateRegistry`, this will be handled by the `RecursiveState`.
@@ -22,6 +28,18 @@ class StateRegistry {
           this.states = {};
           this.current = [];
           this.new = [];
+
+          addEventListener("recursive-event-is-executing", () => {
+               StateRegistry.eventIsExecuting = true;
+          });
+
+          addEventListener("recursive-event-finished", () => {
+               StateRegistry.eventIsExecuting = false;
+
+               if (StateRegistry.batched) {
+                    RecursiveEvents.update();
+               }
+          });
 
           addEventListener("recursive-did-render", () => {
                this.current = this.new;
@@ -43,9 +61,10 @@ class StateRegistry {
      /**
       * Create or returns the state object if it already exists in the `globalRegistry`.
       * @param {SetState} state stateful object
-      * @returns {Array | undefined} an array of length 2 : [`value`,`setValue`]
+      * @returns {Array | undefined} an array of length 3 : [`value`,`setValue`,`free`]
       * * `value` current value
       * * `setValue` a function that update the `value` with a new one.
+      * * `free` remove the state from the `StateRegistry`
       */
      setState(state) {
           if (!state.uid) ThrowStateError(`State object does not have a valid uid.`);
@@ -67,9 +86,10 @@ class StateRegistry {
      /**
       * returns the state object if it already exists in the `globalRegistry`.
       * @param {string} uid state unique identifier
-      * @returns {Array | undefined} an array of length 2 : [`value`,`setValue`]
+      * @returns {Array | undefined} an array of length 3 : [`value`,`setValue`,`free`]
       * * `value` current value
       * * `setValue` a function that update the `value` with a new one.
+      * * `free` remove the state from the `StateRegistry`
       */
      getState(uid) {
           const get = this.states[uid].value;

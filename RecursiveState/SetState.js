@@ -25,7 +25,12 @@ class SetState {
       */
      setValue(newVal) {
           this.value = newVal;
-          RecursiveEvents.update();
+
+          if (StateRegistrey.eventIsExecuting) {
+               StateRegistrey.batched = true;
+          } else {
+               RecursiveEvents.update();
+          }
      }
 
      /**

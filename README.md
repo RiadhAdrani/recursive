@@ -1,4 +1,4 @@
-# [Recursive](https://riadhadrani.github.io/recursive-website/) [![Version](https://img.shields.io/npm/v/@riadh-adrani/recursive?color=blue)](https://github.com/RiadhAdrani/recursive/releases) [![Licence](https://img.shields.io/npm/l/@riadh-adrani/recursive)](https://github.com/RiadhAdrani/recursive/issues)
+# [Recursive](https://riadhadrani.github.io/recursive-website/) [![Version](https://img.shields.io/npm/v/@riadh-adrani/recursive?color=blue)](https://www.npmjs.com/package/@riadh-adrani/recursive) [![Licence](https://img.shields.io/npm/l/@riadh-adrani/recursive)](https://github.com/RiadhAdrani/recursive/issues)
 
 Recursive is a javascript library to build a declarative, component-based, Javascript only web apps.
 
