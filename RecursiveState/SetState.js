@@ -2,8 +2,6 @@ import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
 import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
 import StateRegistrey from "./StateRegistry.js";
 
-const reservedStates = ["route"];
-
 /**
  * ### SetState
  * Stateful Object, used to automatically update the UI whenever a change occurs to its value.
@@ -20,6 +18,8 @@ class SetState {
           this.value = value;
           this.uid = uid;
      }
+
+     static reservedStates = ["route"];
 
      /**
       * Update the value of the stateful object and make the needed changes in the DOM.
@@ -55,7 +55,7 @@ class SetState {
       * @returns {Array} an array of length 2 : [`value`, `setValue`]
       */
      static setState(uid, initValue) {
-          if (reservedStates.includes(uid)) throw `${uid} is a reserved state UID.`;
+          if (SetState.reservedStates.includes(uid)) throw `${uid} is a reserved state UID.`;
           if (!StateRegistrey.globalRegistry) StateRegistrey.globalRegistry = new StateRegistrey();
           return StateRegistrey.globalRegistry.setState(new SetState(initValue, uid));
      }

@@ -1,4 +1,5 @@
 import RecursiveEvents from "@riadh-adrani/recursive/RecursiveDOM/RecursiveEvents";
+import SetState from "@riadh-adrani/recursive/RecursiveState/SetState";
 
 function ThrowStateError(msg) {
      const e = new Error(`Failed to compute states => ${msg}`);
@@ -49,7 +50,8 @@ class StateRegistry {
 
           addEventListener("recursive-did-update", () => {
                this.current.forEach((state) => {
-                    if (this.new.indexOf(state) === -1 && !state.isRecursive) {
+                    if (!SetState.reservedStates.includes(state.uid) && !state.isReserved) {
+                    } else if (this.new.indexOf(state) === -1) {
                          delete this.states[state];
                     }
                });
@@ -88,11 +90,15 @@ class StateRegistry {
       * returns the state object if it already exists in the `globalRegistry`.
       * @param {string} uid state unique identifier
       * @returns {Array | undefined} an array of length 3 : [`value`,`setValue`,`free`]
-      * * `value` current value
+      * * `value` current valued
       * * `setValue` a function that update the `value` with a new one.
       * * `free` remove the state from the `StateRegistry`
       */
      getState(uid) {
+          if (!this.states[uid]) {
+               throw `State with the UID ${uid} does not exist !`;
+          }
+
           const get = this.states[uid].value;
           const set = (newVal) => {
                this.states[uid].setValue(newVal);
