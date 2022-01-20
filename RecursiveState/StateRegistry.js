@@ -38,6 +38,7 @@ class StateRegistry {
 
                if (StateRegistry.batched) {
                     RecursiveEvents.update();
+                    StateRegistry.batched = false;
                }
           });
 
@@ -48,7 +49,7 @@ class StateRegistry {
 
           addEventListener("recursive-did-update", () => {
                this.current.forEach((state) => {
-                    if (this.new.indexOf(state) === -1) {
+                    if (this.new.indexOf(state) === -1 && !state.isRecursive) {
                          delete this.states[state];
                     }
                });

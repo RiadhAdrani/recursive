@@ -1,6 +1,7 @@
 import CreateComponent from "../CreateComponent/CreateComponent.js";
 import Route from "./Route.js";
-import { updateAfter } from "../Recursive-State.js";
+import { getState } from "../Recursive-State.js";
+import SetState from "../RecursiveState/SetState";
 
 /**
  * ### Router
@@ -9,6 +10,45 @@ import { updateAfter } from "../Recursive-State.js";
  * @see {@link Route}
  */
 class Router {
+     /**
+      * Create a Router to manage App directories.
+      * @param {Route} routes Define the main route for the App.
+      */
+     constructor(routes) {
+          this.routes = {};
+
+          routes.flatten(this.routes);
+
+          const [] = SetState.setReservedState(
+               "route",
+               (() => {
+                    for (let r in this.routes) {
+                         return this.routes[r];
+                    }
+               })()
+          );
+
+          window.addEventListener("popstate", (e) => {
+               if (e.state) {
+                    const data = this.isDynamicRoute(e.state.route);
+
+                    if (data.isDynamic) {
+                         this.loadRoute(data.template);
+                    } else {
+                         this.loadRoute(this.routes[e.state.route]);
+                    }
+               } else {
+                    const root = (() => {
+                         for (let r in this.routes) {
+                              return r;
+                         }
+                    })();
+
+                    this.loadRoute(this.routes[root]);
+               }
+          });
+     }
+
      static router = null;
 
      /**
@@ -32,43 +72,7 @@ class Router {
       * @returns {CreateComponent} component
       */
      static render() {
-          return Router.router.current.component();
-     }
-
-     /**
-      * Create a Router to manage App directories.
-      * @param {Route} routes Define the main route for the App.
-      */
-     constructor(routes) {
-          this.routes = {};
-
-          routes.flatten(this.routes);
-
-          this.current = (() => {
-               for (let r in this.routes) {
-                    return this.routes[r];
-               }
-          })();
-
-          window.addEventListener("popstate", (e) => {
-               if (e.state) {
-                    const data = this.isDynamicRoute(e.state.route);
-
-                    if (data.isDynamic) {
-                         this.loadRoute(data.template);
-                    } else {
-                         this.loadRoute(this.routes[e.state.route]);
-                    }
-               } else {
-                    const root = (() => {
-                         for (let r in this.routes) {
-                              return r;
-                         }
-                    })();
-
-                    this.loadRoute(this.routes[root]);
-               }
-          });
+          return getState("route")[0].component();
      }
 
      /**
@@ -76,7 +80,7 @@ class Router {
       * @returns {CreateComponent} the representing component element.
       */
      render() {
-          return this.current.component();
+          return getState("route")[0].component();
      }
 
      /**
@@ -116,16 +120,13 @@ class Router {
       * @param {Route} template the template of the route
       */
      loadRoute(template) {
-          updateAfter(() => {
-               this.current?.onExit();
-               this.current = template;
-               if (this.current.title) {
-                    document.title = this.current.title;
-               }
-          });
+          const [current, setCurrent] = getState("route");
 
+          current?.onExit();
+          setCurrent(template);
+          if (template.title) document.title = template.title;
           window.scrollTo({ top: 0, behavior: "smooth" });
-          this.current?.onLoad();
+          template?.onLoad();
      }
 
      /**
@@ -141,12 +142,14 @@ class Router {
 
           const data = this.isDynamicRoute(name);
 
+          const [current] = getState("route");
+
           if (data.isDynamic) {
-               history.pushState({ route: name }, this.current.title, `${name}`);
+               history.pushState({ route: name }, current.title, `${name}`);
                this.loadRoute(data.template);
           } else if (this.routes[name]) {
-               if (this.routes[name].name !== this.current.name) {
-                    history.pushState({ route: name }, this.current.title, `${name}`);
+               if (this.routes[name].name !== current.name) {
+                    history.pushState({ route: name }, current.title, `${name}`);
                     this.loadRoute(this.routes[name]);
                }
           }

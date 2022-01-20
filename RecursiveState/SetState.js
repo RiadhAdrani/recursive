@@ -2,6 +2,8 @@ import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
 import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
 import StateRegistrey from "./StateRegistry.js";
 
+const reservedStates = ["route"];
+
 /**
  * ### SetState
  * Stateful Object, used to automatically update the UI whenever a change occurs to its value.
@@ -36,11 +38,13 @@ class SetState {
      /**
       * Update the DOM after preforming certain actions bundled inside a function.
       * @param {Function} actions - a function that will be executed before updating the DOM.
+      * @deprecated
       */
      static updateAfter(actions) {
           try {
+               RecursiveEvents.startEvent();
                actions();
-               RecursiveEvents.update();
+               RecursiveEvents.endEvent();
           } catch (e) {}
      }
 
@@ -48,11 +52,25 @@ class SetState {
       * Create a stateful object and return its params as an array
       * @param {any} uid state unique identifier
       * @param {any} initValue define an initial value
-      * @returns {Array} an array of length 3 : [`value`, `setValue`, `free`]
+      * @returns {Array} an array of length 2 : [`value`, `setValue`]
       */
      static setState(uid, initValue) {
+          if (reservedStates.includes(uid)) throw `${uid} is a reserved state UID.`;
           if (!StateRegistrey.globalRegistry) StateRegistrey.globalRegistry = new StateRegistrey();
           return StateRegistrey.globalRegistry.setState(new SetState(initValue, uid));
+     }
+
+     /**
+      * Create a reserved stateful object and return its params as an array
+      * @param {any} uid state unique identifier
+      * @param {any} initValue define an initial value
+      * @returns {Array} an array of length 2 : [`value`, `setValue`]
+      */
+     static setReservedState(uid, initValue) {
+          if (!StateRegistrey.globalRegistry) StateRegistrey.globalRegistry = new StateRegistrey();
+          const res = new SetState(initValue, uid);
+          res.isReserved = true;
+          return StateRegistrey.globalRegistry.setState(res);
      }
 }
 
