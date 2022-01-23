@@ -164,7 +164,9 @@ class Router {
 
           const regExp = /:[^:;]*;/gm;
 
-          const keys = Router.router.current.name.match(regExp) || [];
+          const [current] = getState("route");
+
+          const keys = current.name.match(regExp) || [];
           const data = history.state.route.match(regExp) || [];
 
           if (keys.length === data.length && keys.length > 0) {

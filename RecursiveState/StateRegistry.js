@@ -49,12 +49,16 @@ class StateRegistry {
           });
 
           addEventListener("recursive-did-update", () => {
-               this.current.forEach((state) => {
-                    if (!SetState.reservedStates.includes(state.uid) && !state.isReserved) {
-                    } else if (this.new.indexOf(state) === -1) {
-                         delete this.states[state];
+               for (let i = 0; i < this.current.length; i++) {
+                    const uid = this.current[i];
+
+                    if (SetState.reservedStates.includes(uid)) {
+                         continue;
                     }
-               });
+                    if (this.new.indexOf(uid) === -1) {
+                         delete this.states[uid];
+                    }
+               }
 
                this.current = this.new;
                this.new = [];
