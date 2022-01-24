@@ -1,5 +1,5 @@
-import RecursiveEvents from "@riadh-adrani/recursive/RecursiveDOM/RecursiveEvents";
-import SetState from "@riadh-adrani/recursive/RecursiveState/SetState";
+import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
+import SetState from "./SetState.js";
 
 function ThrowStateError(msg) {
      const e = new Error(`Failed to compute states => ${msg}`);
@@ -30,11 +30,11 @@ class StateRegistry {
           this.current = [];
           this.new = [];
 
-          addEventListener("recursive-event-is-executing", () => {
+          addEventListener(RecursiveEvents.EVENTS._BATCHING_STARTED, () => {
                StateRegistry.eventIsExecuting = true;
           });
 
-          addEventListener("recursive-event-finished", () => {
+          addEventListener(RecursiveEvents.EVENTS._BATCHING_ENDED, () => {
                StateRegistry.eventIsExecuting = false;
 
                if (StateRegistry.batched) {
@@ -43,12 +43,12 @@ class StateRegistry {
                }
           });
 
-          addEventListener("recursive-did-render", () => {
+          addEventListener(RecursiveEvents.EVENTS._DOM_DID_RENDER, () => {
                this.current = this.new;
                this.new = [];
           });
 
-          addEventListener("recursive-did-update", () => {
+          addEventListener(RecursiveEvents.EVENTS._DOM_DID_UPDATE, () => {
                for (let i = 0; i < this.current.length; i++) {
                     const uid = this.current[i];
 
@@ -84,7 +84,7 @@ class StateRegistry {
 
           const get = this.states[state.uid].value;
           const set = (newVal) => {
-               this.states[state.uid].setValue(newVal);
+               if (this.states[state.uid]) this.states[state.uid].setValue(newVal);
           };
 
           return [get, set];
@@ -105,7 +105,7 @@ class StateRegistry {
 
           const get = this.states[uid].value;
           const set = (newVal) => {
-               this.states[uid].setValue(newVal);
+               if (this.states[uid]) this.states[uid].setValue(newVal);
           };
 
           return [get, set];

@@ -21,11 +21,11 @@ class RecursiveCSSOM {
                mediaQueries: [],
           };
 
-          addEventListener("recursive-component-style", (e) => {
+          addEventListener(RecursiveEvents.EVENTS._STYLE_COMPONENT, (e) => {
                this.stack.push(e.detail);
           });
 
-          addEventListener("recursive-compute-style", () => {
+          addEventListener(RecursiveEvents.EVENTS._STYLE_COMPUTE, () => {
                this.current = {
                     selectors: [],
                     animations: [],
@@ -68,7 +68,7 @@ class RecursiveCSSOM {
                this.stack = [];
           });
 
-          addEventListener("recursive-static-style", (e) => {
+          addEventListener(RecursiveEvents.EVENTS._STYLE_STATIC_COMPUTE, (e) => {
                const ss = Handler.exportStatic(e.detail);
                if (ss !== this.staticSheet) {
                     this.appStaticStyle.innerHTML = ss;

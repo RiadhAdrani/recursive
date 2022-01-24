@@ -23,8 +23,9 @@ class RecursiveDOM {
 
           document.querySelector("body").append(this.root);
 
-          addEventListener("recursive-update", () => {
+          addEventListener(RecursiveEvents.EVENTS._UPDATE_START, () => {
                this.update();
+               RecursiveEvents.didUpdate();
           });
      }
 
@@ -82,7 +83,7 @@ class RecursiveDOM {
 
                this.oldRender = this.app();
 
-               this.app().addExternalStyle();
+               this.oldRender.addExternalStyle();
 
                RecursiveEvents.computeStyle();
 
@@ -123,8 +124,6 @@ class RecursiveDOM {
                this.oldRender = newRender;
 
                RecursiveEvents.computeStyle();
-
-               RecursiveEvents.didUpdate();
 
                if (RecursiveDOM.devMode)
                     console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
