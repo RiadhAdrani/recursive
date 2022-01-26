@@ -1,3 +1,4 @@
+import { throwError } from "@riadh-adrani/recursive/RecursiveDOM/RecursiveError";
 import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
 import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
 import StateRegistrey from "./StateRegistry.js";
@@ -55,7 +56,7 @@ class SetState {
       * @returns {Array} an array of length 2 : [`value`, `setValue`]
       */
      static setState(uid, initValue) {
-          if (SetState.reservedStates.includes(uid)) throw `${uid} is a reserved state UID.`;
+          if (SetState.reservedStates.includes(uid)) throwError(`${uid} is a reserved state UID`,[`You have used a reserved UID from this list : ${SetState.reservedStates}`])
           if (!StateRegistrey.globalRegistry) StateRegistrey.globalRegistry = new StateRegistrey();
           return StateRegistrey.globalRegistry.setState(new SetState(initValue, uid));
      }

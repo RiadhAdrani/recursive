@@ -1,3 +1,4 @@
+import { throwError } from "../../RecursiveDOM/RecursiveError.js";
 import PropList from "../../RecursiveDOM/PropList.js";
 import CreateTextNode from "../CreateTextNode.js";
 import Check from "./Check.js";
@@ -25,7 +26,9 @@ export default {
 
                          // throw an error if a child is an array
                          if (Check.isArrayOfComponents(children[i])) {
-                              ThrowInitError("Child cannot be an array.");
+                              throwError("Child Cannot be of type array", [
+                                   "Check if you are nesting an array inside the children array.",
+                              ]);
                          }
 
                          // if child is a component.
@@ -44,7 +47,9 @@ export default {
                                    if (Check.isComponent(children[j]) && children[j] !== null) {
                                         break;
                                    } else if (Check.isArrayOfComponents(children[j])) {
-                                        ThrowInitError("Child cannot be an array.");
+                                        throwError("Child Cannot be of type array", [
+                                             "Check if you are nesting an array inside the children array.",
+                                        ]);
                                    } else {
                                         textNode = `${textNode}${children[j]}`;
                                         i++;

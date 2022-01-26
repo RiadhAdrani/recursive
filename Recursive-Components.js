@@ -1,6 +1,5 @@
 import { goTo } from "./Recursive-Router.js";
 import { CreateComponent } from "./Recursive.js";
-import Check from "./CreateComponent/tools/Check.js";
 
 /**
  * ## EmbedExternalView `<embed>`
@@ -3135,20 +3134,21 @@ class RawHTML extends CreateComponent {
      constructor({ html, id, draggable, className, events, hooks, flags }) {
           super({
                tag: "html-container",
-               children: `${html}`,
                className,
                events,
                hooks,
                flags,
                props: { id, draggable },
           });
+
+          this.html = html;
           this.flags.forceRerender = true;
      }
 
      render() {
           let render = document.createElement(this.tag);
 
-          render.innerHTML = this.children[0];
+          render.innerHTML = this.html;
 
           this.domInstance = render;
 
@@ -3156,9 +3156,7 @@ class RawHTML extends CreateComponent {
      }
 
      update(newComponent) {
-          this.domInstance.replaceWith(
-               Check.isComponent(newComponent) ? newComponent.render() : newComponent
-          );
+          this.domInstance.replaceWith(newComponent.render());
           return true;
      }
 }
@@ -3170,7 +3168,7 @@ class RawHTML extends CreateComponent {
  */
 const Raw = ({ html, id, draggable, className, events, hooks, flags }) => {
      return new RawHTML({
-          children: html,
+          html,
           id,
           draggable,
           className,
@@ -3354,7 +3352,7 @@ const BorderSpinner = ({
 
           return `border-spinner-${transform(color)}-${transform(thickness)}-${transform(
                duration
-          )}-${transform(timingFunction)}`;
+          )}-${transform(timingFunction)}-${transform(size)}`;
      }
 
      return new CreateComponent({

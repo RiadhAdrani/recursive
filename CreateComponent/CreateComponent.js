@@ -5,11 +5,7 @@ import Render from "./tools/Render.js";
 import Update from "./tools/Update.js";
 import Style from "./tools/Style.js";
 import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
-
-function ThrowComponentError(msg) {
-     const e = new Error(`Failed to create component => ${msg}`);
-     throw e;
-}
+import { throwError } from "../RecursiveDOM/RecursiveError";
 
 /**
  * ## CreateComponent
@@ -49,7 +45,9 @@ class CreateComponent {
      }) {
           // tag cannot be
           if (!tag) {
-               ThrowComponentError("tag property is missing.");
+               throwError('"tag" should not be empty or null.', [
+                    "Make sure to pass an HTML tag to your component.",
+               ]);
           }
 
           // CreateComponent specific props
@@ -126,9 +124,12 @@ class CreateComponent {
           // get the dom instance of the component
           const htmlElement = this.domInstance;
 
-          if (!htmlElement.tagName) {
-               ThrowComponentError(
-                    "Component not found inside document : This error should not happen : Report a bug to https://github.com/RiadhAdrani/recursive"
+          if (!htmlElement) {
+               throwError(
+                    "Component not found inside the DOM tree: This error should not happen: Report a bug to https://github.com/RiadhAdrani/recursive",
+                    [
+                         "You may have tried to manipulate the DOM manually outside the Recursive context.",
+                    ]
                );
           }
 
@@ -195,19 +196,24 @@ class CreateComponent {
      /**
       * Allow the user to execute custom actions when the component has been created.
       */
-     $onCreated() {
-          if (typeof this.hooks.onCreated === "function") {
+     $onCreated(recursively = false) {
+          if (!recursively) {
                RecursiveEvents.startEvent();
-               this.hooks.onCreated(this.domInstance);
-               RecursiveEvents.endEvent();
           }
 
+          if (typeof this.hooks.onCreated === "function") {
+               this.hooks.onCreated(this.domInstance);
+          }
           if (this.children) {
                this.children.forEach((child) => {
                     if (child.$$createcomponent) {
-                         child.$onCreated();
+                         child.$onCreated(true);
                     }
                });
+          }
+
+          if (!recursively) {
+               RecursiveEvents.endEvent();
           }
      }
 

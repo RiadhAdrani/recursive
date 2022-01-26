@@ -1,3 +1,6 @@
+import { throwError } from "./RecursiveError";
+import StateRegistry from "../RecursiveState/StateRegistry";
+
 const _UPDATE_START = "recursive-update";
 const _STYLE_COMPUTE = "recursive-compute-style";
 const _STYLE_COMPONENT = "recursive-component-style";
@@ -33,7 +36,7 @@ const BATCHING_ENDED = new Event(_BATCHING_ENDED);
 
 let isBusy = false;
 let unhandled = false;
-let timeOut = 200;
+let timeOut = 0;
 
 function busy() {
      if (!isBusy) isBusy = true;
@@ -41,27 +44,36 @@ function busy() {
 
 function unBusy() {
      isBusy = false;
+
      if (unhandled) {
+          timeOut = timeOut + 100;
           unhandled = false;
           update();
+     } else {
+          timeOut = 0;
      }
-
-     timeOut = 200;
 }
 
 function handleConflict(event) {
-     timeOut += 100;
-
      setTimeout(() => {
+          if (timeOut > 200) {
+               throwError("Infinite updates detected.", [
+                    "The app is updating over and over.",
+                    "Maybe you are updating the state too much.",
+               ]);
+          }
           isBusy = false;
           dispatchEvent(event);
      }, timeOut);
 }
 
 function startEvent() {
+     if (StateRegistry.eventIsExecuting) return;
+
      try {
           dispatchEvent(BATCHING_STARTED);
      } catch (e) {
+          timeOut += 100;
           handleConflict(BATCHING_STARTED);
      }
 }
@@ -69,6 +81,7 @@ function endEvent() {
      try {
           dispatchEvent(BATCHING_ENDED);
      } catch (e) {
+          timeOut += 100;
           handleConflict(BATCHING_ENDED);
      }
 }
@@ -90,6 +103,7 @@ function update() {
                dispatchEvent(UPDATE_START_EVENT);
           }
      } catch (e) {
+          timeOut += 100;
           handleConflict(UPDATE_START_EVENT);
      }
 }

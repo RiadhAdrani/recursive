@@ -1,9 +1,11 @@
 import CreateComponent from "./CreateComponent/CreateComponent.js";
-import RecursiveDOM from "./RecursiveDOM/RecursiveDOM.js";
 import CustomComponents from "./CreateComponent/CustomComponents.js";
+import RecursiveDOM from "./RecursiveDOM/RecursiveDOM.js";
 import RecursiveCSSOM from "./RecursiveCCSOM/RecursiveCSSOM.js";
+import { onError } from "./RecursiveDOM/RecursiveError";
 
 CustomComponents();
+onError();
 
 new RecursiveCSSOM();
 const RDOM = new RecursiveDOM();

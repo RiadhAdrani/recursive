@@ -1,3 +1,4 @@
+import { throwError } from "../RecursiveDOM/RecursiveError.js";
 import CreateComponent from "../CreateComponent/CreateComponent.js";
 import Router from "./Router.js";
 
@@ -21,10 +22,18 @@ export default class Route {
       */
      constructor({ name, component, title, subRoutes, onLoad, onExit }) {
           if (!/^\/([a-zA-Z0-9]|-|.|_|~){0,}(\/){0}$/gm.test(name.trim())) {
-               throw Error(`Invalid route name: ${name}`);
+               throwError(`Invalid route name "${name}"`, [
+                    'Route name should start with "/".',
+                    'Route name should not end with "/".',
+                    'Route can only accepts these special characters: "-" "." "_" "~".',
+                    'Dynamic routes parameters start with ":" and end with ";". Example : /example@user=:user;',
+               ]);
           }
           if (!/^(\S+){0,}$/gm.test(name.trim())) {
-               throw Error(`No white spaces are allowed in route name: ${name}`);
+               throwError(`No white spaces are allowed in route names : "${name}"`, [
+                    "Remove white spaces from the route name.",
+                    "If the route is dynamic, make sure to remove white spaces before injecting your parameters.",
+               ]);
           }
           this.name = name.trim();
           this.component = component;

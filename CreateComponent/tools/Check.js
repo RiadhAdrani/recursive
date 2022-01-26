@@ -1,9 +1,5 @@
+import { throwError } from "../../RecursiveDOM/RecursiveError.js";
 import CreateComponent from "../CreateComponent.js";
-
-function ThrowCheckError(msg) {
-     const e = new Error(`Check Failed => ${msg}`);
-     throw e;
-}
 
 export default {
      /**
@@ -29,6 +25,9 @@ export default {
                ? true
                : /^[a-zA-Z]([a-zA-Z0-9]|(-))+$/.test(classname)
                ? true
-               : ThrowCheckError(`"${classname}" is not a valid className.`);
+               : throwError(`${classname} is not a valid className`, [
+                      'Class name can only include alphaneumerical characters and "-".',
+                      "Class name should not contain spaces.",
+                 ]);
      },
 };

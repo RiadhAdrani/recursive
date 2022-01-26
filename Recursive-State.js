@@ -27,6 +27,7 @@ const getState = (uid) => {
  * Update the DOM after performing certain actions.
  * @param {Function} actions function to execute
  * @returns {void}
+ * @deprecated
  */
 const updateAfter = (actions) => SetState.updateAfter(actions);
 

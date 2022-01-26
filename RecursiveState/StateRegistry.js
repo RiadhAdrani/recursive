@@ -1,10 +1,6 @@
+import { throwError } from "@riadh-adrani/recursive/RecursiveDOM/RecursiveError";
 import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
 import SetState from "./SetState.js";
-
-function ThrowStateError(msg) {
-     const e = new Error(`Failed to compute states => ${msg}`);
-     throw e;
-}
 
 /**
  * ### StateRegistry
@@ -24,7 +20,7 @@ class StateRegistry {
       * @returns { StateRegistry } a new registry object
       */
      constructor() {
-          if (StateRegistry.globalRegistry != undefined) throw "State Registery already exists";
+          if (StateRegistry.globalRegistry != undefined) throwError('State Registry already exists',['State Resigtry cannot be instanciated more than once. Are you trying to manually create an object?'])
 
           this.states = {};
           this.current = [];
@@ -74,7 +70,7 @@ class StateRegistry {
       * * `free` remove the state from the `StateRegistry`
       */
      setState(state) {
-          if (!state.uid) ThrowStateError(`State object does not have a valid uid.`);
+          if (!state.uid) throwError('State object does not have a valid uid',['setState accepts two parameters: the first is the unique identifier (UID) and the second is the initial value.'])
 
           if (!this.states[state.uid]) {
                this.states[state.uid] = state;
@@ -100,7 +96,7 @@ class StateRegistry {
       */
      getState(uid) {
           if (!this.states[uid]) {
-               throw `State with the UID ${uid} does not exist !`;
+               throwError(`State with the UID ${uid} does not exist!`,['You tried to access a non-existant state.','States could be cleared upon updates, when they are out of scope.'])
           }
 
           const get = this.states[uid].value;

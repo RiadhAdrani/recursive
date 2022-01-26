@@ -1,4 +1,5 @@
 import PropList from "../../RecursiveDOM/PropList.js";
+import { throwError } from "../../RecursiveDOM/RecursiveError.js";
 
 function ThrowStyleError(msg) {
      const e = new Error(`Failed to compute style => ${msg}`);
@@ -51,15 +52,19 @@ export default {
                                    )
                               );
                          } else {
-                              ThrowStyleError(
-                                   `${selector} is not a valid CSS selector, or is still not implemented in the library.`
+                              throwError(
+                                   `${selector} is not a valid CSS selector, or is still not implemented in the library.`,
+                                   [
+                                        "List of accepted selectors could be found here : https://github.com/RiadhAdrani/recursive/blob/6ca1c1bd2762d26a97f32b36507ef95bd7b85a84/RecursiveDOM/PropList.js#L652 .",
+                                   ]
                               );
                          }
                     }
                } else {
-                    ThrowStyleError(
-                         "Unable to apply style, className is missing from the styleSheet."
-                    );
+                    throwError("className is missing from the styleSheet.", [
+                         "styleSheet property need a className to generate component style.",
+                         "Add className with a meaningful (and unique if needed) value.",
+                    ]);
                }
           }
 

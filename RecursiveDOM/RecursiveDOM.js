@@ -1,3 +1,4 @@
+import { throwError } from "./RecursiveError";
 import CreateComponent from "../CreateComponent/CreateComponent.js";
 import HandleWindow from "./HandleWindow.js";
 import RecursiveEvents from "./RecursiveEvents.js";
@@ -29,79 +30,39 @@ class RecursiveDOM {
           });
      }
 
-     handleError(execute) {
-          try {
-               execute();
-          } catch (e) {
-               const error = new CreateComponent({
-                    tag: "div",
-                    inlineStyle: {
-                         padding: "20px 20px 40px 20px",
-                         background: "#992222",
-                         color: "white",
-                         position: "absolute",
-                         fontSize: "20px",
-                         width: "-webkit-fill-available",
-                    },
-                    children: [
-                         new CreateComponent({
-                              tag: "p",
-                              children: `${e}`,
-                              inlineStyle: {
-                                   fontSize: "20px",
-                                   fontWeight: "Trebuchet MS",
-                                   padding: "10px",
-                              },
-                         }),
-                         new CreateComponent({
-                              tag: "p",
-                              children: `${e.stack}`,
-                              inlineStyle: {
-                                   padding: "20px",
-                                   fontSize: "16px",
-                                   lineHeight: "1.5em",
-                                   whiteSpace: "break-spaces",
-                                   fontFamily: "monospace",
-                                   background: "#551111",
-                              },
-                         }),
-                    ],
-               });
-
-               this.root.innerHTML = "";
-               this.root.append(error.render());
-               console.error(e);
-          }
-     }
-
      /**
       * Render the app for the first time.
       */
      render() {
-          this.handleError(() => {
-               const startTime = new Date().getTime();
+          const startTime = new Date().getTime();
 
-               this.oldRender = this.app();
+          this.oldRender = this.app();
 
-               this.oldRender.addExternalStyle();
+          if (this.oldRender.$$createcomponent !== "create-component") {
+               throwError('Root component is not of type "CreateComponent"', [
+                    "Render only accepts a function call.",
+                    "You should return CreateComponent from your app function.",
+               ]);
+          }
 
-               RecursiveEvents.computeStyle();
+          this.oldRender.addExternalStyle();
 
-               this.root.innerHTML = "";
+          RecursiveEvents.computeStyle();
 
-               HandleWindow.events(this.events);
+          this.root.innerHTML = "";
 
-               RecursiveEvents.willRender();
+          HandleWindow.events(this.events);
 
-               this.root.append(this.oldRender.render());
+          RecursiveEvents.willRender();
 
-               if (RecursiveDOM.devMode)
-                    console.log(`First paint done in ${new Date().getTime() - startTime}ms`);
+          this.root.append(this.oldRender.render());
 
-               this.oldRender.$onCreated();
+          if (RecursiveDOM.devMode)
+               console.log(`First paint done in ${new Date().getTime() - startTime}ms`);
 
-               RecursiveEvents.didRender();
-          });
+          this.oldRender.$onCreated();
+
+          RecursiveEvents.didRender();
      }
 
      /**
@@ -110,24 +71,22 @@ class RecursiveDOM {
       * @function
       */
      update() {
-          this.handleError(() => {
-               const startTime = new Date().getTime();
+          const startTime = new Date().getTime();
 
-               const newRender = this.app();
+          const newRender = this.app();
 
-               newRender.addExternalStyle();
+          newRender.addExternalStyle();
 
-               RecursiveEvents.willUpdate();
+          RecursiveEvents.willUpdate();
 
-               this.oldRender.update(newRender);
+          this.oldRender.update(newRender);
 
-               this.oldRender = newRender;
+          this.oldRender = newRender;
 
-               RecursiveEvents.computeStyle();
+          RecursiveEvents.computeStyle();
 
-               if (RecursiveDOM.devMode)
-                    console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
-          });
+          if (RecursiveDOM.devMode)
+               console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
      }
 
      destroy() {
