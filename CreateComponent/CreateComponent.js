@@ -220,10 +220,24 @@ class CreateComponent {
      /**
       * Allow the user to execute custom actions when the component has been destroyed.
       */
-     $onDestroyed() {
-          if (typeof this.hooks.onDestroyed === "function") {
+     $onDestroyed(recursively) {
+          if (!recursively) {
                RecursiveEvents.startEvent();
+          }
+
+          if (typeof this.hooks.onDestroyed === "function") {
                this.hooks.onDestroyed(this);
+          }
+
+          if (this.children) {
+               this.children.forEach((child) => {
+                    if (child.$$createcomponent) {
+                         child.$onDestroyed(true);
+                    }
+               });
+          }
+
+          if (!recursively) {
                RecursiveEvents.endEvent();
           }
      }
@@ -231,10 +245,24 @@ class CreateComponent {
      /**
       * Allow the user to execute custom actions just before the destruction of the component.
       */
-     $beforeDestroyed() {
-          if (typeof this.hooks.beforeDestroyed === "function") {
+     $beforeDestroyed(recursively) {
+          if (!recursively) {
                RecursiveEvents.startEvent();
-               this.hooks.beforeDestroyed(this.domInstance);
+          }
+
+          if (typeof this.hooks.beforeDestroyed === "function") {
+               this.hooks.beforeDestroyed(this);
+          }
+
+          if (this.children) {
+               this.children.forEach((child) => {
+                    if (child.$$createcomponent) {
+                         child.$beforeDestroyed(true);
+                    }
+               });
+          }
+
+          if (!recursively) {
                RecursiveEvents.endEvent();
           }
      }

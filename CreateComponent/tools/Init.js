@@ -117,10 +117,13 @@ export default {
                     if (typeof events[event] === "function") {
                          component.events[event] = events[event];
                     } else {
-                         ThrowInitError(`${event} is not a function.`);
+                         throwError(`${event} is not function.`, ["Event is not of type function"]);
                     }
                } else {
-                    ThrowInitError(`${event} is not a valid event name.`);
+                    throwError(`${event} is not a valid event name or is yet to be implemented.`, [
+                         "Event name is non-existant",
+                         "List of events : https://github.com/RiadhAdrani/recursive/blob/91b3cb8ae80fcbc7aa402b1d7814c0d2b7a0e779/RecursiveDOM/PropList.js#L537",
+                    ]);
                }
           }
      },
@@ -146,10 +149,15 @@ export default {
                          if (typeof hooks[hook] === "function") {
                               component.hooks[hook] = hooks[hook];
                          } else {
-                              ThrowInitError(`${hook} is not a function.`);
+                              throwError(`${hook} is not a function.`, [
+                                   "Hook is not of type function",
+                              ]);
                          }
                     } else {
-                         ThrowInitError(`${hook} is not a valid hook.`);
+                         throwError(`${hook} is not a valid hook name.`, [
+                              "Hook name is non-existant",
+                              "List of hooks : https://github.com/RiadhAdrani/recursive/blob/91b3cb8ae80fcbc7aa402b1d7814c0d2b7a0e779/RecursiveDOM/PropList.js#L645",
+                         ]);
                     }
                }
           }

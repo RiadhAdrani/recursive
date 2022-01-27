@@ -20,7 +20,10 @@ class StateRegistry {
       * @returns { StateRegistry } a new registry object
       */
      constructor() {
-          if (StateRegistry.globalRegistry != undefined) throwError('State Registry already exists',['State Resigtry cannot be instanciated more than once. Are you trying to manually create an object?'])
+          if (StateRegistry.globalRegistry != undefined)
+               throwError("State Registry already exists", [
+                    "State Resigtry cannot be instanciated more than once. Are you trying to manually create an object?",
+               ]);
 
           this.states = {};
           this.current = [];
@@ -52,6 +55,7 @@ class StateRegistry {
                          continue;
                     }
                     if (this.new.indexOf(uid) === -1) {
+                         this.states[uid].beforeDestroyed();
                          delete this.states[uid];
                     }
                }
@@ -64,13 +68,13 @@ class StateRegistry {
      /**
       * Create or returns the state object if it already exists in the `globalRegistry`.
       * @param {SetState} state stateful object
-      * @returns {Array | undefined} an array of length 3 : [`value`,`setValue`,`free`]
-      * * `value` current value
-      * * `setValue` a function that update the `value` with a new one.
-      * * `free` remove the state from the `StateRegistry`
+      * @returns {Array | undefined} an array containing data and state manipulation functions.
       */
      setState(state) {
-          if (!state.uid) throwError('State object does not have a valid uid',['setState accepts two parameters: the first is the unique identifier (UID) and the second is the initial value.'])
+          if (!state.uid)
+               throwError("State object does not have a valid uid", [
+                    "setState accepts two parameters: the first is the unique identifier (UID) and the second is the initial value.",
+               ]);
 
           if (!this.states[state.uid]) {
                this.states[state.uid] = state;
@@ -82,21 +86,25 @@ class StateRegistry {
           const set = (newVal) => {
                if (this.states[state.uid]) this.states[state.uid].setValue(newVal);
           };
+          const prev = this.states[state.uid].preValue;
+          const exists = () => {
+               return this.states[state.uid] != false;
+          };
 
-          return [get, set];
+          return [get, set, prev, exists];
      }
 
      /**
       * returns the state object if it already exists in the `globalRegistry`.
       * @param {string} uid state unique identifier
-      * @returns {Array | undefined} an array of length 3 : [`value`,`setValue`,`free`]
-      * * `value` current valued
-      * * `setValue` a function that update the `value` with a new one.
-      * * `free` remove the state from the `StateRegistry`
+      * @returns {Array | undefined} an array containing data and state manipulation functions.
       */
      getState(uid) {
           if (!this.states[uid]) {
-               throwError(`State with the UID ${uid} does not exist!`,['You tried to access a non-existant state.','States could be cleared upon updates, when they are out of scope.'])
+               throwError(`State with the UID ${uid} does not exist!`, [
+                    "You tried to access a non-existant state.",
+                    "States could be cleared upon updates, when they are out of scope.",
+               ]);
           }
 
           const get = this.states[uid].value;
@@ -104,7 +112,12 @@ class StateRegistry {
                if (this.states[uid]) this.states[uid].setValue(newVal);
           };
 
-          return [get, set];
+          const prev = this.states[uid].preValue;
+          const exists = () => {
+               return this.states[uid] != false;
+          };
+
+          return [get, set, prev, exists];
      }
 }
 

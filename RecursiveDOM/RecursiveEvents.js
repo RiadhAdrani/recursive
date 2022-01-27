@@ -56,7 +56,7 @@ function unBusy() {
 
 function handleConflict(event) {
      setTimeout(() => {
-          if (timeOut > 200) {
+          if (timeOut > 300) {
                throwError("Infinite updates detected.", [
                     "The app is updating over and over.",
                     "Maybe you are updating the state too much.",

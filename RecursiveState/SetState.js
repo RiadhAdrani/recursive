@@ -15,9 +15,11 @@ class SetState {
       * @param {any} uid state unique identifier
       * @returns {SetState} stateful object
       */
-     constructor(value, uid) {
-          this.value = value;
+     constructor(value, uid, beforeDestroyed) {
           this.uid = uid;
+          this.value = value;
+          this.beforeDestroyed = typeof beforeDestroyed === "function" ? beforeDestroyed : () => {};
+          this.preValue = undefined;
      }
 
      static reservedStates = ["route"];
@@ -27,6 +29,7 @@ class SetState {
       * @param {any} newVal new value
       */
      setValue(newVal) {
+          this.preValue = this.value;
           this.value = newVal;
 
           if (StateRegistrey.eventIsExecuting) {
@@ -53,19 +56,24 @@ class SetState {
       * Create a stateful object and return its params as an array
       * @param {any} uid state unique identifier
       * @param {any} initValue define an initial value
-      * @returns {Array} an array of length 2 : [`value`, `setValue`]
+      * @returns {Array} an array containing data and state manipulation functions.
       */
-     static setState(uid, initValue) {
-          if (SetState.reservedStates.includes(uid)) throwError(`${uid} is a reserved state UID`,[`You have used a reserved UID from this list : ${SetState.reservedStates}`])
+     static setState(uid, initValue, beforeDestroyed) {
+          if (SetState.reservedStates.includes(uid))
+               throwError(`${uid} is a reserved state UID`, [
+                    `You have used a reserved UID from this list : ${SetState.reservedStates}`,
+               ]);
           if (!StateRegistrey.globalRegistry) StateRegistrey.globalRegistry = new StateRegistrey();
-          return StateRegistrey.globalRegistry.setState(new SetState(initValue, uid));
+          return StateRegistrey.globalRegistry.setState(
+               new SetState(initValue, uid, beforeDestroyed)
+          );
      }
 
      /**
       * Create a reserved stateful object and return its params as an array
       * @param {any} uid state unique identifier
       * @param {any} initValue define an initial value
-      * @returns {Array} an array of length 2 : [`value`, `setValue`]
+      * @returns {Array} an array containing data and state manipulation functions.
       */
      static setReservedState(uid, initValue) {
           if (!StateRegistrey.globalRegistry) StateRegistrey.globalRegistry = new StateRegistrey();

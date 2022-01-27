@@ -10,7 +10,8 @@ import StateRegistry from "./RecursiveState/StateRegistry.js";
  * * `value` current value
  * * `setValue` a function that update the `value` with a new one.
  */
-const setState = (uid, value) => SetState.setState(uid, value);
+const setState = (uid, value, beforeDestroyed = () => {}) =>
+     SetState.setState(uid, value, beforeDestroyed);
 
 /**
  * Returns the state with the specified uid
