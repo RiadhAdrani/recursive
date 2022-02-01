@@ -1,5 +1,6 @@
-import RecursiveEvents from "@riadh-adrani/recursive/RecursiveDOM/RecursiveEvents";
+import { CreateComponent } from "../../Recursive";
 import PropList from "../../RecursiveDOM/PropList.js";
+import RecursiveOrchestrator from "../../RecursiveOrchestrator/RecursiveOrchestrator.js";
 
 export default {
      /**
@@ -42,7 +43,7 @@ export default {
       * @param newComponent new component
       * @param render rendered htmlElement
       */
-     children: (component, newComponent, render) => {
+     children: (component, newComponent) => {
           function compareEqualChildren() {
                for (let i = 0; i < component.children.length; i++) {
                     component.children[i].update(newComponent.children[i]);
@@ -85,11 +86,11 @@ export default {
                for (let event in newComponent.events) {
                     if (!render.events[event]) {
                          render.addEventListener(PropList.Events[event].listener, (e) => {
-                              RecursiveEvents.startEvent();
+                              RecursiveOrchestrator.requestBatchingStart(`event-${event}`);
 
                               render.events[event](e);
 
-                              RecursiveEvents.endEvent();
+                              RecursiveOrchestrator.requestBatchingEnd(`event-${event}`);
                          });
                     }
                     updateEvent(event);

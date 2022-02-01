@@ -17,6 +17,8 @@ import { throwError } from "../RecursiveDOM/RecursiveError";
  * @see {@link RecursiveDOM}
  */
 class CreateComponent {
+     static contextStack = [];
+
      /**
       * Create a new component
       * @param {Object} param
@@ -41,6 +43,7 @@ class CreateComponent {
           inlineStyle,
           props,
           flags,
+          key,
           hooks = {},
      }) {
           // tag cannot be
@@ -52,6 +55,9 @@ class CreateComponent {
 
           // CreateComponent specific props
           this.$$createcomponent = "create-component";
+
+          // key
+          this.key = key;
 
           // HTML Attributes
           this.tag = tag;
@@ -171,10 +177,12 @@ class CreateComponent {
           // check if there is any change
           didUpdate = inlineStyleDidUpdate || attributesDidUpdate ? true : false;
 
-          // Execute update lifecycle method
-          didUpdate ? this.$onUpdated() : "";
-
           newComponent.domInstance = this.domInstance;
+
+          // Execute update lifecycle method
+          if (didUpdate) {
+               RecursiveDOM.enqueuOnUpdated(() => newComponent.$onUpdated());
+          }
      }
 
      // LIFE CYCLE METHODS
@@ -187,44 +195,30 @@ class CreateComponent {
       */
      $onUpdated() {
           if (typeof this.hooks.onUpdated === "function") {
-               RecursiveEvents.startEvent();
                this.hooks.onUpdated(this.domInstance);
-               RecursiveEvents.endEvent();
           }
      }
 
      /**
       * Allow the user to execute custom actions when the component has been created.
       */
-     $onCreated(recursively = false) {
-          if (!recursively) {
-               RecursiveEvents.startEvent();
-          }
-
+     $onCreated() {
           if (typeof this.hooks.onCreated === "function") {
                this.hooks.onCreated(this.domInstance);
           }
           if (this.children) {
                this.children.forEach((child) => {
                     if (child.$$createcomponent) {
-                         child.$onCreated(true);
+                         child.$onCreated();
                     }
                });
-          }
-
-          if (!recursively) {
-               RecursiveEvents.endEvent();
           }
      }
 
      /**
       * Allow the user to execute custom actions when the component has been destroyed.
       */
-     $onDestroyed(recursively) {
-          if (!recursively) {
-               RecursiveEvents.startEvent();
-          }
-
+     $onDestroyed() {
           if (typeof this.hooks.onDestroyed === "function") {
                this.hooks.onDestroyed(this);
           }
@@ -232,24 +226,32 @@ class CreateComponent {
           if (this.children) {
                this.children.forEach((child) => {
                     if (child.$$createcomponent) {
-                         child.$onDestroyed(true);
+                         child.$onDestroyed();
                     }
                });
           }
+     }
 
-          if (!recursively) {
-               RecursiveEvents.endEvent();
-          }
+     /**
+      * Execute everytime the RecursiveDOM updates
+      */
+     $onRerender() {
+          // if (typeof this.hooks.onRerender === "function") {
+          //      this.hooks.onRerender(this.domInstance);
+          // }
+          // if (this.children) {
+          //      this.children.forEach((child) => {
+          //           if (child.$$createcomponent) {
+          //                child.$onRerender();
+          //           }
+          //      });
+          // }
      }
 
      /**
       * Allow the user to execute custom actions just before the destruction of the component.
       */
-     $beforeDestroyed(recursively) {
-          if (!recursively) {
-               RecursiveEvents.startEvent();
-          }
-
+     $beforeDestroyed() {
           if (typeof this.hooks.beforeDestroyed === "function") {
                this.hooks.beforeDestroyed(this);
           }
@@ -257,13 +259,9 @@ class CreateComponent {
           if (this.children) {
                this.children.forEach((child) => {
                     if (child.$$createcomponent) {
-                         child.$beforeDestroyed(true);
+                         child.$beforeDestroyed();
                     }
                });
-          }
-
-          if (!recursively) {
-               RecursiveEvents.endEvent();
           }
      }
 
@@ -274,9 +272,9 @@ class CreateComponent {
       * remove the current dom instance
       */
      $removeFromDOM() {
-          this.$beforeDestroyed();
-          this.domInstance.remove();
-          this.$onDestroyed();
+          RecursiveDOM.enqueueBeforeDestroyed(() => this.$beforeDestroyed());
+          RecursiveDOM.enqueueDomAction(() => this.domInstance.remove());
+          RecursiveDOM.enqueueOnDestroyed(() => this.$onDestroyed());
      }
 
      /**
@@ -284,10 +282,10 @@ class CreateComponent {
       * @param {CreateComponent} newComponent component to render
       */
      $replaceInDOM(newComponent) {
-          this.$beforeDestroyed();
-          this.domInstance.replaceWith(newComponent.render());
-          this.$onDestroyed();
-          newComponent.$onCreated();
+          RecursiveDOM.enqueueBeforeDestroyed(() => this.$beforeDestroyed());
+          RecursiveDOM.enqueueDomAction(() => this.domInstance.replaceWith(newComponent.render()));
+          RecursiveDOM.enqueueOnDestroyed(() => this.$onDestroyed());
+          RecursiveDOM.enqueuOnCreated(() => newComponent.$onCreated());
      }
 
      /**
@@ -295,8 +293,8 @@ class CreateComponent {
       * @param {CreateComponent} parentComponent
       */
      $appendInDOM(parentComponent) {
-          parentComponent.domInstance.append(this.render());
-          this.$onCreated();
+          RecursiveDOM.enqueueDomAction(() => parentComponent.domInstance.append(this.render()));
+          RecursiveDOM.enqueuOnCreated(() => this.$onCreated());
      }
 
      // STYLING
@@ -304,6 +302,7 @@ class CreateComponent {
 
      /**
       * Send the `styleSheet` object to the RecursiveDOM to be processed.
+      * @deprecated
       */
      addExternalStyle() {
           RecursiveEvents.sendCSSobject({ ...this.style });
@@ -315,6 +314,20 @@ class CreateComponent {
                     }
                });
           }
+     }
+
+     flattenStyle() {
+          const output = [];
+
+          if (this.children) {
+               this.children.forEach((child) => {
+                    output.push(...child.flattenStyle());
+               });
+          }
+
+          if (this.style) output.push(this.style);
+
+          return output;
      }
 }
 

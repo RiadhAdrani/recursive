@@ -1,4 +1,4 @@
-import RecursiveEvents from "@riadh-adrani/recursive/RecursiveDOM/RecursiveEvents";
+import RecursiveOrchestrator from "../../RecursiveOrchestrator/RecursiveOrchestrator";
 import PropList from "../../RecursiveDOM/PropList.js";
 
 export default {
@@ -41,11 +41,11 @@ export default {
                     element.events[prop] = event;
 
                     element.addEventListener(PropList.Events[prop].listener, (e) => {
-                         RecursiveEvents.startEvent();
+                         RecursiveOrchestrator.requestBatchingStart(`event-${prop}`);
 
                          element.events[prop](e);
 
-                         RecursiveEvents.endEvent();
+                         RecursiveOrchestrator.requestBatchingEnd(`event-${prop}`);
                     });
                }
 

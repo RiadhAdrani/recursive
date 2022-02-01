@@ -647,6 +647,7 @@ export default {
           onDestroyed: "onDestroyed",
           onUpdated: "onUpdated",
           beforeDestroyed: "beforeDestroyed",
+          onRerender: "onRerender",
      },
      // CSS Selectors
      CssSelectors: {

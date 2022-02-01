@@ -89,7 +89,7 @@ class Router {
       * @returns {JSON} the type of the route, alongside its template if it is `dynamic`.
       */
      isDynamicRoute(route) {
-          const regExp = /:[^:;]*;/gm;
+          const regExp = /:[^:;]*;/;
 
           for (let name in this.routes) {
                const template = name.toString();

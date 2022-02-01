@@ -1,22 +1,18 @@
 import CreateComponent from "./CreateComponent/CreateComponent.js";
 import CustomComponents from "./CreateComponent/CustomComponents.js";
 import RecursiveDOM from "./RecursiveDOM/RecursiveDOM.js";
-import RecursiveCSSOM from "./RecursiveCCSOM/RecursiveCSSOM.js";
 import { onError } from "./RecursiveDOM/RecursiveError";
 
-CustomComponents();
 onError();
-
-new RecursiveCSSOM();
-const RDOM = new RecursiveDOM();
+CustomComponents();
 
 /**
  * Render your App.
  * @param {Function} App function returning the tree of components
  */
 function Render(App) {
-     RDOM.app = App;
-     RDOM.render();
+     RecursiveDOM.singleton.app = App;
+     RecursiveDOM.singleton.render();
 }
 
 /**

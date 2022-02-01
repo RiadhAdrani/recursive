@@ -1,5 +1,4 @@
-import { throwError } from "@riadh-adrani/recursive/RecursiveDOM/RecursiveError";
-import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
+import { throwError } from "../RecursiveDOM/RecursiveError";
 import SetState from "./SetState.js";
 
 /**
@@ -8,11 +7,7 @@ import SetState from "./SetState.js";
  * Do not create your own `StateRegistry`, this will be handled by the `RecursiveState`.
  */
 class StateRegistry {
-     static globalRegistry = undefined;
-
-     static eventIsExecuting = false;
-
-     static batched = false;
+     static singleton = new StateRegistry();
 
      /**
       * Create a new state registry.
@@ -20,50 +15,41 @@ class StateRegistry {
       * @returns { StateRegistry } a new registry object
       */
      constructor() {
-          if (StateRegistry.globalRegistry != undefined)
+          if (StateRegistry.singleton instanceof StateRegistry)
                throwError("State Registry already exists", [
                     "State Resigtry cannot be instanciated more than once. Are you trying to manually create an object?",
                ]);
 
           this.states = {};
+          this.history = [];
           this.current = [];
           this.new = [];
-
-          addEventListener(RecursiveEvents.EVENTS._BATCHING_STARTED, () => {
-               StateRegistry.eventIsExecuting = true;
-          });
-
-          addEventListener(RecursiveEvents.EVENTS._BATCHING_ENDED, () => {
-               StateRegistry.eventIsExecuting = false;
-
-               if (StateRegistry.batched) {
-                    RecursiveEvents.update();
-                    StateRegistry.batched = false;
-               }
-          });
-
-          addEventListener(RecursiveEvents.EVENTS._DOM_DID_RENDER, () => {
-               this.current = this.new;
-               this.new = [];
-          });
-
-          addEventListener(RecursiveEvents.EVENTS._DOM_DID_UPDATE, () => {
-               for (let i = 0; i < this.current.length; i++) {
-                    const uid = this.current[i];
-
-                    if (SetState.reservedStates.includes(uid)) {
-                         continue;
-                    }
-                    if (this.new.indexOf(uid) === -1) {
-                         this.states[uid].beforeDestroyed();
-                         delete this.states[uid];
-                    }
-               }
-
-               this.current = this.new;
-               this.new = [];
-          });
      }
+
+     clean() {
+          this.history.push(this.states);
+
+          for (let i = 0; i < this.current.length; i++) {
+               const uid = this.current[i];
+
+               if (SetState.reservedStates.includes(uid)) {
+                    continue;
+               }
+               if (this.new.indexOf(uid) === -1) {
+                    if (this.states[uid]) {
+                         if (typeof this.states[uid].beforeDestroyed === "function")
+                              this.states[uid].beforeDestroyed();
+                    }
+
+                    delete this.states[uid];
+               }
+          }
+
+          this.current = this.new;
+          this.new = [];
+     }
+
+     static clean = () => StateRegistry.singleton.clean();
 
      /**
       * Create or returns the state object if it already exists in the `globalRegistry`.
@@ -71,6 +57,8 @@ class StateRegistry {
       * @returns {Array | undefined} an array containing data and state manipulation functions.
       */
      setState(state) {
+          let firstTime = false;
+
           if (!state.uid)
                throwError("State object does not have a valid uid", [
                     "setState accepts two parameters: the first is the unique identifier (UID) and the second is the initial value.",
@@ -78,6 +66,7 @@ class StateRegistry {
 
           if (!this.states[state.uid]) {
                this.states[state.uid] = state;
+               firstTime = true;
           }
 
           this.new.push(state.uid);
@@ -91,7 +80,15 @@ class StateRegistry {
                return this.states[state.uid] != false;
           };
 
-          return [get, set, prev, exists];
+          const live = () => {
+               return this.states[state.uid].value;
+          };
+
+          if (typeof state.onInit === "function" && firstTime) {
+               (() => state.onInit())();
+          }
+
+          return [get, set, prev, exists, live];
      }
 
      /**
@@ -114,10 +111,14 @@ class StateRegistry {
 
           const prev = this.states[uid].preValue;
           const exists = () => {
-               return this.states[uid] != false;
+               return this.states[uid] !== undefined;
           };
 
-          return [get, set, prev, exists];
+          const live = () => {
+               return this.states[uid].value;
+          };
+
+          return [get, set, prev, exists, live];
      }
 }
 

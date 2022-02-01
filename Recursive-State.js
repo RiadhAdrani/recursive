@@ -3,15 +3,13 @@ import StateRegistry from "./RecursiveState/StateRegistry.js";
 
 /**
  *
- * @param {any} uid assign a unique identifier to the state. do not use iteration `index`,
- * use something unique to the component you want to attach to.
- * @param {any} value initial value of the state
- * @returns {Array} an array of length 2 : [`value`,`setValue`]
- * * `value` current value
- * * `setValue` a function that update the `value` with a new one.
+ * @param {any} value define an initial value.
+ * @param {String} uid state unique identifier.
+ * @param {Function} beforeDestroyed executes before the state got cleaned up by the `StateRegistry`.
+ * @param {Function} onInit executes after the state has been initialized. Allow the user to perform async call and update the state accordingly
  */
-const setState = (uid, value, beforeDestroyed = () => {}) =>
-     SetState.setState(uid, value, beforeDestroyed);
+const setState = (uid, value, onInit, beforeDestroyed) =>
+     SetState.setState(uid, value, onInit, beforeDestroyed);
 
 /**
  * Returns the state with the specified uid
@@ -21,14 +19,13 @@ const setState = (uid, value, beforeDestroyed = () => {}) =>
  * * `setValue` a function that update the `value` with a new one.
  */
 const getState = (uid) => {
-     return StateRegistry.globalRegistry ? StateRegistry.globalRegistry.getState(uid) : undefined;
+     return StateRegistry.singleton.getState(uid);
 };
 
 /**
  * Update the DOM after performing certain actions.
  * @param {Function} actions function to execute
  * @returns {void}
- * @deprecated
  */
 const updateAfter = (actions) => SetState.updateAfter(actions);
 

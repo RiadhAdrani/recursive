@@ -1,10 +1,18 @@
 import HandleStyleObject from "./HandleStyleObject.js";
 import Handler from "./HandleStyle.js";
-import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
 import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
+import { throwError } from "@riadh-adrani/recursive/RecursiveDOM/RecursiveError";
 
 class RecursiveCSSOM {
+     static singleton = new RecursiveCSSOM();
+
      constructor() {
+          if (RecursiveCSSOM.singleton instanceof RecursiveCSSOM) {
+               throwError("RecrusiveCSSOM cannot have more than one instance", [
+                    "RecrusiveCSSOM is an internal class and should not be used in development.",
+               ]);
+          }
+
           this.appStyle = document.createElement("style");
           this.appStaticStyle = document.createElement("style");
 
@@ -14,70 +22,59 @@ class RecursiveCSSOM {
           this.sheet = "";
           this.staticSheet = "";
 
-          this.stack = [];
+          this.current = {
+               selectors: [],
+               animations: [],
+               mediaQueries: [],
+          };
+     }
+
+     update(stack) {
           this.current = {
                selectors: [],
                animations: [],
                mediaQueries: [],
           };
 
-          addEventListener(RecursiveEvents.EVENTS._STYLE_COMPONENT, (e) => {
-               this.stack.push(e.detail);
-          });
-
-          addEventListener(RecursiveEvents.EVENTS._STYLE_COMPUTE, () => {
-               this.current = {
-                    selectors: [],
-                    animations: [],
-                    mediaQueries: [],
-               };
-
-               this.stack.forEach((item) => {
-                    if (item.className) {
-                         HandleStyleObject(
-                              item,
-                              this.current.selectors,
-                              this.current.mediaQueries,
-                              this.current.animations
-                         );
-                    }
-               });
-
-               const exported = Handler.export(
-                    this.current.selectors,
-                    this.current.animations,
-                    this.current.mediaQueries
-               );
-
-               const newStyle = exported.ss;
-
-               if (RecursiveDOM.devMode) {
-                    if (exported.warnings.animation) {
-                         console.warn(exported.warnings.animation);
-                    }
-                    if (exported.warnings.selectors) {
-                         console.warn(exported.warnings.selectors);
-                    }
-               }
-
-               if (this.sheet !== newStyle) {
-                    this.appStyle.innerHTML = newStyle;
-                    this.sheet = newStyle;
-               }
-
-               this.stack = [];
-          });
-
-          addEventListener(RecursiveEvents.EVENTS._STYLE_STATIC_COMPUTE, (e) => {
-               const ss = Handler.exportStatic(e.detail);
-               if (ss !== this.staticSheet) {
-                    this.appStaticStyle.innerHTML = ss;
+          stack.forEach((item) => {
+               if (item.className) {
+                    HandleStyleObject(
+                         item,
+                         this.current.selectors,
+                         this.current.mediaQueries,
+                         this.current.animations
+                    );
                }
           });
+
+          const exported = Handler.export(
+               this.current.selectors,
+               this.current.animations,
+               this.current.mediaQueries
+          );
+
+          const newStyle = exported.ss;
+
+          if (RecursiveDOM.devMode) {
+               if (exported.warnings.animation) {
+                    console.warn(exported.warnings.animation);
+               }
+               if (exported.warnings.selectors) {
+                    console.warn(exported.warnings.selectors);
+               }
+          }
+
+          if (this.sheet !== newStyle) {
+               this.appStyle.innerHTML = newStyle;
+               this.sheet = newStyle;
+          }
      }
 
-     static setStyle(styleSheet) {
-          RecursiveEvents.sendStaticStyleSheet(styleSheet);
+     injectStaticStyle(styleSheet) {
+          const ss = Handler.exportStatic(styleSheet);
+          if (ss !== this.staticSheet) {
+               this.appStaticStyle.innerHTML = ss;
+          }
      }
 }
 

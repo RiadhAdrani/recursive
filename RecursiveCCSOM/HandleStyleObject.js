@@ -1,4 +1,4 @@
-import { throwError } from "@riadh-adrani/recursive/RecursiveDOM/RecursiveError";
+import { throwError } from "../RecursiveDOM/RecursiveError";
 import PropList from "../RecursiveDOM/PropList.js";
 
 export default (styleSheet, selectors, mediaQueries, animations) => {
@@ -37,12 +37,20 @@ export default (styleSheet, selectors, mediaQueries, animations) => {
                               styleObject(PropList.CssSelectors[selector], styleSheet[selector])
                          );
                     } else {
-                         throwError(`"${selector}" is not a valid CSS selector or is not yet implemented.`,['Wrap your style inside a "normal" selector when using the "styleSheet".','You may have typos.']);
-                         
+                         throwError(
+                              `"${selector}" is not a valid CSS selector or is not yet implemented.`,
+                              [
+                                   'Wrap your style inside a "normal" selector when using the "styleSheet".',
+                                   "You may have typos.",
+                              ]
+                         );
                     }
                }
           } else {
-               throwError(`"className" is missing in the "styleSheet"`,['The styleSheet does not include a "className" definition.','The "styleSheet" should include a valid "className" to be applied.'])
+               throwError(`"className" is missing in the "styleSheet"`, [
+                    'The styleSheet does not include a "className" definition.',
+                    'The "styleSheet" should include a valid "className" to be applied.',
+               ]);
           }
      }
 };
