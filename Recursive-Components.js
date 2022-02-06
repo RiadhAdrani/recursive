@@ -1,4 +1,4 @@
-import { goTo } from "./Recursive-Router.js";
+import { getRoot, goTo } from "./RecursiveRouter/RecursiveRouter";
 import { CreateComponent } from "./Recursive.js";
 
 /**
@@ -1465,7 +1465,7 @@ const Link = ({
           props: {
                id,
                draggable,
-               href: to,
+               href: `${location.origin}/${getRoot()}${to}`,
           },
           className: className,
           key,

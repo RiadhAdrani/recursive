@@ -21,14 +21,11 @@ class StateRegistry {
                ]);
 
           this.states = {};
-          this.history = [];
           this.current = [];
           this.new = [];
      }
 
      clean() {
-          this.history.push(this.states);
-
           for (let i = 0; i < this.current.length; i++) {
                const uid = this.current[i];
 
@@ -119,6 +116,41 @@ class StateRegistry {
           };
 
           return [get, set, prev, exists, live];
+     }
+
+     /**
+      * returns the reserved state object if it already exists in the `globalRegistry`.
+      * @param {string} uid state unique identifier.
+      * @internal do not user in development.
+      * @returns {Array | undefined} an array containing data and state manipulation functions.
+      */
+     getReservedState(uid) {
+          if (!SetState.reservedStates.includes(uid)) {
+               throwError(`Reserved state with the UID ${uid} does not exist!`, [
+                    "You tried to access a non-existant reserved state.",
+                    "States could be cleared upon updates, when they are out of scope.",
+               ]);
+          }
+
+          const get = this.states[uid].value;
+          const set = (newVal) => {
+               if (this.states[uid]) this.states[uid].setValue(newVal);
+          };
+
+          const prev = this.states[uid].preValue;
+          const exists = () => {
+               return this.states[uid] !== undefined;
+          };
+
+          const live = () => {
+               return this.states[uid].value;
+          };
+
+          return [get, set, prev, exists, live];
+     }
+
+     static getReservedState(uid) {
+          return this.singleton.getReservedState(uid);
      }
 }
 

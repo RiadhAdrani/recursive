@@ -4,6 +4,7 @@ import HandleWindow from "./HandleWindow.js";
 import RecursiveCSSOM from "../RecursiveCCSOM/RecursiveCSSOM";
 import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator";
 import StateRegistry from "../RecursiveState/StateRegistry";
+import RefRegistry from "@riadh-adrani/recursive/RecursiveState/RefRegistry";
 
 /**
  * ## RecursiveDOM
@@ -39,6 +40,10 @@ class RecursiveDOM {
           if (typeof action === "function") RecursiveDOM.singleton.onUpdatedQueue.push(action);
      }
 
+     static enqueueOnRef(action) {
+          if (typeof action === "function") RecursiveDOM.singleton.onRefQueue.push(action);
+     }
+
      /**
       * @constructor
       * @param {Object} params deconstructed paramaters
@@ -59,6 +64,7 @@ class RecursiveDOM {
           this.onDestroyedQueue = [];
           this.onCreatedQueue = [];
           this.onUpdatedQueue = [];
+          this.onRefQueue = [];
 
           document.querySelector("body").append(this.root);
      }
@@ -69,6 +75,7 @@ class RecursiveDOM {
           this.onDestroyedQueue = [];
           this.onCreatedQueue = [];
           this.onUpdatedQueue = [];
+          this.onRefQueue = [];
      }
 
      exBeforeDestroyed = () => this.beforeDestroyedQueue.forEach((fn) => fn());
@@ -80,6 +87,8 @@ class RecursiveDOM {
      exOnCreated = () => this.onCreatedQueue.forEach((fn) => fn());
 
      exOnUpdated = () => this.onUpdatedQueue.forEach((fn) => fn());
+
+     exOnRef = () => this.onRefQueue.forEach((fn) => fn());
 
      /**
       * Render the app for the first time.
@@ -109,6 +118,7 @@ class RecursiveDOM {
 
           RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_CREATED);
           this.oldRender.$onCreated();
+          this.oldRender.$onRefRecursively();
 
           RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.CLEAN_STATES);
           this.resetQueues();
@@ -136,6 +146,7 @@ class RecursiveDOM {
           RecursiveCSSOM.singleton.update(newRender.flattenStyle());
 
           RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_DIFF);
+          RefRegistry.clean();
           this.oldRender.update(newRender);
           this.oldRender = newRender;
 
@@ -153,6 +164,7 @@ class RecursiveDOM {
 
           RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_UPDATED);
           this.exOnUpdated();
+          this.exOnRef();
 
           RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.CLEAN_STATES);
           this.resetQueues();

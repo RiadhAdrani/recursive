@@ -2,7 +2,6 @@ import { throwError } from "../../RecursiveDOM/RecursiveError.js";
 import PropList from "../../RecursiveDOM/PropList.js";
 import CreateTextNode from "../CreateTextNode.js";
 import Check from "./Check.js";
-import RecursiveOrchestrator from "../../RecursiveOrchestrator/RecursiveOrchestrator";
 
 export default {
      /**
@@ -143,11 +142,7 @@ export default {
                if (hooks[hook] !== undefined) {
                     if (PropList.Hooks[hook]) {
                          if (typeof hooks[hook] === "function") {
-                              component.hooks[hook] = () => {
-                                   RecursiveOrchestrator.requestBatchingStart(`hook-${hook}`);
-                                   hooks[hook]();
-                                   RecursiveOrchestrator.requestBatchingEnd(`hook-${hook}`);
-                              };
+                              component.hooks[hook] = hooks[hook];
                          } else {
                               throwError(`${hook} is not a function.`, [
                                    "Hook is not of type function",

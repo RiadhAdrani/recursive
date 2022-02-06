@@ -1,11 +1,9 @@
 import { throwError } from "../RecursiveDOM/RecursiveError.js";
 import CreateComponent from "../CreateComponent/CreateComponent.js";
-import Router from "./Router.js";
 
 /**
  * ## Route
  * ### Define a directory in your App.
- * @see {@link Router}
  */
 export default class Route {
      /**
@@ -20,7 +18,7 @@ export default class Route {
       * @param {Function} param.onLoad method to be executed when the route load.
       * @param {Function} param.onExit method to be executed when the route unload.
       */
-     constructor({ name, component, title, subRoutes, onLoad, onExit }) {
+     constructor({ name, component, title, subRoutes, onLoad, onExit, redirectTo }) {
           if (!/^\/([a-zA-Z0-9]|-|.|_|~){0,}(\/){0}$/gm.test(name.trim())) {
                throwError(`Invalid route name "${name}"`, [
                     'Route name should start with "/".',
@@ -35,6 +33,8 @@ export default class Route {
                     "If the route is dynamic, make sure to remove white spaces before injecting your parameters.",
                ]);
           }
+
+          this.redirectTo = redirectTo;
           this.name = name.trim();
           this.component = component;
           this.title = title;

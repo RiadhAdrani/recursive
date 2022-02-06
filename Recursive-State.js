@@ -1,5 +1,6 @@
 import SetState from "./RecursiveState/SetState.js";
 import StateRegistry from "./RecursiveState/StateRegistry.js";
+import RefRegistry from "./RecursiveState/RefRegistry.js";
 
 /**
  *
@@ -29,4 +30,6 @@ const getState = (uid) => {
  */
 const updateAfter = (actions) => SetState.updateAfter(actions);
 
-export { setState, updateAfter, getState };
+const getRef = (ref) => RefRegistry.getRef(ref);
+
+export { setState, updateAfter, getState, getRef };

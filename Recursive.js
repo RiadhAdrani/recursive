@@ -2,6 +2,7 @@ import CreateComponent from "./CreateComponent/CreateComponent.js";
 import CustomComponents from "./CreateComponent/CustomComponents.js";
 import RecursiveDOM from "./RecursiveDOM/RecursiveDOM.js";
 import { onError } from "./RecursiveDOM/RecursiveError";
+import { onFreshLoad } from "./RecursiveRouter/RecursiveRouter";
 
 onError();
 CustomComponents();
@@ -13,6 +14,8 @@ CustomComponents();
 function Render(App) {
      RecursiveDOM.singleton.app = App;
      RecursiveDOM.singleton.render();
+
+     onFreshLoad();
 }
 
 /**

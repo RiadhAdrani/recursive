@@ -6,6 +6,8 @@ import Update from "./tools/Update.js";
 import Style from "./tools/Style.js";
 import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
 import { throwError } from "../RecursiveDOM/RecursiveError";
+import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator";
+import RefRegistry from "../RecursiveState/RefRegistry";
 
 /**
  * ## CreateComponent
@@ -63,6 +65,8 @@ class CreateComponent {
           this.tag = tag;
 
           this.props = {};
+
+          this.ref = undefined;
 
           // props
           if (className) this.className = className;
@@ -153,6 +157,10 @@ class CreateComponent {
                return;
           }
 
+          if (this.hooks.onRef) {
+               this.$onRef();
+          }
+
           // update events
           Update.events(newComponent, htmlElement);
 
@@ -182,6 +190,7 @@ class CreateComponent {
           // Execute update lifecycle method
           if (didUpdate) {
                RecursiveDOM.enqueuOnUpdated(() => newComponent.$onUpdated());
+               RecursiveDOM.enqueueOnRef(() => newComponent.$onRef());
           }
      }
 
@@ -195,7 +204,9 @@ class CreateComponent {
       */
      $onUpdated() {
           if (typeof this.hooks.onUpdated === "function") {
+               RecursiveOrchestrator.requestBatchingStart("on-updated");
                this.hooks.onUpdated(this.domInstance);
+               RecursiveOrchestrator.requestBatchingEnd("on-updated");
           }
      }
 
@@ -204,7 +215,9 @@ class CreateComponent {
       */
      $onCreated() {
           if (typeof this.hooks.onCreated === "function") {
+               RecursiveOrchestrator.requestBatchingStart("on-created");
                this.hooks.onCreated(this.domInstance);
+               RecursiveOrchestrator.requestBatchingEnd("on-created");
           }
           if (this.children) {
                this.children.forEach((child) => {
@@ -220,7 +233,9 @@ class CreateComponent {
       */
      $onDestroyed() {
           if (typeof this.hooks.onDestroyed === "function") {
+               RecursiveOrchestrator.requestBatchingStart("on-destroyed");
                this.hooks.onDestroyed(this);
+               RecursiveOrchestrator.requestBatchingEnd("on-destroyed");
           }
 
           if (this.children) {
@@ -235,25 +250,16 @@ class CreateComponent {
      /**
       * Execute everytime the RecursiveDOM updates
       */
-     $onRerender() {
-          // if (typeof this.hooks.onRerender === "function") {
-          //      this.hooks.onRerender(this.domInstance);
-          // }
-          // if (this.children) {
-          //      this.children.forEach((child) => {
-          //           if (child.$$createcomponent) {
-          //                child.$onRerender();
-          //           }
-          //      });
-          // }
-     }
+     $onRerender() {}
 
      /**
       * Allow the user to execute custom actions just before the destruction of the component.
       */
      $beforeDestroyed() {
           if (typeof this.hooks.beforeDestroyed === "function") {
+               RecursiveOrchestrator.requestBatchingStart("before-destroyed");
                this.hooks.beforeDestroyed(this);
+               RecursiveOrchestrator.requestBatchingEnd("before-destroyed");
           }
 
           if (this.children) {
@@ -263,6 +269,21 @@ class CreateComponent {
                     }
                });
           }
+     }
+
+     $onRef() {
+          if (typeof this.hooks.onRef === "function") {
+               const ref = this.hooks.onRef(this.domInstance);
+               if (typeof ref === "string") {
+                    this.ref = ref;
+                    RefRegistry.setRef(ref, this.domInstance);
+               }
+          }
+     }
+
+     $onRefRecursively() {
+          this.$onRef();
+          this.children.forEach((child) => child.$onRef());
      }
 
      // DOM MANIPULATION METHODS
@@ -286,6 +307,7 @@ class CreateComponent {
           RecursiveDOM.enqueueDomAction(() => this.domInstance.replaceWith(newComponent.render()));
           RecursiveDOM.enqueueOnDestroyed(() => this.$onDestroyed());
           RecursiveDOM.enqueuOnCreated(() => newComponent.$onCreated());
+          RecursiveDOM.enqueueOnRef(() => newComponent.$onRef());
      }
 
      /**
@@ -295,6 +317,7 @@ class CreateComponent {
      $appendInDOM(parentComponent) {
           RecursiveDOM.enqueueDomAction(() => parentComponent.domInstance.append(this.render()));
           RecursiveDOM.enqueuOnCreated(() => this.$onCreated());
+          RecursiveDOM.enqueueOnRef(() => this.$onRef());
      }
 
      // STYLING

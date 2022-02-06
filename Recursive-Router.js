@@ -1,30 +1,12 @@
-import Router from "./RecursiveRouter/Router.js";
 import Route from "./RecursiveRouter/Route.js";
 import { CreateComponent } from "./Recursive.js";
-
-/**
- * Load a new name-specified route.
- * @param {string} name the name of the target route.
- */
-const goTo = (name) => {
-     Router.goTo(name);
-};
-
-/**
- * Create a global router.
- * @param {Route} route root entry route. usually named `\`.
- */
-const createRouter = (route) => {
-     Router.createRouter(route);
-};
-
-/**
- * Return the current route representation as a `component`.
- * @returns {CreateComponent} component
- */
-const renderRouter = () => {
-     return Router.render();
-};
+import {
+     getParams,
+     goTo,
+     getRoute,
+     renderRoute,
+     createRouter,
+} from "./RecursiveRouter/RecursiveRouter";
 
 /**
  * Create a `Route`
@@ -38,16 +20,8 @@ const renderRouter = () => {
  * @param {Function} param.onLoad method to be executed when the route load.
  * @param {Function} param.onExit method to be executed when the route unload.
  */
-const createRoute = ({ name, component, title, subRoutes, onLoad, onExit }) => {
-     return new Route({ name, component, title, subRoutes, onLoad, onExit });
-};
-
-/**
- * Get the params of the current route if they exist.
- * @returns {JSON} object containing `key:value`.
- */
-const getParams = () => {
-     return Router.getParams();
+const createRoute = ({ name, component, title, subRoutes, onLoad, onExit, redirectTo }) => {
+     return new Route({ name, component, title, subRoutes, onLoad, onExit, redirectTo });
 };
 
 /**
@@ -58,4 +32,4 @@ const setTitle = (title) => {
      document.title = title;
 };
 
-export { goTo, createRouter, renderRouter, createRoute, getParams, setTitle };
+export { goTo, createRouter, renderRoute, createRoute, getParams, setTitle, getRoute };

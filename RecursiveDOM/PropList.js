@@ -529,9 +529,18 @@ export default {
           webkitLineClamp: "-webkit-line-clamp",
           webkitAppearance: "-webkit-appearance",
           webkitTextEmphasis: "-webkit-text-emphasis",
+          webkitHyphens: "-webkit-hyphens",
 
           // Moz
           mozAppearance: "-moz-appearance",
+          mozTabSize: "-moz-tab-size",
+          mozHyphens: "-moz-hyphens",
+
+          // O
+          oTabSize: "-o-tab-size",
+
+          // MS
+          msHyphens: "-ms-hyphens",
      },
      // Events
      Events: {
@@ -647,7 +656,7 @@ export default {
           onDestroyed: "onDestroyed",
           onUpdated: "onUpdated",
           beforeDestroyed: "beforeDestroyed",
-          onRerender: "onRerender",
+          onRef: "onRef",
      },
      // CSS Selectors
      CssSelectors: {
