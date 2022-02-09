@@ -1,5 +1,5 @@
-import { getRoot, goTo } from "./RecursiveRouter/RecursiveRouter";
-import { CreateComponent } from "./Recursive.js";
+import { getRoot, goTo } from "./RecursiveRouter/RecursiveRouter.js";
+import CreateComponent from "./CreateComponent/CreateComponent.js";
 
 /**
  * ## EmbedExternalView `<embed>`

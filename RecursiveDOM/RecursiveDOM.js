@@ -1,6 +1,5 @@
 import { throwError } from "./RecursiveError";
 import CreateComponent from "../CreateComponent/CreateComponent.js";
-import HandleWindow from "./HandleWindow.js";
 import RecursiveCSSOM from "../RecursiveCCSOM/RecursiveCSSOM";
 import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator";
 import StateRegistry from "../RecursiveState/StateRegistry";

@@ -181,7 +181,6 @@ class RecursiveRouter {
 
           setCurrent(_template.name);
 
-          if (_template.title) document.title = _template.title;
           if (this.scroll) window.scrollTo({ top: 0, behavior: "smooth" });
           _template?.onLoad();
      }
@@ -306,6 +305,9 @@ const findMatch = (route) => RecursiveRouter.singleton.findMatch(route);
 const renderRoute = () => {
      const [route] = StateRegistry.getReservedState("route");
      setParams();
+     if (RecursiveRouter.singleton.routes[route].title) {
+          document.title = RecursiveRouter.singleton.routes[route].title;
+     }
      return encapsulateRoute({ route }, () => renderFragment());
 };
 

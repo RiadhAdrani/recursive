@@ -1,12 +1,12 @@
 import Route from "./RecursiveRouter/Route.js";
-import { CreateComponent } from "./Recursive.js";
+import { CreateComponent } from "./CreateComponent/CreateComponent.js";
 import {
      getParams,
      goTo,
      getRoute,
      renderRoute,
      createRouter,
-} from "./RecursiveRouter/RecursiveRouter";
+} from "./RecursiveRouter/RecursiveRouter.js";
 
 /**
  * Create a `Route`
