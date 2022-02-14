@@ -169,10 +169,10 @@ class RecursiveRouter {
 
      /**
       * Load the app route specified with `name` and `template`
-      * @param {String} name the name of target route
+      * @param {String} anchor the name of target element
       * @param {Route} template the template of the route
       */
-     loadRoute(template) {
+     loadRoute(template, anchor) {
           const [current, setCurrent] = StateRegistry.getReservedState("route");
 
           this.routes[current]?.onExit();
@@ -181,8 +181,46 @@ class RecursiveRouter {
 
           setCurrent(_template.name);
 
-          if (this.scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+          if (anchor) {
+               const target = document.getElementById(anchor.replace("#", ""));
+               if (target) {
+                    console.log("scrolling into view");
+                    target.scrollIntoView();
+               }
+          } else {
+               if (this.scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+
           _template?.onLoad();
+     }
+
+     checkRoute(name) {
+          if (name !== "/") {
+               name = name.replace(/\/$/, "");
+          }
+
+          const anchorRegEx = /#[a-zA-Z0-9-._~:?#\[\]\@!$&'()*+,;=]{1,}$/gm;
+
+          let anchor = "";
+
+          const res = anchorRegEx.exec(name);
+
+          if (res) anchor = res[0];
+
+          if (anchor) name = name.replace(anchor, "");
+
+          const [current] = StateRegistry.getReservedState("route");
+
+          if (current === name) {
+               if (anchor) {
+                    const target = document.getElementById(anchor.replace("#", ""));
+                    if (target) target.scrollIntoView();
+               }
+
+               return [false, ""];
+          }
+
+          return [this.resolveRoute(name), anchor];
      }
 
      /**
@@ -192,37 +230,29 @@ class RecursiveRouter {
      goTo(name) {
           if (!name) return;
 
-          const [current] = StateRegistry.getReservedState("route");
+          const [_route, anchor] = this.checkRoute(name);
 
-          if (current === name) {
-               return;
+          if (_route) {
+               pushState(_route.route.name, _route.route.title, `${_route.path}${anchor}`);
+
+               this.loadRoute(_route.route, anchor);
           }
-
-          const _route = this.resolveRoute(name);
-
-          pushState(_route.route.name, _route.route.title, _route.path);
-
-          this.loadRoute(_route.route);
      }
 
      /**
       * replace the current route with this one without adding a history state.
       * @param {String} name route to be redirected to.
       */
-     replaceWith(name) {
+     replaceWith(name, hash) {
           if (!name) return;
 
-          const [current] = StateRegistry.getReservedState("route");
+          const [_route, anchor] = this.checkRoute(name);
 
-          if (current === name) {
-               return;
+          if (_route) {
+               replaceState(_route.route.name, _route.route.title, `${_route.path}${hash}`);
+
+               this.loadRoute(_route.route, hash);
           }
-
-          const _route = this.resolveRoute(name);
-
-          replaceState(_route.route.name, _route.route.title, _route.path);
-
-          this.loadRoute(_route.route);
      }
 
      /**
@@ -320,7 +350,8 @@ const onFreshLoad = () => {
                const route = window.location.pathname.substring(
                     RecursiveRouter.singleton.root.length + 1
                );
-               RecursiveRouter.singleton.replaceWith(route);
+               const hash = location.hash;
+               RecursiveRouter.singleton.replaceWith(route, hash);
           }
      }
 };
