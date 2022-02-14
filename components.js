@@ -3631,14 +3631,14 @@ class ListViewer extends CreateComponent {
           if (!this.hooks) {
                this.hooks = {};
           }
-          this.hooks.onCreated = () => {
+          this.hooks.onRef = () => {
                if (this.children.length === 0 || typeof onObserved !== "function") return;
 
                var observer = new IntersectionObserver(
                     (entries) => {
                          if (entries[0].isIntersecting === true) {
                               onObserved(this.domInstance);
-                              observer.observe(this.domInstance.lastChild);
+                              observer.unobserve(entries[0].target);
                          }
                     },
                     { threshold: [0] }
@@ -3647,8 +3647,8 @@ class ListViewer extends CreateComponent {
                observer.observe(this.domInstance.lastChild);
 
                if (hooks) {
-                    if (hooks.onCreated) {
-                         hooks.onCreated();
+                    if (hooks.onRef) {
+                         hooks.onRef();
                     }
                }
           };
@@ -3661,7 +3661,7 @@ class ListViewer extends CreateComponent {
  * Flexible component allowing for progressive/infine rendering of large lists
  * @param props.onObserved execute an action when the last child of the component became visible.
  */
-const List = ({
+const LazyColumn = ({
      children,
      id,
      draggable,
@@ -3806,7 +3806,7 @@ export {
      BorderSpinner,
      Row,
      Column,
-     List,
+     LazyColumn,
      EmptyBox,
      Raw,
      Main,
