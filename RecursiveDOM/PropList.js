@@ -565,6 +565,7 @@ export default {
           onDragEnter: { listener: "dragenter", on: "ondragenter" },
           onDragLeave: { listener: "dragleave", on: "ondragleave" },
           onDragOver: { listener: "dragover", on: "ondragover" },
+          onDragStart: { listener: "dragstart", on: "ondragstart" },
           onDrop: { listener: "drop", on: "ondrop" },
           onDurationChange: { listener: "durationchange", on: "ondurationchange" },
           onEnded: { listener: "ended", on: "onended" },

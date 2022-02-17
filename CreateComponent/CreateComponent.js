@@ -95,6 +95,27 @@ class CreateComponent {
           // Children
           this.children = [];
           Init.children(this, children);
+
+          this.map = false;
+          if (this.children) {
+               for (let i = 0; i < this.children.length; i++) {
+                    if (this.children[i].key) {
+                         if (!this.map) this.map = {};
+
+                         if (this.map[this.children[i].key])
+                              throwError(
+                                   `Component with the key ${this.children[i].key} already exists.`,
+                                   ["Two or more components has the same key."]
+                              );
+
+                         this.map[this.children[i].key] = { c: this.children[i], i };
+                    } else {
+                         this.map = false;
+                    }
+               }
+          }
+
+          // if (this.map) console.log(this.map);
      }
 
      /**
@@ -318,6 +339,24 @@ class CreateComponent {
           RecursiveDOM.enqueueDomAction(() => parentComponent.domInstance.append(this.render()));
           RecursiveDOM.enqueuOnCreated(() => this.$onCreated());
           RecursiveDOM.enqueueOnRef(() => this.$onRef());
+     }
+
+     /**
+      * change the position of the current dom instance
+      * @param {CreateComponent} parentComponent
+      * @param {Number} position
+      */
+     $changePosition(parentComponent, position) {
+          // console.log(
+          //      `changing ${this.domInstance.innerHTML} with ${parentComponent.domInstance.children[position].innerHTML}`
+          // );
+
+          RecursiveDOM.enqueueDomAction(() =>
+               parentComponent.domInstance.insertBefore(
+                    this.domInstance,
+                    parentComponent.domInstance.children[position]
+               )
+          );
      }
 
      // STYLING

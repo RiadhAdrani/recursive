@@ -43,28 +43,56 @@ export default {
       * @param render rendered htmlElement
       */
      children: (component, newComponent) => {
-          function compareEqualChildren() {
-               for (let i = 0; i < component.children.length; i++) {
-                    component.children[i].update(newComponent.children[i]);
+          if (component.map && newComponent.map) {
+               for (let key in component.map) {
+                    if (!newComponent.map[key]) {
+                         component.map[key].c.$removeFromDOM();
+                         delete component.map[key];
+                    }
                }
-          }
 
-          if (component.children.length === newComponent.children.length) {
-               compareEqualChildren();
-          }
-          // if component.children are greater than newComponent.children
-          else if (component.children.length > newComponent.children.length) {
-               while (component.children.length > newComponent.children.length) {
-                    component.children.pop().$removeFromDOM();
+               for (let key in component.map) {
+                    component.map[key].c.update(newComponent.map[key].c);
                }
-               compareEqualChildren();
-          }
-          // if component.children are less than newComponent.children
-          else {
-               for (let i = component.children.length; i < newComponent.children.length; i++) {
-                    newComponent.children[i].$appendInDOM(component);
+
+               for (let key in newComponent.map) {
+                    if (!component.map[key]) {
+                         component.map[key] = {
+                              ...newComponent.map[key],
+                              i: Object.keys(component.map).length,
+                         };
+                         newComponent.map[key].c.$appendInDOM(component);
+                    }
                }
-               compareEqualChildren();
+
+               for (let key in component.map) {
+                    if (component.map[key].i !== newComponent.map[key].i)
+                         component.map[key].c.$changePosition(component, newComponent.map[key].i);
+               }
+          } else {
+               function compareEqualChildren() {
+                    for (let i = 0; i < component.children.length; i++) {
+                         component.children[i].update(newComponent.children[i]);
+                    }
+               }
+
+               if (component.children.length === newComponent.children.length) {
+                    compareEqualChildren();
+               }
+               // if component.children are greater than newComponent.children
+               else if (component.children.length > newComponent.children.length) {
+                    while (component.children.length > newComponent.children.length) {
+                         component.children.pop().$removeFromDOM();
+                    }
+                    compareEqualChildren();
+               }
+               // if component.children are less than newComponent.children
+               else {
+                    for (let i = component.children.length; i < newComponent.children.length; i++) {
+                         newComponent.children[i].$appendInDOM(component);
+                    }
+                    compareEqualChildren();
+               }
           }
      },
      /**

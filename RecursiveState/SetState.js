@@ -37,7 +37,7 @@ class SetState {
           RecursiveOrchestrator.notifyStateChanged(this.uid);
 
           if (
-               !RecursiveOrchestrator.isBatching() ||
+               !RecursiveOrchestrator.isBatching() &&
                RecursiveOrchestrator.singleton.step === RecursiveOrchestrator.states.FREE
           ) {
                RecursiveOrchestrator.requestUpdate(this.uid);
