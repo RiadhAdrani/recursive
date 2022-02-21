@@ -269,7 +269,7 @@ class RecursiveRouter {
           const current = this.singleton.routes[currentName];
 
           const keys = current.name.match(regExp) || [];
-          const data = history.state.route.match(regExp) || [];
+          const data = location.pathname.match(regExp) || [];
 
           if (keys.length === data.length && keys.length > 0) {
                const comb = {};

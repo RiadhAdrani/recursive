@@ -105,6 +105,13 @@ class RecursiveOrchestrator {
           }, time * 1.5);
      }
 
+     unwatchTask(name) {
+          if (this.currentTask.name !== name) {
+          } else {
+               this.currentTask.done = true;
+          }
+     }
+
      static startTask(callback, time, step) {
           if (step) {
                RecursiveOrchestrator.singleton.step = step;
@@ -122,13 +129,6 @@ class RecursiveOrchestrator {
           }
 
           return `task-${uuid}-${time}`;
-     }
-
-     unwatchTask(name) {
-          if (this.currentTask.name !== name) {
-          } else {
-               this.currentTask.done = true;
-          }
      }
 
      static states = {
@@ -174,9 +174,9 @@ class RecursiveOrchestrator {
      }
 
      endBatching(sender) {
-          this.batching = false;
           this.batchingLastDuration = Date.now() - this.batchingStartTime;
           this.batchingRequests = [];
+          this.batching = false;
           if (this.stateChanged) {
                this.requestUpdate(sender);
           }
@@ -184,13 +184,11 @@ class RecursiveOrchestrator {
 
      requestEndBatching(sender) {
           if (this.batchingRequests.length > 0) {
-               this.batchingRequests.pop();
+               this.batchingRequests = this.batchingRequests.filter((req) => req.uuid !== sender);
           }
 
-          if (this.batchingRequests.length < 1) {
-               if (this.stateChanged) {
-                    this.endBatching(sender);
-               }
+          if (this.batchingRequests.length === 0) {
+               this.endBatching(sender);
           }
      }
 
@@ -211,7 +209,7 @@ class RecursiveOrchestrator {
           }
      }
 
-     static isBatching = () => RecursiveOrchestrator.singleton.batching;
+     static isBatching = () => RecursiveOrchestrator.singleton.batching === true;
 
      static requestUpdate = (sender) => {
           RecursiveOrchestrator.singleton.requestUpdate(sender);
@@ -229,5 +227,7 @@ class RecursiveOrchestrator {
           RecursiveOrchestrator.singleton.stateChanged = true;
      };
 }
+
+window.orchestrator = RecursiveOrchestrator.singleton;
 
 export default RecursiveOrchestrator;

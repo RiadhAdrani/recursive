@@ -119,6 +119,12 @@ class CreateComponent {
      }
 
      /**
+      * modify the render process
+      * @param {HTMLElement} render html element to be rendered
+      */
+     superRender(render) {}
+
+     /**
       * Convert the Recursive representation into a DOM element.
       * @returns {HTMLElement} DOM element.
       */
@@ -137,7 +143,7 @@ class CreateComponent {
           // renderchildren(this.children, render);
           Render.children(this, render);
 
-          // render.key = this.key;
+          this.superRender(render);
 
           this.domInstance = render;
 
@@ -145,9 +151,14 @@ class CreateComponent {
      }
 
      /**
+      * execute after the component has updated
+      * @param {CreateComponent | string} newComponent
+      */
+     superUpdate(newComponent) {}
+
+     /**
       * Compare the current component with another given one and update the `DOM` if needed.
       * @param {CreateComponent | string} newComponent
-      * @returns {boolean} - indicates weather the component did change or not.
       */
      update(newComponent) {
           let didUpdate = false;
@@ -178,10 +189,6 @@ class CreateComponent {
                return;
           }
 
-          if (this.hooks.onRef) {
-               this.$onRef();
-          }
-
           // update events
           Update.events(newComponent, htmlElement);
 
@@ -206,12 +213,15 @@ class CreateComponent {
           // check if there is any change
           didUpdate = inlineStyleDidUpdate || attributesDidUpdate ? true : false;
 
+          this.superUpdate(newComponent);
+
           newComponent.domInstance = this.domInstance;
+
+          // RecursiveDOM.enqueueOnRef(() => newComponent.$onRef());
 
           // Execute update lifecycle method
           if (didUpdate) {
                RecursiveDOM.enqueuOnUpdated(() => newComponent.$onUpdated());
-               RecursiveDOM.enqueueOnRef(() => newComponent.$onRef());
           }
      }
 
@@ -304,7 +314,7 @@ class CreateComponent {
 
      $onRefRecursively() {
           this.$onRef();
-          this.children.forEach((child) => child.$onRef());
+          this.children.forEach((child) => child.$onRefRecursively());
      }
 
      // DOM MANIPULATION METHODS
@@ -328,7 +338,7 @@ class CreateComponent {
           RecursiveDOM.enqueueDomAction(() => this.domInstance.replaceWith(newComponent.render()));
           RecursiveDOM.enqueueOnDestroyed(() => this.$onDestroyed());
           RecursiveDOM.enqueuOnCreated(() => newComponent.$onCreated());
-          RecursiveDOM.enqueueOnRef(() => newComponent.$onRef());
+          // RecursiveDOM.enqueueOnRef(() => newComponent.$onRef());
      }
 
      /**
@@ -338,7 +348,7 @@ class CreateComponent {
      $appendInDOM(parentComponent) {
           RecursiveDOM.enqueueDomAction(() => parentComponent.domInstance.append(this.render()));
           RecursiveDOM.enqueuOnCreated(() => this.$onCreated());
-          RecursiveDOM.enqueueOnRef(() => this.$onRef());
+          // RecursiveDOM.enqueueOnRef(() => this.$onRef());
      }
 
      /**

@@ -3632,25 +3632,27 @@ class ListViewer extends CreateComponent {
                this.hooks = {};
           }
           this.hooks.onRef = () => {
+               if (hooks) {
+                    if (hooks.onRef) {
+                         hooks.onRef();
+                    }
+               }
+
                if (this.children.length === 0 || typeof onObserved !== "function") return;
 
                var observer = new IntersectionObserver(
                     (entries) => {
                          if (entries[0].isIntersecting === true) {
-                              onObserved(this.domInstance);
                               observer.unobserve(entries[0].target);
+                              if (entries[0].target === this.domInstance.lastChild) {
+                                   onObserved(this.domInstance);
+                              }
                          }
                     },
                     { threshold: [0] }
                );
 
                observer.observe(this.domInstance.lastChild);
-
-               if (hooks) {
-                    if (hooks.onRef) {
-                         hooks.onRef();
-                    }
-               }
           };
      }
 }

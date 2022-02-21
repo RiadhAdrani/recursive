@@ -163,7 +163,7 @@ class RecursiveDOM {
 
           RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_UPDATED);
           this.exOnUpdated();
-          this.exOnRef();
+          this.oldRender.$onRefRecursively();
 
           RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.CLEAN_STATES);
           this.resetQueues();
