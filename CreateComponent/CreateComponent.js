@@ -8,6 +8,7 @@ import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
 import { throwError } from "../RecursiveDOM/RecursiveError";
 import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator";
 import RefRegistry from "../RecursiveState/RefRegistry";
+import { endCurrentContext, getContext, startContext } from "../RecursiveContext/RecursiveContext";
 
 /**
  * ## CreateComponent
@@ -114,8 +115,19 @@ class CreateComponent {
                     }
                }
           }
+     }
 
-          // if (this.map) console.log(this.map);
+     /**
+      * assign UIDs
+      */
+     uidify(index) {
+          const uid = getContext() ? `${getContext().uid}${index}` : "0";
+          this.uid = uid;
+          startContext({ uid });
+          this.children.forEach((child, indx) => {
+               child.uidify(indx);
+          });
+          endCurrentContext();
      }
 
      /**
@@ -397,7 +409,15 @@ class CreateComponent {
                });
           }
 
-          if (this.style) output.push(this.style);
+          if (this.style) {
+               if (this.style.scoped) {
+                    this.style.className = `${this.style.className}-${this.uid}`;
+                    this.className = `${this.className}-${this.uid}`;
+                    this.props.className = this.className;
+               }
+
+               output.push(this.style);
+          }
 
           return output;
      }

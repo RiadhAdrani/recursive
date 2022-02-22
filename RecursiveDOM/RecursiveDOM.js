@@ -99,6 +99,7 @@ class RecursiveDOM {
 
           RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
           this.oldRender = this.app();
+          this.oldRender.uidify("0");
 
           if (this.oldRender.$$createcomponent !== "create-component") {
                throwError('Root component is not of type "CreateComponent"', [
@@ -140,6 +141,7 @@ class RecursiveDOM {
 
           RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
           const newRender = this.app();
+          newRender.uidify("0");
 
           RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_STYLE);
           RecursiveCSSOM.singleton.update(newRender.flattenStyle());

@@ -28,7 +28,8 @@ export default (styleSheet, selectors, mediaQueries, animations) => {
                     if (
                          selector === "mediaQueries" ||
                          selector === "animations" ||
-                         selector === "className"
+                         selector === "className" ||
+                         selector === "scoped"
                     )
                          continue;
 
