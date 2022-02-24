@@ -3,7 +3,6 @@ import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
 import Init from "./tools/Init.js";
 import Render from "./tools/Render.js";
 import Update from "./tools/Update.js";
-import Style from "./tools/Style.js";
 import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
 import { throwError } from "../RecursiveDOM/RecursiveError";
 import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator";
@@ -20,8 +19,6 @@ import { endCurrentContext, getContext, startContext } from "../RecursiveContext
  * @see {@link RecursiveDOM}
  */
 class CreateComponent {
-     static contextStack = [];
-
      /**
       * Create a new component
       * @param {Object} param
@@ -37,18 +34,7 @@ class CreateComponent {
       * @param {JSON} param.flags define flags for component updating.
       * @param {Function} param.hooks define lifecycle methods.
       */
-     constructor({
-          tag,
-          children,
-          events,
-          className,
-          style,
-          inlineStyle,
-          props,
-          flags,
-          key,
-          hooks = {},
-     }) {
+     constructor({ tag, children, events, className, style, props, flags, key, hooks = {} }) {
           // tag cannot be
           if (!tag) {
                throwError('"tag" should not be empty or null.', [
@@ -72,7 +58,7 @@ class CreateComponent {
           // props
           if (className) this.className = className;
           if (style) this.style = style;
-          if (inlineStyle) this.inlineStyle = inlineStyle;
+          // if (inlineStyle) this.inlineStyle = inlineStyle;
 
           Init.className(this, style);
 
@@ -121,7 +107,7 @@ class CreateComponent {
       * assign UIDs
       */
      uidify(index) {
-          const uid = getContext() ? `${getContext().uid}${index}` : "0";
+          const uid = getContext() ? `${getContext().uid}-${index}` : "0";
           this.uid = uid;
           startContext({ uid });
           this.children.forEach((child, indx) => {
@@ -205,7 +191,7 @@ class CreateComponent {
           Update.events(newComponent, htmlElement);
 
           // update inline style
-          const inlineStyleDidUpdate = Style.updateInline(this, newComponent);
+          // const inlineStyleDidUpdate = Style.updateInline(this, newComponent);
 
           // update class names
           if (this.className !== newComponent.className) {
@@ -223,7 +209,7 @@ class CreateComponent {
           Update.children(this, newComponent, htmlElement);
 
           // check if there is any change
-          didUpdate = inlineStyleDidUpdate || attributesDidUpdate ? true : false;
+          didUpdate = attributesDidUpdate ? true : false;
 
           this.superUpdate(newComponent);
 

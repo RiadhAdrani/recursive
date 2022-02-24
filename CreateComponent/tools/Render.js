@@ -12,13 +12,13 @@ export default {
                element[PropList.Attributes[p]] = component.props[p];
           }
 
-          if (component.inlineStyle) {
-               for (let prop in component.inlineStyle) {
-                    if (element.style.hasOwnProperty(prop)) {
-                         element.style[prop] = component.inlineStyle[prop];
-                    }
-               }
-          }
+          // if (component.inlineStyle) {
+          //      for (let prop in component.inlineStyle) {
+          //           if (element.style.hasOwnProperty(prop)) {
+          //                element.style[prop] = component.inlineStyle[prop];
+          //           }
+          //      }
+          // }
      },
      /**
       * Render children into the element
