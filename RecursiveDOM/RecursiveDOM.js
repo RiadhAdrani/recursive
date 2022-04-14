@@ -3,7 +3,7 @@ import CreateComponent from "../CreateComponent/CreateComponent.js";
 import RecursiveCSSOM from "../RecursiveCCSOM/RecursiveCSSOM";
 import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator";
 import StateRegistry from "../RecursiveState/StateRegistry";
-import RefRegistry from "@riadh-adrani/recursive/RecursiveState/RefRegistry";
+import RefRegistry from "../RecursiveState/RefRegistry";
 
 /**
  * ## RecursiveDOM
@@ -14,170 +14,173 @@ import RefRegistry from "@riadh-adrani/recursive/RecursiveState/RefRegistry";
  * @see{@link CreateComponent}
  */
 class RecursiveDOM {
-     static devMode = false;
+    static devMode = false;
 
-     static singleton = new RecursiveDOM();
+    static singleton = new RecursiveDOM();
 
-     static enqueueDomAction(action) {
-          if (typeof action === "function") RecursiveDOM.singleton.domActions.push(action);
-     }
+    static enqueueDomAction(action) {
+        if (typeof action === "function") RecursiveDOM.singleton.domActions.push(action);
+    }
 
-     static enqueueBeforeDestroyed(action) {
-          if (typeof action === "function")
-               RecursiveDOM.singleton.beforeDestroyedQueue.push(action);
-     }
+    static enqueueBeforeDestroyed(action) {
+        if (typeof action === "function") RecursiveDOM.singleton.beforeDestroyedQueue.push(action);
+    }
 
-     static enqueueOnDestroyed(action) {
-          if (typeof action === "function") RecursiveDOM.singleton.onDestroyedQueue.push(action);
-     }
+    static enqueueOnDestroyed(action) {
+        if (typeof action === "function") RecursiveDOM.singleton.onDestroyedQueue.push(action);
+    }
 
-     static enqueuOnCreated(action) {
-          if (typeof action === "function") RecursiveDOM.singleton.onCreatedQueue.push(action);
-     }
+    static enqueuOnCreated(action) {
+        if (typeof action === "function") RecursiveDOM.singleton.onCreatedQueue.push(action);
+    }
 
-     static enqueuOnUpdated(action) {
-          if (typeof action === "function") RecursiveDOM.singleton.onUpdatedQueue.push(action);
-     }
+    static enqueuOnUpdated(action) {
+        if (typeof action === "function") RecursiveDOM.singleton.onUpdatedQueue.push(action);
+    }
 
-     static enqueueOnRef(action) {
-          if (typeof action === "function") RecursiveDOM.singleton.onRefQueue.push(action);
-     }
+    static enqueueOnRef(action) {
+        if (typeof action === "function") RecursiveDOM.singleton.onRefQueue.push(action);
+    }
 
-     /**
-      * @constructor
-      * @param {Object} params deconstructed paramaters
-      * @param {Function} params.appFunction application UI tree
-      */
-     constructor() {
-          if (RecursiveDOM.singleton instanceof RecursiveDOM) {
-               throwError("RecrusiveDOM cannot have more than one instance", [
-                    "RecrusiveDOM is an internal class and should not be used in development.",
-                    "User Recrusive.Render to render your app.",
-               ]);
-          }
+    /**
+     * @constructor
+     * @param {Object} params deconstructed paramaters
+     * @param {Function} params.appFunction application UI tree
+     */
+    constructor() {
+        if (RecursiveDOM.singleton instanceof RecursiveDOM) {
+            throwError("RecrusiveDOM cannot have more than one instance", [
+                "RecrusiveDOM is an internal class and should not be used in development.",
+                "User Recrusive.Render to render your app.",
+            ]);
+        }
 
-          this.root = document.createElement("app-view");
+        this.root = document.createElement("app-view");
 
-          this.domActions = [];
-          this.beforeDestroyedQueue = [];
-          this.onDestroyedQueue = [];
-          this.onCreatedQueue = [];
-          this.onUpdatedQueue = [];
-          this.onRefQueue = [];
+        this.domActions = [];
+        this.beforeDestroyedQueue = [];
+        this.onDestroyedQueue = [];
+        this.onCreatedQueue = [];
+        this.onUpdatedQueue = [];
+        this.onRefQueue = [];
 
-          document.querySelector("body").append(this.root);
-     }
+        document.querySelector("body").append(this.root);
+    }
 
-     resetQueues() {
-          this.domActions = [];
-          this.beforeDestroyedQueue = [];
-          this.onDestroyedQueue = [];
-          this.onCreatedQueue = [];
-          this.onUpdatedQueue = [];
-          this.onRefQueue = [];
-     }
+    resetQueues() {
+        this.domActions = [];
+        this.beforeDestroyedQueue = [];
+        this.onDestroyedQueue = [];
+        this.onCreatedQueue = [];
+        this.onUpdatedQueue = [];
+        this.onRefQueue = [];
+    }
 
-     exBeforeDestroyed = () => this.beforeDestroyedQueue.forEach((fn) => fn());
+    exBeforeDestroyed = () => this.beforeDestroyedQueue.forEach((fn) => fn());
 
-     exDomActions = () => this.domActions.forEach((fn) => fn());
+    exDomActions = () => this.domActions.forEach((fn) => fn());
 
-     exOnDestroyed = () => this.onDestroyedQueue.forEach((fn) => fn());
+    exOnDestroyed = () => this.onDestroyedQueue.forEach((fn) => fn());
 
-     exOnCreated = () => this.onCreatedQueue.forEach((fn) => fn());
+    exOnCreated = () => this.onCreatedQueue.forEach((fn) => fn());
 
-     exOnUpdated = () => this.onUpdatedQueue.forEach((fn) => fn());
+    exOnUpdated = () => this.onUpdatedQueue.forEach((fn) => fn());
 
-     exOnRef = () => this.onRefQueue.forEach((fn) => fn());
+    exOnRef = () => this.onRefQueue.forEach((fn) => fn());
 
-     /**
-      * Render the app for the first time.
-      */
-     render() {
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.RENDERING);
+    /**
+     * Render the app for the first time.
+     */
+    render() {
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.RENDERING);
 
-          const startTime = new Date().getTime();
+        // const startTime = new Date().getTime();
+        console.time("Render");
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
-          this.oldRender = this.app();
-          this.oldRender.uidify("0");
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
+        this.oldRender = this.app();
+        this.oldRender.uidify("0");
 
-          if (this.oldRender.$$createcomponent !== "create-component") {
-               throwError('Root component is not of type "CreateComponent"', [
-                    "Render only accepts a function call.",
-                    "You should return CreateComponent from your app function.",
-               ]);
-          }
+        if (this.oldRender.$$createcomponent !== "create-component") {
+            throwError('Root component is not of type "CreateComponent"', [
+                "Render only accepts a function call.",
+                "You should return CreateComponent from your app function.",
+            ]);
+        }
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_STYLE);
-          RecursiveCSSOM.singleton.update(this.oldRender.flattenStyle());
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_STYLE);
+        RecursiveCSSOM.singleton.update(this.oldRender.flattenStyle());
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMMIT_INTO_DOM);
-          this.root.innerHTML = "";
-          // HandleWindow.events(this.events);
-          this.root.append(this.oldRender.render());
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMMIT_INTO_DOM);
+        this.root.innerHTML = "";
+        // HandleWindow.events(this.events);
+        this.root.append(this.oldRender.render());
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_CREATED);
-          this.oldRender.$onCreated();
-          this.oldRender.$onRefRecursively();
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_CREATED);
+        this.oldRender.$onCreated();
+        this.oldRender.$onRefRecursively();
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.CLEAN_STATES);
-          this.resetQueues();
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.CLEAN_STATES);
+        this.resetQueues();
 
-          if (RecursiveDOM.devMode)
-               console.log(`First paint done in ${new Date().getTime() - startTime}ms`);
+        // if (RecursiveDOM.devMode)
+        //      console.log(`First paint done in ${new Date().getTime() - startTime}ms`);
+        console.timeEnd("Render");
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.FREE);
-     }
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.FREE);
+    }
 
-     /**
-      * Update the UI whenever a stateful object has been modified using the `setValue` or `updateAfter` method.
-      * @see {@link SetState.setValue}
-      * @function
-      */
-     update() {
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.UPDATING);
+    /**
+     * Update the UI whenever a stateful object has been modified using the `setValue` or `updateAfter` method.
+     * @see {@link SetState.setValue}
+     * @function
+     */
+    update() {
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.UPDATING);
 
-          const startTime = new Date().getTime();
+        // const startTime = new Date().getTime();
+        console.time("UI Update");
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
-          const newRender = this.app();
-          newRender.uidify("0");
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
+        const newRender = this.app();
+        newRender.uidify("0");
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_STYLE);
-          RecursiveCSSOM.singleton.update(newRender.flattenStyle());
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_STYLE);
+        RecursiveCSSOM.singleton.update(newRender.flattenStyle());
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_DIFF);
-          RefRegistry.clean();
-          this.oldRender.update(newRender);
-          this.oldRender = newRender;
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_DIFF);
+        RefRegistry.clean();
+        this.oldRender.update(newRender);
+        this.oldRender = newRender;
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_BEFORE_DESTROYED);
-          this.exBeforeDestroyed();
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_BEFORE_DESTROYED);
+        this.exBeforeDestroyed();
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMMIT_INTO_DOM);
-          this.exDomActions();
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMMIT_INTO_DOM);
+        this.exDomActions();
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_DESTROYED);
-          this.exOnDestroyed();
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_DESTROYED);
+        this.exOnDestroyed();
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_CREATED);
-          this.exOnCreated();
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_CREATED);
+        this.exOnCreated();
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_UPDATED);
-          this.exOnUpdated();
-          this.oldRender.$onRefRecursively();
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_UPDATED);
+        this.exOnUpdated();
+        this.oldRender.$onRefRecursively();
 
-          RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.CLEAN_STATES);
-          this.resetQueues();
-          StateRegistry.clean();
+        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.CLEAN_STATES);
+        this.resetQueues();
+        StateRegistry.clean();
 
-          if (RecursiveDOM.devMode)
-               console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
-     }
+        // if (RecursiveDOM.devMode)
+        //      console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
+        console.timeEnd("UI Update");
+    }
 
-     destroy() {
-          this.roots.app.remove();
-     }
+    destroy() {
+        this.roots.app.remove();
+    }
 }
 
 export default RecursiveDOM;

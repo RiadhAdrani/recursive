@@ -184,7 +184,6 @@ class RecursiveRouter {
           if (anchor) {
                const target = document.getElementById(anchor.replace("#", ""));
                if (target) {
-                    console.log("scrolling into view");
                     target.scrollIntoView();
                }
           } else {

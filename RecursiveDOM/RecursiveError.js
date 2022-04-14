@@ -71,31 +71,43 @@ const displayErrorScreen = (toDisplay) => {
                new CreateComponent({
                     tag: "p",
                     children: `[PHASE: ${RecursiveOrchestrator.singleton.step}] ${toDisplay.message}`,
-                    inlineStyle: {
-                         fontWeight: "Trebuchet MS",
-                         padding: "10px",
-                         margin: "5px 0px",
-                         backgroundColor: "#551111",
+                    style: {
+                         className: "title",
+                         scoped: true,
+                         normal: {
+                              fontWeight: "Trebuchet MS",
+                              padding: "10px",
+                              margin: "5px 0px",
+                              backgroundColor: "#551111",
+                         },
                     },
                }),
                new CreateComponent({
                     tag: "p",
                     children: `Source : ${toDisplay.fileURL}`,
-                    inlineStyle: {
-                         fontWeight: "Trebuchet MS",
-                         padding: "10px",
-                         margin: "5px 0px",
-                         backgroundColor: "#551111",
+                    style: {
+                         className: "source",
+                         scoped: true,
+                         normal: {
+                              fontWeight: "Trebuchet MS",
+                              padding: "10px",
+                              margin: "5px 0px",
+                              backgroundColor: "#551111",
+                         },
                     },
                }),
                new CreateComponent({
                     tag: "div",
                     flags: { renderIf: toDisplay.help !== false },
-                    inlineStyle: {
-                         fontWeight: "Trebuchet MS",
-                         padding: "10px",
-                         margin: "5px 0px",
-                         backgroundColor: "#551111",
+                    style: {
+                         className: "help-wrapper",
+                         scoped: true,
+                         normal: {
+                              fontWeight: "Trebuchet MS",
+                              padding: "10px",
+                              margin: "5px 0px",
+                              backgroundColor: "#551111",
+                         },
                     },
                     children: [
                          new CreateComponent({
@@ -126,13 +138,17 @@ const displayErrorScreen = (toDisplay) => {
                new CreateComponent({
                     tag: "p",
                     children: `${toDisplay.stackTrace}`,
-                    inlineStyle: {
-                         padding: "20px",
-                         lineHeight: "1.5em",
-                         whiteSpace: "break-spaces",
-                         background: "#551111",
-                         margin: "5px 0px",
-                         flex: 1,
+                    style: {
+                         className: "trace",
+                         scoped: true,
+                         normal: {
+                              padding: "20px",
+                              lineHeight: "1.5em",
+                              whiteSpace: "break-spaces",
+                              background: "#551111",
+                              margin: "5px 0px",
+                              flex: 1,
+                         },
                     },
                }),
           ],
