@@ -7,7 +7,7 @@ import * as Style from "./style.js";
 import RecursiveDOM from "./RecursiveDOM/RecursiveDOM.js";
 import { onFreshLoad } from "./RecursiveRouter/RecursiveRouter.js";
 
-onError();
+// onError();
 CustomComponents();
 
 /**
@@ -15,10 +15,10 @@ CustomComponents();
  * @param {Function} App function returning the tree of components
  */
 function Render(App) {
-     RecursiveDOM.singleton.app = App;
-     RecursiveDOM.singleton.render();
+    RecursiveDOM.singleton.app = App;
+    RecursiveDOM.singleton.render();
 
-     onFreshLoad();
+    onFreshLoad();
 }
 
 /**
@@ -27,7 +27,7 @@ function Render(App) {
  * @param {boolean} value true | false
  */
 function DevMode(value) {
-     RecursiveDOM.devMode = value;
+    RecursiveDOM.devMode = value;
 }
 
 export { Render, DevMode, Router, Components, State, Style };

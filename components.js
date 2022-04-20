@@ -1,5 +1,6 @@
-import { getRoot, goTo } from "./RecursiveRouter/RecursiveRouter.js";
+import { goTo } from "./RecursiveRouter/RecursiveRouter.js";
 import CreateComponent from "./CreateComponent/CreateComponent.js";
+import { makeURL } from "./RecursiveRouter/RecursiveHistory";
 
 /**
  * ## EmbedExternalView `<embed>`
@@ -15,18 +16,18 @@ import CreateComponent from "./CreateComponent/CreateComponent.js";
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/embed
  */
 const Embed =
-     () =>
-     ({ style, id, draggable, height, src, type, width, className, key, events, hooks, flags }) =>
-          new CreateComponent({
-               tag: "embed",
-               props: { id, draggable, height, src, type, width },
-               className: className,
-               key,
-               events: events,
-               hooks,
-               style,
-               flags,
-          });
+    () =>
+    ({ style, id, draggable, height, src, type, width, className, key, events, hooks, flags }) =>
+        new CreateComponent({
+            tag: "embed",
+            props: { id, draggable, height, src, type, width },
+            className: className,
+            key,
+            events: events,
+            hooks,
+            style,
+            flags,
+        });
 
 /**
  * ## SourceView `<source>`
@@ -46,30 +47,30 @@ const Embed =
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
  */
 const Source = ({
-     style,
-     id,
-     draggable,
-     media,
-     sizes,
-     src,
-     srcSet,
-     type,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    style,
+    id,
+    draggable,
+    media,
+    sizes,
+    src,
+    srcSet,
+    type,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          tag: "source",
-          props: { id, draggable, media, sizes, src, srcSet, type },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "source",
+        props: { id, draggable, media, sizes, src, srcSet, type },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## PortalView `<portal>`
@@ -82,27 +83,27 @@ const Source = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/portal
  */
 const Portal = ({
-     style,
-     id,
-     draggable,
-     referrerPolicy,
-     src,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    style,
+    id,
+    draggable,
+    referrerPolicy,
+    src,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          tag: "portal",
-          props: { id, draggable, referrerPolicy, src },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          flags,
-          style,
-     });
+    new CreateComponent({
+        tag: "portal",
+        props: { id, draggable, referrerPolicy, src },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        flags,
+        style,
+    });
 
 /**
  * ## PictureView `<picture>`
@@ -118,17 +119,17 @@ const Portal = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/picture
  */
 const Picture = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          children,
-          tag: "picture",
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "picture",
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## ObjectView `<object>`
@@ -147,32 +148,32 @@ const Picture = ({ children, style, id, draggable, className, key, events, hooks
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object
  */
 const Object = ({
-     style,
-     id,
-     draggable,
-     className,
-     key,
-     data,
-     form,
-     height,
-     name,
-     type,
-     useMap,
-     width,
-     events,
-     hooks,
-     flags,
+    style,
+    id,
+    draggable,
+    className,
+    key,
+    data,
+    form,
+    height,
+    name,
+    type,
+    useMap,
+    width,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          tag: "object",
-          props: { id, draggable, data, form, height, name, type, useMap, width },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "object",
+        props: { id, draggable, data, form, height, name, type, useMap, width },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## ObjectParameterView `<param>`
@@ -184,17 +185,17 @@ const Object = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/param
  */
 const Param = ({ style, id, draggable, name, value, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "param",
-          renderIf,
-          props: { id, draggable, name, value },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "param",
+        renderIf,
+        props: { id, draggable, name, value },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## IFrameView `<iframe>`
@@ -213,52 +214,52 @@ const Param = ({ style, id, draggable, name, value, className, key, events, hook
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe
  */
 const IFrame = ({
-     children,
-     style,
-     id,
-     draggable,
-     allow,
-     allowFullScreen,
-     allowPaymentRequest,
-     height,
-     loading,
-     name,
-     referrerPolicy,
-     sandbox,
-     src,
-     srcDoc,
-     width,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    children,
+    style,
+    id,
+    draggable,
+    allow,
+    allowFullScreen,
+    allowPaymentRequest,
+    height,
+    loading,
+    name,
+    referrerPolicy,
+    sandbox,
+    src,
+    srcDoc,
+    width,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children,
-          tag: "iframe",
-          props: {
-               id,
-               draggable,
-               allow,
-               allowFullScreen,
-               allowPaymentRequest,
-               height,
-               loading,
-               name,
-               referrerPolicy,
-               sandbox,
-               src,
-               srcDoc,
-               width,
-          },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "iframe",
+        props: {
+            id,
+            draggable,
+            allow,
+            allowFullScreen,
+            allowPaymentRequest,
+            height,
+            loading,
+            name,
+            referrerPolicy,
+            sandbox,
+            src,
+            srcDoc,
+            width,
+        },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## ButtonView `<button>`
@@ -288,52 +289,52 @@ const IFrame = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button
  */
 const Button = ({
-     text,
-     style,
-     id,
-     draggable,
-     autofocus,
-     disabled,
-     form,
-     formAction,
-     formEncType,
-     formMethod,
-     formNoValidate,
-     formTarget,
-     name,
-     type,
-     value,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    text,
+    style,
+    id,
+    draggable,
+    autofocus,
+    disabled,
+    form,
+    formAction,
+    formEncType,
+    formMethod,
+    formNoValidate,
+    formTarget,
+    name,
+    type,
+    value,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children: text,
-          tag: "button",
-          props: {
-               id,
-               draggable,
-               autofocus,
-               disabled,
-               form,
-               formAction,
-               formEncType,
-               formMethod,
-               formNoValidate,
-               formTarget,
-               name,
-               type,
-               value,
-          },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children: text,
+        tag: "button",
+        props: {
+            id,
+            draggable,
+            autofocus,
+            disabled,
+            form,
+            formAction,
+            formEncType,
+            formMethod,
+            formNoValidate,
+            formTarget,
+            name,
+            type,
+            value,
+        },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## TextAreaView `<textarea>`
@@ -359,60 +360,60 @@ const Button = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea
  */
 const TextArea = ({
-     text,
-     value,
-     style,
-     id,
-     draggable,
-     autoComplete,
-     autofocus,
-     cols,
-     disabled,
-     form,
-     maxLength,
-     minLength,
-     name,
-     placeholder,
-     readOnly,
-     required,
-     rows,
-     spellCheck,
-     wrap,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    text,
+    value,
+    style,
+    id,
+    draggable,
+    autoComplete,
+    autofocus,
+    cols,
+    disabled,
+    form,
+    maxLength,
+    minLength,
+    name,
+    placeholder,
+    readOnly,
+    required,
+    rows,
+    spellCheck,
+    wrap,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children: text,
-          tag: "textarea",
-          props: {
-               value,
-               id,
-               draggable,
-               autoComplete,
-               autofocus,
-               cols,
-               disabled,
-               form,
-               maxLength,
-               minLength,
-               name,
-               placeholder,
-               readOnly,
-               required,
-               rows,
-               spellCheck,
-               wrap,
-          },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children: text,
+        tag: "textarea",
+        props: {
+            value,
+            id,
+            draggable,
+            autoComplete,
+            autofocus,
+            cols,
+            disabled,
+            form,
+            maxLength,
+            minLength,
+            name,
+            placeholder,
+            readOnly,
+            required,
+            rows,
+            spellCheck,
+            wrap,
+        },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## SelectView `<select>`
@@ -432,44 +433,44 @@ const TextArea = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
  */
 const Select = ({
-     children,
-     style,
-     id,
-     draggable,
-     autoComplete,
-     autofocus,
-     disabled,
-     form,
-     multiple,
-     required,
-     size,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    children,
+    style,
+    id,
+    draggable,
+    autoComplete,
+    autofocus,
+    disabled,
+    form,
+    multiple,
+    required,
+    size,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children,
-          tag: "select",
-          props: {
-               id,
-               draggable,
-               autoComplete,
-               autofocus,
-               disabled,
-               form,
-               multiple,
-               required,
-               size,
-          },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "select",
+        props: {
+            id,
+            draggable,
+            autoComplete,
+            autofocus,
+            disabled,
+            form,
+            multiple,
+            required,
+            size,
+        },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## ProgressView `<progress>`
@@ -482,29 +483,29 @@ const Select = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress
  */
 const Progress = ({
-     text,
-     style,
-     id,
-     draggable,
-     className,
-     key,
-     max,
-     value,
-     events,
-     hooks,
-     flags,
+    text,
+    style,
+    id,
+    draggable,
+    className,
+    key,
+    max,
+    value,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children: text,
-          tag: "progress",
-          props: { id, draggable, max, value },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children: text,
+        tag: "progress",
+        props: { id, draggable, max, value },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## OutputView `<output>`
@@ -519,30 +520,30 @@ const Progress = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/output
  */
 const Output = ({
-     text,
-     style,
-     id,
-     draggable,
-     isFor,
-     form,
-     name,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    text,
+    style,
+    id,
+    draggable,
+    isFor,
+    form,
+    name,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children: text,
-          tag: "output",
-          props: { id, draggable, isFor, form, name },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children: text,
+        tag: "output",
+        props: { id, draggable, isFor, form, name },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## OptionView `<option>`
@@ -558,31 +559,31 @@ const Output = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option
  */
 const Option = ({
-     text,
-     style,
-     id,
-     draggable,
-     className,
-     key,
-     disabled,
-     label,
-     selected,
-     value,
-     events,
-     hooks,
-     flags,
+    text,
+    style,
+    id,
+    draggable,
+    className,
+    key,
+    disabled,
+    label,
+    selected,
+    value,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children: text,
-          tag: "option",
-          props: { id, draggable, disabled, label, selected, value },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children: text,
+        tag: "option",
+        props: { id, draggable, disabled, label, selected, value },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## OptionGroupView `<optgroup>`
@@ -598,29 +599,29 @@ const Option = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/optgroup
  */
 const OptionGroup = ({
-     children,
-     style,
-     id,
-     draggable,
-     disabled,
-     label,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    children,
+    style,
+    id,
+    draggable,
+    disabled,
+    label,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children,
-          tag: "optgroup",
-          props: { id, draggable, disabled, label },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "optgroup",
+        props: { id, draggable, disabled, label },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## MeterView `<meter>`
@@ -637,32 +638,32 @@ const OptionGroup = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter
  */
 const Meter = ({
-     style,
-     id,
-     draggable,
-     className,
-     key,
-     value,
-     min,
-     max,
-     low,
-     high,
-     optimum,
-     form,
-     events,
-     hooks,
-     flags,
+    style,
+    id,
+    draggable,
+    className,
+    key,
+    value,
+    min,
+    max,
+    low,
+    high,
+    optimum,
+    form,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          tag: "meter",
-          props: { id, draggable, value, min, max, low, high, optimum, form },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "meter",
+        props: { id, draggable, value, min, max, low, high, optimum, form },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## LabelView `<label>`
@@ -675,17 +676,17 @@ const Meter = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label
  */
 const Label = ({ text, style, id, draggable, isFor, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          children: text,
-          tag: "label",
-          props: { id, draggable, isFor },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children: text,
+        tag: "label",
+        props: { id, draggable, isFor },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## InputView `<form>`
@@ -725,92 +726,92 @@ const Label = ({ text, style, id, draggable, isFor, className, key, events, hook
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input
  */
 const Input = ({
-     style,
-     id,
-     draggable,
-     className,
-     key,
-     events,
-     hooks,
-     accept,
-     alt,
-     autoComplete,
-     autofocus,
-     capture,
-     checked,
-     dirname,
-     disabled,
-     form,
-     formAction,
-     formEncType,
-     formMethod,
-     formNoValidate,
-     formTarget,
-     height,
-     list,
-     max,
-     maxLength,
-     min,
-     minLength,
-     multiple,
-     name,
-     pattern,
-     placeholder,
-     readOnly,
-     required,
-     size,
-     src,
-     step,
-     type,
-     value,
-     width,
-     flags,
+    style,
+    id,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    accept,
+    alt,
+    autoComplete,
+    autofocus,
+    capture,
+    checked,
+    dirname,
+    disabled,
+    form,
+    formAction,
+    formEncType,
+    formMethod,
+    formNoValidate,
+    formTarget,
+    height,
+    list,
+    max,
+    maxLength,
+    min,
+    minLength,
+    multiple,
+    name,
+    pattern,
+    placeholder,
+    readOnly,
+    required,
+    size,
+    src,
+    step,
+    type,
+    value,
+    width,
+    flags,
 }) =>
-     new CreateComponent({
-          tag: "input",
-          props: {
-               id,
-               draggable,
-               type,
-               accept,
-               alt,
-               autoComplete,
-               autofocus,
-               capture,
-               checked,
-               dirname,
-               disabled,
-               form,
-               formAction,
-               formEncType,
-               formMethod,
-               formNoValidate,
-               formTarget,
-               height,
-               list,
-               max,
-               maxLength,
-               min,
-               minLength,
-               multiple,
-               name,
-               pattern,
-               placeholder,
-               readOnly,
-               required,
-               size,
-               src,
-               step,
-               value,
-               width,
-          },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "input",
+        props: {
+            id,
+            draggable,
+            type,
+            accept,
+            alt,
+            autoComplete,
+            autofocus,
+            capture,
+            checked,
+            dirname,
+            disabled,
+            form,
+            formAction,
+            formEncType,
+            formMethod,
+            formNoValidate,
+            formTarget,
+            height,
+            list,
+            max,
+            maxLength,
+            min,
+            minLength,
+            multiple,
+            name,
+            pattern,
+            placeholder,
+            readOnly,
+            required,
+            size,
+            src,
+            step,
+            value,
+            width,
+        },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## FormView `<form>`
@@ -830,48 +831,48 @@ const Input = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form
  */
 const Form = ({
-     children,
-     style,
-     id,
-     draggable,
-     acceptCharSet,
-     autoComplete,
-     name,
-     rel,
-     action,
-     encType,
-     method,
-     noValidate,
-     target,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    children,
+    style,
+    id,
+    draggable,
+    acceptCharSet,
+    autoComplete,
+    name,
+    rel,
+    action,
+    encType,
+    method,
+    noValidate,
+    target,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children,
-          tag: "form",
-          props: {
-               id,
-               draggable,
-               acceptCharSet,
-               autoComplete,
-               name,
-               rel,
-               action,
-               encType,
-               method,
-               noValidate,
-               target,
-          },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "form",
+        props: {
+            id,
+            draggable,
+            acceptCharSet,
+            autoComplete,
+            name,
+            rel,
+            action,
+            encType,
+            method,
+            noValidate,
+            target,
+        },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## FieldSetView `<fieldset>`
@@ -888,30 +889,30 @@ const Form = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset
  */
 const FieldSet = ({
-     children,
-     style,
-     id,
-     draggable,
-     disabled,
-     form,
-     name,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    children,
+    style,
+    id,
+    draggable,
+    disabled,
+    form,
+    name,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children,
-          tag: "fieldset",
-          props: { id, draggable, disabled, form, name },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "fieldset",
+        props: { id, draggable, disabled, form, name },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## DataListView `<datalist>`
@@ -922,17 +923,17 @@ const FieldSet = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist
  */
 const DataList = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          children,
-          tag: "datalist",
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "datalist",
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## AbbreviationView `<abbr>`
@@ -945,17 +946,17 @@ const DataList = ({ children, style, id, draggable, className, key, events, hook
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr
  */
 const Abbr = ({ text, title, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "abbr",
-          children: text,
-          props: { title, id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "abbr",
+        children: text,
+        props: { title, id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## WordBreakOpportunityView `<wbr>`
@@ -967,17 +968,17 @@ const Abbr = ({ text, title, style, id, draggable, className, key, events, hooks
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/wbr
  */
 const Wbr = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "wbr",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "wbr",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## VariableView `<var>`
@@ -990,17 +991,17 @@ const Wbr = ({ text, style, id, draggable, className, key, events, hooks, flags 
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/var
  */
 const Var = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "var",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "var",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## UnarticulatedAnnotationView `<u>`
@@ -1012,17 +1013,17 @@ const Var = ({ text, style, id, draggable, className, key, events, hooks, flags 
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/u
  */
 const U = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "u",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "u",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## SuperscriptTextView `<sup>`
@@ -1034,17 +1035,17 @@ const U = ({ text, style, id, draggable, className, key, events, hooks, flags })
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sup
  */
 const Sup = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "sup",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "sup",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## SubscriptTextView `<sub>`
@@ -1056,17 +1057,17 @@ const Sup = ({ text, style, id, draggable, className, key, events, hooks, flags 
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sub
  */
 const Sub = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "sub",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "sub",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## StrongTextView `<strong>`
@@ -1077,17 +1078,17 @@ const Sub = ({ text, style, id, draggable, className, key, events, hooks, flags 
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong
  */
 const Strong = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "strong",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "strong",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## StrikethroughTextView `<s>`
@@ -1101,17 +1102,17 @@ const Strong = ({ text, style, id, draggable, className, key, events, hooks, fla
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/s
  */
 const S = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "s",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "s",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## SpanView `<span>`
@@ -1127,17 +1128,17 @@ const S = ({ text, style, id, draggable, className, key, events, hooks, flags })
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/span
  */
 const Span = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "span",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "span",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## SmallTextView `<small>`
@@ -1149,17 +1150,17 @@ const Span = ({ text, style, id, draggable, className, key, events, hooks, flags
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small
  */
 const Small = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "small",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "small",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## SampleTextView `<samp>`
@@ -1172,17 +1173,17 @@ const Small = ({ text, style, id, draggable, className, key, events, hooks, flag
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/samp
  */
 const Samp = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "samp",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "samp",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## RubyTextView `<ruby>`
@@ -1194,17 +1195,17 @@ const Samp = ({ text, style, id, draggable, className, key, events, hooks, flags
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ruby
  */
 const Ruby = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "ruby",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "ruby",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## RubyTextView `<rt>`
@@ -1217,17 +1218,17 @@ const Ruby = ({ text, style, id, draggable, className, key, events, hooks, flags
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/rt
  */
 const Rt = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "rt",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "rt",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## RubyFallBackView `<rp>`
@@ -1240,17 +1241,17 @@ const Rt = ({ text, style, id, draggable, className, key, events, hooks, flags }
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/rp
  */
 const Rp = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "rp",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "rp",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## QuotationView `<q>`
@@ -1266,17 +1267,17 @@ const Rp = ({ text, style, id, draggable, className, key, events, hooks, flags }
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/q
  */
 const Q = ({ text, style, id, draggable, cite, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "q",
-          children: text,
-          props: { id, draggable, cite },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "q",
+        children: text,
+        props: { id, draggable, cite },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## MarkTextView `<mark>`
@@ -1287,17 +1288,17 @@ const Q = ({ text, style, id, draggable, cite, className, key, events, hooks, fl
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/mark
  */
 const Mark = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "mark",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "mark",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## AnchorView `<a>`
@@ -1311,33 +1312,33 @@ const Mark = ({ text, style, id, draggable, className, key, events, hooks, flags
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a
  */
 const Link = ({ children, style, to, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "a",
-          children: children,
-          props: {
-               id,
-               draggable,
-               href: `${location.origin}/${getRoot()}${to}`,
-          },
-          className: className,
-          key,
-          events: {
-               ...events,
-               onClick: (e) => {
-                    if (events) {
-                         if (events.onClick) {
-                              events.onClick();
-                         }
+    new CreateComponent({
+        tag: "a",
+        children: children,
+        props: {
+            id,
+            draggable,
+            href: makeURL(to),
+        },
+        className: className,
+        key,
+        events: {
+            ...events,
+            onClick: (e) => {
+                if (events) {
+                    if (events.onClick) {
+                        events.onClick();
                     }
+                }
 
-                    e.preventDefault();
-                    goTo(to);
-               },
-          },
-          hooks,
-          style,
-          flags,
-     });
+                e.preventDefault();
+                goTo(to);
+            },
+        },
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## LineBreakView `<br>`
@@ -1348,16 +1349,16 @@ const Link = ({ children, style, to, id, draggable, className, key, events, hook
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/br
  */
 const Br = ({ style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "br",
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "br",
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## KeyboardInputView `<kbd>`
@@ -1370,17 +1371,17 @@ const Br = ({ style, id, draggable, className, key, events, hooks, flags }) =>
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd
  */
 const Kdb = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "kdb",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "kdb",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## ItalicTextView `<i>`
@@ -1393,17 +1394,17 @@ const Kdb = ({ text, style, id, draggable, className, key, events, hooks, flags 
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i
  */
 const I = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "i",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "i",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## EmphasisTextView `<em>`
@@ -1414,17 +1415,17 @@ const I = ({ text, style, id, draggable, className, key, events, hooks, flags })
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em
  */
 const Em = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "em",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "em",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## DefinitionView `<dfn>`
@@ -1437,17 +1438,17 @@ const Em = ({ text, style, id, draggable, className, key, events, hooks, flags }
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dfn
  */
 const Dfn = ({ text, style, id, draggable, title, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "dfn",
-          children: text,
-          props: { id, draggable, title },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "dfn",
+        children: text,
+        props: { id, draggable, title },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## DataView `<data>`
@@ -1458,17 +1459,17 @@ const Dfn = ({ text, style, id, draggable, title, className, key, events, hooks,
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/data
  */
 const Data = ({ text, style, value, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "data",
-          children: text,
-          props: { id, draggable, value },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "data",
+        children: text,
+        props: { id, draggable, value },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## CodeView `<code>`
@@ -1480,17 +1481,17 @@ const Data = ({ text, style, value, id, draggable, className, key, events, hooks
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/code
  */
 const Code = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "code",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "code",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## CiteView `<cite>`
@@ -1503,17 +1504,17 @@ const Code = ({ text, style, id, draggable, className, key, events, hooks, flags
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/cite
  */
 const Cite = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "cite",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "cite",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## BoldTextView `<b>`
@@ -1529,17 +1530,17 @@ const Cite = ({ text, style, id, draggable, className, key, events, hooks, flags
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b
  */
 const B = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "b",
-          children,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "b",
+        children,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## BidirectionalTextOverrideView `<bdo>`
@@ -1550,17 +1551,17 @@ const B = ({ children, style, id, draggable, className, key, events, hooks, flag
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdo
  */
 const Bdo = ({ text, style, id, draggable, direction, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "bdo",
-          children: text,
-          props: { dir: direction, id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "bdo",
+        children: text,
+        props: { dir: direction, id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## BidirectionalIsolationTextView `<bdi>`
@@ -1573,17 +1574,17 @@ const Bdo = ({ text, style, id, draggable, direction, className, key, events, ho
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdi
  */
 const Bdi = ({ text, style, id, draggable, direction, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "bdi",
-          children: text,
-          props: { dir: direction, id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "bdi",
+        children: text,
+        props: { dir: direction, id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## AnchorView `<a>`
@@ -1617,56 +1618,56 @@ const Bdi = ({ text, style, id, draggable, direction, className, key, events, ho
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a
  */
 const A = ({
-     children,
-     style,
-     id,
-     draggable,
-     download,
-     href,
-     hrefLang,
-     ping,
-     referrerPolicy,
-     rel,
-     target,
-     type,
-     charSet,
-     coords,
-     name,
-     rev,
-     shape,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    children,
+    style,
+    id,
+    draggable,
+    download,
+    href,
+    hrefLang,
+    ping,
+    referrerPolicy,
+    rel,
+    target,
+    type,
+    charSet,
+    coords,
+    name,
+    rev,
+    shape,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          tag: "a",
-          children: children,
-          props: {
-               id,
-               draggable,
-               download,
-               href,
-               hrefLang,
-               ping,
-               referrerPolicy,
-               rev,
-               target,
-               rel,
-               type,
-               charSet,
-               coords,
-               name,
-               shape,
-          },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "a",
+        children: children,
+        props: {
+            id,
+            draggable,
+            download,
+            href,
+            hrefLang,
+            ping,
+            referrerPolicy,
+            rev,
+            target,
+            rel,
+            type,
+            charSet,
+            coords,
+            name,
+            shape,
+        },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## DetailsView `<details>`
@@ -1686,17 +1687,17 @@ const A = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details
  */
 const Details = ({ children, style, id, draggable, open, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          children,
-          tag: "details",
-          props: { id, draggable, open },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "details",
+        props: { id, draggable, open },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## SummaryView `<summary>`
@@ -1707,17 +1708,17 @@ const Details = ({ children, style, id, draggable, open, className, key, events,
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/summary
  */
 const Summary = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          children: text,
-          tag: "summary",
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children: text,
+        tag: "summary",
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## AreaView `<area>`
@@ -1756,51 +1757,51 @@ const Summary = ({ text, style, id, draggable, className, key, events, hooks, fl
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/area
  */
 const Area = ({
-     children,
-     style,
-     id,
-     draggable,
-     alt,
-     coords,
-     download,
-     href,
-     hrefLang,
-     ping,
-     referrerPolicy,
-     rel,
-     shape,
-     target,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    children,
+    style,
+    id,
+    draggable,
+    alt,
+    coords,
+    download,
+    href,
+    hrefLang,
+    ping,
+    referrerPolicy,
+    rel,
+    shape,
+    target,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          tag: "area",
-          children,
-          props: {
-               id,
-               draggable,
-               alt,
-               coords,
-               download,
-               href,
-               href,
-               hrefLang,
-               ping,
-               referrerPolicy,
-               rel,
-               shape,
-               target,
-          },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "area",
+        children,
+        props: {
+            id,
+            draggable,
+            alt,
+            coords,
+            download,
+            href,
+            href,
+            hrefLang,
+            ping,
+            referrerPolicy,
+            rel,
+            shape,
+            target,
+        },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## VideoView `<video>`
@@ -1834,52 +1835,52 @@ const Area = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
  */
 const Video = ({
-     children,
-     style,
-     id,
-     draggable,
-     autoplay,
-     controls,
-     crossOrigin,
-     height,
-     loop,
-     muted,
-     playsinline,
-     poster,
-     preload,
-     src,
-     width,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    children,
+    style,
+    id,
+    draggable,
+    autoplay,
+    controls,
+    crossOrigin,
+    height,
+    loop,
+    muted,
+    playsinline,
+    poster,
+    preload,
+    src,
+    width,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children,
-          tag: "video",
-          props: {
-               id,
-               draggable,
-               autoplay,
-               controls,
-               crossOrigin,
-               height,
-               loop,
-               muted,
-               playsinline,
-               poster,
-               preload,
-               src,
-               width,
-          },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "video",
+        props: {
+            id,
+            draggable,
+            autoplay,
+            controls,
+            crossOrigin,
+            height,
+            loop,
+            muted,
+            playsinline,
+            poster,
+            preload,
+            src,
+            width,
+        },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## TrackView `<track>`
@@ -1902,30 +1903,30 @@ const Video = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/track
  */
 const Track = ({
-     style,
-     id,
-     draggable,
-     defaultTrack,
-     kind,
-     label,
-     src,
-     srcLang,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    style,
+    id,
+    draggable,
+    defaultTrack,
+    kind,
+    label,
+    src,
+    srcLang,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          tag: "track",
-          props: { id, draggable, kind, label, src, srcLang, default: defaultTrack },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "track",
+        props: { id, draggable, kind, label, src, srcLang, default: defaultTrack },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## MapView `<map>`
@@ -1940,17 +1941,17 @@ const Track = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/map
  */
 const Map = ({ text, style, id, draggable, name, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "map",
-          children: text,
-          props: { id, draggable, name },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "map",
+        children: text,
+        props: { id, draggable, name },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## ImageView `<img>`
@@ -1976,50 +1977,50 @@ const Map = ({ text, style, id, draggable, name, className, key, events, hooks, 
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
  */
 const Img = ({
-     style,
-     id,
-     draggable,
-     alt,
-     crossOrigin,
-     decoding,
-     height,
-     isMap,
-     referrerPolicy,
-     sizes,
-     src,
-     srcSet,
-     width,
-     useMap,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    style,
+    id,
+    draggable,
+    alt,
+    crossOrigin,
+    decoding,
+    height,
+    isMap,
+    referrerPolicy,
+    sizes,
+    src,
+    srcSet,
+    width,
+    useMap,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          tag: "img",
-          props: {
-               id,
-               draggable,
-               alt,
-               crossOrigin,
-               decoding,
-               height,
-               isMap,
-               referrerPolicy,
-               sizes,
-               src,
-               srcSet,
-               width,
-               useMap,
-          },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "img",
+        props: {
+            id,
+            draggable,
+            alt,
+            crossOrigin,
+            decoding,
+            height,
+            isMap,
+            referrerPolicy,
+            sizes,
+            src,
+            srcSet,
+            width,
+            useMap,
+        },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## AudioView `<audio>`
@@ -2046,34 +2047,34 @@ const Img = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
  */
 const Audio = ({
-     children,
-     style,
-     id,
-     draggable,
-     autoplay,
-     controls,
-     crossOrigin,
-     loop,
-     muted,
-     preload,
-     src,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    children,
+    style,
+    id,
+    draggable,
+    autoplay,
+    controls,
+    crossOrigin,
+    loop,
+    muted,
+    preload,
+    src,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          tag: "audio",
-          children,
-          props: { id, draggable, autoplay, controls, crossOrigin, loop, muted, preload, src },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "audio",
+        children,
+        props: { id, draggable, autoplay, controls, crossOrigin, loop, muted, preload, src },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## AddressView `<address>`
@@ -2083,17 +2084,17 @@ const Audio = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address
  */
 const Address = ({ children, style, id, draggable, className, key, events, hooks, flags }) => {
-     return new CreateComponent({
-          tag: "address",
-          children: children,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    return new CreateComponent({
+        tag: "address",
+        children: children,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 };
 
 /**
@@ -2104,17 +2105,17 @@ const Address = ({ children, style, id, draggable, className, key, events, hooks
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/section
  */
 const Section = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          tag: "section",
-          children,
-          props: { id, draggable },
-          className,
-          key,
-          events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "section",
+        children,
+        props: { id, draggable },
+        className,
+        key,
+        events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## NavView `<nav>`
@@ -2124,17 +2125,17 @@ const Section = ({ children, style, id, draggable, className, key, events, flags
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/nav
  */
 const Nav = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          tag: "nav",
-          children,
-          props: { id, draggable },
-          className,
-          key,
-          events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "nav",
+        children,
+        props: { id, draggable },
+        className,
+        key,
+        events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## MainView `<main>`
@@ -2143,17 +2144,17 @@ const Nav = ({ children, style, id, draggable, className, key, events, flags, ho
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/main
  */
 const Main = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          tag: "main",
-          children,
-          props: { id, draggable },
-          className,
-          key,
-          events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "main",
+        children,
+        props: { id, draggable },
+        className,
+        key,
+        events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## HeaderTitleView `<header>`
@@ -2163,17 +2164,17 @@ const Main = ({ children, style, id, draggable, className, key, events, flags, h
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
 const H6 = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          tag: "h6",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "h6",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## HeaderTitleView `<header>`
@@ -2183,17 +2184,17 @@ const H6 = ({ text, style, id, draggable, className, key, events, flags, hooks }
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
 const H5 = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          tag: "h5",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "h5",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## HeaderTitleView `<header>`
@@ -2203,17 +2204,17 @@ const H5 = ({ text, style, id, draggable, className, key, events, flags, hooks }
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
 const H4 = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          tag: "h4",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "h4",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## HeaderTitleView `<header>`
@@ -2223,17 +2224,17 @@ const H4 = ({ text, style, id, draggable, className, key, events, flags, hooks }
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
 const H3 = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          tag: "h3",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "h3",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## HeaderTitleView `<header>`
@@ -2243,17 +2244,17 @@ const H3 = ({ text, style, id, draggable, className, key, events, flags, hooks }
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
 const H2 = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "h2",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "h2",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## HeaderTitleView `<header>`
@@ -2263,17 +2264,17 @@ const H2 = ({ text, style, id, draggable, className, key, events, hooks, flags }
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
 const H1 = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "h1",
-          children: text,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "h1",
+        children: text,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## HeaderView `<header>`
@@ -2284,17 +2285,17 @@ const H1 = ({ text, style, id, draggable, className, key, events, hooks, flags }
  */
 
 const Header = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "header",
-          children: children,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "header",
+        children: children,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## FooterView `<footer>`
@@ -2304,17 +2305,17 @@ const Header = ({ children, style, id, draggable, className, key, events, hooks,
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/footer
  */
 const Footer = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "footer",
-          children: children,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "footer",
+        children: children,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## AsideView `<aside>`
@@ -2324,17 +2325,17 @@ const Footer = ({ children, style, id, draggable, className, key, events, hooks,
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/aside
  */
 const Aside = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "aside",
-          children: children,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "aside",
+        children: children,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## ArticleView `<article>`
@@ -2344,17 +2345,17 @@ const Aside = ({ children, style, id, draggable, className, key, events, hooks, 
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/article
  */
 const Article = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "article",
-          children: children,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "article",
+        children: children,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## TableBodyView `<tbody>`
@@ -2365,17 +2366,17 @@ const Article = ({ children, style, id, draggable, className, key, events, hooks
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody
  */
 const Tbody = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          children,
-          tag: "tbody",
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "tbody",
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## TableView `<table>`
@@ -2386,17 +2387,17 @@ const Tbody = ({ children, style, id, draggable, className, key, events, flags, 
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table
  */
 const Table = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          children,
-          tag: "table",
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "table",
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## TableRowView `<tr>`
@@ -2407,17 +2408,17 @@ const Table = ({ children, style, id, draggable, className, key, events, flags, 
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tr
  */
 const Tr = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          tag: "tr",
-          children,
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "tr",
+        children,
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## TableHeadView `<thead>`
@@ -2427,17 +2428,17 @@ const Tr = ({ children, style, id, draggable, className, key, events, flags, hoo
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/thead
  */
 const Thead = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          children,
-          tag: "thead",
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "thead",
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## TableHeadCellView `<th>`
@@ -2454,32 +2455,32 @@ const Thead = ({ children, style, id, draggable, className, key, events, flags, 
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th
  */
 const Th = ({
-     children,
-     style,
-     abbreviation,
-     colSpan,
-     headers,
-     rowSpan,
-     scope,
-     id,
-     draggable,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    children,
+    style,
+    abbreviation,
+    colSpan,
+    headers,
+    rowSpan,
+    scope,
+    id,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children,
-          tag: "th",
-          props: { id, draggable, abbreviation, colSpan, headers, rowSpan, scope },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "th",
+        props: { id, draggable, abbreviation, colSpan, headers, rowSpan, scope },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## TableFootView `<tfoot>`
@@ -2489,17 +2490,17 @@ const Th = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tfoot
  */
 const Tfoot = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          children,
-          tag: "tfoot",
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "tfoot",
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## TableColumnView `<col>`
@@ -2514,17 +2515,17 @@ const Tfoot = ({ children, style, id, draggable, className, key, events, flags, 
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col
  */
 const Col = ({ children, style, id, draggable, span, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          children,
-          tag: "col",
-          props: { id, draggable, span },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "col",
+        props: { id, draggable, span },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## TableBodyView `<colgroup>`
@@ -2536,17 +2537,17 @@ const Col = ({ children, style, id, draggable, span, className, key, events, hoo
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/colgroup
  */
 const ColGroup = ({ children, style, id, draggable, span, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          children,
-          tag: "colgroup",
-          props: { id, draggable, span },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "colgroup",
+        props: { id, draggable, span },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## TableBodyView `<td>`
@@ -2561,30 +2562,30 @@ const ColGroup = ({ children, style, id, draggable, span, className, key, events
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td
  */
 const Td = ({
-     children,
-     style,
-     id,
-     draggable,
-     colSpan,
-     headers,
-     rowSpan,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
+    children,
+    style,
+    id,
+    draggable,
+    colSpan,
+    headers,
+    rowSpan,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          children,
-          tag: "td",
-          props: { id, draggable, colSpan, headers, rowSpan },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children,
+        tag: "td",
+        props: { id, draggable, colSpan, headers, rowSpan },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## TableCaptionView `<caption>`
@@ -2594,17 +2595,17 @@ const Td = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption
  */
 const Caption = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          children: text,
-          tag: "caption",
-          props: { id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        children: text,
+        tag: "caption",
+        props: { id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## BlockQuoteView `<blockquote>`
@@ -2615,17 +2616,17 @@ const Caption = ({ text, style, id, draggable, className, key, events, flags, ho
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote
  */
 const BlockQuote = ({ text, cite, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          tag: "blockquote",
-          children: text,
-          props: { cite, id, draggable },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "blockquote",
+        children: text,
+        props: { cite, id, draggable },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## UnorderedListView `<ol>`
@@ -2642,29 +2643,29 @@ const BlockQuote = ({ text, cite, style, id, draggable, className, key, events, 
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul
  */
 const Ul = ({
-     children,
-     style,
-     className,
-     key,
-     events,
-     id,
-     draggable,
-     hooks,
-     type,
-     compact,
-     flags,
+    children,
+    style,
+    className,
+    key,
+    events,
+    id,
+    draggable,
+    hooks,
+    type,
+    compact,
+    flags,
 }) => {
-     return new CreateComponent({
-          tag: "ul",
-          children,
-          style,
-          className,
-          key,
-          events,
-          props: { id, draggable, type, compact },
-          hooks,
-          flags,
-     });
+    return new CreateComponent({
+        tag: "ul",
+        children,
+        style,
+        className,
+        key,
+        events,
+        props: { id, draggable, type, compact },
+        hooks,
+        flags,
+    });
 };
 
 /**
@@ -2688,30 +2689,30 @@ const Ul = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/pre
  */
 const Pre = ({
-     children,
-     style,
-     id,
-     draggable,
-     className,
-     key,
-     events,
-     hooks,
-     cols,
-     width,
-     wrap,
-     flags,
+    children,
+    style,
+    id,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    cols,
+    width,
+    wrap,
+    flags,
 }) =>
-     new CreateComponent({
-          tag: "pre",
-          children: children,
-          props: { id, draggable, cols, width, wrap },
-          className: className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "pre",
+        children: children,
+        props: { id, draggable, cols, width, wrap },
+        className: className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## ParagraphView `<p>`
@@ -2727,17 +2728,17 @@ const Pre = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
  */
 const P = ({ text, className, key, id, draggable, events, style, flags, hooks }) =>
-     new CreateComponent({
-          tag: "p",
-          children: text,
-          style,
-          events: events,
-          className: className,
-          key,
-          props: { id, draggable },
-          hooks,
-          flags,
-     });
+    new CreateComponent({
+        tag: "p",
+        children: text,
+        style,
+        events: events,
+        className: className,
+        key,
+        props: { id, draggable },
+        hooks,
+        flags,
+    });
 
 /**
  * ## OrderedListView `<ol>`
@@ -2755,32 +2756,32 @@ const P = ({ text, className, key, id, draggable, events, style, flags, hooks })
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ol
  */
 const Ol = ({
-     children,
-     style,
-     className,
-     key,
-     events,
-     id,
-     draggable,
-     hooks,
-     reversed,
-     start,
-     type,
-     flags,
+    children,
+    style,
+    className,
+    key,
+    events,
+    id,
+    draggable,
+    hooks,
+    reversed,
+    start,
+    type,
+    flags,
 }) => {
-     return new CreateComponent({
-          tag: "ol",
-          children,
-          style,
-          className,
-          key,
-          events,
-          id,
-          draggable,
-          props: { id, draggable, reversed, start, type },
-          hooks,
-          flags,
-     });
+    return new CreateComponent({
+        tag: "ol",
+        children,
+        style,
+        className,
+        key,
+        events,
+        id,
+        draggable,
+        props: { id, draggable, reversed, start, type },
+        hooks,
+        flags,
+    });
 };
 
 /**
@@ -2803,29 +2804,29 @@ const Ol = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/li
  */
 const Li = ({
-     children,
-     style,
-     className,
-     key,
-     events,
-     id,
-     draggable,
-     hooks,
-     value,
-     type,
-     flags,
+    children,
+    style,
+    className,
+    key,
+    events,
+    id,
+    draggable,
+    hooks,
+    value,
+    type,
+    flags,
 }) => {
-     return new CreateComponent({
-          tag: "li",
-          children,
-          style,
-          className,
-          key,
-          events,
-          props: { id, draggable, value, type },
-          hooks,
-          flags,
-     });
+    return new CreateComponent({
+        tag: "li",
+        children,
+        style,
+        className,
+        key,
+        events,
+        props: { id, draggable, value, type },
+        hooks,
+        flags,
+    });
 };
 
 /**
@@ -2842,34 +2843,34 @@ const Li = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/hr
  */
 const Hr = ({
-     style,
-     id,
-     draggable,
-     className,
-     key,
-     events,
-     align,
-     color,
-     noShade,
-     size,
-     width,
-     hooks,
-     flags,
+    style,
+    id,
+    draggable,
+    className,
+    key,
+    events,
+    align,
+    color,
+    noShade,
+    size,
+    width,
+    hooks,
+    flags,
 }) =>
-     new CreateComponent({
-          tag: "hr",
+    new CreateComponent({
+        tag: "hr",
 
-          id,
-          draggable: id,
-          draggable,
-          className: className,
-          key,
-          props: { align, color, noShade, size, width, id, draggable },
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+        id,
+        draggable: id,
+        draggable,
+        className: className,
+        key,
+        props: { align, color, noShade, size, width, id, draggable },
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## FigureView `<figure>`
@@ -2881,28 +2882,28 @@ const Hr = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure
  */
 const Figure = ({
-     children,
+    children,
 
-     style,
-     id,
-     draggable,
-     className,
-     key,
-     events,
-     flags,
-     hooks,
+    style,
+    id,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
 }) =>
-     new CreateComponent({
-          tag: "figure",
-          children,
-          props: { id, draggable },
-          className,
-          key,
-          events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "figure",
+        children,
+        props: { id, draggable },
+        className,
+        key,
+        events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## FigureCaptionView `<figcaption>`
@@ -2913,17 +2914,17 @@ const Figure = ({
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figcaption
  */
 const FigCaption = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          tag: "figcaption",
-          children: text,
-          props: { id, draggable },
-          className,
-          key,
-          events: events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "figcaption",
+        children: text,
+        props: { id, draggable },
+        className,
+        key,
+        events: events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## DividerView `<div>`
@@ -2936,17 +2937,17 @@ const FigCaption = ({ text, style, id, draggable, className, key, events, flags,
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div
  */
 const Div = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
-     new CreateComponent({
-          tag: "div",
-          children: children,
-          props: { id, draggable },
-          className: className,
-          key,
-          events,
-          style,
-          hooks,
-          flags,
-     });
+    new CreateComponent({
+        tag: "div",
+        children: children,
+        props: { id, draggable },
+        className: className,
+        key,
+        events,
+        style,
+        hooks,
+        flags,
+    });
 
 /**
  * ## DescriptionTermView `<dt>`
@@ -2962,17 +2963,17 @@ const Div = ({ children, style, id, draggable, className, key, events, hooks, fl
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dt
  */
 const Dt = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          tag: "dt",
-          children: text,
-          props: { id, draggable },
-          className,
-          key,
-          events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "dt",
+        children: text,
+        props: { id, draggable },
+        className,
+        key,
+        events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## DescriptionListView `<dl>`
@@ -2986,17 +2987,17 @@ const Dt = ({ text, style, id, draggable, className, key, events, flags, hooks }
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl
  */
 const Dl = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
-     new CreateComponent({
-          tag: "dl",
-          children: children,
-          props: { id, draggable },
-          className,
-          key,
-          events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "dl",
+        children: children,
+        props: { id, draggable },
+        className,
+        key,
+        events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * ## DescriptionDetailsView `<dd>`
@@ -3006,52 +3007,52 @@ const Dl = ({ children, style, id, draggable, className, key, events, flags, hoo
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dd
  */
 const Dd = ({ text, style, id, draggable, className, key, events, hooks, noWrap, flags }) =>
-     new CreateComponent({
-          tag: "dd",
-          children: text,
-          props: { noWrap, id, draggable },
-          className,
-          key,
-          events,
-          hooks,
-          style,
-          flags,
-     });
+    new CreateComponent({
+        tag: "dd",
+        children: text,
+        props: { noWrap, id, draggable },
+        className,
+        key,
+        events,
+        hooks,
+        style,
+        flags,
+    });
 
 /**
  * @class RawHTML
  * @extends CreateComponent create a Raw component object.
  */
 class RawHTML extends CreateComponent {
-     constructor({ html, id, draggable, className, key, events, hooks, flags }) {
-          super({
-               tag: "html-container",
-               className,
-               key,
-               events,
-               hooks,
-               flags,
-               props: { id, draggable },
-          });
+    constructor({ html, id, draggable, className, key, events, hooks, flags }) {
+        super({
+            tag: "html-container",
+            className,
+            key,
+            events,
+            hooks,
+            flags,
+            props: { id, draggable },
+        });
 
-          this.html = html;
-          this.flags.forceRerender = true;
-     }
+        this.html = html;
+        this.flags.forceRerender = true;
+    }
 
-     render() {
-          let render = document.createElement(this.tag);
+    render() {
+        let render = document.createElement(this.tag);
 
-          render.innerHTML = this.html;
+        render.innerHTML = this.html;
 
-          this.domInstance = render;
+        this.domInstance = render;
 
-          return render;
-     }
+        return render;
+    }
 
-     update(newComponent) {
-          this.domInstance.replaceWith(newComponent.render());
-          return true;
-     }
+    update(newComponent) {
+        this.domInstance.replaceWith(newComponent.render());
+        return true;
+    }
 }
 
 /**
@@ -3060,16 +3061,16 @@ class RawHTML extends CreateComponent {
  * Provide a way to render raw html inside of it.
  */
 const Raw = ({ html, id, draggable, className, key, events, hooks, flags }) => {
-     return new RawHTML({
-          html,
-          id,
-          draggable,
-          className,
-          key,
-          events,
-          hooks,
-          flags,
-     });
+    return new RawHTML({
+        html,
+        id,
+        draggable,
+        className,
+        key,
+        events,
+        hooks,
+        flags,
+    });
 };
 
 /**
@@ -3080,21 +3081,21 @@ const Raw = ({ html, id, draggable, className, key, events, hooks, flags }) => {
  * @param props.width view width
  */
 const EmptyBox = ({ height, width, id, draggable, events, hooks, flags }) => {
-     return new CreateComponent({
-          tag: "empty-box",
-          style: {
-               className: "empty-box",
-               scoped: true,
-               normal: {
-                    height,
-                    width,
-               },
-          },
-          events,
-          hooks,
-          flags,
-          props: { id, draggable },
-     });
+    return new CreateComponent({
+        tag: "empty-box",
+        style: {
+            className: "empty-box",
+            scoped: true,
+            normal: {
+                height,
+                width,
+            },
+        },
+        events,
+        hooks,
+        flags,
+        props: { id, draggable },
+    });
 };
 
 /**
@@ -3102,57 +3103,57 @@ const EmptyBox = ({ height, width, id, draggable, events, hooks, flags }) => {
  * @extends CreateComponent create a list view with an end observer.
  */
 class ListViewer extends CreateComponent {
-     constructor({
-          children,
-          id,
-          draggable,
-          className,
-          key,
-          onObserved,
-          events,
-          hooks,
-          flags,
-          style,
-     }) {
-          super({
-               tag: "list-view",
-               children,
-               props: { id, draggable },
-               className,
-               key,
-               events,
-               hooks,
-               flags,
-               style,
-          });
+    constructor({
+        children,
+        id,
+        draggable,
+        className,
+        key,
+        onObserved,
+        events,
+        hooks,
+        flags,
+        style,
+    }) {
+        super({
+            tag: "list-view",
+            children,
+            props: { id, draggable },
+            className,
+            key,
+            events,
+            hooks,
+            flags,
+            style,
+        });
 
-          if (!this.hooks) {
-               this.hooks = {};
-          }
-          this.hooks.onRef = () => {
-               if (hooks) {
-                    if (hooks.onRef) {
-                         hooks.onRef();
+        if (!this.hooks) {
+            this.hooks = {};
+        }
+        this.hooks.onRef = () => {
+            if (hooks) {
+                if (hooks.onRef) {
+                    hooks.onRef();
+                }
+            }
+
+            if (this.children.length === 0 || typeof onObserved !== "function") return;
+
+            var observer = new IntersectionObserver(
+                (entries) => {
+                    if (entries[0].isIntersecting === true) {
+                        observer.unobserve(entries[0].target);
+                        if (entries[0].target === this.domInstance.lastChild) {
+                            onObserved(this.domInstance);
+                        }
                     }
-               }
+                },
+                { threshold: [0] }
+            );
 
-               if (this.children.length === 0 || typeof onObserved !== "function") return;
-
-               var observer = new IntersectionObserver(
-                    (entries) => {
-                         if (entries[0].isIntersecting === true) {
-                              observer.unobserve(entries[0].target);
-                              if (entries[0].target === this.domInstance.lastChild) {
-                                   onObserved(this.domInstance);
-                              }
-                         }
-                    },
-                    { threshold: [0] }
-               );
-
-               observer.observe(this.domInstance.lastChild);
-          };
-     }
+            observer.observe(this.domInstance.lastChild);
+        };
+    }
 }
 
 /**
@@ -3162,29 +3163,29 @@ class ListViewer extends CreateComponent {
  * @param props.onObserved execute an action when the last child of the component became visible.
  */
 const LazyColumn = ({
-     children,
-     id,
-     draggable,
-     className,
-     key,
-     events,
-     hooks,
-     flags,
-     style,
-     onObserved,
+    children,
+    id,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+    style,
+    onObserved,
 }) => {
-     return new ListViewer({
-          children,
-          id,
-          draggable,
-          className,
-          key,
-          events,
-          onObserved,
-          hooks,
-          flags,
-          style,
-     });
+    return new ListViewer({
+        children,
+        id,
+        draggable,
+        className,
+        key,
+        events,
+        onObserved,
+        hooks,
+        flags,
+        style,
+    });
 };
 
 /**
@@ -3193,17 +3194,17 @@ const LazyColumn = ({
  * Flexbox displaying items vertically.
  */
 const Column = ({ children, style, id, draggable, className, key, events, hooks, flags }) => {
-     return new CreateComponent({
-          tag: "column-view",
-          children,
-          style,
-          props: { id, draggable },
-          className,
-          key,
-          events,
-          hooks,
-          flags,
-     });
+    return new CreateComponent({
+        tag: "column-view",
+        children,
+        style,
+        props: { id, draggable },
+        className,
+        key,
+        events,
+        hooks,
+        flags,
+    });
 };
 
 /**
@@ -3212,17 +3213,17 @@ const Column = ({ children, style, id, draggable, className, key, events, hooks,
  * Flexbox displaying items horizontally.
  */
 const Row = ({ children, style, id, draggable, className, key, events, hooks, flags }) => {
-     return new CreateComponent({
-          tag: "row-view",
-          children,
-          style,
-          props: { id, draggable },
-          className,
-          key,
-          events,
-          hooks,
-          flags,
-     });
+    return new CreateComponent({
+        tag: "row-view",
+        children,
+        style,
+        props: { id, draggable },
+        className,
+        key,
+        events,
+        hooks,
+        flags,
+    });
 };
 
 /**
@@ -3231,151 +3232,151 @@ const Row = ({ children, style, id, draggable, className, key, events, hooks, fl
  * Used to show a loading state.
  */
 const BorderSpinner = ({
-     color = "black",
-     size = "30px",
-     thickness = "5px",
-     duration = "1.5s",
-     timingFunction = "ease",
-     flags,
+    color = "black",
+    size = "30px",
+    thickness = "5px",
+    duration = "1.5s",
+    timingFunction = "ease",
+    flags,
 }) => {
-     function className() {
-          function transform(str) {
-               return str.toString().replace(/[^a-z0-9+]+/gi, "-");
-          }
+    function className() {
+        function transform(str) {
+            return str.toString().replace(/[^a-z0-9+]+/gi, "-");
+        }
 
-          return `border-spinner-${transform(color)}-${transform(thickness)}-${transform(
-               duration
-          )}-${transform(timingFunction)}-${transform(size)}`;
-     }
+        return `border-spinner-${transform(color)}-${transform(thickness)}-${transform(
+            duration
+        )}-${transform(timingFunction)}-${transform(size)}`;
+    }
 
-     return new CreateComponent({
-          tag: "border-spinner",
-          children: [],
-          style: {
-               className: "border-spinner",
-               scoped: true,
-               normal: {
-                    border: `solid ${thickness} ${color}`,
-                    borderRadius: "50%",
-                    borderTopColor: "transparent",
-                    height: size,
-                    width: size,
-                    animation: `${className()}-animation ${duration} infinite`,
-                    animationTimingFunction: timingFunction,
-               },
-               animations: [
-                    {
-                         name: `${className()}-animation`,
-                         steps: {
-                              "0%": { transform: "rotate(0deg)" },
-                              "100%": { transform: "rotate(360deg)" },
-                         },
+    return new CreateComponent({
+        tag: "border-spinner",
+        children: [],
+        style: {
+            className: "border-spinner",
+            scoped: true,
+            normal: {
+                border: `solid ${thickness} ${color}`,
+                borderRadius: "50%",
+                borderTopColor: "transparent",
+                height: size,
+                width: size,
+                animation: `${className()}-animation ${duration} infinite`,
+                animationTimingFunction: timingFunction,
+            },
+            animations: [
+                {
+                    name: `${className()}-animation`,
+                    steps: {
+                        "0%": { transform: "rotate(0deg)" },
+                        "100%": { transform: "rotate(360deg)" },
                     },
-               ],
-          },
-          flags,
-     });
+                },
+            ],
+        },
+        flags,
+    });
 };
 
 export {
-     BorderSpinner,
-     Row,
-     Column,
-     LazyColumn,
-     EmptyBox,
-     Raw,
-     Main,
-     Dd,
-     Dl,
-     Dt,
-     Div,
-     FigCaption,
-     Figure,
-     Hr,
-     Li,
-     Ol,
-     P,
-     Pre,
-     Ul,
-     BlockQuote,
-     Caption,
-     Td,
-     ColGroup,
-     Col,
-     Tfoot,
-     Th,
-     Thead,
-     Tr,
-     Table,
-     Tbody,
-     Article,
-     Aside,
-     Footer,
-     Header,
-     H1,
-     H2,
-     H3,
-     H4,
-     H5,
-     H6,
-     Nav,
-     Section,
-     Address,
-     Audio,
-     Img,
-     Map,
-     Track,
-     Video,
-     Area,
-     Summary,
-     Details,
-     A,
-     Bdi,
-     Bdo,
-     B,
-     Cite,
-     Code,
-     Data,
-     Dfn,
-     Em,
-     I,
-     Kdb,
-     Br,
-     Link,
-     Mark,
-     Q,
-     Rp,
-     Rt,
-     Ruby,
-     Samp,
-     Small,
-     Span,
-     S,
-     Strong,
-     Sub,
-     Sup,
-     U,
-     Var,
-     Wbr,
-     Abbr,
-     DataList,
-     FieldSet,
-     Form,
-     Input,
-     Label,
-     Meter,
-     OptionGroup,
-     Option,
-     Output,
-     Progress,
-     Select,
-     TextArea,
-     Button,
-     IFrame,
-     Param,
-     Object,
-     Picture,
-     Portal,
-     Source,
-     Embed,
+    BorderSpinner,
+    Row,
+    Column,
+    LazyColumn,
+    EmptyBox,
+    Raw,
+    Main,
+    Dd,
+    Dl,
+    Dt,
+    Div,
+    FigCaption,
+    Figure,
+    Hr,
+    Li,
+    Ol,
+    P,
+    Pre,
+    Ul,
+    BlockQuote,
+    Caption,
+    Td,
+    ColGroup,
+    Col,
+    Tfoot,
+    Th,
+    Thead,
+    Tr,
+    Table,
+    Tbody,
+    Article,
+    Aside,
+    Footer,
+    Header,
+    H1,
+    H2,
+    H3,
+    H4,
+    H5,
+    H6,
+    Nav,
+    Section,
+    Address,
+    Audio,
+    Img,
+    Map,
+    Track,
+    Video,
+    Area,
+    Summary,
+    Details,
+    A,
+    Bdi,
+    Bdo,
+    B,
+    Cite,
+    Code,
+    Data,
+    Dfn,
+    Em,
+    I,
+    Kdb,
+    Br,
+    Link,
+    Mark,
+    Q,
+    Rp,
+    Rt,
+    Ruby,
+    Samp,
+    Small,
+    Span,
+    S,
+    Strong,
+    Sub,
+    Sup,
+    U,
+    Var,
+    Wbr,
+    Abbr,
+    DataList,
+    FieldSet,
+    Form,
+    Input,
+    Label,
+    Meter,
+    OptionGroup,
+    Option,
+    Output,
+    Progress,
+    Select,
+    TextArea,
+    Button,
+    IFrame,
+    Param,
+    Object,
+    Picture,
+    Portal,
+    Source,
+    Embed,
 };

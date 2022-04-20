@@ -95,7 +95,7 @@ class RecursiveDOM {
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.RENDERING);
 
         // const startTime = new Date().getTime();
-        console.time("Render");
+        if (RecursiveDOM.devMode) console.time("Render");
 
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
         this.oldRender = this.app();
@@ -125,7 +125,7 @@ class RecursiveDOM {
 
         // if (RecursiveDOM.devMode)
         //      console.log(`First paint done in ${new Date().getTime() - startTime}ms`);
-        console.timeEnd("Render");
+        if (RecursiveDOM.devMode) console.timeEnd("Render");
 
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.FREE);
     }
@@ -139,7 +139,7 @@ class RecursiveDOM {
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.UPDATING);
 
         // const startTime = new Date().getTime();
-        console.time("UI Update");
+        if (RecursiveDOM.devMode) console.time("UI Update");
 
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
         const newRender = this.app();
@@ -175,7 +175,7 @@ class RecursiveDOM {
 
         // if (RecursiveDOM.devMode)
         //      console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
-        console.timeEnd("UI Update");
+        if (RecursiveDOM.devMode) console.timeEnd("UI Update");
     }
 
     destroy() {
