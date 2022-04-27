@@ -1,5 +1,6 @@
 import PropList from "../../RecursiveDOM/PropList.js";
 import RecursiveOrchestrator from "../../RecursiveOrchestrator/RecursiveOrchestrator.js";
+import CreateComponent from "../CreateComponent.js";
 
 export default {
     /**
@@ -72,11 +73,21 @@ export default {
     },
     /**
      * Update component's children
-     * @param component old component
-     * @param newComponent new component
-     * @param render rendered htmlElement
+     * @param {CreateComponent} component old component
+     * @param {CreateComponent} newComponent new component
+     * @param {HTMLElement} render rendered htmlElement
      */
     children: (component, newComponent) => {
+        // Check for a missing node element.
+        // rerender the whole component tree if an element is missing
+        for (let i in component.children) {
+            if (!document.contains(component.children[i].domInstance)) {
+                component.$replaceInDOM(newComponent);
+                return;
+            }
+        }
+
+        // Check for mapping
         if (component.map && newComponent.map) {
             for (let key in component.map) {
                 if (!newComponent.map[key]) {
