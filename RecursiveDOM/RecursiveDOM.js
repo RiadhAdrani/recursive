@@ -55,7 +55,8 @@ class RecursiveDOM {
             ]);
         }
 
-        this.root = document.createElement("app-view");
+        this.root = document.createElement("div");
+        this.root.id = "root";
 
         this.domActions = [];
         this.beforeDestroyedQueue = [];

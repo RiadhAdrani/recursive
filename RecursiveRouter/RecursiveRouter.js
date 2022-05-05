@@ -74,7 +74,7 @@ class RecursiveRouter {
      * @returns {JSON} the type of the route, alongside its template if it is `dynamic`.
      */
     isDynamicRoute(route) {
-        const regExp = /:[^:;]*;/;
+        const regExp = /:[^:;]*;/g;
 
         for (let name in this.routes) {
             const template = name.toString();
