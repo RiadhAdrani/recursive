@@ -1,7 +1,11 @@
 import RecursiveCSSOM from "./RecursiveCCSOM/RecursiveCSSOM.js";
 
-const set = (cssobject) => {
+const setStaticStyle = (cssobject) => {
     RecursiveCSSOM.singleton.injectStaticStyle(cssobject);
 };
 
-export { set as setStyle };
+const setStyle = (cssobject) => {
+    RecursiveCSSOM.singleton.addDynamicDeclaration(cssobject);
+};
+
+export { setStaticStyle, setStyle };

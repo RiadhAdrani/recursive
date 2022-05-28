@@ -24,6 +24,7 @@ export default {
         checked: "checked",
         charSet: "charset",
         colSpan: "colSpan",
+        contentEditable: "contenteditable",
 
         data: "data",
         dirName: "dirname",
@@ -628,6 +629,16 @@ export default {
         onVolumeChange: { listener: "volumnechange", on: "onvolumechange" },
         onWaiting: { listener: "waiting", on: "onwaiting" },
         onWheel: { listener: "wheel", on: "onwheel" },
+
+        // Custom & Semi events
+        onClickGlobal: {
+            listener: "clickglobal",
+            on: "onclickglobal",
+            handler: (element) => {
+                if (!window.onclickglobal) window.onclickglobal = [];
+                onclickglobal.push(element);
+            },
+        },
     },
     // Create Component Flags
     Flags: {

@@ -1,6 +1,6 @@
-import StateRegistry from "../RecursiveState/StateRegistry";
-import { throwError } from "../RecursiveDOM/RecursiveError";
-import { findMatch } from "./RecursiveRouter";
+import StateRegistry from "../RecursiveState/StateRegistry.js";
+import { throwError } from "../RecursiveDOM/RecursiveError.js";
+import { findMatch } from "./RecursiveRouter.js";
 
 class RecursiveRouterContext {
     static singleton = new RecursiveRouterContext();

@@ -28,7 +28,9 @@ const createRoute = ({ name, component, title, subRoutes, onLoad, onExit, redire
  * @param {String} title new title
  */
 const setTitle = (title) => {
-    document.title = title;
+    if (document.title != title) {
+        document.title = title;
+    }
 };
 
 export { goTo, createRouter, renderRoute, createRoute as route, getParams, setTitle, getRoute };

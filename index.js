@@ -1,13 +1,11 @@
-import { onError } from "./RecursiveDOM/RecursiveError.js";
 import CustomComponents from "./CreateComponent/CustomComponents.js";
-import * as Router from "./router.js";
 import * as Components from "./components.js";
-import * as State from "./state.js";
-import * as Style from "./style.js";
 import RecursiveDOM from "./RecursiveDOM/RecursiveDOM.js";
+import { setStaticStyle, setStyle } from "./style.js";
+import { setCache, setState, getCache, getState, getRef, updateAfter } from "./state.js";
+import { createRouter, getParams, getRoute, goTo, renderRoute, route, setTitle } from "./router.js";
 import { onFreshLoad } from "./RecursiveRouter/RecursiveRouter.js";
 
-// onError();
 CustomComponents();
 
 /**
@@ -30,4 +28,23 @@ function DevMode(value) {
     RecursiveDOM.devMode = value;
 }
 
-export { Render, DevMode, Router, Components, State, Style };
+export {
+    Render,
+    DevMode,
+    setStaticStyle,
+    setStyle,
+    setCache,
+    setState,
+    getCache,
+    getState,
+    getRef,
+    updateAfter,
+    createRouter,
+    getParams,
+    getRoute,
+    goTo,
+    renderRoute,
+    route,
+    setTitle,
+    Components,
+};

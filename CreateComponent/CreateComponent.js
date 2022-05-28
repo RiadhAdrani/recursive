@@ -1,13 +1,16 @@
 import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
-
 import Init from "./tools/Init.js";
 import Render from "./tools/Render.js";
 import Update from "./tools/Update.js";
 import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
-import { throwError } from "../RecursiveDOM/RecursiveError";
-import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator";
-import RefRegistry from "../RecursiveState/RefRegistry";
-import { endCurrentContext, getContext, startContext } from "../RecursiveContext/RecursiveContext";
+import { throwError } from "../RecursiveDOM/RecursiveError.js";
+import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
+import RefRegistry from "../RecursiveState/RefRegistry.js";
+import {
+    endCurrentContext,
+    getContext,
+    startContext,
+} from "../RecursiveContext/RecursiveContext.js";
 
 /**
  * ## CreateComponent
@@ -53,34 +56,25 @@ class CreateComponent {
 
         this.props = {};
 
+        this.children = [];
+        this.flags = {};
+        this.hooks = {};
+        this.events = {};
+
         this.ref = undefined;
+        this.domInstance = undefined;
+
+        if (this.flags.renderIf == false && this.flags.renderIf != undefined) return;
 
         // props
         if (className) this.className = className;
         if (style) this.style = style;
-        // if (inlineStyle) this.inlineStyle = inlineStyle;
 
         Init.className(this, style);
-
         Init.attributes(this, { ...props, className: this.className });
-
-        // dom instance
-        this.domInstance = undefined;
-
-        // Events
-        this.events = {};
         Init.events(this, events);
-
-        // Lifecycle Hooks
-        this.hooks = {};
         Init.hooks(this, hooks);
-
-        // Rendering Flags
-        this.flags = {};
         Init.flags(this, flags);
-
-        // Children
-        this.children = [];
         Init.children(this, children);
 
         this.map = false;

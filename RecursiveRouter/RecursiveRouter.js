@@ -1,9 +1,9 @@
 import CreateComponent from "../CreateComponent/CreateComponent.js";
 import Route from "./Route.js";
-import SetState from "../RecursiveState/SetState";
-import StateRegistry from "../RecursiveState/StateRegistry";
-import { encapsulateRoute, renderFragment, setParams } from "./RecursiveRouterContext";
-import { pushState, replaceState } from "./RecursiveHistory";
+import SetState from "../RecursiveState/SetState.js";
+import StateRegistry from "../RecursiveState/StateRegistry.js";
+import { encapsulateRoute, renderFragment, setParams } from "./RecursiveRouterContext.js";
+import { pushState, replaceState } from "./RecursiveHistory.js";
 
 /**
  * ### Router
@@ -346,7 +346,11 @@ const renderRoute = () => {
 const onFreshLoad = () => {
     if (window.location.pathname !== "/") {
         if (RecursiveRouter.singleton) {
-            const route = window.location.pathname.substring(RecursiveRouter.singleton.root.length);
+            const route = window.location.pathname.replace(
+                "/" + RecursiveRouter.singleton.root,
+                ""
+            );
+
             const hash = location.hash;
 
             RecursiveRouter.singleton.replaceWith(route, hash);

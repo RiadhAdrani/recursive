@@ -1,4 +1,4 @@
-import RecursiveOrchestrator from "../../RecursiveOrchestrator/RecursiveOrchestrator";
+import RecursiveOrchestrator from "../../RecursiveOrchestrator/RecursiveOrchestrator.js";
 import PropList from "../../RecursiveDOM/PropList.js";
 
 export default {
@@ -40,13 +40,17 @@ export default {
             function addEvent(prop, event) {
                 element.events[prop] = event;
 
-                element.addEventListener(PropList.Events[prop].listener, (e) => {
-                    RecursiveOrchestrator.requestBatchingStart(`event-${prop}`);
+                if (PropList.Events[prop].handler) {
+                    PropList.Events[prop].handler(element);
+                } else {
+                    element.addEventListener(PropList.Events[prop].listener, (e) => {
+                        RecursiveOrchestrator.requestBatchingStart(`event-${prop}`);
 
-                    element.events[prop](e);
+                        element.events[prop](e);
 
-                    RecursiveOrchestrator.requestBatchingEnd(`event-${prop}`);
-                });
+                        RecursiveOrchestrator.requestBatchingEnd(`event-${prop}`);
+                    });
+                }
             }
 
             element.events = {};

@@ -1,80 +1,9 @@
-import PropList from "../../RecursiveDOM/PropList.js";
-import { throwError } from "../../RecursiveDOM/RecursiveError.js";
+import CreateComponent from "@riadh-adrani/recursive/CreateComponent/CreateComponent.js";
 
 export default {
     /**
-     * Push styles, animations and media queries into the Virtual DOM to be processed and then applied.
-     * @param component this (can't be called outside CreateComponent)
-     */
-    // applySheet: (component) => {
-    //      if (!RecursiveDOM) ThrowStyleError("RecursiveDOM is not initialized.");
-
-    //      if (component.style) {
-    //           if (component.style.className) {
-    //                const styleObject = (selector, content) => {
-    //                     return {
-    //                          selector: `.${component.style.className.trim()}${selector.trim()}`,
-    //                          content: content,
-    //                     };
-    //                };
-
-    //                if (component.style.mediaQueries) {
-    //                     RecursiveDOM.style.mediaQueries.push({
-    //                          queries: component.style.mediaQueries,
-    //                          className: component.style.className,
-    //                     });
-    //                }
-
-    //                if (component.style.animations) {
-    //                     component.style.animations.forEach((animation) => {
-    //                          RecursiveDOM.style.animations.push(animation);
-    //                     });
-    //                }
-
-    //                for (var selector in component.style) {
-    //                     if (
-    //                          selector === "mediaQueries" ||
-    //                          selector === "animations" ||
-    //                          selector === "className" ||
-    //                          selector === "scoped"
-    //                     )
-    //                          continue;
-
-    //                     if (PropList.CssSelectors[selector] || selector === "normal") {
-    //                          RecursiveDOM.style.selectors.push(
-    //                               styleObject(
-    //                                    PropList.CssSelectors[selector],
-    //                                    component.style[selector]
-    //                               )
-    //                          );
-    //                     } else {
-    //                          throwError(
-    //                               `${selector} is not a valid CSS selector, or is still not implemented in the library.`,
-    //                               [
-    //                                    "List of accepted selectors could be found here : https://github.com/RiadhAdrani/recursive/blob/6ca1c1bd2762d26a97f32b36507ef95bd7b85a84/RecursiveDOM/PropList.js#L652 .",
-    //                               ]
-    //                          );
-    //                     }
-    //                }
-    //           } else {
-    //                throwError("className is missing from the styleSheet.", [
-    //                     "styleSheet property need a className to generate component style.",
-    //                     "Add className with a meaningful (and unique if needed) value.",
-    //                ]);
-    //           }
-    //      }
-
-    //      if (component.children) {
-    //           component.children.forEach((child) => {
-    //                if (child.render) {
-    //                     child.addExternalStyle();
-    //                }
-    //           });
-    //      }
-    // },
-    /**
-     * @param {JSON} newComponent new component
-     * @param {JSON} component current component
+     * @param {CreateComponent} newComponent new component
+     * @param {CreateComponent} component current component
      */
     updateInline: (component, newComponent) => {
         let didUpdate = false;

@@ -1,4 +1,4 @@
-import { getRoot } from "./RecursiveRouter";
+import { getRoot } from "./RecursiveRouter.js";
 
 class RecursiveHistory {
     static singleton = new RecursiveHistory();
@@ -19,6 +19,11 @@ class RecursiveHistory {
         history.replaceState({ route }, title, this.makeURL(path));
     }
 
+    /**
+     *
+     * @param {String} path route segment
+     * @returns
+     */
     makeURL(path) {
         let url = `${location.origin}/`;
 
@@ -26,7 +31,7 @@ class RecursiveHistory {
             url += `${getRoot()}/`;
         }
 
-        if (path[0] == "/") {
+        if (path.charAt(0) == "/") {
             url += path.slice(1);
         } else {
             url += path;

@@ -1,6 +1,6 @@
 import { goTo } from "./RecursiveRouter/RecursiveRouter.js";
 import CreateComponent from "./CreateComponent/CreateComponent.js";
-import { makeURL } from "./RecursiveRouter/RecursiveHistory";
+import { makeURL } from "./RecursiveRouter/RecursiveHistory.js";
 
 /**
  * ## EmbedExternalView `<embed>`
@@ -17,10 +17,24 @@ import { makeURL } from "./RecursiveRouter/RecursiveHistory";
  */
 const Embed =
     () =>
-    ({ style, id, draggable, height, src, type, width, className, key, events, hooks, flags }) =>
+    ({
+        style,
+        id,
+        contentEditable,
+        draggable,
+        height,
+        src,
+        type,
+        width,
+        className,
+        key,
+        events,
+        hooks,
+        flags,
+    }) =>
         new CreateComponent({
             tag: "embed",
-            props: { id, draggable, height, src, type, width },
+            props: { id, contentEditable, draggable, height, src, type, width },
             className: className,
             key,
             events: events,
@@ -49,6 +63,7 @@ const Embed =
 const Source = ({
     style,
     id,
+    contentEditable,
     draggable,
     media,
     sizes,
@@ -63,7 +78,7 @@ const Source = ({
 }) =>
     new CreateComponent({
         tag: "source",
-        props: { id, draggable, media, sizes, src, srcSet, type },
+        props: { id, contentEditable, draggable, media, sizes, src, srcSet, type },
         className: className,
         key,
         events: events,
@@ -85,6 +100,7 @@ const Source = ({
 const Portal = ({
     style,
     id,
+    contentEditable,
     draggable,
     referrerPolicy,
     src,
@@ -96,7 +112,7 @@ const Portal = ({
 }) =>
     new CreateComponent({
         tag: "portal",
-        props: { id, draggable, referrerPolicy, src },
+        props: { id, contentEditable, draggable, referrerPolicy, src },
         className: className,
         key,
         events: events,
@@ -118,11 +134,22 @@ const Portal = ({
  * a nested browsing context, or a resource to be handled by a plugin.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/picture
  */
-const Picture = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
+const Picture = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         children,
         tag: "picture",
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -150,6 +177,7 @@ const Picture = ({ children, style, id, draggable, className, key, events, hooks
 const Object = ({
     style,
     id,
+    contentEditable,
     draggable,
     className,
     key,
@@ -166,7 +194,7 @@ const Object = ({
 }) =>
     new CreateComponent({
         tag: "object",
-        props: { id, draggable, data, form, height, name, type, useMap, width },
+        props: { id, contentEditable, draggable, data, form, height, name, type, useMap, width },
         className: className,
         key,
         events: events,
@@ -184,11 +212,23 @@ const Object = ({
  * @param param.value Specifies the value of the parameter.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/param
  */
-const Param = ({ style, id, draggable, name, value, className, key, events, hooks, flags }) =>
+const Param = ({
+    style,
+    id,
+    contentEditable,
+    draggable,
+    name,
+    value,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "param",
         renderIf,
-        props: { id, draggable, name, value },
+        props: { id, contentEditable, draggable, name, value },
         className: className,
         key,
         events: events,
@@ -217,6 +257,7 @@ const IFrame = ({
     children,
     style,
     id,
+    contentEditable,
     draggable,
     allow,
     allowFullScreen,
@@ -240,6 +281,7 @@ const IFrame = ({
         tag: "iframe",
         props: {
             id,
+            contentEditable,
             draggable,
             allow,
             allowFullScreen,
@@ -292,6 +334,7 @@ const Button = ({
     text,
     style,
     id,
+    contentEditable,
     draggable,
     autofocus,
     disabled,
@@ -315,6 +358,7 @@ const Button = ({
         tag: "button",
         props: {
             id,
+            contentEditable,
             draggable,
             autofocus,
             disabled,
@@ -364,6 +408,7 @@ const TextArea = ({
     value,
     style,
     id,
+    contentEditable,
     draggable,
     autoComplete,
     autofocus,
@@ -391,6 +436,7 @@ const TextArea = ({
         props: {
             value,
             id,
+            contentEditable,
             draggable,
             autoComplete,
             autofocus,
@@ -436,6 +482,7 @@ const Select = ({
     children,
     style,
     id,
+    contentEditable,
     draggable,
     autoComplete,
     autofocus,
@@ -455,6 +502,7 @@ const Select = ({
         tag: "select",
         props: {
             id,
+            contentEditable,
             draggable,
             autoComplete,
             autofocus,
@@ -486,6 +534,7 @@ const Progress = ({
     text,
     style,
     id,
+    contentEditable,
     draggable,
     className,
     key,
@@ -498,7 +547,7 @@ const Progress = ({
     new CreateComponent({
         children: text,
         tag: "progress",
-        props: { id, draggable, max, value },
+        props: { id, contentEditable, draggable, max, value },
         className: className,
         key,
         events: events,
@@ -523,6 +572,7 @@ const Output = ({
     text,
     style,
     id,
+    contentEditable,
     draggable,
     isFor,
     form,
@@ -536,7 +586,7 @@ const Output = ({
     new CreateComponent({
         children: text,
         tag: "output",
-        props: { id, draggable, isFor, form, name },
+        props: { id, contentEditable, draggable, isFor, form, name },
         className: className,
         key,
         events: events,
@@ -562,6 +612,7 @@ const Option = ({
     text,
     style,
     id,
+    contentEditable,
     draggable,
     className,
     key,
@@ -576,7 +627,7 @@ const Option = ({
     new CreateComponent({
         children: text,
         tag: "option",
-        props: { id, draggable, disabled, label, selected, value },
+        props: { id, contentEditable, draggable, disabled, label, selected, value },
         className: className,
         key,
         events: events,
@@ -602,6 +653,7 @@ const OptionGroup = ({
     children,
     style,
     id,
+    contentEditable,
     draggable,
     disabled,
     label,
@@ -614,7 +666,7 @@ const OptionGroup = ({
     new CreateComponent({
         children,
         tag: "optgroup",
-        props: { id, draggable, disabled, label },
+        props: { id, contentEditable, draggable, disabled, label },
         className: className,
         key,
         events: events,
@@ -640,6 +692,7 @@ const OptionGroup = ({
 const Meter = ({
     style,
     id,
+    contentEditable,
     draggable,
     className,
     key,
@@ -656,7 +709,7 @@ const Meter = ({
 }) =>
     new CreateComponent({
         tag: "meter",
-        props: { id, draggable, value, min, max, low, high, optimum, form },
+        props: { id, contentEditable, draggable, value, min, max, low, high, optimum, form },
         className: className,
         key,
         events: events,
@@ -670,16 +723,28 @@ const Meter = ({
  * *from MDN Docs*
  * ### The Input Label element
  * The ``<label>`` HTML element represents a caption for an item in a user interface.
- * @param param.for The value of the for attribute must be a single id, draggable
+ * @param param.for The value of the for attribute must be a single id, contentEditable, draggable
  * for a labelable form-related element in the same document as the ``<label>`` element.
  * So, any given label element can be associated with only one form control.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label
  */
-const Label = ({ text, style, id, draggable, isFor, className, key, events, hooks, flags }) =>
+const Label = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    isFor,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         children: text,
         tag: "label",
-        props: { id, draggable, isFor },
+        props: { id, contentEditable, draggable, isFor },
         className: className,
         key,
         events: events,
@@ -728,6 +793,7 @@ const Label = ({ text, style, id, draggable, isFor, className, key, events, hook
 const Input = ({
     style,
     id,
+    contentEditable,
     draggable,
     className,
     key,
@@ -771,6 +837,7 @@ const Input = ({
         tag: "input",
         props: {
             id,
+            contentEditable,
             draggable,
             type,
             accept,
@@ -834,6 +901,7 @@ const Form = ({
     children,
     style,
     id,
+    contentEditable,
     draggable,
     acceptCharSet,
     autoComplete,
@@ -855,6 +923,7 @@ const Form = ({
         tag: "form",
         props: {
             id,
+            contentEditable,
             draggable,
             acceptCharSet,
             autoComplete,
@@ -883,7 +952,7 @@ const Form = ({
  * @param param.disabled If this Boolean attribute is set,
  * all form controls that are descendants of the ``<fieldset>``,
  * are disabled, meaning they are not editable and won't be submitted along with the ``<form>.``
- * @param param.form This attribute takes the value of the id, draggable attribute of a ``<form>`` element
+ * @param param.form This attribute takes the value of the id, contentEditable, draggable attribute of a ``<form>`` element
  * you want the ``<fieldset>`` to be part of, even if it is not inside the form.
  * @param param.name The name associated with the group.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset
@@ -892,6 +961,7 @@ const FieldSet = ({
     children,
     style,
     id,
+    contentEditable,
     draggable,
     disabled,
     form,
@@ -905,7 +975,7 @@ const FieldSet = ({
     new CreateComponent({
         children,
         tag: "fieldset",
-        props: { id, draggable, disabled, form, name },
+        props: { id, contentEditable, draggable, disabled, form, name },
         className: className,
         key,
         events: events,
@@ -922,11 +992,22 @@ const FieldSet = ({
  * the permissible or recommended options available to choose from within other controls.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist
  */
-const DataList = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
+const DataList = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         children,
         tag: "datalist",
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -945,11 +1026,23 @@ const DataList = ({ children, style, id, draggable, className, key, events, hook
  * @param param.title contain a full human-readable description or expansion of the abbreviation
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr
  */
-const Abbr = ({ text, title, style, id, draggable, className, key, events, hooks, flags }) =>
+const Abbr = ({
+    text,
+    title,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "abbr",
         children: text,
-        props: { title, id, draggable },
+        props: { title, id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -967,11 +1060,22 @@ const Abbr = ({ text, title, style, id, draggable, className, key, events, hooks
  * though its line-breaking rules would not otherwise create a break at that location.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/wbr
  */
-const Wbr = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Wbr = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "wbr",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -990,11 +1094,22 @@ const Wbr = ({ text, style, id, draggable, className, key, events, hooks, flags 
  * although that behavior is browser-dependent.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/var
  */
-const Var = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Var = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "var",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1012,11 +1127,11 @@ const Var = ({ text, style, id, draggable, className, key, events, hooks, flags 
  * This is rendered by default as a simple solid underline, but may be altered using CSS.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/u
  */
-const U = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const U = ({ text, style, id, contentEditable, draggable, className, key, events, hooks, flags }) =>
     new CreateComponent({
         tag: "u",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1034,11 +1149,22 @@ const U = ({ text, style, id, draggable, className, key, events, hooks, flags })
  * Superscripts are usually rendered with a raised baseline using smaller text
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sup
  */
-const Sup = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Sup = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "sup",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1056,11 +1182,22 @@ const Sup = ({ text, style, id, draggable, className, key, events, hooks, flags 
  * Subscripts are typically rendered with a lowered baseline using smaller text.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sub
  */
-const Sub = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Sub = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "sub",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1077,11 +1214,22 @@ const Sub = ({ text, style, id, draggable, className, key, events, hooks, flags 
  * Browsers typically render the contents in bold type.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong
  */
-const Strong = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Strong = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "strong",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1101,11 +1249,11 @@ const Strong = ({ text, style, id, draggable, className, key, events, hooks, fla
  * for that, use the ``<del>`` and ``<ins>`` elements, as appropriate.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/s
  */
-const S = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const S = ({ text, style, id, contentEditable, draggable, className, key, events, hooks, flags }) =>
     new CreateComponent({
         tag: "s",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1120,18 +1268,29 @@ const S = ({ text, style, id, draggable, className, key, events, hooks, flags })
  * ### The Content Span element
  * The ``<span>`` HTML element is a generic inline container for phrasing content,
  * which does not inherently represent anything.
- * It can be used to group elements for styling purposes (using the class or id, draggable attributes),
+ * It can be used to group elements for styling purposes (using the class or id, contentEditable, draggable attributes),
  * or because they share attribute values, such as lang.
  * It should be used only when no other semantic element is appropriate.
  * ``<span>`` is very much like a ``<div>`` element,
  * but ``<div>`` is a block-level element whereas a ``<span>`` is an inline element.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/span
  */
-const Span = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Span = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "span",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1149,11 +1308,22 @@ const Span = ({ text, style, id, draggable, className, key, events, hooks, flags
  * By default, it renders text within it one font-size smaller, such as from small to x-small.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small
  */
-const Small = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Small = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "small",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1172,11 +1342,22 @@ const Small = ({ text, style, id, draggable, className, key, events, hooks, flag
  * the browser's default monospaced font (such as Courier or Lucida Console).
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/samp
  */
-const Samp = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Samp = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "samp",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1194,11 +1375,22 @@ const Samp = ({ text, style, id, draggable, className, key, events, hooks, flags
  * It can also be used for annotating other kinds of text, but this usage is less common.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ruby
  */
-const Ruby = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Ruby = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "ruby",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1217,11 +1409,22 @@ const Ruby = ({ text, style, id, draggable, className, key, events, hooks, flags
  * The ``<rt>`` element must always be contained within a <ruby> element.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/rt
  */
-const Rt = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Rt = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "rt",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1240,11 +1443,22 @@ const Rt = ({ text, style, id, draggable, className, key, events, hooks, flags }
  * that wrap the <rt> element that contains the annotation's text.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/rp
  */
-const Rp = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Rp = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "rp",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1266,11 +1480,23 @@ const Rp = ({ text, style, id, draggable, className, key, events, hooks, flags }
  * explaining the context or the reference for the quote.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/q
  */
-const Q = ({ text, style, id, draggable, cite, className, key, events, hooks, flags }) =>
+const Q = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    cite,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "q",
         children: text,
-        props: { id, draggable, cite },
+        props: { id, contentEditable, draggable, cite },
         className: className,
         key,
         events: events,
@@ -1287,11 +1513,22 @@ const Q = ({ text, style, id, draggable, cite, className, key, events, hooks, fl
  * due to the marked passage's relevance or importance in the enclosing context.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/mark
  */
-const Mark = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Mark = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "mark",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1311,12 +1548,25 @@ const Mark = ({ text, style, id, draggable, className, key, events, hooks, flags
  * If the href attribute is present, pressing the enter key while focused on the ``<a>`` element will activate it.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a
  */
-const Link = ({ children, style, to, id, draggable, className, key, events, hooks, flags }) =>
+const Link = ({
+    children,
+    style,
+    to,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "a",
         children: children,
         props: {
             id,
+            contentEditable,
             draggable,
             href: makeURL(to),
         },
@@ -1348,10 +1598,10 @@ const Link = ({ children, style, to, id, draggable, className, key, events, hook
  * It is useful for writing a poem or an address, where the division of lines is significant.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/br
  */
-const Br = ({ style, id, draggable, className, key, events, hooks, flags }) =>
+const Br = ({ style, id, contentEditable, draggable, className, key, events, hooks, flags }) =>
     new CreateComponent({
         tag: "br",
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1370,11 +1620,22 @@ const Br = ({ style, id, draggable, className, key, events, hooks, flags }) =>
  * using its default monospace font, although this is not mandated by the HTML standard.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd
  */
-const Kdb = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Kdb = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "kdb",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1393,11 +1654,11 @@ const Kdb = ({ text, style, id, draggable, className, key, events, hooks, flags 
  * which is the original source of the ``<i>`` naming of this element.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i
  */
-const I = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const I = ({ text, style, id, contentEditable, draggable, className, key, events, hooks, flags }) =>
     new CreateComponent({
         tag: "i",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1414,11 +1675,22 @@ const I = ({ text, style, id, draggable, className, key, events, hooks, flags })
  * The ``<em>`` element can be nested, with each level of nesting indicating a greater degree of emphasis.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em
  */
-const Em = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Em = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "em",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1437,11 +1709,23 @@ const Em = ({ text, style, id, draggable, className, key, events, hooks, flags }
  * which is the nearest ancestor of the ``<dfn>`` is considered to be the definition of the term.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dfn
  */
-const Dfn = ({ text, style, id, draggable, title, className, key, events, hooks, flags }) =>
+const Dfn = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    title,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "dfn",
         children: text,
-        props: { id, draggable, title },
+        props: { id, contentEditable, draggable, title },
         className: className,
         key,
         events: events,
@@ -1458,11 +1742,23 @@ const Dfn = ({ text, style, id, draggable, title, className, key, events, hooks,
  * @param param.value This attribute specifies the machine-readable translation of the content of the element.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/data
  */
-const Data = ({ text, style, value, id, draggable, className, key, events, hooks, flags }) =>
+const Data = ({
+    text,
+    style,
+    value,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "data",
         children: text,
-        props: { id, draggable, value },
+        props: { id, contentEditable, draggable, value },
         className: className,
         key,
         events: events,
@@ -1480,11 +1776,22 @@ const Data = ({ text, style, value, id, draggable, className, key, events, hooks
  * By default, the content text is displayed using the user agent's default monospace font.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/code
  */
-const Code = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Code = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "code",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1503,11 +1810,22 @@ const Code = ({ text, style, id, draggable, className, key, events, hooks, flags
  * related to citation metadata.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/cite
  */
-const Cite = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Cite = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "cite",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1529,11 +1847,22 @@ const Cite = ({ text, style, id, draggable, className, key, events, hooks, flags
  * or the ``<strong>`` element to indicate that text is of special importance.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b
  */
-const B = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
+const B = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "b",
         children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1550,11 +1879,23 @@ const B = ({ children, style, id, draggable, className, key, events, hooks, flag
  * so that the text within is rendered in a different direction.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdo
  */
-const Bdo = ({ text, style, id, draggable, direction, className, key, events, hooks, flags }) =>
+const Bdo = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    direction,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "bdo",
         children: text,
-        props: { dir: direction, id, draggable },
+        props: { dir: direction, id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1573,11 +1914,23 @@ const Bdo = ({ text, style, id, draggable, direction, className, key, events, ho
  * and doesn't know the directionality of the text being inserted.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdi
  */
-const Bdi = ({ text, style, id, draggable, direction, className, key, events, hooks, flags }) =>
+const Bdi = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    direction,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "bdi",
         children: text,
-        props: { dir: direction, id, draggable },
+        props: { dir: direction, id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1611,7 +1964,7 @@ const Bdi = ({ text, style, id, draggable, direction, className, key, events, ho
  * @param param.type Hints at the linked URL’s format with a MIME type. No built-in functionality.
  * @param param.charSet **deprecated** Hinted at the character encoding of the linked URL.
  * @param param.name **deprecated** Was required to define a possible target location in a page. In HTML 4.01,
- * id, draggable and name could both be used on ``<a>``, as long as they had identical values.
+ * id, contentEditable, draggable and name could both be used on ``<a>``, as long as they had identical values.
  * @param param.rev **deprecated** Specified a reverse link; the opposite of the rel attribute.
  * Deprecated for being very confusing.
  * @param param.shape **deprecated** The shape of the hyperlink’s region in an image map.
@@ -1621,6 +1974,7 @@ const A = ({
     children,
     style,
     id,
+    contentEditable,
     draggable,
     download,
     href,
@@ -1646,6 +2000,7 @@ const A = ({
         children: children,
         props: {
             id,
+            contentEditable,
             draggable,
             download,
             href,
@@ -1686,11 +2041,23 @@ const A = ({
  * By default this attribute is absent which means the details are not visible
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details
  */
-const Details = ({ children, style, id, draggable, open, className, key, events, hooks, flags }) =>
+const Details = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    open,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         children,
         tag: "details",
-        props: { id, draggable, open },
+        props: { id, contentEditable, draggable, open },
         className: className,
         key,
         events: events,
@@ -1707,11 +2074,22 @@ const Details = ({ children, style, id, draggable, open, className, key, events,
  * Clicking the ``<summary>`` element toggles the state of the parent`` <details>`` element open and closed.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/summary
  */
-const Summary = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const Summary = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         children: text,
         tag: "summary",
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -1760,6 +2138,7 @@ const Area = ({
     children,
     style,
     id,
+    contentEditable,
     draggable,
     alt,
     coords,
@@ -1782,6 +2161,7 @@ const Area = ({
         children,
         props: {
             id,
+            contentEditable,
             draggable,
             alt,
             coords,
@@ -1838,6 +2218,7 @@ const Video = ({
     children,
     style,
     id,
+    contentEditable,
     draggable,
     autoplay,
     controls,
@@ -1861,6 +2242,7 @@ const Video = ({
         tag: "video",
         props: {
             id,
+            contentEditable,
             draggable,
             autoplay,
             controls,
@@ -1905,6 +2287,7 @@ const Video = ({
 const Track = ({
     style,
     id,
+    contentEditable,
     draggable,
     defaultTrack,
     kind,
@@ -1919,7 +2302,7 @@ const Track = ({
 }) =>
     new CreateComponent({
         tag: "track",
-        props: { id, draggable, kind, label, src, srcLang, default: defaultTrack },
+        props: { id, contentEditable, draggable, kind, label, src, srcLang, default: defaultTrack },
         className: className,
         key,
         events: events,
@@ -1937,14 +2320,26 @@ const Track = ({
  * The attribute must be present and must have a non-empty value with no space characters.
  * The value of the name attribute must not be equal to the value of the name attribute of another
  * ``<map>`` element in the same document.
- * If the id, draggable attribute is also specified, both attributes must have the same value.
+ * If the id, contentEditable, draggable attribute is also specified, both attributes must have the same value.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/map
  */
-const Map = ({ text, style, id, draggable, name, className, key, events, hooks, flags }) =>
+const Map = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    name,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "map",
         children: text,
-        props: { id, draggable, name },
+        props: { id, contentEditable, draggable, name },
         className: className,
         key,
         events: events,
@@ -1979,6 +2374,7 @@ const Map = ({ text, style, id, draggable, name, className, key, events, hooks, 
 const Img = ({
     style,
     id,
+    contentEditable,
     draggable,
     alt,
     crossOrigin,
@@ -1991,6 +2387,7 @@ const Img = ({
     srcSet,
     width,
     useMap,
+    loading = "lazy",
     className,
     key,
     events,
@@ -2001,6 +2398,7 @@ const Img = ({
         tag: "img",
         props: {
             id,
+            contentEditable,
             draggable,
             alt,
             crossOrigin,
@@ -2013,6 +2411,7 @@ const Img = ({
             srcSet,
             width,
             useMap,
+            loading,
         },
         className: className,
         key,
@@ -2050,6 +2449,7 @@ const Audio = ({
     children,
     style,
     id,
+    contentEditable,
     draggable,
     autoplay,
     controls,
@@ -2067,7 +2467,18 @@ const Audio = ({
     new CreateComponent({
         tag: "audio",
         children,
-        props: { id, draggable, autoplay, controls, crossOrigin, loop, muted, preload, src },
+        props: {
+            id,
+            contentEditable,
+            draggable,
+            autoplay,
+            controls,
+            crossOrigin,
+            loop,
+            muted,
+            preload,
+            src,
+        },
         className: className,
         key,
         events: events,
@@ -2083,11 +2494,22 @@ const Audio = ({
  * The `address` HTML element indicates that the enclosed HTML provides contact information for a person or people, or for an organization.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address
  */
-const Address = ({ children, style, id, draggable, className, key, events, hooks, flags }) => {
+const Address = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) => {
     return new CreateComponent({
         tag: "address",
         children: children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2104,11 +2526,22 @@ const Address = ({ children, style, id, draggable, className, key, events, hooks
  * The ``<section>`` HTML element represents a generic standalone section of a document, which doesn't have a more specific semantic element to represent it. Sections should always have a heading, with very few exceptions.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/section
  */
-const Section = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
+const Section = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         tag: "section",
         children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className,
         key,
         events,
@@ -2124,11 +2557,22 @@ const Section = ({ children, style, id, draggable, className, key, events, flags
  * The ``<nav>`` HTML element represents a section of a page whose purpose is to provide navigation links, either within the current document or to other documents. Common examples of navigation sections are menus, tables of contents, and indexes.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/nav
  */
-const Nav = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
+const Nav = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         tag: "nav",
         children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className,
         key,
         events,
@@ -2143,11 +2587,22 @@ const Nav = ({ children, style, id, draggable, className, key, events, flags, ho
  * The ``<main>`` HTML element represents the dominant content of the <body> of a document. The main content area consists of content that is directly related to or expands upon the central topic of a document, or the central functionality of an application.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/main
  */
-const Main = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
+const Main = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         tag: "main",
         children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className,
         key,
         events,
@@ -2163,11 +2618,22 @@ const Main = ({ children, style, id, draggable, className, key, events, flags, h
  * The `<h1>` to `<h6>` HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
-const H6 = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
+const H6 = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         tag: "h6",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2183,11 +2649,22 @@ const H6 = ({ text, style, id, draggable, className, key, events, flags, hooks }
  * The `<h1>` to `<h6>` HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
-const H5 = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
+const H5 = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         tag: "h5",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2203,11 +2680,22 @@ const H5 = ({ text, style, id, draggable, className, key, events, flags, hooks }
  * The `<h1>` to `<h6>` HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
-const H4 = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
+const H4 = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         tag: "h4",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2223,11 +2711,22 @@ const H4 = ({ text, style, id, draggable, className, key, events, flags, hooks }
  * The `<h1>` to `<h6>` HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
-const H3 = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
+const H3 = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         tag: "h3",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2243,11 +2742,22 @@ const H3 = ({ text, style, id, draggable, className, key, events, flags, hooks }
  * The `<h1>` to `<h6>` HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
-const H2 = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const H2 = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "h2",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2263,11 +2773,22 @@ const H2 = ({ text, style, id, draggable, className, key, events, hooks, flags }
  * The `<h1>` to `<h6>` HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
-const H1 = ({ text, style, id, draggable, className, key, events, hooks, flags }) =>
+const H1 = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "h1",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2284,11 +2805,22 @@ const H1 = ({ text, style, id, draggable, className, key, events, hooks, flags }
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
  */
 
-const Header = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
+const Header = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "header",
         children: children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2304,11 +2836,22 @@ const Header = ({ children, style, id, draggable, className, key, events, hooks,
  * The ``<footer>`` HTML element represents a footer for its nearest sectioning content or sectioning root element. A <footer> typically contains information about the author of the section, copyright data or links to related documents.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/footer
  */
-const Footer = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
+const Footer = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "footer",
         children: children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2324,11 +2867,22 @@ const Footer = ({ children, style, id, draggable, className, key, events, hooks,
  * The ``<aside>`` HTML element represents a portion of a document whose content is only indirectly related to the document's main content. Asides are frequently presented as sidebars or call-out boxes.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/aside
  */
-const Aside = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
+const Aside = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "aside",
         children: children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2344,11 +2898,22 @@ const Aside = ({ children, style, id, draggable, className, key, events, hooks, 
  * The `article` HTML element represents a self-contained composition in a document, page, application, or site, which is intended to be independently distributable or reusable (e.g., in syndication). Examples include: a forum post, a magazine or newspaper article, or a blog entry, a product card, a user-submitted comment, an interactive widget or gadget, or any other independent item of content.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/article
  */
-const Article = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
+const Article = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "article",
         children: children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2365,11 +2930,22 @@ const Article = ({ children, style, id, draggable, className, key, events, hooks
  * indicating that they comprise the body of the table (``<table>``).
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody
  */
-const Tbody = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
+const Tbody = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         children,
         tag: "tbody",
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2386,11 +2962,22 @@ const Tbody = ({ children, style, id, draggable, className, key, events, flags, 
  * information presented in a two-dimensional table comprised of rows and columns of cells containing data.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table
  */
-const Table = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
+const Table = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         children,
         tag: "table",
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2407,11 +2994,22 @@ const Table = ({ children, style, id, draggable, className, key, events, flags, 
  * The row's cells can then be established using a mix of ``<td>`` (data cell) and ``<th>`` (header cell) elements.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tr
  */
-const Tr = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
+const Tr = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         tag: "tr",
         children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2427,11 +3025,22 @@ const Tr = ({ children, style, id, draggable, className, key, events, flags, hoo
  * The ``<thead>`` HTML element defines a set of rows defining the head of the columns of the table.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/thead
  */
-const Thead = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
+const Thead = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         children,
         tag: "thead",
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2449,7 +3058,7 @@ const Thead = ({ children, style, id, draggable, className, key, events, flags, 
  * @param param.abbreviation This attribute contains a short abbreviated description of the cell's content.
  * @param param.colSpan This attribute contains a non-negative integer value that indicates for how many columns the cell extends.
  * @param param.headers This attribute contains a list of space-separated strings,
- * each corresponding to the id, draggable attribute of the ``<th>`` elements that apply to this element.
+ * each corresponding to the id, contentEditable, draggable attribute of the ``<th>`` elements that apply to this element.
  * @param param.rowSpan This attribute contains a non-negative integer value that indicates for how many rows the cell extends.
  * @param param.scope This enumerated attribute defines the cells that the header (defined in the ``<th>``) element relates to.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th
@@ -2463,6 +3072,7 @@ const Th = ({
     rowSpan,
     scope,
     id,
+    contentEditable,
     draggable,
     className,
     key,
@@ -2473,7 +3083,7 @@ const Th = ({
     new CreateComponent({
         children,
         tag: "th",
-        props: { id, draggable, abbreviation, colSpan, headers, rowSpan, scope },
+        props: { id, contentEditable, draggable, abbreviation, colSpan, headers, rowSpan, scope },
         className: className,
         key,
         events: events,
@@ -2489,11 +3099,22 @@ const Th = ({
  * The ``<tfoot>`` HTML element defines a set of rows summarizing the columns of the table.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tfoot
  */
-const Tfoot = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
+const Tfoot = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         children,
         tag: "tfoot",
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2514,11 +3135,23 @@ const Tfoot = ({ children, style, id, draggable, className, key, events, flags, 
  * If not present, its default value is 1.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col
  */
-const Col = ({ children, style, id, draggable, span, className, key, events, hooks, flags }) =>
+const Col = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    span,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         children,
         tag: "col",
-        props: { id, draggable, span },
+        props: { id, contentEditable, draggable, span },
         className: className,
         key,
         events: events,
@@ -2536,11 +3169,23 @@ const Col = ({ children, style, id, draggable, span, className, key, events, hoo
  * consecutive columns the ``<colgroup>`` element spans.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/colgroup
  */
-const ColGroup = ({ children, style, id, draggable, span, className, key, events, hooks, flags }) =>
+const ColGroup = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    span,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         children,
         tag: "colgroup",
-        props: { id, draggable, span },
+        props: { id, contentEditable, draggable, span },
         className: className,
         key,
         events: events,
@@ -2557,7 +3202,7 @@ const ColGroup = ({ children, style, id, draggable, span, className, key, events
  * It participates in the table model.
  * @param param.colSpan This attribute contains a non-negative integer value that indicates for how many columns the cell extends.
  * @param param.headers This attribute contains a list of space-separated strings,
- * each corresponding to the id, draggable attribute of the ``<th>`` elements that apply to this element.
+ * each corresponding to the id, contentEditable, draggable attribute of the ``<th>`` elements that apply to this element.
  * @param param.rowSpan This attribute contains a non-negative integer value that indicates for how many rows the cell extends.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td
  */
@@ -2565,6 +3210,7 @@ const Td = ({
     children,
     style,
     id,
+    contentEditable,
     draggable,
     colSpan,
     headers,
@@ -2578,7 +3224,7 @@ const Td = ({
     new CreateComponent({
         children,
         tag: "td",
-        props: { id, draggable, colSpan, headers, rowSpan },
+        props: { id, contentEditable, draggable, colSpan, headers, rowSpan },
         className: className,
         key,
         events: events,
@@ -2594,11 +3240,22 @@ const Td = ({
  * The ``<caption>`` HTML element specifies the caption (or title) of a table.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption
  */
-const Caption = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
+const Caption = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         children: text,
         tag: "caption",
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2615,11 +3272,23 @@ const Caption = ({ text, style, id, draggable, className, key, events, flags, ho
  * @param param.cite A URL that designates a source document or message for the information quoted. This attribute is intended to point to information explaining the context or the reference for the quote.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote
  */
-const BlockQuote = ({ text, cite, style, id, draggable, className, key, events, flags, hooks }) =>
+const BlockQuote = ({
+    text,
+    cite,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         tag: "blockquote",
         children: text,
-        props: { cite, id, draggable },
+        props: { cite, id, contentEditable, draggable },
         className: className,
         key,
         events: events,
@@ -2649,6 +3318,7 @@ const Ul = ({
     key,
     events,
     id,
+    contentEditable,
     draggable,
     hooks,
     type,
@@ -2662,7 +3332,7 @@ const Ul = ({
         className,
         key,
         events,
-        props: { id, draggable, type, compact },
+        props: { id, contentEditable, draggable, type, compact },
         hooks,
         flags,
     });
@@ -2692,6 +3362,7 @@ const Pre = ({
     children,
     style,
     id,
+    contentEditable,
     draggable,
     className,
     key,
@@ -2705,7 +3376,7 @@ const Pre = ({
     new CreateComponent({
         tag: "pre",
         children: children,
-        props: { id, draggable, cols, width, wrap },
+        props: { id, contentEditable, draggable, cols, width, wrap },
         className: className,
         key,
         events: events,
@@ -2727,7 +3398,7 @@ const Pre = ({
  * if another block-level element is parsed before the closing ``</p>`` tag.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
  */
-const P = ({ text, className, key, id, draggable, events, style, flags, hooks }) =>
+const P = ({ text, className, key, id, contentEditable, draggable, events, style, flags, hooks }) =>
     new CreateComponent({
         tag: "p",
         children: text,
@@ -2735,7 +3406,7 @@ const P = ({ text, className, key, id, draggable, events, style, flags, hooks })
         events: events,
         className: className,
         key,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         hooks,
         flags,
     });
@@ -2762,6 +3433,7 @@ const Ol = ({
     key,
     events,
     id,
+    contentEditable,
     draggable,
     hooks,
     reversed,
@@ -2777,8 +3449,9 @@ const Ol = ({
         key,
         events,
         id,
+        contentEditable,
         draggable,
-        props: { id, draggable, reversed, start, type },
+        props: { id, contentEditable, draggable, reversed, start, type },
         hooks,
         flags,
     });
@@ -2810,6 +3483,7 @@ const Li = ({
     key,
     events,
     id,
+    contentEditable,
     draggable,
     hooks,
     value,
@@ -2823,7 +3497,7 @@ const Li = ({
         className,
         key,
         events,
-        props: { id, draggable, value, type },
+        props: { id, contentEditable, draggable, value, type },
         hooks,
         flags,
     });
@@ -2845,6 +3519,7 @@ const Li = ({
 const Hr = ({
     style,
     id,
+    contentEditable,
     draggable,
     className,
     key,
@@ -2861,11 +3536,13 @@ const Hr = ({
         tag: "hr",
 
         id,
+        contentEditable,
         draggable: id,
+        contentEditable,
         draggable,
         className: className,
         key,
-        props: { align, color, noShade, size, width, id, draggable },
+        props: { align, color, noShade, size, width, id, contentEditable, draggable },
         events: events,
         hooks,
         style,
@@ -2886,6 +3563,7 @@ const Figure = ({
 
     style,
     id,
+    contentEditable,
     draggable,
     className,
     key,
@@ -2896,7 +3574,7 @@ const Figure = ({
     new CreateComponent({
         tag: "figure",
         children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className,
         key,
         events,
@@ -2913,11 +3591,22 @@ const Figure = ({
  * of its parent ``<figure>`` element.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figcaption
  */
-const FigCaption = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
+const FigCaption = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         tag: "figcaption",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className,
         key,
         events: events,
@@ -2936,11 +3625,22 @@ const FigCaption = ({ text, style, id, draggable, className, key, events, flags,
  * or some kind of layout model like Flexbox is applied to its parent element).
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div
  */
-const Div = ({ children, style, id, draggable, className, key, events, hooks, flags }) =>
+const Div = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) =>
     new CreateComponent({
         tag: "div",
         children: children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className: className,
         key,
         events,
@@ -2962,11 +3662,22 @@ const Div = ({ children, style, id, draggable, className, key, events, hooks, fl
  * or other related text associated with the term specified using ``<dt>``.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dt
  */
-const Dt = ({ text, style, id, draggable, className, key, events, flags, hooks }) =>
+const Dt = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         tag: "dt",
         children: text,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className,
         key,
         events,
@@ -2986,11 +3697,22 @@ const Dt = ({ text, style, id, draggable, className, key, events, flags, hooks }
  * (a list of key-value pairs).
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl
  */
-const Dl = ({ children, style, id, draggable, className, key, events, flags, hooks }) =>
+const Dl = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    flags,
+    hooks,
+}) =>
     new CreateComponent({
         tag: "dl",
         children: children,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className,
         key,
         events,
@@ -3006,11 +3728,23 @@ const Dl = ({ children, style, id, draggable, className, key, events, flags, hoo
  * The ``<dd>`` HTML element provides the description, definition, or value for the preceding term (``<dt>``) in a description list (``<dl>``).
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dd
  */
-const Dd = ({ text, style, id, draggable, className, key, events, hooks, noWrap, flags }) =>
+const Dd = ({
+    text,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    noWrap,
+    flags,
+}) =>
     new CreateComponent({
         tag: "dd",
         children: text,
-        props: { noWrap, id, draggable },
+        props: { noWrap, id, contentEditable, draggable },
         className,
         key,
         events,
@@ -3024,7 +3758,7 @@ const Dd = ({ text, style, id, draggable, className, key, events, hooks, noWrap,
  * @extends CreateComponent create a Raw component object.
  */
 class RawHTML extends CreateComponent {
-    constructor({ html, id, draggable, className, key, events, hooks, flags }) {
+    constructor({ html, id, contentEditable, draggable, className, key, events, hooks, flags }) {
         super({
             tag: "html-container",
             className,
@@ -3032,7 +3766,7 @@ class RawHTML extends CreateComponent {
             events,
             hooks,
             flags,
-            props: { id, draggable },
+            props: { id, contentEditable, draggable },
         });
 
         this.html = html;
@@ -3060,10 +3794,11 @@ class RawHTML extends CreateComponent {
  * ### The raw HTML container
  * Provide a way to render raw html inside of it.
  */
-const Raw = ({ html, id, draggable, className, key, events, hooks, flags }) => {
+const Raw = ({ html, id, contentEditable, draggable, className, key, events, hooks, flags }) => {
     return new RawHTML({
         html,
         id,
+        contentEditable,
         draggable,
         className,
         key,
@@ -3080,7 +3815,16 @@ const Raw = ({ html, id, draggable, className, key, events, hooks, flags }) => {
  * @param props.height view height
  * @param props.width view width
  */
-const EmptyBox = ({ height, width, id, draggable, events, hooks, flags }) => {
+const EmptyBox = ({
+    height = "0px",
+    width = "0px",
+    id,
+    contentEditable,
+    draggable,
+    events,
+    hooks,
+    flags,
+}) => {
     return new CreateComponent({
         tag: "empty-box",
         style: {
@@ -3094,7 +3838,7 @@ const EmptyBox = ({ height, width, id, draggable, events, hooks, flags }) => {
         events,
         hooks,
         flags,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
     });
 };
 
@@ -3106,6 +3850,7 @@ class ListViewer extends CreateComponent {
     constructor({
         children,
         id,
+        contentEditable,
         draggable,
         className,
         key,
@@ -3118,7 +3863,7 @@ class ListViewer extends CreateComponent {
         super({
             tag: "list-view",
             children,
-            props: { id, draggable },
+            props: { id, contentEditable, draggable },
             className,
             key,
             events,
@@ -3165,6 +3910,7 @@ class ListViewer extends CreateComponent {
 const LazyColumn = ({
     children,
     id,
+    contentEditable,
     draggable,
     className,
     key,
@@ -3177,6 +3923,7 @@ const LazyColumn = ({
     return new ListViewer({
         children,
         id,
+        contentEditable,
         draggable,
         className,
         key,
@@ -3193,12 +3940,23 @@ const LazyColumn = ({
  * ### The vertical flexbox
  * Flexbox displaying items vertically.
  */
-const Column = ({ children, style, id, draggable, className, key, events, hooks, flags }) => {
+const Column = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) => {
     return new CreateComponent({
         tag: "column-view",
         children,
         style,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className,
         key,
         events,
@@ -3212,12 +3970,23 @@ const Column = ({ children, style, id, draggable, className, key, events, hooks,
  * ### The horizontal flexbox
  * Flexbox displaying items horizontally.
  */
-const Row = ({ children, style, id, draggable, className, key, events, hooks, flags }) => {
+const Row = ({
+    children,
+    style,
+    id,
+    contentEditable,
+    draggable,
+    className,
+    key,
+    events,
+    hooks,
+    flags,
+}) => {
     return new CreateComponent({
         tag: "row-view",
         children,
         style,
-        props: { id, draggable },
+        props: { id, contentEditable, draggable },
         className,
         key,
         events,
@@ -3278,7 +4047,16 @@ const BorderSpinner = ({
     });
 };
 
+/**
+ * ## Fragment `<fragment>`
+ * ### The grouping element
+ * A special component that allow the grouping of components without the need of a wrapper element.
+ */
+const Fragment = ({ components, flags }) =>
+    new CreateComponent({ tag: "fragment", children: components, flags });
+
 export {
+    Fragment,
     BorderSpinner,
     Row,
     Column,

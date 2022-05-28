@@ -1,9 +1,9 @@
-import { throwError } from "./RecursiveError";
-import CreateComponent from "../CreateComponent/CreateComponent.js";
-import RecursiveCSSOM from "../RecursiveCCSOM/RecursiveCSSOM";
-import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator";
-import StateRegistry from "../RecursiveState/StateRegistry";
-import RefRegistry from "../RecursiveState/RefRegistry";
+import { throwError } from "./RecursiveError.js";
+import RecursiveCSSOM from "../RecursiveCCSOM/RecursiveCSSOM.js";
+import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
+import StateRegistry from "../RecursiveState/StateRegistry.js";
+import RefRegistry from "../RecursiveState/RefRegistry.js";
+import RecursiveEvents from "./RecursiveEvents.js";
 
 /**
  * ## RecursiveDOM
@@ -95,7 +95,6 @@ class RecursiveDOM {
     render() {
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.RENDERING);
 
-        // const startTime = new Date().getTime();
         if (RecursiveDOM.devMode) console.time("Render");
 
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
@@ -114,7 +113,6 @@ class RecursiveDOM {
 
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMMIT_INTO_DOM);
         this.root.innerHTML = "";
-        // HandleWindow.events(this.events);
         this.root.append(this.oldRender.render());
 
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_CREATED);
@@ -124,8 +122,6 @@ class RecursiveDOM {
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.CLEAN_STATES);
         this.resetQueues();
 
-        // if (RecursiveDOM.devMode)
-        //      console.log(`First paint done in ${new Date().getTime() - startTime}ms`);
         if (RecursiveDOM.devMode) console.timeEnd("Render");
 
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.FREE);
@@ -139,7 +135,6 @@ class RecursiveDOM {
     update() {
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.UPDATING);
 
-        // const startTime = new Date().getTime();
         if (RecursiveDOM.devMode) console.time("UI Update");
 
         RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
@@ -174,8 +169,6 @@ class RecursiveDOM {
         this.resetQueues();
         StateRegistry.clean();
 
-        // if (RecursiveDOM.devMode)
-        //      console.log(`UI updated in ${new Date().getTime() - startTime}ms`);
         if (RecursiveDOM.devMode) console.timeEnd("UI Update");
     }
 
