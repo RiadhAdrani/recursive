@@ -378,6 +378,29 @@ class CreateComponent {
         }
     }
 
+    /**
+     * Transform the UID into a unqie and valid className
+     * @returns {String} unique className
+     */
+    makeUniqueClassName() {
+        if (!this.style) return "";
+        if (!this.style.scoped) return "";
+
+        function convert(n) {
+            return String.fromCharCode((n % 25) + 97);
+        }
+
+        return [...this.uid]
+            .map((char, i) => {
+                return convert(char == "-" ? i : char.charCodeAt());
+            })
+            .join("");
+    }
+
+    /**
+     * Flatten the style sheet of a component and its children
+     * @returns {Array<JSON>} component and its children style sheets as an array
+     */
     flattenStyle() {
         const output = [];
 
@@ -389,8 +412,11 @@ class CreateComponent {
 
         if (this.style) {
             if (this.style.scoped) {
-                this.style.className = `${this.style.className}-${this.tag}-${this.uid}`;
-                this.className = `${this.className}-${this.tag}-${this.uid}`;
+                const scoping = `-${this.tag}-${this.makeUniqueClassName()}`;
+                const addSpace = !this.style.className;
+
+                this.style.className = !addSpace ? this.style.className + scoping : scoping;
+                this.className = this.className + (addSpace ? " " : "") + scoping;
                 this.props.className = this.className;
             }
 

@@ -81,8 +81,8 @@ export default {
     },
     /**
      * Add style className to the classList
-     * @param component CreateComponent
-     * @param style style object
+     * @param {CreateComponent} component CreateComponent
+     * @param {JSON} style style object
      */
     className: (component, style) => {
         // if style is valid
