@@ -43,6 +43,7 @@ Inside your `index.js` you render your app like this:
 ```js
 import { Render } from "./recursive-js/index.js";
 import { P } from "./recursive-js/components.js";
+
 Render(() => P({ text: "Hello World" }));
 ```
 
