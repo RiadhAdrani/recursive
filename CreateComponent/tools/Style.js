@@ -1,4 +1,4 @@
-import CreateComponent from "@riadh-adrani/recursive/CreateComponent/CreateComponent.js";
+import CreateComponent from "../CreateComponent.js";
 
 export default {
     /**

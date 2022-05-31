@@ -4,8 +4,11 @@ import Render from "./tools/Render.js";
 import Update from "./tools/Update.js";
 import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
 import { throwError } from "../RecursiveDOM/RecursiveError.js";
-import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
-import RefRegistry from "../RecursiveState/RefRegistry.js";
+import {
+    requestBatchingEnd,
+    requestBatchingStart,
+} from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
+import { setRef } from "../RecursiveState/SetReference.js";
 import {
     endCurrentContext,
     getContext,
@@ -225,9 +228,9 @@ class CreateComponent {
      */
     $onUpdated() {
         if (typeof this.hooks.onUpdated === "function") {
-            RecursiveOrchestrator.requestBatchingStart("on-updated");
+            requestBatchingStart("on-updated");
             this.hooks.onUpdated(this.domInstance);
-            RecursiveOrchestrator.requestBatchingEnd("on-updated");
+            requestBatchingEnd("on-updated");
         }
     }
 
@@ -236,9 +239,9 @@ class CreateComponent {
      */
     $onCreated() {
         if (typeof this.hooks.onCreated === "function") {
-            RecursiveOrchestrator.requestBatchingStart("on-created");
+            requestBatchingStart("on-created");
             this.hooks.onCreated(this.domInstance);
-            RecursiveOrchestrator.requestBatchingEnd("on-created");
+            requestBatchingEnd("on-created");
         }
         if (this.children) {
             this.children.forEach((child) => {
@@ -254,9 +257,9 @@ class CreateComponent {
      */
     $onDestroyed() {
         if (typeof this.hooks.onDestroyed === "function") {
-            RecursiveOrchestrator.requestBatchingStart("on-destroyed");
+            requestBatchingStart("on-destroyed");
             this.hooks.onDestroyed(this);
-            RecursiveOrchestrator.requestBatchingEnd("on-destroyed");
+            requestBatchingEnd("on-destroyed");
         }
 
         if (this.children) {
@@ -278,9 +281,9 @@ class CreateComponent {
      */
     $beforeDestroyed() {
         if (typeof this.hooks.beforeDestroyed === "function") {
-            RecursiveOrchestrator.requestBatchingStart("before-destroyed");
+            requestBatchingStart("before-destroyed");
             this.hooks.beforeDestroyed(this);
-            RecursiveOrchestrator.requestBatchingEnd("before-destroyed");
+            requestBatchingEnd("before-destroyed");
         }
 
         if (this.children) {
@@ -297,7 +300,7 @@ class CreateComponent {
             const ref = this.hooks.onRef(this.domInstance);
             if (typeof ref === "string") {
                 this.ref = ref;
-                RefRegistry.setRef(ref, this.domInstance);
+                setRef(ref, this.domInstance);
             }
         }
     }

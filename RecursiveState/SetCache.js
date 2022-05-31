@@ -1,5 +1,9 @@
-import { throwError } from "@riadh-adrani/recursive/RecursiveDOM/RecursiveError.js";
-import RecursiveOrchestrator from "@riadh-adrani/recursive/RecursiveOrchestrator/RecursiveOrchestrator.js";
+import { throwError } from "../RecursiveDOM/RecursiveError.js";
+import {
+    notifyStateChanged,
+    requestUpdate,
+    isBatching,
+} from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
 
 class CacheStore {
     static singleton = new CacheStore();
@@ -21,6 +25,19 @@ class CacheStore {
         return true;
     }
 
+    retrieveCache(uuid) {
+        const val = this.items[uuid].value;
+        const set = (newVal) => {
+            if (this.items[uuid]) this.items[uuid].setValue(newVal);
+        };
+        const setSilently = (newVal) => {
+            if (this.items[uuid]) this.items[uuid].setValueSilently(newVal);
+        };
+        const live = () => this.items[uuid].value;
+
+        return [val, set, setSilently, live];
+    }
+
     /**
      * Create a cache object. Available any where and every where after initialization.
      * @param {String} uuid the universal unique identifier of the cached data
@@ -40,20 +57,13 @@ class CacheStore {
             firstTime = true;
         }
 
-        const val = this.items[uuid].value;
-        const set = (newVal) => {
-            if (this.items[uuid]) this.items[uuid].setValue(newVal);
-        };
-        const setSilently = (newVal) => {
-            if (this.items[uuid]) this.items[uuid].setValueSilently(newVal);
-        };
-        const live = () => this.items[uuid].value;
+        const res = this.retrieveCache(uuid);
 
         if (typeof this.items[uuid].onInit === "function" && firstTime) {
             (() => this.items[uuid].onInit())();
         }
 
-        return [val, set, setSilently, live];
+        return res;
     }
 
     getCache(uuid) {
@@ -63,16 +73,7 @@ class CacheStore {
             ]);
         }
 
-        const val = this.items[uuid].value;
-        const set = (newVal) => {
-            if (this.items[uuid]) this.items[uuid].setValue(newVal);
-        };
-        const setSilently = (newVal) => {
-            if (this.items[uuid]) this.items[uuid].setValueSilently(newVal);
-        };
-        const live = () => this.items[uuid].value;
-
-        return [val, set, setSilently, live];
+        return this.retrieveCache(uuid);
     }
 }
 
@@ -96,19 +97,31 @@ class Cache {
         this.value = newVal;
 
         if (valueDidChange) {
-            RecursiveOrchestrator.notifyStateChanged(this.uuid);
+            notifyStateChanged(this.uuid);
 
-            if (RecursiveOrchestrator.isBatching() === false) {
-                RecursiveOrchestrator.requestUpdate(this.uuid);
+            if (isBatching() === false) {
+                requestUpdate(this.uuid);
             }
         }
     }
 }
 
+/**
+ * Create a cache object. Available any where and every where after initialization.
+ * @param {String} uuid the universal unique identifier of the cached data
+ * @param {Any} value the initial value of the cached data
+ * @param {Function} onInit an function that will execute when the cached has been successfully added to the store.
+ * @returns {[Any, Function, Function, Function]} an array of data and functions
+ */
 function setCache(uuid, value, onInit) {
     return CacheStore.singleton.setCache(uuid, value, onInit);
 }
 
+/**
+ * Retrieve an already cached object.
+ * @param {String} uuid the universal unique identifier of the cached data
+ * @returns {[Any, Function, Function, Function]} an array of data and functions
+ */
 function getCache(uuid) {
     return CacheStore.singleton.getCache(uuid);
 }

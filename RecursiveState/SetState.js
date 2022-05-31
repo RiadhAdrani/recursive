@@ -1,6 +1,124 @@
 import { throwError } from "../RecursiveDOM/RecursiveError.js";
-import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
-import StateRegistrey from "./StateRegistry.js";
+import {
+    requestBatchingEnd,
+    requestBatchingStart,
+    isBatching,
+    requestUpdate,
+    notifyStateChanged,
+} from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
+import SetStore from "./SetStore.js";
+
+class StateStore extends SetStore {
+    /**
+     * Create a new state registry.
+     * Do not create your own `StateStore`, this will be handled by the `RecursiveStore`.
+     * @returns { StateStore } a new registry object
+     */
+    constructor() {
+        super();
+
+        this.current = [];
+        this.new = [];
+    }
+
+    static singleton = new StateStore();
+
+    clean() {
+        for (let i = 0; i < this.current.length; i++) {
+            const uid = this.current[i];
+
+            if (SetState.reservedStates.includes(uid)) {
+                continue;
+            }
+            if (this.new.indexOf(uid) === -1) {
+                if (this.items[uid]) {
+                    if (typeof this.items[uid].beforeDestroyed === "function")
+                        (() => this.items[uid].beforeDestroyed())();
+                }
+
+                delete this.items[uid];
+            }
+        }
+
+        this.current = this.new;
+        this.new = [];
+    }
+
+    /**
+     * Create or returns the state object if it already exists in the `globalRegistry`.
+     * @param {SetState} state stateful object
+     * @returns {Array | undefined} an array containing data and state manipulation functions.
+     */
+    setState(state) {
+        let firstTime = false;
+
+        if (!this.items[state.uid]) {
+            this.items[state.uid] = state;
+            firstTime = true;
+        }
+
+        this.new.push(state.uid);
+
+        const res = this.retrieveState(state.uid);
+
+        if (typeof state.onInit === "function" && firstTime) {
+            (() => state.onInit())();
+        }
+
+        return res;
+    }
+
+    retrieveState(uid) {
+        const get = this.items[uid].value;
+        const set = (newVal) => {
+            if (this.items[uid]) this.items[uid].setValue(newVal);
+        };
+
+        const prev = this.items[uid].preValue;
+        const exists = () => {
+            return this.items[uid] !== undefined;
+        };
+
+        const live = () => {
+            return this.items[uid].value;
+        };
+
+        return [get, set, prev, exists, live];
+    }
+
+    /**
+     * returns the state object if it already exists in the `globalRegistry`.
+     * @param {string} uid state unique identifier
+     * @returns {Array | undefined} an array containing data and state manipulation functions.
+     */
+    getState(uid) {
+        if (!this.items[uid]) {
+            throwError(`State with the UID ${uid} does not exist!`, [
+                "You tried to access a non-existant state.",
+                "States could be cleared upon updates, when they are out of scope.",
+            ]);
+        }
+
+        return this.retrieveState(uid);
+    }
+
+    /**
+     * returns the reserved state object if it already exists in the `globalRegistry`.
+     * @param {string} uid state unique identifier.
+     * @internal do not user in development.
+     * @returns {Array | undefined} an array containing data and state manipulation functions.
+     */
+    getReservedState(uid) {
+        if (!SetState.reservedStates.includes(uid)) {
+            throwError(`Reserved state with the UID ${uid} does not exist!`, [
+                "You tried to access a non-existant reserved state.",
+                "States could be cleared upon updates, when they are out of scope.",
+            ]);
+        }
+
+        return this.retrieveState(uid);
+    }
+}
 
 /**
  * ### SetState
@@ -37,10 +155,10 @@ class SetState {
         this.value = newVal;
 
         if (stateDidChange) {
-            RecursiveOrchestrator.notifyStateChanged(this.uid);
+            notifyStateChanged(this.uid);
 
-            if (RecursiveOrchestrator.isBatching() === false) {
-                RecursiveOrchestrator.requestUpdate(this.uid);
+            if (isBatching() === false) {
+                requestUpdate(this.uid);
             }
         }
     }
@@ -51,9 +169,9 @@ class SetState {
      * @param {Function} actions - a function that will be executed before updating the DOM.
      */
     static updateAfter(actions) {
-        RecursiveOrchestrator.requestBatchingStart("update-after");
+        requestBatchingStart("update-after");
         actions();
-        RecursiveOrchestrator.requestBatchingEnd("update-after");
+        requestBatchingEnd("update-after");
     }
 
     /**
@@ -70,9 +188,7 @@ class SetState {
                 `You have used a reserved UID from this list : ${SetState.reservedStates}`,
             ]);
 
-        return StateRegistrey.singleton.setState(
-            new SetState(initValue, uid, beforeDestroyed, onInit)
-        );
+        return StateStore.singleton.setState(new SetState(initValue, uid, beforeDestroyed, onInit));
     }
 
     /**
@@ -84,8 +200,61 @@ class SetState {
     static setReservedState(uid, initValue) {
         const res = new SetState(initValue, uid);
         res.isReserved = true;
-        return StateRegistrey.singleton.setState(res);
+        return StateStore.singleton.setState(res);
     }
 }
 
-export default SetState;
+/**
+ * Create a reserved stateful object and return its params as an array
+ * @param {any} uid state unique identifier
+ * @param {any} initValue define an initial value
+ * @returns {Array} an array containing data and state manipulation functions.
+ */
+function setReservedState(uid, value) {
+    return SetState.setReservedState(uid, value);
+}
+
+/**
+ * returns the reserved state object if it already exists in the `globalRegistry`.
+ * @param {string} uid state unique identifier.
+ * @internal do not user in development.
+ * @returns {Array | undefined} an array containing data and state manipulation functions.
+ */
+function getReservedState(uid) {
+    return StateStore.singleton.getReservedState(uid);
+}
+
+/**
+ * Create a new state object.
+ * @param {String} uid state unique identifier.
+ * @param {Any} value define an initial value.
+ * @param {Function} onInit executes after the state has been initialized. Allow the user to perform async call and update the state accordingly
+ * @param {Function} beforeDestroyed executes before the state got cleaned up by the `StateRegistry`.
+ * @return {[Any,Function,Any,Function,Function]} [ `value` , `setValue` , `previousValue` , `doExist` , `getValue` ]
+ */
+function setState(uid, value, onInit, onBeforeDestroyed) {
+    return SetState.setState(uid, value, onInit, onBeforeDestroyed);
+}
+
+/**
+ * Create a new state object.
+ * @param {String} uid state unique identifier.
+ * @return {[Any,Function,Any,Function,Function]} [ `value` , `setValue` , `previousValue` , `doExist` , `getValue` ]
+ */
+function getState(uid) {
+    return StateStore.singleton.getState(uid);
+}
+
+/**
+ * Update the DOM after performing certain actions.
+ * @param {Function} actions function to execute
+ */
+function updateAfter(actions) {
+    SetState.updateAfter(actions);
+}
+
+function cleanStore() {
+    StateStore.singleton.clean();
+}
+
+export { setReservedState, getReservedState, setState, getState, updateAfter, cleanStore };

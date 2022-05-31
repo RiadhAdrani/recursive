@@ -1,7 +1,6 @@
 import CreateComponent from "../CreateComponent/CreateComponent.js";
 import Route from "./Route.js";
-import SetState from "../RecursiveState/SetState.js";
-import StateRegistry from "../RecursiveState/StateRegistry.js";
+import { setReservedState, getReservedState } from "../RecursiveState/SetState.js";
 import { encapsulateRoute, renderFragment, setParams } from "./RecursiveRouterContext.js";
 import { pushState, replaceState } from "./RecursiveHistory.js";
 
@@ -42,7 +41,7 @@ class RecursiveRouter {
             });
         }
 
-        const [] = SetState.setReservedState(
+        const [] = setReservedState(
             "route",
             (() => {
                 for (let r in this.routes) {
@@ -173,7 +172,7 @@ class RecursiveRouter {
      * @param {Route} template the template of the route
      */
     loadRoute(template, anchor) {
-        const [current, setCurrent] = StateRegistry.getReservedState("route");
+        const [current, setCurrent] = getReservedState("route");
 
         this.routes[current]?.onExit();
 
@@ -208,7 +207,7 @@ class RecursiveRouter {
 
         if (anchor) name = name.replace(anchor, "");
 
-        const [current] = StateRegistry.getReservedState("route");
+        const [current] = getReservedState("route");
 
         if (current === name) {
             if (anchor) {
@@ -263,7 +262,7 @@ class RecursiveRouter {
 
         const regExp = /:[^:;]*;/gm;
 
-        const [currentName] = StateRegistry.getReservedState("route");
+        const [currentName] = getReservedState("route");
 
         const current = this.singleton.routes[currentName];
 
@@ -290,7 +289,7 @@ class RecursiveRouter {
  * return the current route name.
  * @returns {String} route name.
  */
-const getRoute = () => StateRegistry.getReservedState("route")[0];
+const getRoute = () => getReservedState("route")[0];
 
 /**
  * return the current route parameters if found.
@@ -321,6 +320,21 @@ const createRouter = (route, prefix, scroll) => {
 };
 
 /**
+ * Create a `Route`
+ * @param name the name of the directory that will be appended to the url:
+ * * Should start with an `\`, and not end with it => example: `\my-route`.
+ * * Parameters could be templated by putting the parameter name between `:` and `;` => example : `\user@id=:id;`
+ * @param component the component representing the directory.
+ * @param title the title of the tab.
+ * @param subRoutes an array of routes serving as sub-directories.
+ * @param onLoad method to be executed when the route load.
+ * @param onExit method to be executed when the route unload.
+ */
+const route = ({ name, component, title, subRoutes, onLoad, onExit, redirectTo }) => {
+    return new Route({ name, component, title, subRoutes, onLoad, onExit, redirectTo });
+};
+
+/**
  * try to match the given route.
  * @param {string} route to be matched with.
  * @returns {Boolean|Route} return a route if it match, else a boolean.
@@ -332,7 +346,7 @@ const findMatch = (route) => RecursiveRouter.singleton.findMatch(route);
  * @returns {CreateComponent} component representing the current route fragment.
  */
 const renderRoute = () => {
-    const [route] = StateRegistry.getReservedState("route");
+    const [route] = getReservedState("route");
     setParams();
     if (RecursiveRouter.singleton.routes[route].title) {
         document.title = RecursiveRouter.singleton.routes[route].title;
@@ -358,4 +372,14 @@ const onFreshLoad = () => {
     }
 };
 
-export { getRoute, getParams, getRoot, goTo, createRouter, findMatch, renderRoute, onFreshLoad };
+export {
+    getRoute,
+    getParams,
+    getRoot,
+    goTo,
+    createRouter,
+    route,
+    findMatch,
+    renderRoute,
+    onFreshLoad,
+};

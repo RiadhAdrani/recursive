@@ -2,7 +2,7 @@ import { throwError } from "../../RecursiveDOM/RecursiveError.js";
 import PropList from "../../RecursiveDOM/PropList.js";
 import CreateTextNode from "../CreateTextNode.js";
 import Check from "./Check.js";
-import CreateComponent from "@riadh-adrani/recursive/CreateComponent/CreateComponent";
+import CreateComponent from "../CreateComponent.js";
 
 export default {
     /**
@@ -86,9 +86,9 @@ export default {
      */
     className: (component, style) => {
         // if style is valid
-        if (style) {
+        if (style !== undefined) {
             // check if className is valid
-            if (style.className) {
+            if (style.className !== undefined) {
                 Check.isValidClassName(style.className);
                 if (!component.className) {
                     component.className = style.className;
@@ -103,6 +103,8 @@ export default {
             for (var i = 0, j = classList.length; i < j; i++) {
                 Check.isValidClassName(classList[i]);
             }
+        } else {
+            component.className = "";
         }
     },
     /**

@@ -28,12 +28,6 @@ class RecursiveOrchestrator {
     static singleton = new RecursiveOrchestrator();
 
     constructor() {
-        if (RecursiveOrchestrator.singleton instanceof RecursiveOrchestrator) {
-            throwError("RecursiveOrchestrator cannot have more than one instance", [
-                "RecursiveOrchestrator is an internal class and should not be used in development.",
-            ]);
-        }
-
         this.currentTask = { done: true };
         this.step = FREE;
         this.updatesCount = 0;
@@ -86,7 +80,6 @@ class RecursiveOrchestrator {
 
     static unWatchTask(name) {
         RecursiveOrchestrator.singleton.unwatchTask(name);
-        // dispatchEvent(new CustomEvent(UN_WATCH_TASK, { detail: { name } }));
     }
 
     watchTask(name, time, onExceeded = () => {}) {
@@ -202,31 +195,64 @@ class RecursiveOrchestrator {
                     );
                     this.endBatching(sender);
                 }
-            }, 20);
+            }, 100);
         } else {
             this.startBatching();
         }
     }
-
-    static isBatching = () => RecursiveOrchestrator.singleton.batching === true;
-
-    static requestUpdate = (sender) => {
-        RecursiveOrchestrator.singleton.requestUpdate(sender);
-    };
-
-    static requestBatchingStart = (sender) => {
-        RecursiveOrchestrator.singleton.requestStartBatching(sender);
-    };
-
-    static requestBatchingEnd = (sender) => {
-        RecursiveOrchestrator.singleton.requestEndBatching(sender);
-    };
-
-    static notifyStateChanged = () => {
-        RecursiveOrchestrator.singleton.stateChanged = true;
-    };
 }
 
-window.orchestrator = RecursiveOrchestrator.singleton;
+function isBatching() {
+    return RecursiveOrchestrator.singleton.batching === true;
+}
 
-export default RecursiveOrchestrator;
+function requestUpdate(sender) {
+    RecursiveOrchestrator.singleton.requestUpdate(sender);
+}
+
+function requestBatchingStart(sender) {
+    RecursiveOrchestrator.singleton.requestStartBatching(sender);
+}
+
+function requestBatchingEnd(sender) {
+    RecursiveOrchestrator.singleton.requestEndBatching(sender);
+}
+
+function notifyStateChanged() {
+    RecursiveOrchestrator.singleton.stateChanged = true;
+}
+
+function changeState(state) {
+    RecursiveOrchestrator.singleton.step = state;
+}
+
+function free() {
+    RecursiveOrchestrator.singleton.free();
+}
+
+const states = {
+    FREE,
+    COMPUTE_DIFF,
+    COMPUTE_TREE,
+    COMPUTE_STYLE,
+    RENDERING,
+    UPDATING,
+    EXEC_BEFORE_DESTROYED,
+    COMMIT_INTO_DOM,
+    EXEC_ON_CREATED,
+    EXEC_ON_DESTROYED,
+    EXEC_ON_UPDATED,
+    EXEC_ON_INJECTED,
+    CLEAN_STATES,
+};
+
+export {
+    isBatching,
+    requestUpdate,
+    requestBatchingStart,
+    requestBatchingEnd,
+    notifyStateChanged,
+    changeState,
+    free,
+    states,
+};

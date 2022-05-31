@@ -1,9 +1,13 @@
 import { throwError } from "./RecursiveError.js";
 import RecursiveCSSOM from "../RecursiveCCSOM/RecursiveCSSOM.js";
-import RecursiveOrchestrator from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
-import StateRegistry from "../RecursiveState/StateRegistry.js";
-import RefRegistry from "../RecursiveState/RefRegistry.js";
-import RecursiveEvents from "./RecursiveEvents.js";
+import {
+    isBatching,
+    states,
+    changeState,
+    free,
+} from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
+import { cleanStore as cleanReferenceStore } from "../RecursiveState/SetReference.js";
+import { cleanStore as cleanStateStore } from "../RecursiveState/SetState.js";
 
 /**
  * ## RecursiveDOM
@@ -48,13 +52,6 @@ class RecursiveDOM {
      * @param {Function} params.appFunction application UI tree
      */
     constructor() {
-        if (RecursiveDOM.singleton instanceof RecursiveDOM) {
-            throwError("RecrusiveDOM cannot have more than one instance", [
-                "RecrusiveDOM is an internal class and should not be used in development.",
-                "User Recrusive.Render to render your app.",
-            ]);
-        }
-
         this.root = document.createElement("div");
         this.root.id = "root";
 
@@ -93,11 +90,11 @@ class RecursiveDOM {
      * Render the app for the first time.
      */
     render() {
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.RENDERING);
+        changeState(states.RENDERING);
 
         if (RecursiveDOM.devMode) console.time("Render");
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
+        changeState(states.COMPUTE_TREE);
         this.oldRender = this.app();
         this.oldRender.uidify("0");
 
@@ -108,23 +105,23 @@ class RecursiveDOM {
             ]);
         }
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_STYLE);
+        changeState(states.COMPUTE_STYLE);
         RecursiveCSSOM.singleton.update(this.oldRender.flattenStyle());
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMMIT_INTO_DOM);
+        changeState(states.COMMIT_INTO_DOM);
         this.root.innerHTML = "";
         this.root.append(this.oldRender.render());
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_CREATED);
+        changeState(states.EXEC_ON_CREATED);
         this.oldRender.$onCreated();
         this.oldRender.$onRefRecursively();
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.CLEAN_STATES);
+        changeState(states.CLEAN_STATES);
         this.resetQueues();
 
         if (RecursiveDOM.devMode) console.timeEnd("Render");
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.FREE);
+        changeState(states.FREE);
     }
 
     /**
@@ -133,41 +130,41 @@ class RecursiveDOM {
      * @function
      */
     update() {
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.UPDATING);
+        changeState(states.UPDATING);
 
         if (RecursiveDOM.devMode) console.time("UI Update");
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
+        changeState(states.COMPUTE_TREE);
         const newRender = this.app();
         newRender.uidify("0");
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_STYLE);
+        changeState(states.COMPUTE_STYLE);
         RecursiveCSSOM.singleton.update(newRender.flattenStyle());
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_DIFF);
-        RefRegistry.clean();
+        changeState(states.COMPUTE_DIFF);
+        cleanReferenceStore();
         this.oldRender.update(newRender);
         this.oldRender = newRender;
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_BEFORE_DESTROYED);
+        changeState(states.EXEC_BEFORE_DESTROYED);
         this.exBeforeDestroyed();
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.COMMIT_INTO_DOM);
+        changeState(states.COMMIT_INTO_DOM);
         this.exDomActions();
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_DESTROYED);
+        changeState(states.EXEC_ON_DESTROYED);
         this.exOnDestroyed();
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_CREATED);
+        changeState(states.EXEC_ON_CREATED);
         this.exOnCreated();
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_UPDATED);
+        changeState(states.EXEC_ON_UPDATED);
         this.exOnUpdated();
         this.oldRender.$onRefRecursively();
 
-        RecursiveOrchestrator.changeState(RecursiveOrchestrator.states.CLEAN_STATES);
+        changeState(states.CLEAN_STATES);
         this.resetQueues();
-        StateRegistry.clean();
+        cleanStateStore();
 
         if (RecursiveDOM.devMode) console.timeEnd("UI Update");
     }

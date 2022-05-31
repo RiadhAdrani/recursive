@@ -345,7 +345,7 @@ const Button = ({
     formNoValidate,
     formTarget,
     name,
-    type,
+    type = "button",
     value,
     className,
     key,

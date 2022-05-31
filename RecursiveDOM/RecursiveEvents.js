@@ -1,16 +1,19 @@
-import RecursiveOrchestrator from "@riadh-adrani/recursive/RecursiveOrchestrator/RecursiveOrchestrator.js";
+import {
+    requestBatchingEnd,
+    requestBatchingStart,
+} from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
 
 function onClickGlobal(e) {
     const target = e.target;
 
     if (!Array.isArray(window.onclickglobal)) return;
 
-    RecursiveOrchestrator.requestBatchingStart(`custom-event-on-click-global`);
+    requestBatchingStart(`custom-event-on-click-global`);
     window.onclickglobal.forEach((element) => {
         if (element.contains(target)) return;
         element.events.onClickGlobal(e);
     });
-    RecursiveOrchestrator.requestBatchingEnd(`custom-event-on-click-global`);
+    requestBatchingEnd(`custom-event-on-click-global`);
 
     const refresh = [];
     window.onclickglobal.forEach((element) => {
