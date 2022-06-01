@@ -360,10 +360,9 @@ const renderRoute = () => {
 const onFreshLoad = () => {
     if (window.location.pathname !== "/") {
         if (RecursiveRouter.singleton) {
-            const route = window.location.pathname.replace(
-                "/" + RecursiveRouter.singleton.root,
-                ""
-            );
+            const route = RecursiveRouter.singleton.root
+                ? window.location.pathname.replace("/" + RecursiveRouter.singleton.root, "")
+                : window.location.pathname;
 
             const hash = location.hash;
 

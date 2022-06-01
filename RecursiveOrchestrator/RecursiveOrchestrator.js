@@ -191,7 +191,7 @@ class RecursiveOrchestrator {
             setTimeout(() => {
                 if (this.batchingRequests.find((req) => req.uuid === uuid)) {
                     console.warn(
-                        "Batch request took too long (more than 20ms). This could be caused by a catched error. Avoid batching your updates in an asynchronous call and using await inside the updateAfter method."
+                        "Batch request took too long (more than 100ms). This could be caused by a catched error. Avoid batching your updates in an asynchronous call and using await inside the updateAfter method."
                     );
                     this.endBatching(sender);
                 }
