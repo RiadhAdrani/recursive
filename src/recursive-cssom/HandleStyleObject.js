@@ -1,5 +1,5 @@
-import { throwError } from "../RecursiveDOM/RecursiveError.js";
-import PropList from "../RecursiveDOM/PropList.js";
+import { throwError } from "../recursive-dom/RecursiveError.js";
+import PropList from "../recursive-dom/PropList.js";
 
 export default (styleSheet, selectors, mediaQueries, animations) => {
     if (styleSheet) {

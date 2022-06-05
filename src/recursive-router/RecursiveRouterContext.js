@@ -1,5 +1,5 @@
-import { getReservedState } from "../RecursiveState/SetState.js";
-import { throwError } from "../RecursiveDOM/RecursiveError.js";
+import { getReservedState } from "../recursive-state/SetState.js";
+import { throwError } from "../recursive-dom/RecursiveError.js";
 import { findMatch } from "./RecursiveRouter.js";
 
 class RecursiveRouterContext {

@@ -1,6 +1,6 @@
-import { throwError } from "../../RecursiveDOM/RecursiveError.js";
-import PropList from "../../RecursiveDOM/PropList.js";
-import CreateTextNode from "../CreateTextNode.js";
+import { throwError } from "../../recursive-dom/RecursiveError.js";
+import PropList from "../../recursive-dom/PropList.js";
+import CreateTextNode from "../../create-component/CreateTextNode.js";
 import Check from "./Check.js";
 import CreateComponent from "../CreateComponent.js";
 

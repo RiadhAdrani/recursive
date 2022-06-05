@@ -1,19 +1,19 @@
-import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
+import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
 import Init from "./tools/Init.js";
 import Render from "./tools/Render.js";
 import Update from "./tools/Update.js";
-import RecursiveEvents from "../RecursiveDOM/RecursiveEvents.js";
-import { throwError } from "../RecursiveDOM/RecursiveError.js";
+import RecursiveEvents from "../recursive-dom/RecursiveEvents.js";
+import { throwError } from "../recursive-dom/RecursiveError.js";
 import {
     requestBatchingEnd,
     requestBatchingStart,
-} from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
-import { setRef } from "../RecursiveState/SetReference.js";
+} from "../recursive-orchestrator/RecursiveOrchestrator.js";
+import { setRef } from "../recursive-state/SetReference.js";
 import {
     endCurrentContext,
     getContext,
     startContext,
-} from "../RecursiveContext/RecursiveContext.js";
+} from "../recursive-context/RecursiveContext.js";
 
 /**
  * ## CreateComponent

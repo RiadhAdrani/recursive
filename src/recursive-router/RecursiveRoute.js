@@ -1,5 +1,5 @@
-import { throwError } from "../RecursiveDOM/RecursiveError.js";
-import CreateComponent from "../CreateComponent/CreateComponent.js";
+import { throwError } from "../recursive-dom/RecursiveError.js";
+import CreateComponent from "../create-component/CreateComponent.js";
 
 /**
  * ## Route

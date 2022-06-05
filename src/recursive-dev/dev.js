@@ -1,8 +1,10 @@
-import { Render, setCache, setStyle } from "./index.js";
-import { Button, Column } from "../components.js";
+import { Render, setCache, setStyle } from "../../index.js";
+import { Button, Column } from "../../components.js";
+import { setState } from "../recursive-state/SetState.js";
 
 Render(() => {
     const [show, setShow] = setCache("show", false);
+    const [cringe, setCringe] = setState("fuck", true);
 
     setStyle({ selectors: { "*": { fontSize: "50px" } } });
 
@@ -10,7 +12,7 @@ Render(() => {
         children: [
             Button({
                 className: "what",
-                text: show ? "Hide" : "Show",
+                text: show && cringe ? "Hide" : "Show",
                 type: "button",
                 events: {
                     onClick: () => {

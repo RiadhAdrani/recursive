@@ -1,9 +1,9 @@
-import CustomComponents from "./CreateComponent/CustomComponents.js";
+import CustomComponents from "./src/create-component/CustomComponents.js";
 import * as Components from "./components.js";
-import RecursiveDOM from "./RecursiveDOM/RecursiveDOM.js";
-import { getRef } from "./RecursiveState/SetReference.js";
-import { setState, getState, updateAfter } from "./RecursiveState/SetState.js";
-import { setCache, getCache } from "./RecursiveState/SetCache.js";
+import RecursiveDOM from "./src/recursive-dom/RecursiveDOM.js";
+import { getRef } from "./src/recursive-state/SetReference.js";
+import { setState, getState, updateAfter } from "./src/recursive-state/SetState.js";
+import { setCache, getCache } from "./src/recursive-state/SetCache.js";
 import {
     createRouter,
     getParams,
@@ -11,9 +11,9 @@ import {
     goTo,
     renderRoute,
     route,
-} from "./RecursiveRouter/RecursiveRouter.js";
-import { onFreshLoad } from "./RecursiveRouter/RecursiveRouter.js";
-import RecursiveCSSOM from "./RecursiveCCSOM/RecursiveCSSOM.js";
+    onFreshLoad,
+} from "./src/recursive-router/RecursiveRouter.js";
+import RecursiveCSSOM from "./src/recursive-cssom/RecursiveCSSOM.js";
 
 CustomComponents();
 

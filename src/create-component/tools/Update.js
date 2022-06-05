@@ -1,9 +1,9 @@
-import PropList from "../../RecursiveDOM/PropList.js";
+import PropList from "../../recursive-dom/PropList.js";
 import {
     requestBatchingEnd,
     requestBatchingStart,
     requestUpdate,
-} from "../../RecursiveOrchestrator/RecursiveOrchestrator.js";
+} from "../../recursive-orchestrator/RecursiveOrchestrator.js";
 import CreateComponent from "../CreateComponent.js";
 
 export default {

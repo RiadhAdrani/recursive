@@ -1,5 +1,5 @@
-import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
-import { throwError } from "../RecursiveDOM/RecursiveError.js";
+import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
+import { throwError } from "../recursive-dom/RecursiveError.js";
 
 const FREE = "free";
 const HANDLING_REQUESTS = "handling-requests";

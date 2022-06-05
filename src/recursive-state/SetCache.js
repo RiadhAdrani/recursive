@@ -1,9 +1,9 @@
-import { throwError } from "../RecursiveDOM/RecursiveError.js";
+import { throwError } from "../recursive-dom/RecursiveError.js";
 import {
     notifyStateChanged,
     requestUpdate,
     isBatching,
-} from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
+} from "../recursive-orchestrator/RecursiveOrchestrator.js";
 
 class CacheStore {
     static singleton = new CacheStore();

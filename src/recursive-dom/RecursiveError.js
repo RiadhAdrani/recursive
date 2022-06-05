@@ -1,4 +1,4 @@
-import CreateComponent from "../CreateComponent/CreateComponent.js";
+import CreateComponent from "../create-component/CreateComponent.js";
 
 const onError = () => {
     window.addEventListener("unhandledrejection", (event) => {

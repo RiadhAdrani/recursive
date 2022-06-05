@@ -1,7 +1,7 @@
 import {
     requestBatchingEnd,
     requestBatchingStart,
-} from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
+} from "../recursive-orchestrator/RecursiveOrchestrator.js";
 
 function onClickGlobal(e) {
     const target = e.target;

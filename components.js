@@ -1,6 +1,6 @@
-import { goTo } from "./RecursiveRouter/RecursiveRouter.js";
-import CreateComponent from "./CreateComponent/CreateComponent.js";
-import { makeURL } from "./RecursiveRouter/RecursiveHistory.js";
+import { goTo } from "./src/recursive-router/RecursiveRouter.js";
+import CreateComponent from "./src/create-component/CreateComponent.js";
+import { makeURL } from "./src/recursive-router/RecursiveHistory.js";
 
 /**
  * ## EmbedExternalView `<embed>`

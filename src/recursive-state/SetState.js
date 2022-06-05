@@ -1,11 +1,11 @@
-import { throwError } from "../RecursiveDOM/RecursiveError.js";
+import { throwError } from "../recursive-dom/RecursiveError.js";
 import {
     requestBatchingEnd,
     requestBatchingStart,
     isBatching,
     requestUpdate,
     notifyStateChanged,
-} from "../RecursiveOrchestrator/RecursiveOrchestrator.js";
+} from "../recursive-orchestrator/RecursiveOrchestrator.js";
 import SetStore from "./SetStore.js";
 
 class StateStore extends SetStore {

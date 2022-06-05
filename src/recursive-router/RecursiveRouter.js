@@ -1,6 +1,6 @@
-import CreateComponent from "../CreateComponent/CreateComponent.js";
-import Route from "./Route.js";
-import { setReservedState, getReservedState } from "../RecursiveState/SetState.js";
+import CreateComponent from "../create-component/CreateComponent.js";
+import Route from "./RecursiveRoute.js";
+import { setReservedState, getReservedState } from "../recursive-state/SetState.js";
 import { encapsulateRoute, renderFragment, setParams } from "./RecursiveRouterContext.js";
 import { pushState, replaceState } from "./RecursiveHistory.js";
 

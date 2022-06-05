@@ -1,7 +1,7 @@
 import HandleStyleObject from "./HandleStyleObject.js";
 import Handler from "./HandleStyle.js";
-import RecursiveDOM from "../RecursiveDOM/RecursiveDOM.js";
-import { throwError } from "../RecursiveDOM/RecursiveError.js";
+import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
+import { throwError } from "../recursive-dom/RecursiveError.js";
 
 class RecursiveCSSOM {
     static singleton = new RecursiveCSSOM();
