@@ -1,92 +1,47 @@
-export default () => {
-     const defaultStyles = [];
+import DefineElement from "./DefineElement.js";
 
-     // -------------------------------------------------------------------------------------------------------------------
-     // HTML CONTAINER
-     class HTMLContainer extends HTMLElement {
-          constructor() {
-               super();
-          }
-     }
-     customElements.define("html-container", HTMLContainer, { extends: "div" });
-     defaultStyles.push("html-container{display:block;}");
+const defaultStyles = [];
 
-     // -------------------------------------------------------------------------------------------------------------------
-     // VERTICAL SPACE
-     class VerticalSpace extends HTMLElement {
-          constructor() {
-               super();
-          }
-     }
-     customElements.define("empty-box", VerticalSpace, { extends: "img" });
-     defaultStyles.push("empty-box{display:block;}");
+class HTMLContainer extends DefineElement {
+    constructor() {
+        super("html-container");
+    }
+}
+defaultStyles.push({ tag: "html-container", normal: { display: "block" } });
 
-     // -------------------------------------------------------------------------------------------------------------------
-     // LIST VIEW
-     class ListView extends HTMLElement {
-          constructor() {
-               super();
-          }
-     }
-     customElements.define("list-view", ListView, { extends: "div" });
-     defaultStyles.push("list-view{display:block;}");
+class EmptyBox extends DefineElement {
+    constructor() {
+        super("empty-box");
+    }
+}
+defaultStyles.push({ tag: "empty-box", normal: { display: "block" } });
 
-     // -------------------------------------------------------------------------------------------------------------------
-     // COLUMN VIEW
-     class ColumnView extends HTMLDivElement {
-          constructor() {
-               super();
-          }
-     }
-     customElements.define("column-view", ColumnView, { extends: "div" });
-     defaultStyles.push("column-view{display:flex;flex-direction:column}");
+class ListView extends DefineElement {
+    constructor() {
+        super("list-view");
+    }
+}
+defaultStyles.push({ tag: "list-view", normal: { display: "flex" } });
 
-     // -------------------------------------------------------------------------------------------------------------------
-     // ROW VIEW
-     class RowView extends HTMLDivElement {
-          constructor() {
-               super();
-          }
-     }
-     customElements.define("row-view", RowView, { extends: "div" });
-     defaultStyles.push("row-view{display:flex;flex-direction:row}");
+class ColumnView extends DefineElement {
+    constructor() {
+        super("column-view");
+    }
+}
+defaultStyles.push({ tag: "column-view", normal: { display: "flex", flexDirection: "column" } });
 
-     // -------------------------------------------------------------------------------------------------------------------
-     // BORDER SPINNER
-     class BorderSpinnerView extends HTMLDivElement {
-          constructor() {
-               super();
-          }
-     }
-     customElements.define("border-spinner", BorderSpinnerView, { extends: "div" });
-     defaultStyles.push("border-spinner{display:block;}");
+class RowView extends DefineElement {
+    constructor() {
+        super("row-view");
+    }
+}
+defaultStyles.push({ tag: "row-view", normal: { display: "flex", flexDirection: "row" } });
 
-     // -------------------------------------------------------------------------------------------------------------------
-     // SPAWNER VIEW
-     class SpawnerView extends HTMLDivElement {
-          constructor() {
-               super();
-          }
-     }
-     customElements.define("spawner-view", SpawnerView, { extends: "div" });
-     defaultStyles.push("spawner-view{display:block;position:absolute}");
+class SpinnerView extends DefineElement {
+    constructor() {
+        super("border-spinner");
+    }
+}
+defaultStyles.push({ tag: "border-spinner", normal: { display: "block" } });
 
-     // -------------------------------------------------------------------------------------------------------------------
-     // APP VIEW
-     class AppView extends HTMLDivElement {
-          constructor() {
-               super();
-          }
-     }
-     customElements.define("app-view", AppView, { extends: "div" });
-     defaultStyles.push("app-view{display:block;}");
-
-     // -------------------------------------------------------------------------------------------------------------------
-     // DEFAULT STYLES
-     const customElementStyle = document.createElement("style");
-     defaultStyles.forEach((rule) => {
-          customElementStyle.innerText += rule;
-     });
-
-     document.querySelector("head").append(customElementStyle);
-};
+export default defaultStyles;

@@ -1,5 +1,8 @@
 import { throwError } from "../../recursive-dom/RecursiveError.js";
-import PropList from "../../recursive-dom/PropList.js";
+import RecursiveDOMEvents from "../../recursive-dom/RecursiveDOMEvents.js";
+import RecursiveHooks from "../../recursive-hooks/RecursiveHooks.js";
+import RecursiveFlags from "../../recursive-flags/RecursiveFlags.js";
+import RecursiveDOMAttributes from "../../recursive-dom/RecursiveDOMAttributes.js";
 import CreateTextNode from "../../create-component/CreateTextNode.js";
 import Check from "./Check.js";
 import CreateComponent from "../CreateComponent.js";
@@ -114,7 +117,7 @@ export default {
      */
     events: (component, events) => {
         for (var event in events) {
-            if (PropList.Events[event]) {
+            if (RecursiveDOMEvents[event]) {
                 if (typeof events[event] === "function") {
                     component.events[event] = events[event];
                 } else {
@@ -123,7 +126,7 @@ export default {
             } else {
                 throwError(`${event} is not a valid event name or is yet to be implemented.`, [
                     "Event name is non-existant",
-                    "List of events : https://github.com/RiadhAdrani/recursive/blob/91b3cb8ae80fcbc7aa402b1d7814c0d2b7a0e779/RecursiveDOM/PropList.js#L537",
+                    "List of events : https://github.com/RiadhAdrani/recursive/blob/91b3cb8ae80fcbc7aa402b1d7814c0d2b7a0e779/RecursiveDOM/Recursivejs#L537",
                 ]);
             }
         }
@@ -134,7 +137,7 @@ export default {
      */
     flags: (component, flags) => {
         for (let f in flags) {
-            if (PropList.Flags[f]) {
+            if (RecursiveFlags[f]) {
                 component.flags[f] = flags[f];
             }
         }
@@ -146,7 +149,7 @@ export default {
     hooks: (component, hooks) => {
         for (var hook in hooks) {
             if (hooks[hook] !== undefined) {
-                if (PropList.Hooks[hook]) {
+                if (RecursiveHooks[hook]) {
                     if (typeof hooks[hook] === "function") {
                         component.hooks[hook] = hooks[hook];
                     } else {
@@ -155,7 +158,7 @@ export default {
                 } else {
                     throwError(`${hook} is not a valid hook name.`, [
                         "Hook name is non-existant",
-                        "List of hooks : https://github.com/RiadhAdrani/recursive/blob/91b3cb8ae80fcbc7aa402b1d7814c0d2b7a0e779/RecursiveDOM/PropList.js#L645",
+                        "List of hooks : https://github.com/RiadhAdrani/recursive/blob/91b3cb8ae80fcbc7aa402b1d7814c0d2b7a0e779/RecursiveDOM/Recursivejs#L645",
                     ]);
                 }
             }
@@ -167,7 +170,7 @@ export default {
      */
     attributes: (component, attributes) => {
         for (var attr in attributes) {
-            if (PropList.Attributes[attr]) {
+            if (RecursiveDOMAttributes[attr]) {
                 if (attributes[attr]) {
                     component.props[attr] = attributes[attr];
                 }

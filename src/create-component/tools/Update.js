@@ -1,8 +1,8 @@
-import PropList from "../../recursive-dom/PropList.js";
+import RecursiveEvents from "../../recursive-dom/RecursiveDOMEvents.js";
+import RecursiveAttributes from "../../recursive-dom/RecursiveDOMAttributes.js";
 import {
     requestBatchingEnd,
     requestBatchingStart,
-    requestUpdate,
 } from "../../recursive-orchestrator/RecursiveOrchestrator.js";
 import CreateComponent from "../CreateComponent.js";
 
@@ -26,7 +26,7 @@ export default {
         }
 
         for (let prop in newComponent.props) {
-            if (PropList.Attributes[prop]) {
+            if (RecursiveAttributes[prop]) {
                 if (component.props[prop] !== newComponent.props[prop]) {
                     updateAttr(prop);
                 }
@@ -34,7 +34,7 @@ export default {
         }
 
         for (let prop in component.props) {
-            if (PropList.Attributes[prop] && !newComponent.props[prop]) {
+            if (RecursiveAttributes[prop] && !newComponent.props[prop]) {
                 render[prop] = "";
             }
         }
@@ -161,7 +161,7 @@ export default {
 
             for (let event in newComponent.events) {
                 if (!render.events[event]) {
-                    render.addEventListener(PropList.Events[event].listener, (e) => {
+                    render.addEventListener(RecursiveEvents[event].listener, (e) => {
                         requestBatchingStart(`event-${event}`);
 
                         render.events[event](e);

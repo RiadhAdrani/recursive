@@ -310,7 +310,7 @@ const IFrame = ({
  * The ``<button>`` HTML element represents a clickable button,
  * used to submit forms or anywhere in a document for accessible,
  * standard button functionality.
- * @param param.autofocus This Boolean attribute specifies that the button
+ * @param param.autoFocus This Boolean attribute specifies that the button
  * should have input focus when the page loads.
  * @param param.disabled This Boolean attribute prevents the user from interacting with the button:
  * it cannot be pressed or focused.
@@ -336,7 +336,7 @@ const Button = ({
     id,
     contentEditable,
     draggable,
-    autofocus,
+    autoFocus,
     disabled,
     form,
     formAction,
@@ -360,7 +360,7 @@ const Button = ({
             id,
             contentEditable,
             draggable,
-            autofocus,
+            autoFocus,
             disabled,
             form,
             formAction,
@@ -388,7 +388,7 @@ const Button = ({
  * useful when you want to allow users to enter a sizeable amount of free-form text,
  * for example a comment on a review or feedback form.
  * @param param.autoComplete This attribute indicates whether the value of the control can be automatically completed by the browser.
- * @param param.autofocus This Boolean attribute lets you specify that a form control should have input focus when the page loads.
+ * @param param.autoFocus This Boolean attribute lets you specify that a form control should have input focus when the page loads.
  * @param param.cols The visible width of the text control, in average character widths.
  * @param param.disabled This Boolean attribute indicates that the user cannot interact with the control.
  * @param param.form The form element that the ``<textarea>`` element is associated with (its "form owner").
@@ -411,7 +411,7 @@ const TextArea = ({
     contentEditable,
     draggable,
     autoComplete,
-    autofocus,
+    autoFocus,
     cols,
     disabled,
     form,
@@ -439,7 +439,7 @@ const TextArea = ({
             contentEditable,
             draggable,
             autoComplete,
-            autofocus,
+            autoFocus,
             cols,
             disabled,
             form,
@@ -467,7 +467,7 @@ const TextArea = ({
  * ### The HTML Select element
  * The ``<select>`` HTML element represents a control that provides a menu of options:
  * @param param.autoComplete A DOMString providing a hint for a user agent's autocomplete feature.
- * @param param.autofocus This Boolean attribute lets you specify that a form control should have input focus when the page loads.
+ * @param param.autoFocus This Boolean attribute lets you specify that a form control should have input focus when the page loads.
  * @param param.disabled This Boolean attribute indicates that the user cannot interact with the control.
  * @param param.form The ``<form>`` element to associate the ``<select>`` with (its form owner).
  * @param param.multiple This Boolean attribute indicates that multiple options can be selected in the list.
@@ -485,7 +485,7 @@ const Select = ({
     contentEditable,
     draggable,
     autoComplete,
-    autofocus,
+    autoFocus,
     disabled,
     form,
     multiple,
@@ -505,7 +505,7 @@ const Select = ({
             contentEditable,
             draggable,
             autoComplete,
-            autofocus,
+            autoFocus,
             disabled,
             form,
             multiple,
@@ -802,7 +802,7 @@ const Input = ({
     accept,
     alt,
     autoComplete,
-    autofocus,
+    autoFocus,
     capture,
     checked,
     dirname,
@@ -843,7 +843,7 @@ const Input = ({
             accept,
             alt,
             autoComplete,
-            autofocus,
+            autoFocus,
             capture,
             checked,
             dirname,

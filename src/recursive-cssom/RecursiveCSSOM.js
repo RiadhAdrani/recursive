@@ -1,7 +1,10 @@
 import HandleStyleObject from "./HandleStyleObject.js";
-import Handler from "./HandleStyle.js";
 import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
+import StaticStyleResolver from "./RecursiveCSSOMStaticStyleResolver.js";
+import RecursiveCSSOMExporter from "./RecursiveCSSOMExporter.js";
+import CustomComponentStyle from "../create-component/CustomComponents.js";
+import SelectorHandler from "./RecursiveCSSOMSelectorHandler.js";
 
 class RecursiveCSSOM {
     static singleton = new RecursiveCSSOM();
@@ -13,6 +16,9 @@ class RecursiveCSSOM {
             ]);
         }
 
+        this.defaultComponentStyle = document.createElement("style");
+        this.defaultComponentStyle.id = "default-components-style";
+
         this.appStaticStyle = document.createElement("style");
         this.appStaticStyle.id = "app-static-style";
 
@@ -22,9 +28,16 @@ class RecursiveCSSOM {
         this.appStyle = document.createElement("style");
         this.appStyle.id = "app-components-style";
 
+        document.querySelector("head").append(this.defaultComponentStyle);
         document.querySelector("head").append(this.appStaticStyle);
         document.querySelector("head").append(this.appStyle);
         document.querySelector("head").append(this.appDynamicStyle);
+
+        CustomComponentStyle.forEach((style) => {
+            this.defaultComponentStyle.innerHTML += `${style.tag}{${SelectorHandler(
+                style.normal
+            )}}`;
+        });
 
         this.sheet = "";
         this.staticSheet = "";
@@ -62,7 +75,7 @@ class RecursiveCSSOM {
             }
         });
 
-        const exported = Handler.export(
+        const exported = RecursiveCSSOMExporter(
             this.current.selectors,
             this.current.animations,
             this.current.mediaQueries
@@ -86,7 +99,7 @@ class RecursiveCSSOM {
     }
 
     injectStaticStyle(styleSheet) {
-        const ss = Handler.exportStatic(styleSheet);
+        const ss = StaticStyleResolver(styleSheet);
         if (ss !== this.staticSheet) {
             this.appStaticStyle.innerHTML = ss;
         }
@@ -99,7 +112,7 @@ class RecursiveCSSOM {
     injectDynamicStyle() {
         let dss = "";
         this.dynamicStack.forEach((declaration) => {
-            dss += Handler.exportStatic(declaration);
+            dss += StaticStyleResolver(declaration);
         });
 
         if (dss != this.dynamicSheet) {

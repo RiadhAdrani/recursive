@@ -2,7 +2,7 @@ import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
 import Init from "./tools/Init.js";
 import Render from "./tools/Render.js";
 import Update from "./tools/Update.js";
-import RecursiveEvents from "../recursive-dom/RecursiveEvents.js";
+import RecursiveDOMEvents from "../recursive-dom/RecursiveDOMEvents.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
 import {
     requestBatchingEnd,
@@ -370,7 +370,7 @@ class CreateComponent {
      * @deprecated
      */
     addExternalStyle() {
-        RecursiveEvents.sendCSSobject({ ...this.style });
+        RecursiveDOMEvents.sendCSSobject({ ...this.style });
 
         if (this.children) {
             this.children.forEach((child) => {

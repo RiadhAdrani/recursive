@@ -1,5 +1,5 @@
 import { throwError } from "../recursive-dom/RecursiveError.js";
-import PropList from "../recursive-dom/PropList.js";
+import RecursiveCSSSelectors from "./RecursiveCSSSelectors.js";
 
 export default (styleSheet, selectors, mediaQueries, animations) => {
     if (styleSheet) {
@@ -34,9 +34,9 @@ export default (styleSheet, selectors, mediaQueries, animations) => {
                 )
                     continue;
 
-                if (PropList.CssSelectors[selector] || selector === "normal") {
+                if (RecursiveCSSSelectors[selector] || selector === "normal") {
                     selectors.push(
-                        styleObject(PropList.CssSelectors[selector], styleSheet[selector])
+                        styleObject(RecursiveCSSSelectors[selector], styleSheet[selector])
                     );
                 } else {
                     throwError(

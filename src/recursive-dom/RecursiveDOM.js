@@ -1,11 +1,6 @@
 import { throwError } from "./RecursiveError.js";
 import RecursiveCSSOM from "../recursive-cssom/RecursiveCSSOM.js";
-import {
-    isBatching,
-    states,
-    changeState,
-    free,
-} from "../recursive-orchestrator/RecursiveOrchestrator.js";
+import { states, changeState } from "../recursive-orchestrator/RecursiveOrchestrator.js";
 import { cleanStore as cleanReferenceStore } from "../recursive-state/SetReference.js";
 import { cleanStore as cleanStateStore } from "../recursive-state/SetState.js";
 

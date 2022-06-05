@@ -1,4 +1,5 @@
 import CustomComponents from "./src/create-component/CustomComponents.js";
+import CreateComponent from "./src/create-component/CreateComponent.js";
 import * as Components from "./components.js";
 import RecursiveDOM from "./src/recursive-dom/RecursiveDOM.js";
 import { getRef } from "./src/recursive-state/SetReference.js";
@@ -14,14 +15,14 @@ import {
     onFreshLoad,
 } from "./src/recursive-router/RecursiveRouter.js";
 import RecursiveCSSOM from "./src/recursive-cssom/RecursiveCSSOM.js";
-
-CustomComponents();
+import RecursiveWindow from "./src/recursive-window/RecursiveWindow.js";
 
 /**
  * Render your App.
  * @param {Function} App function returning the tree of components
  */
 function Render(App) {
+    RecursiveWindow();
     RecursiveDOM.singleton.app = App;
     RecursiveDOM.singleton.render();
 
@@ -73,5 +74,6 @@ export {
     renderRoute,
     route,
     setTitle,
+    CreateComponent,
     Components,
 };

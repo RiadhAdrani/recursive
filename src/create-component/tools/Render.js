@@ -2,7 +2,8 @@ import {
     requestBatchingEnd,
     requestBatchingStart,
 } from "../../recursive-orchestrator/RecursiveOrchestrator.js";
-import PropList from "../../recursive-dom/PropList.js";
+import RecursiveDOMEvents from "../../recursive-dom/RecursiveDOMEvents.js";
+import RecursiveAttributes from "../../recursive-dom/RecursiveDOMAttributes.js";
 
 export default {
     /**
@@ -12,7 +13,7 @@ export default {
      */
     attributes: (component, element) => {
         for (let p in component.props) {
-            element[PropList.Attributes[p]] = component.props[p];
+            element[RecursiveAttributes[p]] = component.props[p];
         }
 
         if (component.style) {
@@ -43,10 +44,10 @@ export default {
             function addEvent(prop, event) {
                 element.events[prop] = event;
 
-                if (PropList.Events[prop].handler) {
-                    PropList.Events[prop].handler(element);
+                if (RecursiveDOMEvents[prop].handler) {
+                    RecursiveDOMEvents[prop].handler(element);
                 } else {
-                    element.addEventListener(PropList.Events[prop].listener, (e) => {
+                    element.addEventListener(RecursiveDOMEvents[prop].listener, (e) => {
                         requestBatchingStart(`event-${prop}`);
 
                         element.events[prop](e);
@@ -59,7 +60,7 @@ export default {
             element.events = {};
 
             for (var event in component.events) {
-                if (PropList.Events[event]) {
+                if (RecursiveDOMEvents[event]) {
                     addEvent(event, component.events[event]);
                 }
             }
