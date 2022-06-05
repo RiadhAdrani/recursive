@@ -1,7 +1,4 @@
 import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
-import Init from "./tools/Init.js";
-import Render from "./tools/Render.js";
-import Update from "./tools/Update.js";
 import RecursiveDOMEvents from "../recursive-dom/RecursiveDOMEvents.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
 import {
@@ -14,6 +11,10 @@ import {
     getContext,
     startContext,
 } from "../recursive-context/RecursiveContext.js";
+import RecursiveDOMAttributes from "../recursive-dom/RecursiveDOMAttributes.js";
+import CreateTextNode from "./CreateTextNode.js";
+import RecursiveFlags from "../recursive-flags/RecursiveFlags.js";
+import RecursiveHooks from "../recursive-hooks/RecursiveHooks.js";
 
 /**
  * ## CreateComponent
@@ -73,12 +74,12 @@ class CreateComponent {
         if (className) this.className = className;
         if (style) this.style = style;
 
-        Init.className(this, style);
-        Init.attributes(this, { ...props, className: this.className });
-        Init.events(this, events);
-        Init.hooks(this, hooks);
-        Init.flags(this, flags);
-        Init.children(this, children);
+        this.prepareClassName();
+        this.prepareAttributes({ ...props, className: this.className });
+        this.prepareEvents(events);
+        this.prepareHooks(hooks);
+        this.prepareFlags(flags);
+        this.prepareChildren(children);
 
         this.map = false;
         if (this.children) {
@@ -100,6 +101,167 @@ class CreateComponent {
         }
     }
 
+    prepareChildren(children) {
+        // if children is not null
+        if (children !== null) {
+            // if children is an array
+            if (this.isArray(children)) {
+                // iterate through children
+                for (let i = 0; i < children.length; i++) {
+                    // skip child if null
+                    if (children[i] === null) continue;
+
+                    // throw an error if a child is an array
+                    if (this.isArray(children[i])) {
+                        throwError("Child Cannot be of type array", [
+                            "Check if you are nesting an array inside the children array.",
+                        ]);
+                    }
+
+                    // if child is a component.
+                    else if (this.isComponent(children[i])) {
+                        // check renderIf value
+                        if (children[i].flags.renderIf !== false) {
+                            if (children[i].tag === "fragment") {
+                                this.children.push(...children[i].children);
+                            } else this.children.push(children[i]);
+                        }
+                    }
+                    // else child could be rendered as a text node
+                    else {
+                        let textNode = children[i];
+
+                        // merge all consecutive non-component child into one text node
+                        for (let j = i + 1, l = children.length; j < l; j++) {
+                            if (this.isComponent(children[j]) && children[j] !== null) {
+                                break;
+                            } else if (this.isArrayOfComponents(children[j])) {
+                                throwError("Child Cannot be of type array", [
+                                    "Check if you are nesting an array inside the children array.",
+                                ]);
+                            } else {
+                                textNode = `${textNode}${children[j]}`;
+                                i++;
+                            }
+                        }
+
+                        // push text node
+                        this.children.push(CreateTextNode(textNode));
+                    }
+                }
+            }
+            // children is a single node
+            else if (children !== undefined) {
+                if (children.$$createcomponent) {
+                    if (children.flags.renderIf !== false) {
+                        if (children.tag === "fragment") this.children = children.children;
+                        else this.children = [children];
+                    }
+                }
+                // child is a text node
+                else {
+                    this.children = [CreateTextNode(children)];
+                }
+            }
+            // child is a component
+        }
+        // no children
+        else {
+            component.children = [];
+        }
+    }
+
+    prepareEvents(events) {
+        for (var event in events) {
+            if (RecursiveDOMEvents[event]) {
+                if (typeof events[event] === "function") {
+                    this.events[event] = events[event];
+                } else {
+                    throwError(`${event} is not function.`, ["Event is not of type function"]);
+                }
+            } else {
+                throwError(`${event} is not a valid event name or is yet to be implemented.`, [
+                    "Event name is non-existant",
+                ]);
+            }
+        }
+    }
+
+    prepareFlags(flags) {
+        for (let f in flags) {
+            if (RecursiveFlags[f]) {
+                this.flags[f] = flags[f];
+            }
+        }
+    }
+
+    prepareAttributes(attributes) {
+        for (var attr in attributes) {
+            if (RecursiveDOMAttributes[attr]) {
+                if (attributes[attr]) {
+                    this.props[attr] = attributes[attr];
+                }
+            }
+        }
+    }
+
+    prepareClassName() {
+        // if style is valid
+        if (this.style !== undefined && this.style.className !== undefined) {
+            // check if className is valid
+            this.isValidClassName(this.style.className);
+            if (!this.className) {
+                this.className = this.style.className;
+            } else {
+                this.className = `${this.className} ${this.style.className}`;
+            }
+        }
+
+        if (this.className) {
+            const classList = this.className.toString().split(" ");
+            for (var i = 0, j = classList.length; i < j; i++) {
+                this.isValidClassName(classList[i]);
+            }
+        } else {
+            this.className = "";
+        }
+    }
+
+    prepareHooks(hooks) {
+        for (var hook in hooks) {
+            if (hooks[hook] !== undefined) {
+                if (RecursiveHooks[hook]) {
+                    if (typeof hooks[hook] === "function") {
+                        this.hooks[hook] = hooks[hook];
+                    } else {
+                        throwError(`${hook} is not a function.`, ["Hook is not of type function"]);
+                    }
+                } else {
+                    throwError(`${hook} is not a valid hook name.`, ["Hook name is non-existant"]);
+                }
+            }
+        }
+    }
+
+    isValidClassName(classname) {
+        return !classname
+            ? true
+            : /^[a-zA-Z]([a-zA-Z0-9]|(-))+$/.test(classname)
+            ? true
+            : throwError(`${classname} is not a valid className`, [
+                  'Class name can only include alphaneumerical characters and "-".',
+                  "Class name should not contain spaces.",
+              ]);
+    }
+
+    isArray(items) {
+        return Array.isArray(items);
+    }
+
+    isComponent(item) {
+        return item instanceof CreateComponent;
+    }
+
     /**
      * assign UIDs
      */
@@ -113,11 +275,51 @@ class CreateComponent {
         endCurrentContext();
     }
 
-    /**
-     * modify the render process
-     * @param {HTMLElement} render html element to be rendered
-     */
-    superRender(render) {}
+    renderAttributes(element) {
+        for (let p in this.props) {
+            element[RecursiveDOMAttributes[p]] = this.props[p];
+        }
+
+        if (this.style) {
+            if (this.style.inline) {
+                for (let att in this.style.inline) {
+                    element.style[att] = this.style.inline[att];
+                }
+            }
+        }
+    }
+
+    renderEvents(element) {
+        if (this.events) {
+            function addEvent(prop, event) {
+                element.events[prop] = event;
+
+                if (RecursiveDOMEvents[prop].handler) {
+                    RecursiveDOMEvents[prop].handler(element);
+                } else {
+                    element.addEventListener(RecursiveDOMEvents[prop].listener, (e) => {
+                        requestBatchingStart(`event-${prop}`);
+
+                        element.events[prop](e);
+
+                        requestBatchingEnd(`event-${prop}`);
+                    });
+                }
+            }
+
+            element.events = {};
+
+            for (var event in this.events) {
+                if (RecursiveDOMEvents[event]) {
+                    addEvent(event, this.events[event]);
+                }
+            }
+        }
+    }
+
+    renderChildren(element) {
+        this.children.forEach((child) => element.append(child.render()));
+    }
 
     /**
      * Convert the Recursive representation into a DOM element.
@@ -126,30 +328,174 @@ class CreateComponent {
     render() {
         let render = document.createElement(this.tag);
 
-        // add attributes
-        Render.attributes(this, render);
-        // renderattributes(this, render);
-
-        // add events
-        // renderevents(this, render);
-        Render.events(this, render);
-
-        // inject children inside the rendered element
-        // renderchildren(this.children, render);
-        Render.children(this, render);
-
-        this.superRender(render);
+        this.renderAttributes(render);
+        this.renderEvents(render);
+        this.renderChildren(render);
 
         this.domInstance = render;
 
         return render;
     }
 
-    /**
-     * execute after the component has updated
-     * @param {CreateComponent | string} newComponent
-     */
-    superUpdate(newComponent) {}
+    updateAttributes(newComponent) {
+        let didUpdate = false;
+
+        const updateAttr = (attr) => {
+            if (newComponent.props[attr]) {
+                this.domInstance[attr] = newComponent.props[attr];
+            } else {
+                this.domInstance[attr] = "";
+            }
+            didUpdate = true;
+        };
+
+        for (let prop in newComponent.props) {
+            if (RecursiveDOMAttributes[prop]) {
+                if (this.props[prop] !== newComponent.props[prop]) {
+                    updateAttr(prop);
+                }
+            }
+        }
+
+        for (let prop in this.props) {
+            if (RecursiveDOMAttributes[prop] && !newComponent.props[prop]) {
+                this.domInstance[prop] = "";
+            }
+        }
+
+        if (newComponent.style) {
+            if (newComponent.style.inline) {
+                if (this.style) {
+                    if (this.style.inline) {
+                        for (let att in this.style.inline) {
+                            if (newComponent.style.inline[att] == undefined) {
+                                this.domInstance.style[att] = "";
+                            }
+                        }
+                    }
+                }
+
+                for (let att in newComponent.style.inline) {
+                    this.domInstance.style[att] = newComponent.style.inline[att];
+                }
+            } else {
+                if (this.style) {
+                    if (this.style.inline) {
+                        for (let att in component.style.inline) {
+                            this.domInstance.style[att] = "";
+                        }
+                    }
+                }
+            }
+        } else {
+            if (this.style) {
+                if (this.style.inline) {
+                    for (let att in this.style.inline) {
+                        this.domInstance.style[att] = "";
+                    }
+                }
+            }
+        }
+
+        return didUpdate;
+    }
+
+    updateChildren(newComponent) {
+        // Check for a missing node element.
+        // rerender the whole component tree if an element is missing
+        for (let i in this.children) {
+            if (!document.contains(this.children[i].domInstance)) {
+                this.$replaceInDOM(newComponent);
+                return;
+            }
+        }
+
+        // Check for mapping
+        if (this.map && newComponent.map) {
+            for (let key in this.map) {
+                if (!newComponent.map[key]) {
+                    this.map[key].c.$removeFromDOM();
+                    delete this.map[key];
+                }
+            }
+
+            for (let key in this.map) {
+                this.map[key].c.update(newComponent.map[key].c);
+            }
+
+            for (let key in newComponent.map) {
+                if (!this.map[key]) {
+                    this.map[key] = {
+                        ...newComponent.map[key],
+                        i: Object.keys(this.map).length,
+                    };
+                    newComponent.map[key].c.$appendInDOM(this);
+                }
+            }
+
+            for (let key in this.map) {
+                if (this.map[key].i !== newComponent.map[key].i)
+                    this.map[key].c.$changePosition(this, newComponent.map[key].i);
+            }
+        } else {
+            const compareEqualChildren = () => {
+                for (let i = 0; i < this.children.length; i++) {
+                    this.children[i].update(newComponent.children[i]);
+                }
+            };
+
+            if (this.children.length === newComponent.children.length) {
+                compareEqualChildren();
+            }
+            // if component.children are greater than newComponent.children
+            else if (this.children.length > newComponent.children.length) {
+                while (thist.children.length > newComponent.children.length) {
+                    this.children.pop().$removeFromDOM();
+                }
+                compareEqualChildren();
+            }
+            // if component.children are less than newComponent.children
+            else {
+                for (let i = this.children.length; i < newComponent.children.length; i++) {
+                    newComponent.children[i].$appendInDOM(this);
+                }
+                compareEqualChildren();
+            }
+        }
+    }
+
+    updateEvents(newComponent) {
+        const updateEvent = (prop) => {
+            this.domInstance.events[prop] = newComponent.events[prop];
+        };
+
+        if (newComponent.events) {
+            if (!this.domInstance.events) {
+                this.domInstance.events = {};
+            }
+
+            for (let event in newComponent.events) {
+                if (!this.domInstance.events[event]) {
+                    this.domInstance.addEventListener(RecursiveDOMEvents[event].listener, (e) => {
+                        requestBatchingStart(`event-${event}`);
+
+                        this.domInstance.events[event](e);
+
+                        requestBatchingEnd(`event-${event}`);
+                    });
+                }
+                updateEvent(event);
+            }
+
+            for (let event in this.domInstance.events) {
+                if (!newComponent.events[event]) {
+                    this.domInstance.events[event] = () => {};
+                }
+            }
+        } else {
+            this.domInstance.events = {};
+        }
+    }
 
     /**
      * Compare the current component with another given one and update the `DOM` if needed.
@@ -183,30 +529,28 @@ class CreateComponent {
         }
 
         // update events
-        Update.events(newComponent, htmlElement);
+        this.updateEvents(newComponent);
 
         // update inline style
         // const inlineStyleDidUpdate = Style.updateInline(this, newComponent);
 
-        // update class names
-        if (this.className !== newComponent.className) {
-            if (newComponent.className) {
-                htmlElement.className = newComponent.className;
-            } else {
-                htmlElement.className = "";
-            }
-        }
+        // // update class names
+        // if (this.className !== newComponent.className) {
+        //     if (newComponent.className) {
+        //         htmlElement.className = newComponent.className;
+        //     } else {
+        //         htmlElement.className = "";
+        //     }
+        // }
 
         // update attributes
-        const attributesDidUpdate = Update.attributes(this, newComponent, htmlElement);
+        const attributesDidUpdate = this.updateAttributes(newComponent);
 
         // update children
-        Update.children(this, newComponent, htmlElement);
+        this.updateChildren(newComponent);
 
         // check if there is any change
         didUpdate = attributesDidUpdate ? true : false;
-
-        this.superUpdate(newComponent);
 
         newComponent.domInstance = this.domInstance;
 
