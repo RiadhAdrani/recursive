@@ -32,16 +32,14 @@ class CreateComponent {
      * @param {string} param.tag "Html tag"
      * @param {Array} param.children an array of children. A child can be of type `CreateComponent`, `string`, `boolean`, `number`. `null` value will be ignored.
      * @param {JSON} param.events event handlers.
-     * @param {boolean} param.renderIf determine if the component should be rendered or not.
-     * @param {string} param.className the equivalent of html classes
+     * @param {string} param.key unique identifier within siblings
      * @param {JSON} param.style external style sheet
-     * @param {JSON} param.inlineStyle component inline style
      * @param {JSON} param.props the equivalent of html attributes
      * @param {JSON} param.hooks define lifecycle methods for the component.
      * @param {JSON} param.flags define flags for component updating.
-     * @param {Function} param.hooks define lifecycle methods.
+     * @param {JSON} param.data define data set.
      */
-    constructor({ tag, children, events, className, style, props, flags, key, hooks = {} }) {
+    constructor({ tag, children, events, style, props, flags, key, hooks, data }) {
         // tag cannot be
         if (!tag) {
             throwError('"tag" should not be empty or null.', [
@@ -64,6 +62,7 @@ class CreateComponent {
         this.flags = {};
         this.hooks = {};
         this.events = {};
+        this.data = data || {};
 
         this.ref = undefined;
         this.domInstance = undefined;
@@ -71,16 +70,17 @@ class CreateComponent {
         if (this.flags.renderIf == false && this.flags.renderIf != undefined) return;
 
         // props
-        if (className) this.className = className;
         if (style) this.style = style;
 
-        this.prepareClassName();
-        this.prepareAttributes({ ...props, className: this.className });
+        this.prepareAttributes(props);
         this.prepareEvents(events);
         this.prepareHooks(hooks);
         this.prepareFlags(flags);
         this.prepareChildren(children);
+        this.prepareMap();
+    }
 
+    prepareMap() {
         this.map = false;
         if (this.children) {
             for (let i = 0; i < this.children.length; i++) {
@@ -205,28 +205,6 @@ class CreateComponent {
         }
     }
 
-    prepareClassName() {
-        // if style is valid
-        if (this.style !== undefined && this.style.className !== undefined) {
-            // check if className is valid
-            this.isValidClassName(this.style.className);
-            if (!this.className) {
-                this.className = this.style.className;
-            } else {
-                this.className = `${this.className} ${this.style.className}`;
-            }
-        }
-
-        if (this.className) {
-            const classList = this.className.toString().split(" ");
-            for (var i = 0, j = classList.length; i < j; i++) {
-                this.isValidClassName(classList[i]);
-            }
-        } else {
-            this.className = "";
-        }
-    }
-
     prepareHooks(hooks) {
         for (var hook in hooks) {
             if (hooks[hook] !== undefined) {
@@ -275,9 +253,17 @@ class CreateComponent {
         endCurrentContext();
     }
 
+    /**
+     *
+     * @param {HTMLElement} element
+     */
     renderAttributes(element) {
         for (let p in this.props) {
             element[RecursiveDOMAttributes[p]] = this.props[p];
+        }
+
+        for (let item in this.data) {
+            element.dataset[item] = this.data[item];
         }
 
         if (this.style) {
@@ -361,6 +347,14 @@ class CreateComponent {
             if (RecursiveDOMAttributes[prop] && !newComponent.props[prop]) {
                 this.domInstance[prop] = "";
             }
+        }
+
+        for (let item in this.data) {
+            delete this.domInstance.dataset[item];
+        }
+
+        for (let item in newComponent.data) {
+            this.domInstance.dataset[item] = newComponent.data[item];
         }
 
         if (newComponent.style) {
@@ -449,7 +443,7 @@ class CreateComponent {
             }
             // if component.children are greater than newComponent.children
             else if (this.children.length > newComponent.children.length) {
-                while (thist.children.length > newComponent.children.length) {
+                while (this.children.length > newComponent.children.length) {
                     this.children.pop().$removeFromDOM();
                 }
                 compareEqualChildren();
@@ -530,18 +524,6 @@ class CreateComponent {
 
         // update events
         this.updateEvents(newComponent);
-
-        // update inline style
-        // const inlineStyleDidUpdate = Style.updateInline(this, newComponent);
-
-        // // update class names
-        // if (this.className !== newComponent.className) {
-        //     if (newComponent.className) {
-        //         htmlElement.className = newComponent.className;
-        //     } else {
-        //         htmlElement.className = "";
-        //     }
-        // }
 
         // update attributes
         const attributesDidUpdate = this.updateAttributes(newComponent);
@@ -706,25 +688,6 @@ class CreateComponent {
         );
     }
 
-    // STYLING
-    // ------------------------------------------------------------------------------------------------------
-
-    /**
-     * Send the `styleSheet` object to the RecursiveDOM to be processed.
-     * @deprecated
-     */
-    addExternalStyle() {
-        RecursiveDOMEvents.sendCSSobject({ ...this.style });
-
-        if (this.children) {
-            this.children.forEach((child) => {
-                if (child.render) {
-                    child.addExternalStyle();
-                }
-            });
-        }
-    }
-
     /**
      * Transform the UID into a unqie and valid className
      * @returns {String} unique className
@@ -757,15 +720,20 @@ class CreateComponent {
             });
         }
 
-        if (this.style) {
-            if (this.style.scoped) {
-                const scoping = `-${this.tag}-${this.makeUniqueClassName()}`;
-                const addSpace = !this.style.className;
+        if (this.style && (this.style.scoped || this.style.className)) {
+            let styleClassName = this.style.className || "";
 
-                this.style.className = !addSpace ? this.style.className + scoping : scoping;
-                this.className = this.className + (addSpace ? " " : "") + scoping;
-                this.props.className = this.className;
+            if (this.style.scoped) {
+                if (styleClassName) styleClassName += "-";
+
+                styleClassName += `${this.tag}-${this.makeUniqueClassName()}`;
             }
+
+            if (this.props.className) this.props.className += " ";
+            else this.props.className = "";
+
+            this.props.className = this.props.className + styleClassName;
+            this.style.className = styleClassName;
 
             output.push(this.style);
         }

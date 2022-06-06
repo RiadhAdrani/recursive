@@ -126,4 +126,8 @@ function getCache(uuid) {
     return CacheStore.singleton.getCache(uuid);
 }
 
-export { setCache, getCache };
+function clearStore() {
+    CacheStore.singleton.items = {};
+}
+
+export { setCache, getCache, clearStore };

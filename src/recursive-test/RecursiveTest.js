@@ -1,7 +1,14 @@
 import { Render } from "../../index.js";
 import CreateComponent from "../create-component/CreateComponent";
+import { clearStore as clearCache } from "../recursive-state/SetCache.js";
+import { clearStore as cleanRefs } from "../recursive-state/SetReference.js";
+import { setState, cleanStore as cleanStates } from "../recursive-state/SetState.js";
 
 function executeTest({ name, test, itemGetter, premise }) {
+    cleanStates();
+    cleanRefs();
+    clearCache();
+
     Render(test);
 
     const result = itemGetter();
@@ -24,10 +31,16 @@ const HtmlAttributesTest = () => {
     return executeTest({
         name: "html-attributes",
         test: () => {
-            return new CreateComponent({ tag: "img", props: { id: "test", src: "test.img" } });
+            return new CreateComponent({
+                tag: "img",
+                props: {
+                    id: "test",
+                    src: "https://images.unsplash.com/photo-1654455103120-e33ac58ab56a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1229&q=80",
+                },
+            });
         },
         itemGetter: () => document.getElementById("test").src,
-        premise: `${location.origin}${location.pathname}test.img`,
+        premise: `https://images.unsplash.com/photo-1654455103120-e33ac58ab56a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1229&q=80`,
     });
 };
 
@@ -35,7 +48,7 @@ const ClassNameTest = () => {
     return executeTest({
         name: "class-attributes",
         test: () => {
-            return new CreateComponent({ tag: "div", props: { id: "test" }, className: "test" });
+            return new CreateComponent({ tag: "div", props: { id: "test", className: "test" } });
         },
         itemGetter: () => document.getElementById("test").className,
         premise: `test`,
@@ -48,8 +61,7 @@ const ClassNameWithStyleTest = () => {
         test: () => {
             return new CreateComponent({
                 tag: "div",
-                props: { id: "test" },
-                className: "test",
+                props: { id: "test", className: "test" },
                 style: { className: "styled" },
             });
         },
@@ -64,8 +76,7 @@ const ClassNameWithScopedStyleTest = () => {
         test: () => {
             return new CreateComponent({
                 tag: "div",
-                props: { id: "test" },
-                className: "test",
+                props: { id: "test", className: "test" },
                 style: { className: "styled", scoped: true },
             });
         },
@@ -100,7 +111,32 @@ const NoClassNameAndNoStyleClassButScopedTest = () => {
             });
         },
         itemGetter: () => document.getElementById("test").className,
-        premise: ` -div-x`,
+        premise: `div-x`,
+    });
+};
+
+const UpdateClassNameTest = () => {
+    return executeTest({
+        name: "set-state",
+        test: () => {
+            const [value, setValue] = setState("value", "test-class-name");
+
+            return new CreateComponent({
+                tag: "div",
+                props: { id: "test", className: value },
+                style: { scoped: true, className: "test-style-class" },
+                events: {
+                    onClick: () => {
+                        setValue("recursive");
+                    },
+                },
+            });
+        },
+        itemGetter: () => {
+            document.getElementById("test").click();
+            return document.getElementById("test").className;
+        },
+        premise: `recursive test-style-class-div-x`,
     });
 };
 
@@ -144,20 +180,326 @@ const AppliedScopedStyleTest = () => {
     });
 };
 
-const tests = [
-    CreateComponentTest(),
-    HtmlAttributesTest(),
-    ClassNameTest(),
-    ClassNameWithStyleTest(),
-    ClassNameWithScopedStyleTest(),
-    NoClassNameWithScopedStyleTest(),
-    NoClassNameAndNoStyleClassButScopedTest(),
-    AppliedStyleTest(),
-    AppliedScopedStyleTest(),
-];
+const UpdateComponentToComponentTest = () => {
+    return executeTest({
+        name: "update-children-component-vs-component",
+        test: () => {
+            const [toggle, setToggle] = setState("toggle", true);
+
+            const Item1 = new CreateComponent({ tag: "p" });
+            const Item2 = new CreateComponent({ tag: "span" });
+
+            return new CreateComponent({
+                tag: "button",
+                children: toggle ? Item1 : Item2,
+                props: { id: "test" },
+                events: { onClick: () => setToggle(!toggle) },
+            });
+        },
+        itemGetter: () => {
+            document.getElementById("test").click();
+            return document.getElementById("test").innerHTML;
+        },
+        premise: "<span></span>",
+    });
+};
+
+const UpdateComponentToTextTest = () => {
+    return executeTest({
+        name: "update-children-component-vs-text",
+        test: () => {
+            const [uctt, setToggle] = setState("uctt", true);
+
+            const Item1 = new CreateComponent({ tag: "p", children: "Item 1" });
+            const Item2 = "Item 2";
+
+            return new CreateComponent({
+                tag: "button",
+                children: uctt ? Item1 : Item2,
+                props: { id: "test" },
+                events: {
+                    onClick: () => {
+                        setToggle(!uctt);
+                    },
+                },
+            });
+        },
+        itemGetter: () => {
+            document.getElementById("test").click();
+            return document.getElementById("test").innerHTML;
+        },
+        premise: "Item 2",
+    });
+};
+
+const UpdateTextToTextTest = () => {
+    return executeTest({
+        name: "update-children-text-vs-text",
+        test: () => {
+            const [uttt, setToggle] = setState("uttt", true);
+
+            const Item1 = "Item 1";
+            const Item2 = "Item 2";
+
+            return new CreateComponent({
+                tag: "button",
+                children: uttt ? Item1 : Item2,
+                props: { id: "test" },
+                events: {
+                    onClick: () => {
+                        setToggle(!uttt);
+                    },
+                },
+            });
+        },
+        itemGetter: () => {
+            document.getElementById("test").click();
+            return document.getElementById("test").innerHTML;
+        },
+        premise: "Item 2",
+    });
+};
+
+const UpdateMoreToLessTest = () => {
+    return executeTest({
+        name: "update-more-to-less-children",
+        test: () => {
+            const [umtlc, setToggle] = setState("umtlc", true);
+
+            const Item1 = [
+                new CreateComponent({ tag: "a", children: "item 1" }),
+                new CreateComponent({ tag: "a", children: "item 2" }),
+                new CreateComponent({ tag: "a", children: "item 3" }),
+            ];
+            const Item2 = new CreateComponent({ tag: "a", children: "item 0" });
+
+            return new CreateComponent({
+                tag: "div",
+                children: umtlc ? Item1 : Item2,
+                props: { id: "test" },
+                events: {
+                    onClick: () => {
+                        setToggle(!umtlc);
+                    },
+                },
+            });
+        },
+        itemGetter: () => {
+            document.getElementById("test").click();
+            return document.getElementById("test").innerHTML;
+        },
+        premise: "<a>item 0</a>",
+    });
+};
+
+const UpdateLessToMoreTest = () => {
+    return executeTest({
+        name: "update-less-to-more-children",
+        test: () => {
+            const [umtlc, setToggle] = setState("umtlc", true);
+
+            const Item2 = [
+                new CreateComponent({ tag: "a", children: "item 1" }),
+                new CreateComponent({ tag: "a", children: "item 2" }),
+                new CreateComponent({ tag: "a", children: "item 3" }),
+            ];
+            const Item1 = new CreateComponent({ tag: "a", children: "item 0" });
+
+            return new CreateComponent({
+                tag: "div",
+                children: umtlc ? Item1 : Item2,
+                props: { id: "test" },
+                events: {
+                    onClick: () => {
+                        setToggle(!umtlc);
+                    },
+                },
+            });
+        },
+        itemGetter: () => {
+            document.getElementById("test").click();
+            return document.getElementById("test").innerHTML;
+        },
+        premise: "<a>item 1</a><a>item 2</a><a>item 3</a>",
+    });
+};
+
+const UpdateMapMoreToLessTest = () => {
+    return executeTest({
+        name: "update-more-to-less-map",
+        test: () => {
+            const [ummtlt, setToggle] = setState("ummtlt", true);
+
+            const Item1 = [
+                new CreateComponent({ tag: "a", children: "item 1", key: 1 }),
+                new CreateComponent({ tag: "a", children: "item 2", key: 2 }),
+                new CreateComponent({ tag: "a", children: "item 3", key: 3 }),
+            ];
+            const Item2 = new CreateComponent({ tag: "a", children: "item 0", key: 4 });
+
+            return new CreateComponent({
+                tag: "div",
+                children: ummtlt ? Item1 : Item2,
+                props: { id: "test" },
+                events: {
+                    onClick: () => {
+                        setToggle(!ummtlt);
+                    },
+                },
+            });
+        },
+        itemGetter: () => {
+            document.getElementById("test").click();
+            return document.getElementById("test").innerHTML;
+        },
+        premise: "<a>item 0</a>",
+    });
+};
+
+const UpdateMapLessToMoreTest = () => {
+    return executeTest({
+        name: "update-less-to-more-map",
+        test: () => {
+            const [umltmt, setToggle] = setState("umltmt", true);
+
+            const Item2 = [
+                new CreateComponent({ tag: "a", children: "item 1", key: 1 }),
+                new CreateComponent({ tag: "a", children: "item 2", key: 2 }),
+                new CreateComponent({ tag: "a", children: "item 3", key: 3 }),
+            ];
+            const Item1 = new CreateComponent({ tag: "a", children: "item 0", key: 2 });
+
+            return new CreateComponent({
+                tag: "div",
+                children: umltmt ? Item1 : Item2,
+                props: { id: "test" },
+                events: {
+                    onClick: () => {
+                        setToggle(!umltmt);
+                    },
+                },
+            });
+        },
+        itemGetter: () => {
+            document.getElementById("test").click();
+            return document.getElementById("test").innerHTML;
+        },
+        premise: "<a>item 1</a><a>item 2</a><a>item 3</a>",
+    });
+};
+
+const UpdateMapChangePositionsTest = () => {
+    return executeTest({
+        name: "update-change-position-map",
+        test: () => {
+            const [umcpt, setToggle] = setState("umcpt", true);
+
+            const Item1 = [
+                new CreateComponent({ tag: "a", children: "item 1", key: 1 }),
+                new CreateComponent({ tag: "a", children: "item 2", key: 2 }),
+                new CreateComponent({ tag: "a", children: "item 3", key: 3 }),
+            ];
+            const Item2 = [
+                new CreateComponent({ tag: "a", children: "item 3", key: 3 }),
+                new CreateComponent({ tag: "a", children: "item 1", key: 1 }),
+                new CreateComponent({ tag: "a", children: "item 2", key: 2 }),
+            ];
+
+            return new CreateComponent({
+                tag: "div",
+                children: umcpt ? Item1 : Item2,
+                props: { id: "test" },
+                events: {
+                    onClick: () => {
+                        setToggle(!umcpt);
+                    },
+                },
+            });
+        },
+        itemGetter: () => {
+            document.getElementById("test").click();
+            return document.getElementById("test").innerHTML;
+        },
+        premise: "<a>item 3</a><a>item 1</a><a>item 2</a>",
+    });
+};
+
+const InlineStyleTest = () => {
+    return executeTest({
+        name: "inline-style",
+        test: () => {
+            return new CreateComponent({
+                tag: "p",
+                children: "text",
+                props: {
+                    id: "test",
+                },
+                style: {
+                    inline: { color: "red" },
+                },
+            });
+        },
+        itemGetter: () => document.getElementById("test").outerHTML,
+        premise: `<p id="test" style="color: red;">text</p>`,
+    });
+};
+
+const ChangeInlineStyleTest = () => {
+    return executeTest({
+        name: "change-inline-style",
+        test: () => {
+            const [cist, setValue] = setState("cist", "red");
+
+            return new CreateComponent({
+                tag: "p",
+                children: "text",
+                props: {
+                    id: "test",
+                },
+                style: {
+                    inline: { color: cist },
+                },
+                events: { onClick: () => setValue("blue") },
+            });
+        },
+        itemGetter: () => {
+            document.getElementById("test").click();
+            return document.getElementById("test").outerHTML;
+        },
+        premise: `<p id="test" style="color: blue;">text</p>`,
+    });
+};
 
 const Run = ({ showOnlyFailed = false }) => {
-    console.log(`%cRunning ${tests.length} Tests ...`, "background:blue;padding:5px 10px;");
+    document.title = "Testing ...";
+
+    const tests = [
+        CreateComponentTest(),
+        HtmlAttributesTest(),
+        ClassNameTest(),
+        ClassNameWithStyleTest(),
+        ClassNameWithScopedStyleTest(),
+        NoClassNameWithScopedStyleTest(),
+        NoClassNameAndNoStyleClassButScopedTest(),
+        AppliedStyleTest(),
+        AppliedScopedStyleTest(),
+        UpdateClassNameTest(),
+        UpdateComponentToComponentTest(),
+        UpdateComponentToTextTest(),
+        UpdateTextToTextTest(),
+        UpdateMoreToLessTest(),
+        UpdateLessToMoreTest(),
+        UpdateMapMoreToLessTest(),
+        UpdateMapLessToMoreTest(),
+        UpdateMapChangePositionsTest(),
+        InlineStyleTest(),
+        ChangeInlineStyleTest(),
+    ];
+
+    console.log(`%cRunning ${tests.length} Tests ...`, "background:purple;padding:5px;");
+
+    const success = [];
+    const fail = [];
 
     tests.forEach((test) => {
         let style = "";
@@ -165,7 +507,7 @@ const Run = ({ showOnlyFailed = false }) => {
 
         if (test.passed) {
             msg = `%c${test.name} : passed`;
-            style = "color:#00ff00;font-size:1em;";
+            style = "color:#00ff00;font-size:10px;";
         } else {
             msg = `%c${test.name} : failed \nExpected "${test.premise}" but got "${test.result}"`;
             style = "color:white;font-size:1em;background:#aa0000;padding:5px";
@@ -174,9 +516,17 @@ const Run = ({ showOnlyFailed = false }) => {
         if (showOnlyFailed && test.passed == true) return;
 
         console.log(msg, style);
+
+        if (test.passed) success.push(test.name);
+        else fail.push(test.name);
     });
 
-    console.log(`%cCompleted ${tests.length} Tests`, "background:blue;padding:5px 10px;");
+    document.title = `Completed ${success.length}/${tests.length} Tests`;
+
+    console.log(
+        `%cCompleted ${success.length}/${tests.length} Tests`,
+        "background:purple;padding:5px;"
+    );
 };
 
 export { Run };

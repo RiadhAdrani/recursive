@@ -1,6 +1,4 @@
-import CustomComponents from "./src/create-component/CustomComponents.js";
 import CreateComponent from "./src/create-component/CreateComponent.js";
-import * as Components from "./components.js";
 import RecursiveDOM from "./src/recursive-dom/RecursiveDOM.js";
 import { getRef } from "./src/recursive-state/SetReference.js";
 import { setState, getState, updateAfter } from "./src/recursive-state/SetState.js";
@@ -75,5 +73,4 @@ export {
     route,
     setTitle,
     CreateComponent,
-    Components,
 };

@@ -32,4 +32,8 @@ function cleanStore() {
     return ReferenceStore.singleton.clean();
 }
 
-export { getRef, setRef, cleanStore };
+function clearStore() {
+    ReferenceStore.singleton.items = {};
+}
+
+export { getRef, setRef, cleanStore, clearStore };
