@@ -3,8 +3,6 @@ import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
 import StaticStyleResolver from "./RecursiveCSSOMStaticStyleResolver.js";
 import RecursiveCSSOMExporter from "./RecursiveCSSOMExporter.js";
-import CustomComponentStyle from "../create-component/CustomComponents.js";
-import SelectorHandler from "./RecursiveCSSOMSelectorHandler.js";
 
 class RecursiveCSSOM {
     static singleton = new RecursiveCSSOM();
@@ -32,12 +30,6 @@ class RecursiveCSSOM {
         document.querySelector("head").append(this.appStaticStyle);
         document.querySelector("head").append(this.appStyle);
         document.querySelector("head").append(this.appDynamicStyle);
-
-        CustomComponentStyle.forEach((style) => {
-            this.defaultComponentStyle.innerHTML += `${style.tag}{${SelectorHandler(
-                style.normal
-            )}}`;
-        });
 
         this.sheet = "";
         this.staticSheet = "";

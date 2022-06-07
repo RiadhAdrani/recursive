@@ -72,6 +72,19 @@ class CreateComponent {
         // props
         if (style) this.style = style;
 
+        this.prepare(props, events, hooks, flags, children);
+    }
+
+    /**
+     * Prepare the attributes, events, hooks, flags and children so that
+     * rendering and updating could happen directly without checking.
+     * @param {JSON} props
+     * @param {JSON} events
+     * @param {JSON} hooks
+     * @param {JSON} flags
+     * @param {JSON} children
+     */
+    prepare(props, events, hooks, flags, children) {
         this.prepareAttributes(props);
         this.prepareEvents(events);
         this.prepareHooks(hooks);
@@ -80,6 +93,9 @@ class CreateComponent {
         this.prepareMap();
     }
 
+    /**
+     * Verify if a map could be created from existing children.
+     */
     prepareMap() {
         this.map = false;
         if (this.children) {
@@ -101,6 +117,10 @@ class CreateComponent {
         }
     }
 
+    /**
+     * Transform the given children into an array.
+     * @param {Array | CreateComponent | String} children
+     */
     prepareChildren(children) {
         // if children is not null
         if (children !== null) {
@@ -171,6 +191,10 @@ class CreateComponent {
         }
     }
 
+    /**
+     * Add only the valid events to the component.
+     * @param {JSON} events
+     */
     prepareEvents(events) {
         for (var event in events) {
             if (RecursiveDOMEvents[event]) {
@@ -187,6 +211,10 @@ class CreateComponent {
         }
     }
 
+    /**
+     * Add valid flags to the components.
+     * @param {JSON} flags
+     */
     prepareFlags(flags) {
         for (let f in flags) {
             if (RecursiveFlags[f]) {
@@ -195,6 +223,10 @@ class CreateComponent {
         }
     }
 
+    /**
+     * Add only the valid attributes to the components.
+     * @param {JSON} attributes
+     */
     prepareAttributes(attributes) {
         for (var attr in attributes) {
             if (RecursiveDOMAttributes[attr]) {
@@ -205,6 +237,10 @@ class CreateComponent {
         }
     }
 
+    /**
+     * Add only the valid hooks.
+     * @param {JSON} hooks
+     */
     prepareHooks(hooks) {
         for (var hook in hooks) {
             if (hooks[hook] !== undefined) {
@@ -221,6 +257,11 @@ class CreateComponent {
         }
     }
 
+    /**
+     * Test if the given class name is valid.
+     * @param {String} classname
+     * @returns {Boolean} true | false
+     */
     isValidClassName(classname) {
         return !classname
             ? true
@@ -232,16 +273,27 @@ class CreateComponent {
               ]);
     }
 
-    isArray(items) {
-        return Array.isArray(items);
+    /**
+     * check if the given item is an array.
+     * @param {Any} item
+     * @returns {Boolean}
+     */
+    isArray(item) {
+        return Array.isArray(item);
     }
 
+    /**
+     * Check if item is of type `CreateComponent`.
+     * @param {Any} item
+     * @returns
+     */
     isComponent(item) {
         return item instanceof CreateComponent;
     }
 
     /**
-     * assign UIDs
+     * Assign uid to the component and its children.
+     * @param {String} index
      */
     uidify(index) {
         const uid = getContext() ? `${getContext().uid}-${index}` : "0";
@@ -254,12 +306,12 @@ class CreateComponent {
     }
 
     /**
-     *
+     * Inject HTML attributes into the rendered element.
      * @param {HTMLElement} element
      */
     renderAttributes(element) {
         for (let p in this.props) {
-            element[RecursiveDOMAttributes[p]] = this.props[p];
+            element.setAttribute(RecursiveDOMAttributes[p], this.props[p]);
         }
 
         for (let item in this.data) {
@@ -275,6 +327,10 @@ class CreateComponent {
         }
     }
 
+    /**
+     * Inject events into the rendered element.
+     * @param {HTMLElement} element
+     */
     renderEvents(element) {
         if (this.events) {
             function addEvent(prop, event) {
@@ -303,8 +359,20 @@ class CreateComponent {
         }
     }
 
+    /**
+     * Inject children into the rendered element.
+     * @param {HTMLElement} element
+     */
     renderChildren(element) {
         this.children.forEach((child) => element.append(child.render()));
+    }
+
+    /**
+     * create the barebones of an element
+     * @returns {HTMLElement}
+     */
+    createElement() {
+        return document.createElement(this.tag);
     }
 
     /**
@@ -312,7 +380,7 @@ class CreateComponent {
      * @returns {HTMLElement} DOM element.
      */
     render() {
-        let render = document.createElement(this.tag);
+        let render = this.createElement();
 
         this.renderAttributes(render);
         this.renderEvents(render);
@@ -323,38 +391,40 @@ class CreateComponent {
         return render;
     }
 
+    /**
+     * Update the current component with new attributes.
+     * @param {CreateComponent} newComponent
+     */
     updateAttributes(newComponent) {
         let didUpdate = false;
 
         const updateAttr = (attr) => {
-            if (newComponent.props[attr]) {
-                this.domInstance[attr] = newComponent.props[attr];
-            } else {
-                this.domInstance[attr] = "";
+            if (newComponent.props[attr] !== undefined) {
+                this.domInstance.setAttribute(
+                    RecursiveDOMAttributes[attr],
+                    newComponent.props[attr]
+                );
             }
             didUpdate = true;
         };
 
         for (let prop in newComponent.props) {
-            if (RecursiveDOMAttributes[prop]) {
-                if (this.props[prop] !== newComponent.props[prop]) {
-                    updateAttr(prop);
-                }
+            if (this.props[prop] !== newComponent.props[prop]) {
+                updateAttr(prop);
             }
         }
 
         for (let prop in this.props) {
-            if (RecursiveDOMAttributes[prop] && !newComponent.props[prop]) {
-                this.domInstance[prop] = "";
-            }
+            if (newComponent.props[prop] === undefined) this.domInstance.removeAttribute(prop);
         }
 
         for (let item in this.data) {
-            delete this.domInstance.dataset[item];
+            if (!newComponent.data[item]) delete this.domInstance.dataset[item];
         }
 
         for (let item in newComponent.data) {
-            this.domInstance.dataset[item] = newComponent.data[item];
+            if (this.data[item] === undefined || this.data[item] != newComponent.data[item])
+                this.domInstance.dataset[item] = newComponent.data[item];
         }
 
         if (newComponent.style) {
@@ -394,6 +464,10 @@ class CreateComponent {
         return didUpdate;
     }
 
+    /**
+     * Update the current component with new children.
+     * @param {CreateComponent} newComponent
+     */
     updateChildren(newComponent) {
         // Check for a missing node element.
         // rerender the whole component tree if an element is missing
@@ -458,6 +532,10 @@ class CreateComponent {
         }
     }
 
+    /**
+     * Update the current component with new events.
+     * @param {CreateComponent} newComponent
+     */
     updateEvents(newComponent) {
         const updateEvent = (prop) => {
             this.domInstance.events[prop] = newComponent.events[prop];
@@ -498,7 +576,6 @@ class CreateComponent {
     update(newComponent) {
         let didUpdate = false;
 
-        // get the dom instance of the component
         const htmlElement = this.domInstance;
 
         if (!htmlElement) {
@@ -508,37 +585,26 @@ class CreateComponent {
             );
         }
 
-        // FLAGS
-        // flags.forceRerender
-        // Just rerender the component
         if (this.flags.forceRerender === true) {
             this.$replaceInDOM(newComponent);
             return;
         }
 
-        // check if the new element have a different tag
         if (this.tag !== newComponent.tag) {
             this.$replaceInDOM(newComponent);
             return;
         }
 
-        // update events
         this.updateEvents(newComponent);
 
-        // update attributes
         const attributesDidUpdate = this.updateAttributes(newComponent);
 
-        // update children
         this.updateChildren(newComponent);
 
-        // check if there is any change
         didUpdate = attributesDidUpdate ? true : false;
 
         newComponent.domInstance = this.domInstance;
 
-        // RecursiveDOM.enqueueOnRef(() => newComponent.$onRef());
-
-        // Execute update lifecycle method
         if (didUpdate) {
             RecursiveDOM.enqueuOnUpdated(() => newComponent.$onUpdated());
         }
@@ -598,11 +664,6 @@ class CreateComponent {
     }
 
     /**
-     * Execute everytime the RecursiveDOM updates
-     */
-    $onRerender() {}
-
-    /**
      * Allow the user to execute custom actions just before the destruction of the component.
      */
     $beforeDestroyed() {
@@ -657,7 +718,6 @@ class CreateComponent {
         RecursiveDOM.enqueueDomAction(() => this.domInstance.replaceWith(newComponent.render()));
         RecursiveDOM.enqueueOnDestroyed(() => this.$onDestroyed());
         RecursiveDOM.enqueuOnCreated(() => newComponent.$onCreated());
-        // RecursiveDOM.enqueueOnRef(() => newComponent.$onRef());
     }
 
     /**
@@ -667,7 +727,6 @@ class CreateComponent {
     $appendInDOM(parentComponent) {
         RecursiveDOM.enqueueDomAction(() => parentComponent.domInstance.append(this.render()));
         RecursiveDOM.enqueuOnCreated(() => this.$onCreated());
-        // RecursiveDOM.enqueueOnRef(() => this.$onRef());
     }
 
     /**
@@ -676,10 +735,6 @@ class CreateComponent {
      * @param {Number} position
      */
     $changePosition(parentComponent, position) {
-        // console.log(
-        //      `changing ${this.domInstance.innerHTML} with ${parentComponent.domInstance.children[position].innerHTML}`
-        // );
-
         RecursiveDOM.enqueueDomAction(() =>
             parentComponent.domInstance.insertBefore(
                 this.domInstance,

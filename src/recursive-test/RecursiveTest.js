@@ -470,6 +470,34 @@ const ChangeInlineStyleTest = () => {
     });
 };
 
+const ChangeAttributesTest = () => {
+    return executeTest({
+        name: "change-attributes-test",
+        test: () => {
+            const [value, setToggle] = setState("cat", true);
+
+            const Item1 = new CreateComponent({ tag: "p", props: { id: "item" } });
+            const Item2 = new CreateComponent({ tag: "p", props: { className: "item" } });
+
+            return new CreateComponent({
+                tag: "div",
+                children: value ? Item1 : Item2,
+                props: { id: "test" },
+                events: {
+                    onClick: () => {
+                        setToggle(!value);
+                    },
+                },
+            });
+        },
+        itemGetter: () => {
+            document.getElementById("test").click();
+            return document.getElementById("test").innerHTML;
+        },
+        premise: `<p class="item"></p>`,
+    });
+};
+
 const Run = ({ showOnlyFailed = false }) => {
     document.title = "Testing ...";
 
@@ -494,6 +522,7 @@ const Run = ({ showOnlyFailed = false }) => {
         UpdateMapChangePositionsTest(),
         InlineStyleTest(),
         ChangeInlineStyleTest(),
+        ChangeAttributesTest(),
     ];
 
     console.log(`%cRunning ${tests.length} Tests ...`, "background:purple;padding:5px;");
