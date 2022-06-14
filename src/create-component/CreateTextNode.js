@@ -1,33 +1,33 @@
 import CreateComponent from "./CreateComponent.js";
 
 const CreateTextNode = (text) => {
-     const textnode = new CreateComponent({ tag: "p", children: [] });
+    const textnode = new CreateComponent({ tag: "p", children: [] });
 
-     textnode.text = text;
+    textnode.text = text;
 
-     textnode.tag = "#text";
+    textnode.tag = "#text";
 
-     textnode.render = () => {
-          const htmlElement = document.createTextNode(textnode.text);
+    textnode.render = () => {
+        const htmlElement = document.createTextNode(textnode.text);
 
-          textnode.domInstance = htmlElement;
+        textnode.domInstance = htmlElement;
 
-          return htmlElement;
-     };
+        return htmlElement;
+    };
 
-     textnode.update = (newComponent) => {
-          if (newComponent.tag !== textnode.tag) {
-               textnode.$replaceInDOM(newComponent);
-          } else {
-               if (textnode.text !== newComponent.text) {
-                    textnode.domInstance.data = newComponent.text;
-               }
+    textnode.update = (newComponent) => {
+        if (newComponent.tag !== textnode.tag) {
+            textnode.$replaceInDOM(newComponent);
+        } else {
+            if (textnode.text !== newComponent.text) {
+                textnode.domInstance.data = newComponent.text;
+            }
 
-               newComponent.domInstance = textnode.domInstance;
-          }
-     };
+            newComponent.domInstance = textnode.domInstance;
+        }
+    };
 
-     return textnode;
+    return textnode;
 };
 
 export default CreateTextNode;

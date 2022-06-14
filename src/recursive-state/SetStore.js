@@ -25,6 +25,10 @@ class SetStore {
         if (this.items[key]) return this.items[key].data;
         else defaultValue;
     }
+
+    cleanStore() {
+        this.items = {};
+    }
 }
 
 export default SetStore;

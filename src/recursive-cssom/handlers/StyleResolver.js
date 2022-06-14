@@ -1,7 +1,7 @@
-import { PrepareMediaQueries } from "./RecursiveCSSOMConflictHandler";
-import MediaQueryHandler from "./RecursiveCSSOMMediaQueryHandler.js";
-import SelectorHandler from "./RecursiveCSSOMSelectorHandler.js";
-import AnimationHandler from "./RecursiveCSSOMAnimationHandler.js";
+import { PrepareMediaQueries } from "./ConflictHandler";
+import MediaQueryHandler from "./MediaQueryHandler.js";
+import SelectorHandler from "./SelectorHandler.js";
+import AnimationHandler from "./AnimationHandler.js";
 
 export default function (css, animations, mediaQueries) {
     let output = "";

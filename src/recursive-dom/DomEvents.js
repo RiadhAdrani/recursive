@@ -1,4 +1,8 @@
-export default {
+import { handler } from "../recursive-window/RecursiveWindow.js";
+
+const list = {
+    // Standard Events
+
     onAbort: { listener: "abort", on: "onabort" },
     onAnimationEnd: { listener: "animationend", on: "onanimationend" },
     onAnimationIteration: { listener: "animationiteration", on: "onanimationiteration" },
@@ -84,13 +88,29 @@ export default {
     onWaiting: { listener: "waiting", on: "onwaiting" },
     onWheel: { listener: "wheel", on: "onwheel" },
 
-    // Custom & Semi events
-    onClickGlobal: {
-        listener: "clickglobal",
-        on: "onclickglobal",
-        handler: (element) => {
-            if (!window.onclickglobal) window.onclickglobal = [];
-            onclickglobal.push(element);
-        },
-    },
+    // Recursive Window events
+
+    onClickGlobal: handler("onclickglobal"),
+    onResizeGlobal: handler("onresizeglobal"),
+    onKeyUpGlobal: handler("onkeyupglobal"),
+    onContextMenuGlobal: handler("oncontextmenuglobal"),
+    onScrollGlobal: handler("onscrollglobal"),
 };
+
+function is(key) {
+    return list[key] !== undefined;
+}
+
+function get(key) {
+    return list[key];
+}
+
+function hasHandler(key) {
+    return is(key) && get(key).handler !== undefined;
+}
+
+function getListener(key) {
+    return get(key).listener;
+}
+
+export { is, get, hasHandler, getListener };

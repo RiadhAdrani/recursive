@@ -1,4 +1,4 @@
-export default {
+const list = {
     ascentOverride: "ascent-override",
     descentOverride: "descent-override",
     fontDisplay: "font-display",
@@ -14,3 +14,13 @@ export default {
     unicodeRange: "unicode-range",
     sizeAdjust: "size-adjust",
 };
+
+function is(key) {
+    return list[key] !== undefined;
+}
+
+function get(key) {
+    return list[key];
+}
+
+export { list, is, get };

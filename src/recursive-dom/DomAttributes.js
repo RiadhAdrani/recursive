@@ -529,4 +529,14 @@ const SVG = {
     accumulate: "accumulate",
 };
 
-export default { ...HTML, ...SVG };
+const list = { ...HTML, ...SVG };
+
+function is(key) {
+    return list[key] !== undefined;
+}
+
+function get(key) {
+    return list[key];
+}
+
+export { list, is, get };

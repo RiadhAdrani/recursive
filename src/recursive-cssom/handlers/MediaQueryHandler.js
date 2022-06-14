@@ -1,4 +1,4 @@
-import SelectorHandler from "./RecursiveCSSOMSelectorHandler.js";
+import SelectorHandler from "./SelectorHandler.js";
 
 export default /**
  * Convert media Queries to css format

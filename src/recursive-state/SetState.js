@@ -1,7 +1,6 @@
 import { throwError } from "../recursive-dom/RecursiveError.js";
 import {
-    requestBatchingEnd,
-    requestBatchingStart,
+    batchCallback,
     isBatching,
     requestUpdate,
     notifyStateChanged,
@@ -102,22 +101,22 @@ class StateStore extends SetStore {
         return this.retrieveState(uid);
     }
 
-    /**
-     * returns the reserved state object if it already exists in the `globalRegistry`.
-     * @param {string} uid state unique identifier.
-     * @internal do not user in development.
-     * @returns {Array | undefined} an array containing data and state manipulation functions.
-     */
-    getReservedState(uid) {
-        if (!SetState.reservedStates.includes(uid)) {
-            throwError(`Reserved state with the UID ${uid} does not exist!`, [
-                "You tried to access a non-existant reserved state.",
-                "States could be cleared upon updates, when they are out of scope.",
-            ]);
-        }
+    // /**
+    //  * returns the reserved state object if it already exists in the `globalRegistry`.
+    //  * @param {string} uid state unique identifier.
+    //  * @internal do not user in development.
+    //  * @returns {Array | undefined} an array containing data and state manipulation functions.
+    //  */
+    // getReservedState(uid) {
+    //     if (!SetState.reservedStates.includes(uid)) {
+    //         throwError(`Reserved state with the UID ${uid} does not exist!`, [
+    //             "You tried to access a non-existant reserved state.",
+    //             "States could be cleared upon updates, when they are out of scope.",
+    //         ]);
+    //     }
 
-        return this.retrieveState(uid);
-    }
+    //     return this.retrieveState(uid);
+    // }
 }
 
 /**
@@ -164,17 +163,6 @@ class SetState {
     }
 
     /**
-     * Update the DOM after preforming certain actions bundled inside a function.
-     * Recommended when calling setState in an asynchronous function.
-     * @param {Function} actions - a function that will be executed before updating the DOM.
-     */
-    static updateAfter(actions) {
-        requestBatchingStart("update-after");
-        actions();
-        requestBatchingEnd("update-after");
-    }
-
-    /**
      * Create a stateful object and return its params as an array
      * @param {any} value define an initial value.
      * @param {String} uid state unique identifier.
@@ -190,38 +178,6 @@ class SetState {
 
         return StateStore.singleton.setState(new SetState(initValue, uid, beforeDestroyed, onInit));
     }
-
-    /**
-     * Create a reserved stateful object and return its params as an array
-     * @param {any} uid state unique identifier
-     * @param {any} initValue define an initial value
-     * @returns {Array} an array containing data and state manipulation functions.
-     */
-    static setReservedState(uid, initValue) {
-        const res = new SetState(initValue, uid);
-        res.isReserved = true;
-        return StateStore.singleton.setState(res);
-    }
-}
-
-/**
- * Create a reserved stateful object and return its params as an array
- * @param {any} uid state unique identifier
- * @param {any} initValue define an initial value
- * @returns {Array} an array containing data and state manipulation functions.
- */
-function setReservedState(uid, value) {
-    return SetState.setReservedState(uid, value);
-}
-
-/**
- * returns the reserved state object if it already exists in the `globalRegistry`.
- * @param {string} uid state unique identifier.
- * @internal do not user in development.
- * @returns {Array | undefined} an array containing data and state manipulation functions.
- */
-function getReservedState(uid) {
-    return StateStore.singleton.getReservedState(uid);
 }
 
 /**
@@ -250,11 +206,11 @@ function getState(uid) {
  * @param {Function} actions function to execute
  */
 function updateAfter(actions) {
-    SetState.updateAfter(actions);
+    batchCallback(actions, "update-after-" + Date.now());
 }
 
 function cleanStore() {
     StateStore.singleton.clean();
 }
 
-export { setReservedState, getReservedState, setState, getState, updateAfter, cleanStore };
+export { setState, getState, updateAfter, cleanStore };

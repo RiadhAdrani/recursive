@@ -1,7 +1,7 @@
-import FontFaceHandler from "./RecursiveCSSOMFontFaceHandler.js";
-import SelectorHandler from "./RecursiveCSSOMSelectorHandler.js";
-import MediaQueryHandler from "./RecursiveCSSOMMediaQueryHandler.js";
-import AnimationHandler from "./RecursiveCSSOMAnimationHandler.js";
+import FontFaceHandler from "./FontFaceHandler.js";
+import SelectorHandler from "./SelectorHandler.js";
+import MediaQueryHandler from "./MediaQueryHandler.js";
+import AnimationHandler from "./AnimationHandler.js";
 
 export default /**
  * Convert static style to string
@@ -11,6 +11,15 @@ function (cssobject) {
     if (!cssobject) return;
 
     let output = "";
+
+    // add checking for every thing bro !
+    if (cssobject["var"]) {
+        output += ":root{";
+        for (let item in cssobject.var) {
+            output += `--${item}:${cssobject.var[item]};`;
+        }
+        output += "}";
+    }
 
     if (cssobject["import"]) {
         for (let item in cssobject.import) {

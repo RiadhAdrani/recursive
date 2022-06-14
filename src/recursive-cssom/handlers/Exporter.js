@@ -1,5 +1,5 @@
-import { SameSelectorHandler } from "./RecursiveCSSOMConflictHandler";
-import RecursiveCSSOMStyleResolver from "./RecursiveCSSOMStyleResolver";
+import { SameSelectorHandler } from "./ConflictHandler.js";
+import RecursiveCSSOMStyleResolver from "./StyleResolver.js";
 
 export default function (css, animations, mediaQueries, oldStyleText, devMode) {
     let output = [];

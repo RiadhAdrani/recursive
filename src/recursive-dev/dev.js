@@ -1,50 +1,67 @@
-import { Render } from "../../index.js";
+import {
+    DevMode,
+    Render,
+    setState,
+    route,
+    createRouter,
+    renderRoute,
+    setStyle,
+} from "../../index.js";
 import CreateComponent from "../create-component/CreateComponent.js";
-import CreateSvgComponent from "../recursive-svg/CreateSvgComponent.js";
+
+DevMode(true);
+
+createRouter(
+    route({
+        name: "/",
+        component: () => "Hello World",
+        subRoutes: [route({ name: "/hola", component: () => "hola" })],
+    })
+);
 
 Render(() => {
+    const [value, setValue] = setState("value", 3);
+
+    setStyle({
+        var: {
+            x: "red",
+        },
+    });
+
     return new CreateComponent({
+        hooks: { onRef: () => "test" },
         tag: "div",
         props: { className: "cringe" },
+        data: { value },
         style: { className: "true", scoped: true },
         children: [
-            new CreateSvgComponent({
-                tag: "svg",
-                props: {
-                    viewBox: "0 0 100 100",
+            new CreateComponent({
+                tag: "span",
+                children: "value = " + value,
+                style: {
+                    className: "Hello",
+                    scoped: true,
+                    normal: { backgroundColor: "var(--x)" },
+                    mediaQueries: [{ condition: "(max-width:500px)", normal: { color: "white" } }],
+                    animations: [
+                        {
+                            name: "anime-is-cringe",
+                            steps: { from: { color: "yellow" }, to: { color: "green" } },
+                        },
+                    ],
                 },
-                style: { inline: { height: "100px", width: "100px" } },
-                children: [
-                    new CreateSvgComponent({
-                        tag: "rect",
-                        props: { x: "0", y: "0", width: "25", height: "25" },
-                        children: [
-                            new CreateSvgComponent({
-                                tag: "animate",
-                                props: {
-                                    attributeType: "XML",
-                                    attributeName: "y",
-                                    from: "0",
-                                    to: "50",
-                                    dur: "1s",
-                                    repeatCount: "indefinite",
-                                },
-                            }),
-                            new CreateSvgComponent({
-                                tag: "animate",
-                                props: {
-                                    attributeType: "XML",
-                                    attributeName: "x",
-                                    from: "0",
-                                    to: "50",
-                                    dur: "1s",
-                                    repeatCount: "indefinite",
-                                },
-                            }),
-                        ],
-                    }),
-                ],
+                events: { onClickGlobal: () => console.log("Clicked somewhere else !") },
             }),
+            new CreateComponent({
+                tag: "button",
+                children: "value = " + (value + 1),
+                events: {
+                    onClick: (e) => {
+                        setValue(value + 1);
+                    },
+                },
+            }),
+            renderRoute(),
         ],
     });
 });

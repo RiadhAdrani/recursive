@@ -1,8 +1,8 @@
-import HandleStyleObject from "./HandleStyleObject.js";
+import HandleStyleObject from "./handlers/HandleStyleObject.js";
 import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
-import StaticStyleResolver from "./RecursiveCSSOMStaticStyleResolver.js";
-import RecursiveCSSOMExporter from "./RecursiveCSSOMExporter.js";
+import StaticStyleResolver from "./handlers/StaticStyleResolver.js";
+import RecursiveCSSOMExporter from "./handlers/Exporter.js";
 
 class RecursiveCSSOM {
     static singleton = new RecursiveCSSOM();
@@ -116,4 +116,16 @@ class RecursiveCSSOM {
     }
 }
 
-export default RecursiveCSSOM;
+const setStaticStyle = (cssobject) => {
+    RecursiveCSSOM.singleton.injectStaticStyle(cssobject);
+};
+
+const setStyle = (cssobject) => {
+    RecursiveCSSOM.singleton.addDynamicDeclaration(cssobject);
+};
+
+const updateStack = (stack) => {
+    RecursiveCSSOM.singleton.update(stack);
+};
+
+export { setStaticStyle, setStyle, updateStack };

@@ -1,4 +1,4 @@
-export default {
+const list = {
     accentColor: "accent-color",
     alignContent: "align-content",
     alignItems: "align-items",
@@ -382,7 +382,7 @@ export default {
     transitionDelay: "transition-delay",
     transitionDuration: "transition-duration",
     transitionProperty: "transition-property",
-    transitionTimingFunction: "transiton-timing-function",
+    transitionTimingFunction: "transition-timing-function",
     translate: "translate",
 
     unicodeBidi: "unicode-bidi",
@@ -400,6 +400,7 @@ export default {
     writingMode: "writing-mode",
 
     zIndex: "z-index",
+    zoom: "zoom",
 
     // Webkit
     webkitLineClamp: "-webkit-line-clamp",
@@ -418,3 +419,13 @@ export default {
     // MS
     msHyphens: "-ms-hyphens",
 };
+
+function is(key) {
+    return list[key] !== undefined;
+}
+
+function get(key) {
+    return list[key];
+}
+
+export { list, is, get };

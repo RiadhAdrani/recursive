@@ -12,15 +12,15 @@ import {
     route,
     onFreshLoad,
 } from "./src/recursive-router/RecursiveRouter.js";
-import RecursiveCSSOM from "./src/recursive-cssom/RecursiveCSSOM.js";
-import RecursiveWindow from "./src/recursive-window/RecursiveWindow.js";
+import { setStaticStyle, setStyle } from "./src/recursive-cssom/RecursiveCSSOM.js";
+import "./src/recursive-window/RecursiveWindow.js";
+import CreateSvgComponent from "./src/recursive-svg/CreateSvgComponent.js";
 
 /**
  * Render your App.
  * @param {Function} App function returning the tree of components
  */
 function Render(App) {
-    RecursiveWindow();
     RecursiveDOM.singleton.app = App;
     RecursiveDOM.singleton.render();
 
@@ -46,14 +46,6 @@ const setTitle = (title) => {
     }
 };
 
-const setStaticStyle = (cssobject) => {
-    RecursiveCSSOM.singleton.injectStaticStyle(cssobject);
-};
-
-const setStyle = (cssobject) => {
-    RecursiveCSSOM.singleton.addDynamicDeclaration(cssobject);
-};
-
 export {
     Render,
     DevMode,
@@ -73,4 +65,5 @@ export {
     route,
     setTitle,
     CreateComponent,
+    CreateSvgComponent,
 };

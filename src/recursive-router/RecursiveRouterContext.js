@@ -1,4 +1,4 @@
-import { getReservedState } from "../recursive-state/SetState.js";
+import { getState } from "../recursive-state/SetReservedState.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
 import { findMatch } from "./RecursiveRouter.js";
 
@@ -55,7 +55,7 @@ class RecursiveRouterContext {
     }
 
     setParams = () => {
-        const [route] = getReservedState("route");
+        const [route] = getState("route");
 
         this.fragments = route
             .split("/")

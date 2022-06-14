@@ -40,15 +40,17 @@ class RecursiveOrchestrator {
     }
 
     requestUpdate(sender) {
-        if (this.step !== FREE && this.step !== HANDLING_REQUESTS) {
+        if (![FREE, HANDLING_REQUESTS].includes(this.step)) {
             this.unhandledRequests.push(updateObj(sender));
             return;
         }
 
         if (this.step === FREE) {
             RecursiveDOM.singleton.update();
+
             this.updatesCount++;
             this.countUpdateSinceFree();
+
             if (this.unhandledRequests.length > 0) {
                 RecursiveOrchestrator.changeState(HANDLING_REQUESTS);
                 this.requestUpdate("unhandled-requests");
@@ -72,46 +74,46 @@ class RecursiveOrchestrator {
         }
     }
 
-    static watchTask(time) {
-        const name = this.taskUUID(time);
-        RecursiveOrchestrator.singleton.watchTask(name, time);
-        return () => this.unWatchTask(name);
-    }
+    // static watchTask(time) {
+    //     const name = this.taskUUID(time);
+    //     RecursiveOrchestrator.singleton.watchTask(name, time);
+    //     return () => this.unWatchTask(name);
+    // }
 
-    static unWatchTask(name) {
-        RecursiveOrchestrator.singleton.unwatchTask(name);
-    }
+    // static unWatchTask(name) {
+    //     RecursiveOrchestrator.singleton.unwatchTask(name);
+    // }
 
-    watchTask(name, time, onExceeded = () => {}) {
-        if (!this.currentTask.done) {
-        }
+    // watchTask(name, time, onExceeded = () => {}) {
+    //     if (!this.currentTask.done) {
+    //     }
 
-        this.currentTask = { name, time, done: false, step: this.step };
+    //     this.currentTask = { name, time, done: false, step: this.step };
 
-        setTimeout(() => {
-            if (!this.currentTask.done && this.currentTask.name === name) {
-                onExceeded();
-            } else {
-                this.currentTask.done = true;
-            }
-        }, time * 1.5);
-    }
+    //     setTimeout(() => {
+    //         if (!this.currentTask.done && this.currentTask.name === name) {
+    //             onExceeded();
+    //         } else {
+    //             this.currentTask.done = true;
+    //         }
+    //     }, time * 1.5);
+    // }
 
-    unwatchTask(name) {
-        if (this.currentTask.name !== name) {
-        } else {
-            this.currentTask.done = true;
-        }
-    }
+    // unwatchTask(name) {
+    //     if (this.currentTask.name !== name) {
+    //     } else {
+    //         this.currentTask.done = true;
+    //     }
+    // }
 
-    static startTask(callback, time, step) {
-        if (step) {
-            RecursiveOrchestrator.singleton.step = step;
-        }
-        const unwatch = RecursiveOrchestrator.watchTask(time);
-        callback();
-        unwatch();
-    }
+    // static startTask(callback, time, step) {
+    //     if (step) {
+    //         RecursiveOrchestrator.singleton.step = step;
+    //     }
+    //     const unwatch = RecursiveOrchestrator.watchTask(time);
+    //     callback();
+    //     unwatch();
+    // }
 
     static taskUUID(time) {
         let uuid = "";
@@ -202,20 +204,25 @@ class RecursiveOrchestrator {
     }
 }
 
+function batchCallback(callback, batchName = "batch-callback") {
+    if (callback === undefined || typeof callback !== "function") return;
+
+    if (RecursiveOrchestrator.singleton.batching === true) callback();
+    else {
+        RecursiveOrchestrator.singleton.requestStartBatching(batchName);
+
+        callback();
+
+        RecursiveOrchestrator.singleton.requestEndBatching(batchName);
+    }
+}
+
 function isBatching() {
     return RecursiveOrchestrator.singleton.batching === true;
 }
 
 function requestUpdate(sender) {
     RecursiveOrchestrator.singleton.requestUpdate(sender);
-}
-
-function requestBatchingStart(sender) {
-    RecursiveOrchestrator.singleton.requestStartBatching(sender);
-}
-
-function requestBatchingEnd(sender) {
-    RecursiveOrchestrator.singleton.requestEndBatching(sender);
 }
 
 function notifyStateChanged() {
@@ -246,13 +253,4 @@ const states = {
     CLEAN_STATES,
 };
 
-export {
-    isBatching,
-    requestUpdate,
-    requestBatchingStart,
-    requestBatchingEnd,
-    notifyStateChanged,
-    changeState,
-    free,
-    states,
-};
+export { isBatching, requestUpdate, batchCallback, notifyStateChanged, changeState, free, states };

@@ -1,4 +1,4 @@
-import RecursiveCSSProperties from "./RecursiveCSSProperties.js";
+import { is, get } from "../CssProperties.js";
 
 export default /**
  * Convert a json into text
@@ -9,8 +9,7 @@ function (json, indentation = "") {
     let output = "";
 
     for (let attr in json) {
-        if (RecursiveCSSProperties[attr])
-            output += `${indentation}${RecursiveCSSProperties[attr]}:${json[attr]};`;
+        if (is(attr)) output += `${indentation}${get(attr)}:${json[attr]};`;
     }
 
     return output;

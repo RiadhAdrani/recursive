@@ -1,15 +1,15 @@
-import CSSSelectors from "./RecursiveCSSSelectors.js";
+import { get } from "../CssSelectors.js";
 
 function DuplicateSelectorsHandler(array) {
     const output = {};
 
     for (let i in array) {
-        if (output[`${array[i].selector}${CSSSelectors[array[i].type]}`]) {
-            output[`${array[i].selector}${CSSSelectors[array[i].type]}`] = SameSelectorHandler(
+        if (output[`${array[i].selector}${get([array[i].type])}`]) {
+            output[`${array[i].selector}${get([array[i].type])}`] = SameSelectorHandler(
                 array[i].content,
-                output[`${array[i].selector}${CSSSelectors[array[i].type]}`]
+                output[`${array[i].selector}${get([array[i].type])}`]
             );
-        } else output[`${array[i].selector}${CSSSelectors[array[i].type]}`] = array[i].content;
+        } else output[`${array[i].selector}${get([array[i].type])}`] = array[i].content;
     }
 
     return output;

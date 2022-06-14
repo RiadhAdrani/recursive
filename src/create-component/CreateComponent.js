@@ -1,20 +1,16 @@
 import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
-import RecursiveDOMEvents from "../recursive-dom/RecursiveDOMEvents.js";
+import { is as isEv, getListener, hasHandler, get as getEv } from "../recursive-dom/DomEvents.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
-import {
-    requestBatchingEnd,
-    requestBatchingStart,
-} from "../recursive-orchestrator/RecursiveOrchestrator.js";
 import { setRef } from "../recursive-state/SetReference.js";
 import {
     endCurrentContext,
     getContext,
     startContext,
 } from "../recursive-context/RecursiveContext.js";
-import RecursiveDOMAttributes from "../recursive-dom/RecursiveDOMAttributes.js";
+import { is as isAttr, get as getAttr } from "../recursive-dom/DomAttributes.js";
 import CreateTextNode from "./CreateTextNode.js";
 import RecursiveFlags from "../recursive-flags/RecursiveFlags.js";
-import RecursiveHooks from "../recursive-hooks/RecursiveHooks.js";
+import { updateAfter } from "../recursive-state/SetState.js";
 
 /**
  * ## CreateComponent
@@ -23,7 +19,6 @@ import RecursiveHooks from "../recursive-hooks/RecursiveHooks.js";
  * it can update, destroy and update itself according the need of the developer.
  * Children component can be injected too, which have the same abilities as their parent,
  * and like that, the library got its name.
- * @see {@link RecursiveDOM}
  */
 class CreateComponent {
     /**
@@ -46,9 +41,6 @@ class CreateComponent {
                 "Make sure to pass an HTML tag to your component.",
             ]);
         }
-
-        // CreateComponent specific props
-        this.$$createcomponent = "create-component";
 
         // key
         this.key = key;
@@ -118,76 +110,31 @@ class CreateComponent {
     }
 
     /**
+     * Process a single child
+     * @param {CreateComponent} child
+     */
+    prepareChild(child) {
+        if ([null, undefined].includes(child)) return;
+
+        if (this.isComponent(child) && child.flags.renderIf !== false) {
+            if (child.tag === "fragment") this.children.push(...child.children);
+            else this.children.push(child);
+        } else {
+            this.children.push(CreateTextNode(child));
+        }
+    }
+
+    /**
      * Transform the given children into an array.
      * @param {Array | CreateComponent | String} children
      */
     prepareChildren(children) {
-        // if children is not null
-        if (children !== null) {
-            // if children is an array
-            if (this.isArray(children)) {
-                // iterate through children
-                for (let i = 0; i < children.length; i++) {
-                    // skip child if null
-                    if (children[i] === null) continue;
+        if ([null, undefined].includes(children)) return;
 
-                    // throw an error if a child is an array
-                    if (this.isArray(children[i])) {
-                        throwError("Child Cannot be of type array", [
-                            "Check if you are nesting an array inside the children array.",
-                        ]);
-                    }
-
-                    // if child is a component.
-                    else if (this.isComponent(children[i])) {
-                        // check renderIf value
-                        if (children[i].flags.renderIf !== false) {
-                            if (children[i].tag === "fragment") {
-                                this.children.push(...children[i].children);
-                            } else this.children.push(children[i]);
-                        }
-                    }
-                    // else child could be rendered as a text node
-                    else {
-                        let textNode = children[i];
-
-                        // merge all consecutive non-component child into one text node
-                        for (let j = i + 1, l = children.length; j < l; j++) {
-                            if (this.isComponent(children[j]) && children[j] !== null) {
-                                break;
-                            } else if (this.isArrayOfComponents(children[j])) {
-                                throwError("Child Cannot be of type array", [
-                                    "Check if you are nesting an array inside the children array.",
-                                ]);
-                            } else {
-                                textNode = `${textNode}${children[j]}`;
-                                i++;
-                            }
-                        }
-
-                        // push text node
-                        this.children.push(CreateTextNode(textNode));
-                    }
-                }
-            }
-            // children is a single node
-            else if (children !== undefined) {
-                if (children.$$createcomponent) {
-                    if (children.flags.renderIf !== false) {
-                        if (children.tag === "fragment") this.children = children.children;
-                        else this.children = [children];
-                    }
-                }
-                // child is a text node
-                else {
-                    this.children = [CreateTextNode(children)];
-                }
-            }
-            // child is a component
-        }
-        // no children
-        else {
-            component.children = [];
+        if (this.isArray(children)) {
+            children.forEach((child) => this.prepareChild(child));
+        } else {
+            this.prepareChild(children);
         }
     }
 
@@ -197,17 +144,15 @@ class CreateComponent {
      */
     prepareEvents(events) {
         for (var event in events) {
-            if (RecursiveDOMEvents[event]) {
-                if (typeof events[event] === "function") {
-                    this.events[event] = events[event];
-                } else {
-                    throwError(`${event} is not function.`, ["Event is not of type function"]);
-                }
-            } else {
+            if (!isEv(event))
                 throwError(`${event} is not a valid event name or is yet to be implemented.`, [
                     "Event name is non-existant",
                 ]);
-            }
+
+            if (typeof events[event] !== "function")
+                throwError(`${event} is not function.`, ["Event is not of type function"]);
+
+            this.events[event] = events[event];
         }
     }
 
@@ -217,9 +162,9 @@ class CreateComponent {
      */
     prepareFlags(flags) {
         for (let f in flags) {
-            if (RecursiveFlags[f]) {
-                this.flags[f] = flags[f];
-            }
+            if (RecursiveFlags[f] === undefined) continue;
+
+            this.flags[f] = flags[f];
         }
     }
 
@@ -229,11 +174,7 @@ class CreateComponent {
      */
     prepareAttributes(attributes) {
         for (var attr in attributes) {
-            if (RecursiveDOMAttributes[attr]) {
-                if (attributes[attr]) {
-                    this.props[attr] = attributes[attr];
-                }
-            }
+            if (isAttr(attr)) this.props[attr] = attributes[attr];
         }
     }
 
@@ -243,17 +184,12 @@ class CreateComponent {
      */
     prepareHooks(hooks) {
         for (var hook in hooks) {
-            if (hooks[hook] !== undefined) {
-                if (RecursiveHooks[hook]) {
-                    if (typeof hooks[hook] === "function") {
-                        this.hooks[hook] = hooks[hook];
-                    } else {
-                        throwError(`${hook} is not a function.`, ["Hook is not of type function"]);
-                    }
-                } else {
-                    throwError(`${hook} is not a valid hook name.`, ["Hook name is non-existant"]);
-                }
-            }
+            if (hooks[hook] === undefined)
+                throwError(`${hook} is not a valid hook name.`, ["Hook name is non-existant"]);
+            if (typeof hooks[hook] !== "function")
+                throwError(`${hook} is not a function.`, ["Hook is not of type function"]);
+
+            this.hooks[hook] = hooks[hook];
         }
     }
 
@@ -297,12 +233,26 @@ class CreateComponent {
      */
     uidify(index) {
         const uid = getContext() ? `${getContext().uid}-${index}` : "0";
+
         this.uid = uid;
+
         startContext({ uid });
+
         this.children.forEach((child, indx) => {
             child.uidify(indx);
         });
+
         endCurrentContext();
+    }
+
+    /**
+     * Inject HTML dataset attribute into the rendered element.
+     * @param {HTMLElement} element
+     */
+    renderDataSet(element) {
+        for (let item in this.data) {
+            element.dataset[item] = this.data[item];
+        }
     }
 
     /**
@@ -311,18 +261,14 @@ class CreateComponent {
      */
     renderAttributes(element) {
         for (let p in this.props) {
-            element.setAttribute(RecursiveDOMAttributes[p], this.props[p]);
+            element.setAttribute(getAttr(p), this.props[p]);
         }
 
-        for (let item in this.data) {
-            element.dataset[item] = this.data[item];
-        }
+        this.renderDataSet(element);
 
-        if (this.style) {
-            if (this.style.inline) {
-                for (let att in this.style.inline) {
-                    element.style[att] = this.style.inline[att];
-                }
+        if (this.style && this.style.inline) {
+            for (let att in this.style.inline) {
+                element.style[att] = this.style.inline[att];
             }
         }
     }
@@ -332,30 +278,24 @@ class CreateComponent {
      * @param {HTMLElement} element
      */
     renderEvents(element) {
-        if (this.events) {
-            function addEvent(prop, event) {
-                element.events[prop] = event;
+        element.events = {};
 
-                if (RecursiveDOMEvents[prop].handler) {
-                    RecursiveDOMEvents[prop].handler(element);
-                } else {
-                    element.addEventListener(RecursiveDOMEvents[prop].listener, (e) => {
-                        requestBatchingStart(`event-${prop}`);
+        function addEvent(prop, event) {
+            element.events[prop] = event;
 
+            if (hasHandler(prop)) {
+                getEv(prop).handler(element);
+            } else {
+                element.addEventListener(getListener(prop), (e) => {
+                    updateAfter(() => {
                         element.events[prop](e);
-
-                        requestBatchingEnd(`event-${prop}`);
                     });
-                }
+                });
             }
+        }
 
-            element.events = {};
-
-            for (var event in this.events) {
-                if (RecursiveDOMEvents[event]) {
-                    addEvent(event, this.events[event]);
-                }
-            }
+        for (var event in this.events) {
+            addEvent(event, this.events[event]);
         }
     }
 
@@ -392,76 +332,105 @@ class CreateComponent {
     }
 
     /**
+     * Update the current component with new dataset.
+     * @param {CreateComponent} newComponent
+     */
+    updateDataSet(newComponent) {
+        for (let item in this.data) {
+            if (newComponent.data[item] === undefined) delete this.domInstance.dataset[item];
+        }
+
+        for (let item in newComponent.data) {
+            if (this.data[item] !== newComponent.data[item]) {
+                this.domInstance.dataset[item] = newComponent.data[item];
+            }
+        }
+    }
+
+    /**
      * Update the current component with new attributes.
      * @param {CreateComponent} newComponent
      */
     updateAttributes(newComponent) {
         let didUpdate = false;
 
-        const updateAttr = (attr) => {
-            if (newComponent.props[attr] !== undefined) {
-                this.domInstance.setAttribute(
-                    RecursiveDOMAttributes[attr],
-                    newComponent.props[attr]
-                );
-            }
-            didUpdate = true;
-        };
-
         for (let prop in newComponent.props) {
-            if (this.props[prop] !== newComponent.props[prop]) {
-                updateAttr(prop);
-            }
+            if (this.props[prop] === newComponent.props[prop]) continue;
+            if (newComponent.props[prop] === undefined) continue;
+
+            this.domInstance.setAttribute(getAttr(prop), newComponent.props[prop]);
+            didUpdate = true;
         }
 
         for (let prop in this.props) {
             if (newComponent.props[prop] === undefined) this.domInstance.removeAttribute(prop);
         }
 
-        for (let item in this.data) {
-            if (!newComponent.data[item]) delete this.domInstance.dataset[item];
-        }
+        this.updateDataSet(newComponent);
 
-        for (let item in newComponent.data) {
-            if (this.data[item] === undefined || this.data[item] != newComponent.data[item])
-                this.domInstance.dataset[item] = newComponent.data[item];
-        }
-
-        if (newComponent.style) {
-            if (newComponent.style.inline) {
-                if (this.style) {
-                    if (this.style.inline) {
-                        for (let att in this.style.inline) {
-                            if (newComponent.style.inline[att] == undefined) {
-                                this.domInstance.style[att] = "";
-                            }
-                        }
-                    }
-                }
-
-                for (let att in newComponent.style.inline) {
-                    this.domInstance.style[att] = newComponent.style.inline[att];
-                }
-            } else {
-                if (this.style) {
-                    if (this.style.inline) {
-                        for (let att in component.style.inline) {
-                            this.domInstance.style[att] = "";
-                        }
+        if (newComponent.style && newComponent.style.inline) {
+            if (this.style && this.style.inline) {
+                for (let att in this.style.inline) {
+                    if (newComponent.style.inline[att] == undefined) {
+                        this.domInstance.style[att] = "";
                     }
                 }
             }
+
+            for (let att in newComponent.style.inline) {
+                this.domInstance.style[att] = newComponent.style.inline[att];
+            }
         } else {
-            if (this.style) {
-                if (this.style.inline) {
-                    for (let att in this.style.inline) {
-                        this.domInstance.style[att] = "";
-                    }
+            if (this.style && this.style.inline) {
+                for (let att in this.style.inline) {
+                    this.domInstance.style[att] = "";
                 }
             }
         }
 
         return didUpdate;
+    }
+
+    /**
+     * Compare equal number of children
+     * @param {CreateComponent} newComponent
+     */
+    compareEqualChildren(newComponent) {
+        for (let i = 0; i < this.children.length; i++) {
+            this.children[i].update(newComponent.children[i]);
+        }
+    }
+
+    /**
+     * Update mapped children
+     * @param {CreateComponent} newComponent
+     */
+    updateWithMap(newComponent) {
+        for (let key in this.map) {
+            if (!newComponent.map[key]) {
+                this.map[key].c.removeFromDOM();
+                delete this.map[key];
+            }
+        }
+
+        for (let key in this.map) {
+            this.map[key].c.update(newComponent.map[key].c);
+        }
+
+        for (let key in newComponent.map) {
+            if (!this.map[key]) {
+                this.map[key] = {
+                    ...newComponent.map[key],
+                    i: Object.keys(this.map).length,
+                };
+                newComponent.map[key].c.appendInDOM(this);
+            }
+        }
+
+        for (let key in this.map) {
+            if (this.map[key].i !== newComponent.map[key].i)
+                this.map[key].c.changePosition(this, newComponent.map[key].i);
+        }
     }
 
     /**
@@ -473,61 +442,34 @@ class CreateComponent {
         // rerender the whole component tree if an element is missing
         for (let i in this.children) {
             if (!document.contains(this.children[i].domInstance)) {
-                this.$replaceInDOM(newComponent);
+                this.replaceInDOM(newComponent);
                 return;
             }
         }
 
         // Check for mapping
         if (this.map && newComponent.map) {
-            for (let key in this.map) {
-                if (!newComponent.map[key]) {
-                    this.map[key].c.$removeFromDOM();
-                    delete this.map[key];
-                }
-            }
-
-            for (let key in this.map) {
-                this.map[key].c.update(newComponent.map[key].c);
-            }
-
-            for (let key in newComponent.map) {
-                if (!this.map[key]) {
-                    this.map[key] = {
-                        ...newComponent.map[key],
-                        i: Object.keys(this.map).length,
-                    };
-                    newComponent.map[key].c.$appendInDOM(this);
-                }
-            }
-
-            for (let key in this.map) {
-                if (this.map[key].i !== newComponent.map[key].i)
-                    this.map[key].c.$changePosition(this, newComponent.map[key].i);
-            }
+            this.updateWithMap(newComponent);
         } else {
-            const compareEqualChildren = () => {
-                for (let i = 0; i < this.children.length; i++) {
-                    this.children[i].update(newComponent.children[i]);
-                }
-            };
-
             if (this.children.length === newComponent.children.length) {
-                compareEqualChildren();
+                this.compareEqualChildren(newComponent);
             }
             // if component.children are greater than newComponent.children
             else if (this.children.length > newComponent.children.length) {
+                // reduce the number of children
                 while (this.children.length > newComponent.children.length) {
-                    this.children.pop().$removeFromDOM();
+                    this.children.pop().removeFromDOM();
                 }
-                compareEqualChildren();
+
+                this.compareEqualChildren(newComponent);
             }
             // if component.children are less than newComponent.children
             else {
+                // append the extra children directly into the dom and compare the rest
                 for (let i = this.children.length; i < newComponent.children.length; i++) {
-                    newComponent.children[i].$appendInDOM(this);
+                    newComponent.children[i].appendInDOM(this);
                 }
-                compareEqualChildren();
+                this.compareEqualChildren(newComponent);
             }
         }
     }
@@ -537,9 +479,11 @@ class CreateComponent {
      * @param {CreateComponent} newComponent
      */
     updateEvents(newComponent) {
-        const updateEvent = (prop) => {
-            this.domInstance.events[prop] = newComponent.events[prop];
-        };
+        for (let event in this.domInstance.events) {
+            if (!newComponent.events[event]) {
+                this.domInstance.events[event] = () => {};
+            }
+        }
 
         if (newComponent.events) {
             if (!this.domInstance.events) {
@@ -547,25 +491,19 @@ class CreateComponent {
             }
 
             for (let event in newComponent.events) {
-                if (!this.domInstance.events[event]) {
-                    this.domInstance.addEventListener(RecursiveDOMEvents[event].listener, (e) => {
-                        requestBatchingStart(`event-${event}`);
+                this.domInstance.events[event] = newComponent.events[event];
 
-                        this.domInstance.events[event](e);
-
-                        requestBatchingEnd(`event-${event}`);
-                    });
-                }
-                updateEvent(event);
-            }
-
-            for (let event in this.domInstance.events) {
-                if (!newComponent.events[event]) {
-                    this.domInstance.events[event] = () => {};
+                if (!this.events[event]) {
+                    if (hasHandler(event)) {
+                        getEv(event).handler(this.domInstance);
+                    } else
+                        this.domInstance.addEventListener(getListener(event), (e) => {
+                            updateAfter(() => {
+                                this.domInstance.events[event](e);
+                            });
+                        });
                 }
             }
-        } else {
-            this.domInstance.events = {};
         }
     }
 
@@ -586,12 +524,12 @@ class CreateComponent {
         }
 
         if (this.flags.forceRerender === true) {
-            this.$replaceInDOM(newComponent);
+            this.replaceInDOM(newComponent);
             return;
         }
 
         if (this.tag !== newComponent.tag) {
-            this.$replaceInDOM(newComponent);
+            this.replaceInDOM(newComponent);
             return;
         }
 
@@ -606,7 +544,7 @@ class CreateComponent {
         newComponent.domInstance = this.domInstance;
 
         if (didUpdate) {
-            RecursiveDOM.enqueuOnUpdated(() => newComponent.$onUpdated());
+            RecursiveDOM.enqueuOnUpdated(() => newComponent.onUpdated());
         }
     }
 
@@ -618,71 +556,59 @@ class CreateComponent {
      * @param {CreateComponent | string} oldComponent - current component
      * @param {CreateComponent | string} newComponent - the new component
      */
-    $onUpdated() {
+    onUpdated() {
         if (typeof this.hooks.onUpdated === "function") {
-            requestBatchingStart("on-updated");
-            this.hooks.onUpdated(this.domInstance);
-            requestBatchingEnd("on-updated");
+            updateAfter(() => {
+                this.hooks.onUpdated(this.domInstance);
+            });
         }
     }
 
     /**
      * Allow the user to execute custom actions when the component has been created.
      */
-    $onCreated() {
+    onCreated() {
         if (typeof this.hooks.onCreated === "function") {
-            requestBatchingStart("on-created");
-            this.hooks.onCreated(this.domInstance);
-            requestBatchingEnd("on-created");
+            updateAfter(() => {
+                this.hooks.onCreated(this.domInstance);
+            });
         }
         if (this.children) {
-            this.children.forEach((child) => {
-                if (child.$$createcomponent) {
-                    child.$onCreated();
-                }
-            });
+            this.children.forEach((child) => child.onCreated());
         }
     }
 
     /**
      * Allow the user to execute custom actions when the component has been destroyed.
      */
-    $onDestroyed() {
+    onDestroyed() {
         if (typeof this.hooks.onDestroyed === "function") {
-            requestBatchingStart("on-destroyed");
-            this.hooks.onDestroyed(this);
-            requestBatchingEnd("on-destroyed");
+            updateAfter(() => {
+                this.hooks.onDestroyed(this);
+            });
         }
 
         if (this.children) {
-            this.children.forEach((child) => {
-                if (child.$$createcomponent) {
-                    child.$onDestroyed();
-                }
-            });
+            this.children.forEach((child) => child.onDestroyed());
         }
     }
 
     /**
      * Allow the user to execute custom actions just before the destruction of the component.
      */
-    $beforeDestroyed() {
+    beforeDestroyed() {
         if (typeof this.hooks.beforeDestroyed === "function") {
-            requestBatchingStart("before-destroyed");
-            this.hooks.beforeDestroyed(this);
-            requestBatchingEnd("before-destroyed");
+            updateAfter(() => {
+                this.hooks.beforeDestroyed(this);
+            });
         }
 
         if (this.children) {
-            this.children.forEach((child) => {
-                if (child.$$createcomponent) {
-                    child.$beforeDestroyed();
-                }
-            });
+            this.children.forEach((child) => child.beforeDestroyed());
         }
     }
 
-    $onRef() {
+    onRef() {
         if (typeof this.hooks.onRef === "function") {
             const ref = this.hooks.onRef(this.domInstance);
             if (typeof ref === "string") {
@@ -692,41 +618,38 @@ class CreateComponent {
         }
     }
 
-    $onRefRecursively() {
-        this.$onRef();
-        this.children.forEach((child) => child.$onRefRecursively());
+    onRefRecursively() {
+        this.onRef();
+        this.children.forEach((child) => child.onRefRecursively());
     }
-
-    // DOM MANIPULATION METHODS
-    // ------------------------------------------------------------------------------------------------------
 
     /**
      * remove the current dom instance
      */
-    $removeFromDOM() {
-        RecursiveDOM.enqueueBeforeDestroyed(() => this.$beforeDestroyed());
+    removeFromDOM() {
+        RecursiveDOM.enqueueBeforeDestroyed(() => this.beforeDestroyed());
         RecursiveDOM.enqueueDomAction(() => this.domInstance.remove());
-        RecursiveDOM.enqueueOnDestroyed(() => this.$onDestroyed());
+        RecursiveDOM.enqueueOnDestroyed(() => this.onDestroyed());
     }
 
     /**
      * replace the current dom instance with a newly created one
      * @param {CreateComponent} newComponent component to render
      */
-    $replaceInDOM(newComponent) {
-        RecursiveDOM.enqueueBeforeDestroyed(() => this.$beforeDestroyed());
+    replaceInDOM(newComponent) {
+        RecursiveDOM.enqueueBeforeDestroyed(() => this.beforeDestroyed());
         RecursiveDOM.enqueueDomAction(() => this.domInstance.replaceWith(newComponent.render()));
-        RecursiveDOM.enqueueOnDestroyed(() => this.$onDestroyed());
-        RecursiveDOM.enqueuOnCreated(() => newComponent.$onCreated());
+        RecursiveDOM.enqueueOnDestroyed(() => this.onDestroyed());
+        RecursiveDOM.enqueuOnCreated(() => newComponent.onCreated());
     }
 
     /**
      * inject the recursive component into the
      * @param {CreateComponent} parentComponent
      */
-    $appendInDOM(parentComponent) {
+    appendInDOM(parentComponent) {
         RecursiveDOM.enqueueDomAction(() => parentComponent.domInstance.append(this.render()));
-        RecursiveDOM.enqueuOnCreated(() => this.$onCreated());
+        RecursiveDOM.enqueuOnCreated(() => this.onCreated());
     }
 
     /**
@@ -734,7 +657,7 @@ class CreateComponent {
      * @param {CreateComponent} parentComponent
      * @param {Number} position
      */
-    $changePosition(parentComponent, position) {
+    changePosition(parentComponent, position) {
         RecursiveDOM.enqueueDomAction(() =>
             parentComponent.domInstance.insertBefore(
                 this.domInstance,

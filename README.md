@@ -65,11 +65,15 @@ Render(() => P({ text: "Hello World" }));
 
 ## Small projects made with Recursive.js
 
--   `My Portfolio` `v0.6` : [Live version](https://riadhadrani.github.io/RiadhAdrani/).
+-   `Audify` `v0.7` : [Check it](https://github.com/RiadhAdrani/audiphy)
 
--   `Dwidder : Twitter clone` `v0.5` : [Live version](https://riadhadrani.github.io/dwidder/).
+-   `Wroddit` `v0.7`: [Check it](https://github.com/RiadhAdrani/wroddit)
 
--   `Color Noter Web` `v0.4` : [Live version](https://riadhadrani.github.io/color-noter-web/).
+-   `My Portfolio` `v0.6` : [Check it](https://github.com/RiadhAdrani/RiadhAdrani/tree/gh-pages).
+
+-   `Dwidder` `v0.5` : [Check it](https://github.com/RiadhAdrani/dwidder).
+
+-   `Color Noter` `v0.4` : [Check it](https://github.com/RiadhAdrani/color-noter-web).
 
 ## Documentation
 

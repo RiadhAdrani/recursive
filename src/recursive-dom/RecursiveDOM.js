@@ -1,8 +1,9 @@
 import { throwError } from "./RecursiveError.js";
-import RecursiveCSSOM from "../recursive-cssom/RecursiveCSSOM.js";
+import { updateStack } from "../recursive-cssom/RecursiveCSSOM.js";
 import { states, changeState } from "../recursive-orchestrator/RecursiveOrchestrator.js";
 import { cleanStore as cleanReferenceStore } from "../recursive-state/SetReference.js";
 import { cleanStore as cleanStateStore } from "../recursive-state/SetState.js";
+import CreateComponent from "../create-component/CreateComponent.js";
 
 /**
  * ## RecursiveDOM
@@ -93,7 +94,7 @@ class RecursiveDOM {
         this.oldRender = this.app();
         this.oldRender.uidify("0");
 
-        if (this.oldRender.$$createcomponent !== "create-component") {
+        if (!this.oldRender instanceof CreateComponent) {
             throwError('Root component is not of type "CreateComponent"', [
                 "Render only accepts a function call.",
                 "You should return CreateComponent from your app function.",
@@ -101,15 +102,15 @@ class RecursiveDOM {
         }
 
         changeState(states.COMPUTE_STYLE);
-        RecursiveCSSOM.singleton.update(this.oldRender.flattenStyle());
+        updateStack(this.oldRender.flattenStyle());
 
         changeState(states.COMMIT_INTO_DOM);
         this.root.innerHTML = "";
         this.root.append(this.oldRender.render());
 
         changeState(states.EXEC_ON_CREATED);
-        this.oldRender.$onCreated();
-        this.oldRender.$onRefRecursively();
+        this.oldRender.onCreated();
+        this.oldRender.onRefRecursively();
 
         changeState(states.CLEAN_STATES);
         this.resetQueues();
@@ -134,7 +135,7 @@ class RecursiveDOM {
         newRender.uidify("0");
 
         changeState(states.COMPUTE_STYLE);
-        RecursiveCSSOM.singleton.update(newRender.flattenStyle());
+        updateStack(newRender.flattenStyle());
 
         changeState(states.COMPUTE_DIFF);
         cleanReferenceStore();
@@ -155,7 +156,7 @@ class RecursiveDOM {
 
         changeState(states.EXEC_ON_UPDATED);
         this.exOnUpdated();
-        this.oldRender.$onRefRecursively();
+        this.oldRender.onRefRecursively();
 
         changeState(states.CLEAN_STATES);
         this.resetQueues();

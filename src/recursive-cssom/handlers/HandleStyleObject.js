@@ -1,5 +1,5 @@
-import { throwError } from "../recursive-dom/RecursiveError.js";
-import RecursiveCSSSelectors from "./RecursiveCSSSelectors.js";
+import { throwError } from "../../recursive-dom/RecursiveError.js";
+import { is, get } from "../CssSelectors.js";
 
 export default (styleSheet, selectors, mediaQueries, animations) => {
     if (styleSheet) {
@@ -26,18 +26,14 @@ export default (styleSheet, selectors, mediaQueries, animations) => {
 
             for (var selector in styleSheet) {
                 if (
-                    selector === "mediaQueries" ||
-                    selector === "animations" ||
-                    selector === "className" ||
-                    selector === "scoped" ||
-                    selector === "inline"
+                    ["mediaQueries", "animations", "className", "scoped", "inline"].includes(
+                        selector
+                    )
                 )
                     continue;
 
-                if (RecursiveCSSSelectors[selector] || selector === "normal") {
-                    selectors.push(
-                        styleObject(RecursiveCSSSelectors[selector], styleSheet[selector])
-                    );
+                if (is(selector) || selector === "normal") {
+                    selectors.push(styleObject(get(selector), styleSheet[selector]));
                 } else {
                     throwError(
                         `"${selector}" is not a valid CSS selector or is not yet implemented.`,

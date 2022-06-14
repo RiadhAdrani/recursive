@@ -1,4 +1,4 @@
-export default {
+const list = {
     normal: "",
     active: ":active",
     anyLink: ":any-link",
@@ -54,3 +54,13 @@ export default {
     webkitScrollbarThumbHover: "::-webkit-scrollbar-thumb:hover",
     webkitScrollbarThumbActive: "::-webkit-scrollbar-thumb:active",
 };
+
+function is(key) {
+    return list[key] !== undefined;
+}
+
+function get(key) {
+    return list[key];
+}
+
+export { list, is, get };
