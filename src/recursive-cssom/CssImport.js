@@ -10,7 +10,7 @@ function render(list) {
     let output = "";
 
     list.forEach((item) => {
-        output += `url("${item}");`;
+        output += `@import url("${item}");`;
     });
 
     return output;

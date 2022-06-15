@@ -1,6 +1,6 @@
 /**
  * Render and return statements of `--var`.
- * @param {Array} list
+ * @param {Object} list
  * @returns
  */
 function render(list) {

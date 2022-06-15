@@ -26,7 +26,7 @@ function get(key) {
 function render(content) {
     if (!content) return "";
 
-    let output = "@font-face {";
+    let output = "@font-face{";
 
     for (let key in content) {
         if (!is(key) || content[key].toString().includes(";")) continue;

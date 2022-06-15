@@ -25,8 +25,7 @@ function (styleSheet) {
 
     if (styleSheet["selectors"]) {
         for (let rule in styleSheet.selectors) {
-            const res = renderSelector(rule, styleSheet.selectors[rule]);
-            output += res;
+            output += renderSelector(rule, styleSheet.selectors[rule]);
         }
     }
 

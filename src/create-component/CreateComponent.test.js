@@ -138,7 +138,7 @@ const processFragment = describe("Process fragment children")
         }).children;
     });
 
-const FragmenWithinFragment = describe("Process fragment children")
+const fragmenWithinFragment = describe("Process fragment children")
     .assert([CreateTextNode("Hello World")], true)
     .start(() => {
         return new CreateComponent({
@@ -252,7 +252,7 @@ export default [
     arrayWithinChildren,
     ignoreFlaggedChild,
     processFragment,
-    FragmenWithinFragment,
+    fragmenWithinFragment,
     validClassName,
     invalidClassName,
     uidify,
