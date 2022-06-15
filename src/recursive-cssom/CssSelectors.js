@@ -1,3 +1,5 @@
+import { render as renderProp } from "./CssProperties";
+
 const list = {
     normal: "",
     active: ":active",
@@ -63,4 +65,23 @@ function get(key) {
     return list[key];
 }
 
-export { list, is, get };
+/**
+ * render a selector declaration
+ * @param {String} selector
+ * @param {JSON} content
+ */
+function render(selector, content) {
+    if (!selector || !content) return "";
+
+    let output = `${selector}{`;
+
+    for (let prop in content) {
+        output += renderProp(prop, content[prop]);
+    }
+
+    output += "}";
+
+    return output;
+}
+
+export { list, is, get, render };

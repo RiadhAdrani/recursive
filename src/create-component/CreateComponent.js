@@ -1,4 +1,11 @@
-import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
+// import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
+import {
+    pushBeforeDestroyed,
+    pushDom,
+    pushOnCreated,
+    pushOnDestroyed,
+    pushOnUpdated,
+} from "../recursive-reconciler/RecursiveReconciler.js";
 import { is as isEv, getListener, hasHandler, get as getEv } from "../recursive-dom/DomEvents.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
 import { setRef } from "../recursive-state/SetReference.js";
@@ -7,7 +14,7 @@ import {
     getContext,
     startContext,
 } from "../recursive-context/RecursiveContext.js";
-import { is as isAttr, get as getAttr } from "../recursive-dom/DomAttributes.js";
+import { is as isAttr, get as getAttr, isToggle } from "../recursive-dom/DomAttributes.js";
 import CreateTextNode from "./CreateTextNode.js";
 import RecursiveFlags from "../recursive-flags/RecursiveFlags.js";
 import { updateAfter } from "../recursive-state/SetState.js";
@@ -116,9 +123,16 @@ class CreateComponent {
     prepareChild(child) {
         if ([null, undefined].includes(child)) return;
 
-        if (this.isComponent(child) && child.flags.renderIf !== false) {
-            if (child.tag === "fragment") this.children.push(...child.children);
-            else this.children.push(child);
+        if (this.isArray(child))
+            throwError(
+                "Child cannot be an array. use fragment component to render arrays as children.",
+                []
+            );
+
+        if (this.isComponent(child)) {
+            if (child.flags.renderIf !== false)
+                if (child.tag === "fragment") this.children.push(...child.children);
+                else this.children.push(child);
         } else {
             this.children.push(CreateTextNode(child));
         }
@@ -261,7 +275,11 @@ class CreateComponent {
      */
     renderAttributes(element) {
         for (let p in this.props) {
-            element.setAttribute(getAttr(p), this.props[p]);
+            if (isToggle(p)) {
+                element.toggleAttribute(getAttr(p), this.props[p] == true);
+            } else {
+                element.setAttribute(getAttr(p), this.props[p]);
+            }
         }
 
         this.renderDataSet(element);
@@ -337,12 +355,13 @@ class CreateComponent {
      */
     updateDataSet(newComponent) {
         for (let item in this.data) {
-            if (newComponent.data[item] === undefined) delete this.domInstance.dataset[item];
+            if (newComponent.data[item] === undefined)
+                pushDom(() => delete this.domInstance.dataset[item]);
         }
 
         for (let item in newComponent.data) {
             if (this.data[item] !== newComponent.data[item]) {
-                this.domInstance.dataset[item] = newComponent.data[item];
+                pushDom(() => (this.domInstance.dataset[item] = newComponent.data[item]));
             }
         }
     }
@@ -358,12 +377,24 @@ class CreateComponent {
             if (this.props[prop] === newComponent.props[prop]) continue;
             if (newComponent.props[prop] === undefined) continue;
 
-            this.domInstance.setAttribute(getAttr(prop), newComponent.props[prop]);
+            pushDom(() => {
+                if (isToggle(prop)) {
+                    this.domInstance.toggleAttribute(
+                        getAttr(prop),
+                        newComponent.props[prop] == true
+                    );
+                } else this.domInstance.setAttribute(getAttr(prop), newComponent.props[prop]);
+            });
+
             didUpdate = true;
         }
 
         for (let prop in this.props) {
-            if (newComponent.props[prop] === undefined) this.domInstance.removeAttribute(prop);
+            if (newComponent.props[prop] === undefined) {
+                pushDom(() => {
+                    this.domInstance.removeAttribute(prop);
+                });
+            }
         }
 
         this.updateDataSet(newComponent);
@@ -372,18 +403,24 @@ class CreateComponent {
             if (this.style && this.style.inline) {
                 for (let att in this.style.inline) {
                     if (newComponent.style.inline[att] == undefined) {
-                        this.domInstance.style[att] = "";
+                        pushDom(() => {
+                            this.domInstance.style[att] = "";
+                        });
                     }
                 }
             }
 
             for (let att in newComponent.style.inline) {
-                this.domInstance.style[att] = newComponent.style.inline[att];
+                pushDom(() => {
+                    this.domInstance.style[att] = newComponent.style.inline[att];
+                });
             }
         } else {
             if (this.style && this.style.inline) {
                 for (let att in this.style.inline) {
-                    this.domInstance.style[att] = "";
+                    pushDom(() => {
+                        this.domInstance.style[att] = "";
+                    });
                 }
             }
         }
@@ -481,25 +518,35 @@ class CreateComponent {
     updateEvents(newComponent) {
         for (let event in this.domInstance.events) {
             if (!newComponent.events[event]) {
-                this.domInstance.events[event] = () => {};
+                pushDom(() => {
+                    this.domInstance.events[event] = () => {};
+                });
             }
         }
 
         if (newComponent.events) {
             if (!this.domInstance.events) {
-                this.domInstance.events = {};
+                pushDom(() => {
+                    this.domInstance.events = {};
+                });
             }
 
             for (let event in newComponent.events) {
-                this.domInstance.events[event] = newComponent.events[event];
+                pushDom(() => {
+                    this.domInstance.events[event] = newComponent.events[event];
+                });
 
                 if (!this.events[event]) {
                     if (hasHandler(event)) {
-                        getEv(event).handler(this.domInstance);
+                        pushDom(() => {
+                            getEv(event).handler(this.domInstance);
+                        });
                     } else
-                        this.domInstance.addEventListener(getListener(event), (e) => {
-                            updateAfter(() => {
-                                this.domInstance.events[event](e);
+                        pushDom(() => {
+                            this.domInstance.addEventListener(getListener(event), (e) => {
+                                updateAfter(() => {
+                                    this.domInstance.events[event](e);
+                                });
                             });
                         });
                 }
@@ -544,7 +591,7 @@ class CreateComponent {
         newComponent.domInstance = this.domInstance;
 
         if (didUpdate) {
-            RecursiveDOM.enqueuOnUpdated(() => newComponent.onUpdated());
+            pushOnUpdated(() => newComponent.onUpdated());
         }
     }
 
@@ -627,9 +674,9 @@ class CreateComponent {
      * remove the current dom instance
      */
     removeFromDOM() {
-        RecursiveDOM.enqueueBeforeDestroyed(() => this.beforeDestroyed());
-        RecursiveDOM.enqueueDomAction(() => this.domInstance.remove());
-        RecursiveDOM.enqueueOnDestroyed(() => this.onDestroyed());
+        pushBeforeDestroyed(() => this.beforeDestroyed());
+        pushDom(() => this.domInstance.remove());
+        pushOnDestroyed(() => this.onDestroyed());
     }
 
     /**
@@ -637,10 +684,10 @@ class CreateComponent {
      * @param {CreateComponent} newComponent component to render
      */
     replaceInDOM(newComponent) {
-        RecursiveDOM.enqueueBeforeDestroyed(() => this.beforeDestroyed());
-        RecursiveDOM.enqueueDomAction(() => this.domInstance.replaceWith(newComponent.render()));
-        RecursiveDOM.enqueueOnDestroyed(() => this.onDestroyed());
-        RecursiveDOM.enqueuOnCreated(() => newComponent.onCreated());
+        pushBeforeDestroyed(() => this.beforeDestroyed());
+        pushDom(() => this.domInstance.replaceWith(newComponent.render()));
+        pushOnDestroyed(() => this.onDestroyed());
+        pushOnCreated(() => newComponent.onCreated());
     }
 
     /**
@@ -648,8 +695,8 @@ class CreateComponent {
      * @param {CreateComponent} parentComponent
      */
     appendInDOM(parentComponent) {
-        RecursiveDOM.enqueueDomAction(() => parentComponent.domInstance.append(this.render()));
-        RecursiveDOM.enqueuOnCreated(() => this.onCreated());
+        pushDom(() => parentComponent.domInstance.append(this.render()));
+        pushOnCreated(() => this.onCreated());
     }
 
     /**
@@ -658,7 +705,7 @@ class CreateComponent {
      * @param {Number} position
      */
     changePosition(parentComponent, position) {
-        RecursiveDOM.enqueueDomAction(() =>
+        pushDom(() =>
             parentComponent.domInstance.insertBefore(
                 this.domInstance,
                 parentComponent.domInstance.children[position]

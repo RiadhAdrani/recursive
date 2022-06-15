@@ -7,14 +7,15 @@ const serve = JSON.parse(process.env.WEBPACK_SERVE || false);
 
 module.exports = merge(common, {
     mode: "development",
+    entry: "./src/recursive-dev/test/test.js",
     output: {
-        filename: "dev.js",
+        filename: "test.js",
         path: path.resolve(__dirname, "dist"),
         publicPath: "/",
     },
     devtool: "source-map",
     optimization: { minimize: false },
-    plugins: [new HtmlWebpackPlugin({ template: "./src/recursive-dev/dev.html" })],
+    // plugins: [new HtmlWebpackPlugin({ template: "./index.html" })],
     devServer: {
         hot: true,
         liveReload: false,

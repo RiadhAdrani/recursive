@@ -420,6 +420,8 @@ const list = {
     msHyphens: "-ms-hyphens",
 };
 
+const forbidden = [";"];
+
 function is(key) {
     return list[key] !== undefined;
 }
@@ -428,4 +430,18 @@ function get(key) {
     return list[key];
 }
 
-export { list, is, get };
+/**
+ * Render a css property declaration.
+ * @param {String} property
+ * @param {String} value
+ * @returns
+ */
+function render(property, value) {
+    if (!is(property) || !value) return "";
+    if (property.includes(";")) return "";
+    if (value.toString().includes(";")) return "";
+
+    return `${get(property)}:${value};`;
+}
+
+export { list, is, get, render };

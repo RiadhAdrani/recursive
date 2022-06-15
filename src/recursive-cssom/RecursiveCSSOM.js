@@ -1,8 +1,8 @@
-import HandleStyleObject from "./handlers/HandleStyleObject.js";
-import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
-import StaticStyleResolver from "./handlers/StaticStyleResolver.js";
-import RecursiveCSSOMExporter from "./handlers/Exporter.js";
+import processComponentStyleSheet from "./handlers/processComponentStyleSheet.js";
+import processStyleSheets from "./handlers/mergeStyleSheets.js";
+import renderStyleSheet from "./CssRender.js";
+import mergeStyleSheets from "./handlers/mergeStyleSheets.js";
 
 class RecursiveCSSOM {
     static singleton = new RecursiveCSSOM();
@@ -36,11 +36,6 @@ class RecursiveCSSOM {
         this.dynamicSheet = "";
 
         this.dynamicStack = [];
-        this.current = {
-            selectors: [],
-            animations: [],
-            mediaQueries: [],
-        };
     }
 
     /**
@@ -50,77 +45,71 @@ class RecursiveCSSOM {
     update(stack) {
         this.injectDynamicStyle();
 
-        this.current = {
-            selectors: [],
-            animations: [],
-            mediaQueries: [],
-        };
-
-        stack.forEach((item) => {
-            if (item.className) {
-                HandleStyleObject(
-                    item,
-                    this.current.selectors,
-                    this.current.mediaQueries,
-                    this.current.animations
-                );
-            }
-        });
-
-        const exported = RecursiveCSSOMExporter(
-            this.current.selectors,
-            this.current.animations,
-            this.current.mediaQueries
+        const res = renderStyleSheet(
+            processStyleSheets((stack || []).map((item) => processComponentStyleSheet(item)))
         );
 
-        const newStyle = exported.ss;
-
-        if (RecursiveDOM.devMode) {
-            if (exported.warnings.animation) {
-                console.warn(exported.warnings.animation);
-            }
-            if (exported.warnings.selectors) {
-                console.warn(exported.warnings.selectors);
-            }
-        }
-
-        if (this.sheet !== newStyle) {
-            this.appStyle.innerHTML = newStyle;
-            this.sheet = newStyle;
+        if (this.sheet !== res) {
+            this.appStyle.innerHTML = res;
+            this.sheet = res;
         }
     }
 
     injectStaticStyle(styleSheet) {
-        const ss = StaticStyleResolver(styleSheet);
+        const ss = renderStyleSheet(styleSheet);
         if (ss !== this.staticSheet) {
             this.appStaticStyle.innerHTML = ss;
         }
     }
 
-    addDynamicDeclaration(object) {
+    addDynamicDeclaration(
+        object = {
+            var: {},
+            import: [],
+            fontFace: {},
+            selectors: {},
+            animations: {},
+            mediaQueries: {},
+        }
+    ) {
         this.dynamicStack.push(object);
     }
 
     injectDynamicStyle() {
-        let dss = "";
-        this.dynamicStack.forEach((declaration) => {
-            dss += StaticStyleResolver(declaration);
-        });
+        const res = renderStyleSheet(mergeStyleSheets(this.dynamicStack));
 
-        if (dss != this.dynamicSheet) {
-            this.appDynamicStyle.innerHTML = dss;
-            this.dynamicSheet = dss;
+        if (this.dynamicSheet !== res) {
+            this.appDynamicStyle.innerHTML = res;
+            this.dynamicSheet = res;
         }
 
         this.dynamicStack = [];
     }
 }
 
-const setStaticStyle = (cssobject) => {
+const setStaticStyle = (
+    cssobject = {
+        var: {},
+        import: [],
+        fontFace: {},
+        selectors: {},
+        animations: {},
+        mediaQueries: {},
+    }
+) => {
     RecursiveCSSOM.singleton.injectStaticStyle(cssobject);
 };
 
-const setStyle = (cssobject) => {
+const setStyle = (
+    cssobject = {
+        var: {},
+        import: [],
+        fontFace: {},
+        selectors: {},
+        animations: {},
+        mediaQueries: {},
+    }
+) => {
     RecursiveCSSOM.singleton.addDynamicDeclaration(cssobject);
 };
 

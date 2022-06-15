@@ -1,5 +1,6 @@
 import CreateComponent from "./src/create-component/CreateComponent.js";
-import RecursiveDOM from "./src/recursive-dom/RecursiveDOM.js";
+// import RecursiveDOM from "./src/recursive-dom/RecursiveDOM.js";
+import { render } from "./src/recursive-reconciler/RecursiveReconciler.js";
 import { getRef } from "./src/recursive-state/SetReference.js";
 import { setState, getState, updateAfter } from "./src/recursive-state/SetState.js";
 import { setCache, getCache } from "./src/recursive-state/SetCache.js";
@@ -21,8 +22,7 @@ import CreateSvgComponent from "./src/recursive-svg/CreateSvgComponent.js";
  * @param {Function} App function returning the tree of components
  */
 function Render(App) {
-    RecursiveDOM.singleton.app = App;
-    RecursiveDOM.singleton.render();
+    render(App);
 
     onFreshLoad();
 }

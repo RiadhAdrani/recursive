@@ -1,4 +1,5 @@
-import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
+// import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
+import { update } from "../recursive-reconciler/RecursiveReconciler.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
 
 const FREE = "free";
@@ -46,7 +47,7 @@ class RecursiveOrchestrator {
         }
 
         if (this.step === FREE) {
-            RecursiveDOM.singleton.update();
+            update();
 
             this.updatesCount++;
             this.countUpdateSinceFree();
@@ -61,7 +62,7 @@ class RecursiveOrchestrator {
         }
         if (this.step === HANDLING_REQUESTS) {
             this.unhandledRequests = [];
-            RecursiveDOM.singleton.update();
+            update();
             this.updatesCount++;
             if (this.unhandledRequests.length > 0) {
                 RecursiveOrchestrator.changeState(HANDLING_REQUESTS);

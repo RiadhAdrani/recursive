@@ -171,11 +171,6 @@ class SetState {
      * @returns {Array} an array containing data and state manipulation functions.
      */
     static setState(uid, initValue, onInit, beforeDestroyed) {
-        if (SetState.reservedStates.includes(uid))
-            throwError(`${uid} is a reserved state UID`, [
-                `You have used a reserved UID from this list : ${SetState.reservedStates}`,
-            ]);
-
         return StateStore.singleton.setState(new SetState(initValue, uid, beforeDestroyed, onInit));
     }
 }

@@ -12,6 +12,7 @@ import CreateComponent from "../create-component/CreateComponent.js";
  * and the CSSOM (Cascading Style Sheet Object Model).
  * @global The VDOM will be injected automatically in the `window` object.
  * @see{@link CreateComponent}
+ * @deprecated
  */
 class RecursiveDOM {
     static devMode = false;
@@ -169,5 +170,3 @@ class RecursiveDOM {
         this.roots.app.remove();
     }
 }
-
-export default RecursiveDOM;

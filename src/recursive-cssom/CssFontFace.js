@@ -23,4 +23,20 @@ function get(key) {
     return list[key];
 }
 
-export { list, is, get };
+function render(content) {
+    if (!content) return "";
+
+    let output = "@font-face {";
+
+    for (let key in content) {
+        if (!is(key) || content[key].toString().includes(";")) continue;
+
+        output += `${get(key)}:${content[key]};`;
+    }
+
+    output += "}";
+
+    return output;
+}
+
+export { list, is, get, render };
