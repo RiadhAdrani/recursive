@@ -158,6 +158,8 @@ class CreateComponent {
      */
     prepareEvents(events) {
         for (var event in events) {
+            if (!events[event]) continue;
+
             if (!isEv(event))
                 throwError(`${event} is not a valid event name or is yet to be implemented.`, [
                     "Event name is non-existant",
@@ -188,7 +190,9 @@ class CreateComponent {
      */
     prepareAttributes(attributes) {
         for (var attr in attributes) {
-            if (isAttr(attr)) this.props[attr] = attributes[attr];
+            if (attributes[attr] === undefined || !isAttr(attr)) continue;
+
+            this.props[attr] = attributes[attr];
         }
     }
 
