@@ -4,7 +4,7 @@ import handler from "./handler.js";
 import on from "./on.js";
 
 export default (winEvent, store, listener, checkTarget = true) => {
-    if (window[store]) throw `Item ${store} cannot be overriden.`;
+    if (window[store]) throw `Global event ${store} cannot be overriden.`;
 
     function clean() {
         window[store].items = window[store].items.filter((ele) => document.contains(ele));

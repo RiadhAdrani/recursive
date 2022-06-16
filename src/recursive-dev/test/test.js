@@ -1,26 +1,32 @@
 import CreateComponentTest from "../../create-component/CreateComponent.test.js";
 import RecursiveCSSOMTest from "../../recursive-cssom/RecursiveCSSOM.test.js";
-import { Render, CreateComponent, setStyle } from "../../../index.js";
+import { Render, CreateComponent, setStyle, setState } from "../../../index.js";
 
 const tests = [...CreateComponentTest, ...RecursiveCSSOMTest];
 
+// const output = [];
+
+// for (let prop in list) {
+//     output.push({ key: prop, content: { value: list[prop] } });
+// }
+
+// console.log(
+//     `{${output.reduce(
+//         (val, item) => val + `${item.key}:{css:"${item.content.value}",support:{}},`,
+//         ""
+//     )}}`
+// );
+
 const App = () => {
+    const [toggleFailed, setToggle] = setState("toggle-failed", false);
+
     setStyle({
-        var: { blue: "red" },
-        fontFace: {
-            fontFamily: "Roboto",
-        },
-        mediaQueries: {
-            good: { normal: { color: "orange" } },
-        },
-        animations: {
-            test: {
-                from: { color: "red" },
-                to: { color: "blue" },
-            },
+        var: {
+            blue: "red",
         },
         selectors: {
             "*": { fontFamily: "monospace", fontSize: "20px" },
+            html: { overflowY: "scroll" },
             ".app": {
                 padding: "10px",
             },
@@ -69,6 +75,8 @@ const App = () => {
 
     const success = tests.reduce((pre, val) => (val.passed === true ? pre + 1 : pre), 0);
 
+    const filter = tests.filter((item) => (toggleFailed ? item.passed === false : true));
+
     return new CreateComponent({
         tag: "div",
         props: { className: "column app" },
@@ -90,9 +98,14 @@ const App = () => {
             new CreateComponent({
                 tag: "h2",
                 children: `${fail} have failed.`,
-                style: { inline: { marginBottom: "20px" } },
             }),
-            ...tests.map(
+            new CreateComponent({
+                tag: "button",
+                children: [`Show only failed tests : `, toggleFailed ? "on" : "off"],
+                style: { inline: { marginBottom: "20px" } },
+                events: { onClick: () => setToggle(!toggleFailed) },
+            }),
+            ...filter.map(
                 (item) =>
                     new CreateComponent({
                         tag: "details",

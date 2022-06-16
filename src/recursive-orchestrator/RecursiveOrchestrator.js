@@ -1,4 +1,3 @@
-// import RecursiveDOM from "../recursive-dom/RecursiveDOM.js";
 import { update } from "../recursive-reconciler/RecursiveReconciler.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
 
@@ -75,48 +74,7 @@ class RecursiveOrchestrator {
         }
     }
 
-    // static watchTask(time) {
-    //     const name = this.taskUUID(time);
-    //     RecursiveOrchestrator.singleton.watchTask(name, time);
-    //     return () => this.unWatchTask(name);
-    // }
-
-    // static unWatchTask(name) {
-    //     RecursiveOrchestrator.singleton.unwatchTask(name);
-    // }
-
-    // watchTask(name, time, onExceeded = () => {}) {
-    //     if (!this.currentTask.done) {
-    //     }
-
-    //     this.currentTask = { name, time, done: false, step: this.step };
-
-    //     setTimeout(() => {
-    //         if (!this.currentTask.done && this.currentTask.name === name) {
-    //             onExceeded();
-    //         } else {
-    //             this.currentTask.done = true;
-    //         }
-    //     }, time * 1.5);
-    // }
-
-    // unwatchTask(name) {
-    //     if (this.currentTask.name !== name) {
-    //     } else {
-    //         this.currentTask.done = true;
-    //     }
-    // }
-
-    // static startTask(callback, time, step) {
-    //     if (step) {
-    //         RecursiveOrchestrator.singleton.step = step;
-    //     }
-    //     const unwatch = RecursiveOrchestrator.watchTask(time);
-    //     callback();
-    //     unwatch();
-    // }
-
-    static taskUUID(time) {
+    static generateTaskUUID(time) {
         let uuid = "";
 
         for (let i = 0; i < 5; i++) {
@@ -189,7 +147,7 @@ class RecursiveOrchestrator {
 
     requestStartBatching(sender) {
         if (this.batching) {
-            const uuid = RecursiveOrchestrator.taskUUID(20);
+            const uuid = RecursiveOrchestrator.generateTaskUUID(20);
             this.batchingRequests.push(updateObj(sender, uuid));
             setTimeout(() => {
                 if (this.batchingRequests.find((req) => req.uuid === uuid)) {

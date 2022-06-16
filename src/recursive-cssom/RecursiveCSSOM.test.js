@@ -80,7 +80,7 @@ const sheetRender = describe("CSS rendering")
         })
     );
 
-const tests = [
+export default [
     propertyRender,
     selectorRender,
     varRender,
@@ -91,5 +91,3 @@ const tests = [
     mediaQueryRender,
     sheetRender,
 ];
-
-export default tests;
