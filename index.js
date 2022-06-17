@@ -1,9 +1,13 @@
 import CreateComponent from "./src/create-component/CreateComponent.js";
-// import RecursiveDOM from "./src/recursive-dom/RecursiveDOM.js";
 import { render } from "./src/recursive-reconciler/RecursiveReconciler.js";
-import { getRef } from "./src/recursive-state/SetReference.js";
-import { setState, getState, updateAfter } from "./src/recursive-state/SetState.js";
-import { setCache, getCache } from "./src/recursive-state/SetCache.js";
+import {
+    setState,
+    getState,
+    setCache,
+    getCache,
+    getRef,
+    updateOn,
+} from "./src/recursive-state/RecursiveState.js";
 import {
     createRouter,
     getParams,
@@ -56,7 +60,7 @@ export {
     getCache,
     getState,
     getRef,
-    updateAfter,
+    updateOn,
     createRouter,
     getParams,
     getRoute,

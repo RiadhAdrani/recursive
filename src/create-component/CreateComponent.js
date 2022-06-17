@@ -8,7 +8,7 @@ import {
 } from "../recursive-reconciler/RecursiveReconciler.js";
 import { is as isEv, getListener, hasHandler, get as getEv } from "../recursive-dom/DomEvents.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
-import { setRef } from "../recursive-state/SetReference.js";
+import { setRef, updateOn } from "../recursive-state/RecursiveState.js";
 import {
     endCurrentContext,
     getContext,
@@ -17,7 +17,6 @@ import {
 import { is as isAttr, get as getAttr, isToggle } from "../recursive-dom/DomAttributes.js";
 import CreateTextNode from "./CreateTextNode.js";
 import RecursiveFlags from "../recursive-flags/RecursiveFlags.js";
-import { updateAfter } from "../recursive-state/SetState.js";
 
 /**
  * ## CreateComponent
@@ -309,7 +308,7 @@ class CreateComponent {
                 getEv(prop).handler(element);
             } else {
                 element.addEventListener(getListener(prop), (e) => {
-                    updateAfter(() => {
+                    updateOn(() => {
                         element.events[prop](e);
                     });
                 });
@@ -548,7 +547,7 @@ class CreateComponent {
                     } else
                         pushDom(() => {
                             this.domInstance.addEventListener(getListener(event), (e) => {
-                                updateAfter(() => {
+                                updateOn(() => {
                                     this.domInstance.events[event](e);
                                 });
                             });
@@ -609,7 +608,7 @@ class CreateComponent {
      */
     onUpdated() {
         if (typeof this.hooks.onUpdated === "function") {
-            updateAfter(() => {
+            updateOn(() => {
                 this.hooks.onUpdated(this.domInstance);
             });
         }
@@ -620,7 +619,7 @@ class CreateComponent {
      */
     onCreated() {
         if (typeof this.hooks.onCreated === "function") {
-            updateAfter(() => {
+            updateOn(() => {
                 this.hooks.onCreated(this.domInstance);
             });
         }
@@ -634,7 +633,7 @@ class CreateComponent {
      */
     onDestroyed() {
         if (typeof this.hooks.onDestroyed === "function") {
-            updateAfter(() => {
+            updateOn(() => {
                 this.hooks.onDestroyed(this);
             });
         }
@@ -649,7 +648,7 @@ class CreateComponent {
      */
     beforeDestroyed() {
         if (typeof this.hooks.beforeDestroyed === "function") {
-            updateAfter(() => {
+            updateOn(() => {
                 this.hooks.beforeDestroyed(this);
             });
         }
@@ -662,6 +661,7 @@ class CreateComponent {
     onRef() {
         if (typeof this.hooks.onRef === "function") {
             const ref = this.hooks.onRef(this.domInstance);
+
             if (typeof ref === "string") {
                 this.ref = ref;
                 setRef(ref, this.domInstance);

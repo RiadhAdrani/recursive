@@ -2,7 +2,7 @@ import CreateComponent from "../create-component/CreateComponent.js";
 import Route from "./RecursiveRoute.js";
 import { encapsulateRoute, renderFragment, setParams } from "./RecursiveRouterContext.js";
 import { pushState, replaceState } from "./RecursiveHistory.js";
-import { getState, setState } from "../recursive-state/SetReservedState.js";
+import { setReserved, getReserved } from "../recursive-state/RecursiveState.js";
 
 /**
  * ### Router
@@ -41,7 +41,7 @@ class RecursiveRouter {
             });
         }
 
-        const [] = setState(
+        const [] = setReserved(
             "route",
             (() => {
                 for (let r in this.routes) {
@@ -172,7 +172,7 @@ class RecursiveRouter {
      * @param {Route} template the template of the route
      */
     loadRoute(template, anchor) {
-        const [current, setCurrent] = getState("route");
+        const [current, setCurrent] = getReserved("route");
 
         this.routes[current]?.onExit();
 
@@ -207,7 +207,7 @@ class RecursiveRouter {
 
         if (anchor) name = name.replace(anchor, "");
 
-        const [current] = getState("route");
+        const [current] = getReserved("route");
 
         if (current === name) {
             if (anchor) {
@@ -262,7 +262,7 @@ class RecursiveRouter {
 
         const regExp = /:[^:;]*;/gm;
 
-        const [currentName] = getState("route");
+        const [currentName] = getReserved("route");
 
         const current = this.singleton.routes[currentName];
 
@@ -289,7 +289,7 @@ class RecursiveRouter {
  * return the current route name.
  * @returns {String} route name.
  */
-const getRoute = () => getState("route")[0];
+const getRoute = () => getReserved("route")[0];
 
 /**
  * return the current route parameters if found.
@@ -346,7 +346,7 @@ const findMatch = (route) => RecursiveRouter.singleton.findMatch(route);
  * @returns {CreateComponent} component representing the current route fragment.
  */
 const renderRoute = () => {
-    const [route] = getState("route");
+    const [route] = getReserved("route");
     setParams();
     if (RecursiveRouter.singleton.routes[route].title) {
         document.title = RecursiveRouter.singleton.routes[route].title;

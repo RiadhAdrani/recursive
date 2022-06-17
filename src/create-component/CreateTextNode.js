@@ -17,7 +17,7 @@ const CreateTextNode = (text) => {
 
     textnode.update = (newComponent) => {
         if (newComponent.tag !== textnode.tag) {
-            textnode.$replaceInDOM(newComponent);
+            textnode.replaceInDOM(newComponent);
         } else {
             if (textnode.text !== newComponent.text) {
                 textnode.domInstance.data = newComponent.text;

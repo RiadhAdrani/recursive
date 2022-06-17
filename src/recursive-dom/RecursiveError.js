@@ -4,10 +4,15 @@
  * @param {Array} help
  */
 const throwError = (msg, help) => {
-    const error = new Error(msg);
-    error.help = help;
+    if (!msg) return;
 
-    throw `${error} - Help : ${help.join(", ")}`;
+    let helpMsg = "";
+
+    if (Array.isArray(help) && help.length > 0) {
+        helpMsg += "- Help" + help.join(", ");
+    }
+
+    throw new Error(`${msg} ${helpMsg}`);
 };
 
 export { throwError };

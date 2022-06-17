@@ -1,9 +1,8 @@
 import { updateStack } from "../recursive-cssom/RecursiveCSSOM.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
 import { changeState, states } from "../recursive-orchestrator/RecursiveOrchestrator.js";
-import { cleanStore as cleanRefStore } from "../recursive-state/SetReference.js";
-import { cleanStore as cleanStateStore } from "../recursive-state/SetState.js";
 import CreateComponent from "../create-component/CreateComponent.js";
+import { clear as clearStores } from "../recursive-state/RecursiveState.js";
 
 const DOM = "DOM";
 const BEFORE_DESTROYED = "BEFORE_DESTROYED";
@@ -24,6 +23,7 @@ class Reconciler {
 
     clean() {
         this.stack = {};
+        clearStores();
     }
 
     pushCallback(callback, name) {
@@ -101,6 +101,8 @@ class Reconciler {
         changeState(states.EXEC_ON_CREATED);
         this.execute(ON_CREATED);
 
+        this.old.onRefRecursively();
+
         changeState(states.CLEAN_STATES);
         this.clean();
 
@@ -120,7 +122,6 @@ class Reconciler {
         updateStack(newest.flattenStyle());
 
         changeState(states.COMPUTE_DIFF);
-        cleanRefStore();
         this.old.update(newest);
         this.old = newest;
 
@@ -139,7 +140,6 @@ class Reconciler {
 
         changeState(states.CLEAN_STATES);
         this.clean();
-        cleanStateStore();
     }
 }
 

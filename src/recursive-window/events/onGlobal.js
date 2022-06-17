@@ -1,4 +1,4 @@
-import { updateAfter } from "../../recursive-state/SetState.js";
+import { updateOn } from "../../recursive-state/RecursiveState.js";
 import handler from "./handler.js";
 
 import on from "./on.js";
@@ -13,7 +13,7 @@ export default (winEvent, store, listener, checkTarget = true) => {
     function notify(target) {
         if (!target || !document.contains(target)) return;
 
-        updateAfter(() => {
+        updateOn(() => {
             window[store].items.forEach((element) => {
                 if (!element.contains(target)) element.events[listener]();
             });
@@ -29,7 +29,7 @@ export default (winEvent, store, listener, checkTarget = true) => {
 
         const target = e.target;
 
-        updateAfter(() => {
+        updateOn(() => {
             window[store].items.forEach((element) => {
                 if (checkTarget && element.contains(target)) return;
 

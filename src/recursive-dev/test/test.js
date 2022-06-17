@@ -1,6 +1,6 @@
 import CreateComponentTest from "../../create-component/CreateComponent.test.js";
 import RecursiveCSSOMTest from "../../recursive-cssom/RecursiveCSSOM.test.js";
-import { Render, CreateComponent, setStyle, setState } from "../../../index.js";
+import { Render, CreateComponent, setStyle, setCache } from "../../../index.js";
 
 const tests = [...CreateComponentTest, ...RecursiveCSSOMTest];
 
@@ -18,7 +18,7 @@ const tests = [...CreateComponentTest, ...RecursiveCSSOMTest];
 // );
 
 const App = () => {
-    const [toggleFailed, setToggle] = setState("toggle-failed", false);
+    const [toggleFailed, setToggle, live] = setCache("toggle-failed", false);
 
     setStyle({
         var: {
@@ -103,59 +103,58 @@ const App = () => {
                 tag: "button",
                 children: [`Show only failed tests : `, toggleFailed ? "on" : "off"],
                 style: { inline: { marginBottom: "20px" } },
-                events: { onClick: () => setToggle(!toggleFailed) },
+                events: {
+                    onClick: () => {
+                        setToggle(!toggleFailed);
+                    },
+                },
             }),
-            ...filter.map(
-                (item) =>
-                    new CreateComponent({
-                        tag: "details",
-                        props: {
-                            className: item.passed ? "wrapper passed" : "wrapper failed",
-                        },
-                        children: [
-                            new CreateComponent({
-                                tag: "summary",
-                                children: [
-                                    item.description,
-                                    " : ",
-                                    item.passed ? "Passed" : "Failed",
-                                ],
-                            }),
-                            new CreateComponent({
-                                tag: "hr",
-                                props: { size: "1px", color: "white" },
-                            }),
-                            new CreateComponent({
-                                tag: "div",
-                                props: { className: "column content" },
-                                children: [
-                                    new CreateComponent({
-                                        tag: "p",
-                                        children: [
-                                            new CreateComponent({
-                                                tag: "span",
-                                                children: "Expected:",
-                                                props: { className: "label" },
-                                            }),
-                                            ` ${item.toBe}`,
-                                        ],
-                                    }),
-                                    new CreateComponent({
-                                        tag: "p",
-                                        children: [
-                                            new CreateComponent({
-                                                tag: "span",
-                                                children: "Result:",
-                                                props: { className: "label" },
-                                            }),
-                                            ` ${item.result}`,
-                                        ],
-                                    }),
-                                ],
-                            }),
-                        ],
-                    })
-            ),
+            ...filter.map((item) => {
+                return new CreateComponent({
+                    tag: "details",
+                    props: {
+                        className: item.passed ? "wrapper passed" : "wrapper failed",
+                    },
+                    children: [
+                        new CreateComponent({
+                            tag: "summary",
+                            children: [item.description, " : ", item.passed ? "Passed" : "Failed"],
+                        }),
+                        new CreateComponent({
+                            tag: "hr",
+                            props: { size: "1px", color: "white" },
+                        }),
+                        new CreateComponent({
+                            tag: "div",
+                            props: { className: "column content" },
+                            children: [
+                                new CreateComponent({
+                                    tag: "p",
+                                    children: [
+                                        new CreateComponent({
+                                            tag: "span",
+                                            children: "Expected:",
+                                            props: { className: "label" },
+                                        }),
+                                        ` ${item.toBe}`,
+                                    ],
+                                }),
+                                new CreateComponent({
+                                    tag: "p",
+                                    children: [
+                                        new CreateComponent({
+                                            tag: "span",
+                                            children: "Result:",
+                                            props: { className: "label" },
+                                        }),
+                                        ` ${item.result}`,
+                                    ],
+                                }),
+                            ],
+                        }),
+                    ],
+                });
+            }),
         ],
     });
 };
