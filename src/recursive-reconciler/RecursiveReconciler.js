@@ -3,6 +3,12 @@ import { throwError } from "../recursive-dom/RecursiveError.js";
 import { changeState, states } from "../recursive-orchestrator/RecursiveOrchestrator.js";
 import CreateComponent from "../create-component/CreateComponent.js";
 import { clear as clearStores } from "../recursive-state/RecursiveState.js";
+import {
+    renderTime,
+    renderTimeEnd,
+    updateTime,
+    updateTimeEnd,
+} from "../recursive-logger/ConsoleLogger.js";
 
 const DOM = "DOM";
 const BEFORE_DESTROYED = "BEFORE_DESTROYED";
@@ -84,6 +90,8 @@ class Reconciler {
 
         this.app = app;
 
+        renderTime();
+
         changeState(states.COMPUTE_TREE);
         this.old = this.app();
 
@@ -106,10 +114,14 @@ class Reconciler {
         changeState(states.CLEAN_STATES);
         this.clean();
 
+        renderTimeEnd();
+
         changeState(states.FREE);
     }
 
     update() {
+        updateTime();
+
         changeState(states.COMPUTE_TREE);
         const newest = this.app();
 
@@ -140,6 +152,8 @@ class Reconciler {
 
         changeState(states.CLEAN_STATES);
         this.clean();
+
+        updateTimeEnd();
     }
 }
 

@@ -64,7 +64,7 @@ class RecursiveState {
         delete this.stores[store].items[key];
     }
 
-    updateItem(key, newValue, store, onChanged) {
+    updateItem(key, newValue, store, onChanged, forceUpdate) {
         if (this.stores[store] === undefined) {
             throwError("Invalid store name.");
         }
@@ -73,7 +73,7 @@ class RecursiveState {
             throwError("State does not exist in the current store.");
         }
 
-        if (this.stores[store].items[key].value !== newValue) {
+        if (this.stores[store].items[key].value !== newValue || forceUpdate) {
             this.stores[store].items[key].history.push(this.stores[store].items[key].value);
             this.stores[store].items[key].preValue = this.stores[store].items[key].value;
 

@@ -41,14 +41,14 @@ class RecursiveRouter {
             });
         }
 
-        const [] = setReserved(
-            "route",
-            (() => {
-                for (let r in this.routes) {
-                    return this.routes[r].name;
-                }
-            })()
-        );
+        const fTemplate = (() => {
+            for (let r in this.routes) {
+                return this.routes[r].name;
+            }
+        })();
+
+        setReserved("path", "/");
+        setReserved("route", fTemplate);
 
         window.addEventListener("popstate", (e) => {
             let _route;
@@ -56,15 +56,19 @@ class RecursiveRouter {
             if (e.state) {
                 _route = e.state.route;
             } else {
-                _route = (() => {
-                    for (let r in this.routes) {
-                        return this.routes[r].name;
-                    }
-                })();
+                _route = fTemplate;
             }
 
-            this.loadRoute(this.routes[_route]);
+            const _to = this.getRoute();
+
+            this.loadRoute(this.routes[_route], _to);
         });
+    }
+
+    getRoute() {
+        return this.root
+            ? window.location.pathname.replace("/" + this.root, "")
+            : window.location.pathname;
     }
 
     /**
@@ -171,14 +175,18 @@ class RecursiveRouter {
      * @param {String} anchor the name of target element
      * @param {Route} template the template of the route
      */
-    loadRoute(template, anchor) {
+    loadRoute(template, route, anchor) {
+        const [path, setPath] = getReserved("path");
         const [current, setCurrent] = getReserved("route");
+
+        if (path === route) return;
 
         this.routes[current]?.onExit();
 
         let _template = template;
 
         setCurrent(_template.name);
+        setPath(route);
 
         if (anchor) {
             const target = document.getElementById(anchor.replace("#", ""));
@@ -233,7 +241,7 @@ class RecursiveRouter {
         if (_route) {
             pushState(_route.route.name, _route.route.title, `${_route.path}${anchor}`);
 
-            this.loadRoute(_route.route, anchor);
+            this.loadRoute(_route.route, name, anchor);
         }
     }
 
@@ -249,7 +257,7 @@ class RecursiveRouter {
         if (_route) {
             replaceState(_route.route.name, _route.route.title, `${_route.path}${hash}`);
 
-            this.loadRoute(_route.route, hash);
+            this.loadRoute(_route.route, name, hash);
         }
     }
 

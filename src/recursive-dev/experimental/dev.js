@@ -10,6 +10,9 @@ import {
     renderRoute,
     getParams,
 } from "../../../index.js";
+import { devLogs } from "../../recursive-logger/ConsoleLogger.js";
+
+devLogs({ render: true, update: true });
 
 const Button = ({ children, onClick }) =>
     new CreateComponent({ tag: "button", children, events: { onClick } });
@@ -99,7 +102,8 @@ createRouter(
                 subRoutes: [route({ name: "/route=:route;", component: Nested })],
             }),
         ],
-    })
+    }),
+    "dev"
 );
 
 Render(() => {
@@ -115,6 +119,7 @@ Render(() => {
                     Link({ children: "set cache", to: "/cache" }),
                     Link({ children: "get ref", to: "/ref" }),
                     Link({ children: "nested", to: "/nested/route=:nested;" }),
+                    Link({ children: "cringez", to: "/nested/route=:cringe;" }),
                 ],
             }),
             renderRoute(),

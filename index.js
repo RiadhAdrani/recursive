@@ -20,6 +20,7 @@ import {
 import { setStaticStyle, setStyle } from "./src/recursive-cssom/RecursiveCSSOM.js";
 import "./src/recursive-window/RecursiveWindow.js";
 import CreateSvgComponent from "./src/recursive-svg/CreateSvgComponent.js";
+import { devLogs } from "./src/recursive-logger/ConsoleLogger.js";
 
 /**
  * Render your App.
@@ -27,7 +28,6 @@ import CreateSvgComponent from "./src/recursive-svg/CreateSvgComponent.js";
  */
 function Render(App) {
     render(App);
-
     onFreshLoad();
 }
 
@@ -51,6 +51,7 @@ const setTitle = (title) => {
 };
 
 export {
+    devLogs,
     Render,
     DevMode,
     setStaticStyle,
