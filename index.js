@@ -32,15 +32,6 @@ function Render(App) {
 }
 
 /**
- * Activate/deactivate dev mode,
- * which will log addtional information to the console.
- * @param {boolean} value true | false
- */
-function DevMode(value) {
-    RecursiveDOM.devMode = value;
-}
-
-/**
  * Change the tab title.
  * @param {String} title new title
  */
@@ -53,7 +44,6 @@ const setTitle = (title) => {
 export {
     devLogs,
     Render,
-    DevMode,
     setStaticStyle,
     setStyle,
     setCache,
