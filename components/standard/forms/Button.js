@@ -1,0 +1,46 @@
+import { CreateComponent } from "../../../index.js";
+
+export default ({
+    children,
+    autofocus,
+    disabled,
+    form,
+    formAction,
+    formEncType,
+    formMethod,
+    formNoValidate,
+    formTarget,
+    name,
+    type = "button",
+    value,
+    props,
+    key,
+    events,
+    hooks,
+    style,
+    flags,
+}) => {
+    return new CreateComponent({
+        tag: "button",
+        children,
+        props: {
+            ...props,
+            autofocus,
+            disabled,
+            form,
+            formAction,
+            formEncType,
+            formMethod,
+            formNoValidate,
+            formTarget,
+            name,
+            type,
+            value,
+        },
+        key,
+        events,
+        hooks,
+        style,
+        flags,
+    });
+};

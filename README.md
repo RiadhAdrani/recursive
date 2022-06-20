@@ -42,7 +42,7 @@ Inside your `index.js` you render your app like this:
 
 ```js
 import { Render } from "./recursive-js/index.js";
-import { P } from "./recursive-js/components.js";
+import { P } from "./recursive-js/components/html.js";
 
 Render(() => P({ text: "Hello World" }));
 ```
@@ -51,7 +51,7 @@ Render(() => P({ text: "Hello World" }));
 
 ```js
 import { Render } from "@riadh-adrani/recursive";
-import { P } from "@riadh-adrani/recursive/components";
+import { P } from "@riadh-adrani/recursive/components/html.js";
 
 Render(() => P({ text: "Hello World" }));
 ```

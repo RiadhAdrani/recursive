@@ -1,5 +1,6 @@
-import CreateComponent from "./src/create-component/CreateComponent.js";
-import { render } from "./src/recursive-reconciler/RecursiveReconciler.js";
+import CreateComponent from "./core/create-component/CreateComponent.js";
+import CreateSvgComponent from "./core/recursive-svg/CreateSvgComponent.js";
+import { render } from "./core/recursive-reconciler/RecursiveReconciler.js";
 import {
     setState,
     getState,
@@ -7,7 +8,7 @@ import {
     getCache,
     getRef,
     updateOn,
-} from "./src/recursive-state/RecursiveState.js";
+} from "./core/recursive-state/RecursiveState.js";
 import {
     createRouter,
     getParams,
@@ -16,11 +17,10 @@ import {
     renderRoute,
     route,
     onFreshLoad,
-} from "./src/recursive-router/RecursiveRouter.js";
-import { setStaticStyle, setStyle } from "./src/recursive-cssom/RecursiveCSSOM.js";
-import "./src/recursive-window/RecursiveWindow.js";
-import CreateSvgComponent from "./src/recursive-svg/CreateSvgComponent.js";
-import { devLogs } from "./src/recursive-logger/ConsoleLogger.js";
+} from "./core/recursive-router/RecursiveRouter.js";
+import { setStaticStyle, setStyle } from "./core/recursive-cssom/RecursiveCSSOM.js";
+import "./core/recursive-window/RecursiveWindow.js";
+import { devLogs } from "./core/recursive-logger/ConsoleLogger.js";
 
 /**
  * Render your App.
