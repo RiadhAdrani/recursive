@@ -1,4 +1,4 @@
-import { CreateComponent } from "../../index.js";
+import { CreateComponent } from "../View";
 
 export default ({ children, flags }) => {
     return new CreateComponent({

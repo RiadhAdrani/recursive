@@ -1,40 +1,11 @@
-import { CreateComponent } from "../../../index.js";
+import { CreateComponent, Props } from "../../View";
 
-export default ({
-    children,
-    autoComplete,
-    autoFocus,
-    disabled,
-    form,
-    multiple,
-    name,
-    required,
-    size,
-    props,
-    key,
-    events,
-    hooks,
-    style,
-    flags,
-}) => {
+/**
+ * @param {Props} props
+ */
+export default (props) => {
     return new CreateComponent({
+        ...props,
         tag: "select",
-        children,
-        props: {
-            ...props,
-            autoComplete,
-            autoFocus,
-            disabled,
-            form,
-            multiple,
-            name,
-            required,
-            size,
-        },
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

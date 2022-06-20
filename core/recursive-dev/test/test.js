@@ -3,7 +3,6 @@ import RecursiveCSSOMTest from "../../recursive-cssom/RecursiveCSSOM.test.js";
 import { Render, setStyle, setCache } from "../../../index.js";
 import { Column } from "../../../components/utility.js";
 import { Button, Details, H1, H2, Hr, P, Span, Summary } from "../../../components/html.js";
-import { Text } from "../../../components/vector.js";
 
 const tests = [...CreateComponentTest, ...RecursiveCSSOMTest];
 
@@ -68,7 +67,7 @@ const App = () => {
     const filter = tests.filter((item) => (toggleFailed ? item.passed === false : true));
 
     return Column({
-        props: { className: "column app" },
+        className: "column app",
         style: {
             scoped: true,
             className: "app-wrapper",
@@ -78,34 +77,30 @@ const App = () => {
         children: [
             H1({ children: `${tests.length} tests have completed.` }),
             H2({ children: `${success} have passed.` }),
-            H2({ children: `${fail} have failed.` }),
+            H2({ children: `${fail} have failed.`, href: "cringe" }),
             Button({
                 children: [`Show only failed tests : `, toggleFailed ? "on" : "off"],
                 style: { inline: { marginBottom: "20px" } },
-                events: {
-                    onClick: () => {
-                        setToggle(!toggleFailed);
-                    },
+                onClick: () => {
+                    setToggle(!toggleFailed);
                 },
             }),
             ...filter.map((item) => {
                 return Details({
-                    props: {
-                        className: item.passed ? "wrapper passed" : "wrapper failed",
-                    },
+                    className: item.passed ? "wrapper passed" : "wrapper failed",
                     children: [
                         Summary({
                             children: [item.description, " : ", item.passed ? "Passed" : "Failed"],
                         }),
                         Hr({ size: "1px", color: "white" }),
                         Column({
-                            props: { className: "content" },
+                            className: "content",
                             children: [
                                 P({
                                     children: [
                                         Span({
                                             children: "Expected:",
-                                            props: { className: "label" },
+                                            className: "label",
                                         }),
                                         ` ${item.toBe}`,
                                     ],
@@ -114,7 +109,7 @@ const App = () => {
                                     children: [
                                         Span({
                                             children: "Result:",
-                                            props: { className: "label" },
+                                            className: "label",
                                         }),
                                         ` ${item.result}`,
                                     ],

@@ -1,28 +1,11 @@
-import { CreateSvgComponent } from "../../index.js";
+import { CreateSvgComponent, Props } from "../View";
 
-export default ({
-    children,
-    height,
-    preserveAspectRatio,
-    viewBox,
-    width,
-    x,
-    y,
-    props,
-    key,
-    events,
-    hooks,
-    style,
-    flags,
-}) => {
+/**
+ * @param {Props} props
+ */
+export default (props) => {
     return new CreateSvgComponent({
+        ...props,
         tag: "svg",
-        children,
-        props: { height, preserveAspectRatio, viewBox, width, x, y, ...props },
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

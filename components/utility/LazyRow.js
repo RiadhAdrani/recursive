@@ -1,5 +1,4 @@
-import { CreateComponent } from "../../index.js";
-import View from "../View";
+import { View, Lazy, CreateComponent } from "../View";
 
 class LazyRowView extends View {
     constructor() {
@@ -8,23 +7,19 @@ class LazyRowView extends View {
 }
 
 class LazyRow extends CreateComponent {
-    constructor({ children, onObserved, props, key, events, style, flags, hooks }) {
+    constructor({ onObserved, ...props }) {
         super({
-            tag: "lazy-row",
-            children,
             onObserved,
-            props,
-            key,
-            events,
-            style,
-            flags,
-            hooks,
+            ...props,
+            tag: "lazy-row",
         });
 
         this.data = { itemCount: this.children.length };
 
+        const _onRef = this.hooks.onRef || (() => {});
+
         this.hooks.onRef = () => {
-            if (hooks && hooks.onRef && typeof hooks.onRef === "function") hooks.onRef();
+            _onRef();
 
             if (this.children.length === 0 || typeof onObserved != "function") return;
 
@@ -47,15 +42,11 @@ class LazyRow extends CreateComponent {
 
 View.makeDefaultStyle("lazy-row{display:flex;flex-direction:row;}");
 
-export default ({ children, onObserved, props, key, events, style, flags, hooks }) => {
+/**
+ * @param {Lazy} props
+ */
+export default (props) => {
     return new LazyRow({
-        onObserved,
-        children,
-        props,
-        key,
-        events,
-        hooks,
-        style,
-        flags,
+        ...props,
     });
 };

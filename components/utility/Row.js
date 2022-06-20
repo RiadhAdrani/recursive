@@ -1,5 +1,4 @@
-import { CreateComponent } from "../../index.js";
-import View from "../View";
+import { View, CreateComponent } from "../View";
 
 class Row extends View {
     constructor() {
@@ -9,15 +8,9 @@ class Row extends View {
 
 View.makeDefaultStyle("row-view{display:flex;flex-direction:row;}");
 
-export default ({ children, props, key, events, hooks, style, flags }) => {
+export default (props) => {
     return new CreateComponent({
+        ...props,
         tag: "row-view",
-        children,
-        props,
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

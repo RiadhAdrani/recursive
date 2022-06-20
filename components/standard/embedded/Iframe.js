@@ -1,44 +1,11 @@
-import { CreateComponent } from "../../../index.js";
+import { CreateComponent, Props } from "../../View";
 
-export default ({
-    children,
-    props,
-    allow,
-    allowFullScreen,
-    allowPaymentRequest,
-    fetchPriority,
-    loading,
-    name,
-    referrerPolicy,
-    sandbox,
-    src,
-    width,
-    key,
-    events,
-    hooks,
-    style,
-    flags,
-}) => {
+/**
+ * @param {Props} props
+ */
+export default (props) => {
     return new CreateComponent({
+        ...props,
         tag: "iframe",
-        children,
-        props: {
-            ...props,
-            allow,
-            allowFullScreen,
-            allowPaymentRequest,
-            fetchPriority,
-            loading,
-            name,
-            referrerPolicy,
-            sandbox,
-            src,
-            width,
-        },
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

@@ -1,14 +1,11 @@
-import { CreateComponent } from "../../../index.js";
+import { CreateComponent, Props } from "../../View";
 
-export default ({ children, compact, type, props, key, events, hooks, style, flags }) => {
+/**
+ * @param {Props} props
+ */
+export default (props) => {
     return new CreateComponent({
+        ...props,
         tag: "ul",
-        children,
-        props: { ...props, compact, type },
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

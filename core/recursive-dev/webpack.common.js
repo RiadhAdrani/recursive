@@ -36,4 +36,18 @@ module.exports = {
             },
         ],
     },
+    stats: { warnings: false },
+    devServer: {
+        hot: true,
+        liveReload: false,
+        static: {
+            directory: path.join(__dirname, "public"),
+        },
+        historyApiFallback: true,
+        client: {
+            overlay: {
+                warnings: false,
+            },
+        },
+    },
 };

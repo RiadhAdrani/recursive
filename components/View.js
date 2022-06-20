@@ -1,8 +1,11 @@
 import DefineElement from "../core/create-component/DefineElement.js";
+import { Props, Lazy } from "../types/Props";
+import CreateComponent from "../core/create-component/CreateComponent.js";
+import CreateSvgComponent from "../core/recursive-svg/CreateSvgComponent.js";
 
 const ref = document.getElementById("default-components-style");
 
-export default class View extends DefineElement {
+class View extends DefineElement {
     constructor(tag) {
         super(tag);
     }
@@ -29,3 +32,5 @@ export default class View extends DefineElement {
             .join("");
     }
 }
+
+export { View, Props, Lazy, CreateComponent, CreateSvgComponent };

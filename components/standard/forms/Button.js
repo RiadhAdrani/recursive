@@ -1,46 +1,11 @@
-import { CreateComponent } from "../../../index.js";
+import { CreateComponent, Props } from "../../View";
 
-export default ({
-    children,
-    autofocus,
-    disabled,
-    form,
-    formAction,
-    formEncType,
-    formMethod,
-    formNoValidate,
-    formTarget,
-    name,
-    type = "button",
-    value,
-    props,
-    key,
-    events,
-    hooks,
-    style,
-    flags,
-}) => {
+/**
+ * @param {Props} props
+ */
+export default (props) => {
     return new CreateComponent({
+        ...props,
         tag: "button",
-        children,
-        props: {
-            ...props,
-            autofocus,
-            disabled,
-            form,
-            formAction,
-            formEncType,
-            formMethod,
-            formNoValidate,
-            formTarget,
-            name,
-            type,
-            value,
-        },
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

@@ -1,55 +1,11 @@
-import { CreateComponent } from "../../../index.js";
+import { CreateComponent, Props } from "../../View";
 
-export default ({
-    children,
-    value,
-    autoComplete,
-    autoFocus,
-    cols,
-    disabled,
-    form,
-    maxLength,
-    minLength,
-    name,
-    placeholder,
-    readOnly,
-    required,
-    rows,
-    spellCheck,
-    wrap,
-    props,
-    key,
-    events,
-    hooks,
-    style,
-    flags,
-}) => {
+/**
+ * @param {Props} props
+ */
+export default (props) => {
     return new CreateComponent({
-        children,
+        ...props,
         tag: "textarea",
-        data: { value },
-        props: {
-            ...props,
-            value,
-            autoComplete,
-            autoFocus,
-            cols,
-            disabled,
-            form,
-            maxLength,
-            minLength,
-            name,
-            placeholder,
-            readOnly,
-            required,
-            rows,
-            spellCheck,
-            wrap,
-        },
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

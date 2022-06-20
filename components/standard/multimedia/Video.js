@@ -1,46 +1,11 @@
-import { CreateComponent } from "../../../index.js";
+import { CreateComponent, Props } from "../../View";
 
-export default ({
-    children,
-    autoplay,
-    controls,
-    crossOrigin,
-    height,
-    loop,
-    muted,
-    playsInline,
-    poster,
-    preload,
-    src,
-    width,
-    props,
-    key,
-    events,
-    hooks,
-    style,
-    flags,
-}) => {
+/**
+ * @param {Props} props
+ */
+export default (props) => {
     return new CreateComponent({
-        children,
+        ...props,
         tag: "video",
-        props: {
-            ...props,
-            autoplay,
-            controls,
-            crossOrigin,
-            height,
-            loop,
-            muted,
-            playsInline,
-            poster,
-            preload,
-            src,
-            width,
-        },
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

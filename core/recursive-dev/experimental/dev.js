@@ -1,10 +1,12 @@
+import { Input } from "../../../components/html.js";
+import { Link } from "../../../components/utility.js";
+import { Circle, Svg, Text } from "../../../components/vector.js";
 import {
     Render,
     CreateComponent,
     setState,
     setCache,
     getRef,
-    goTo,
     createRouter,
     route,
     renderRoute,
@@ -14,22 +16,7 @@ import { devLogs } from "../../recursive-logger/ConsoleLogger.js";
 
 devLogs({ render: true, update: true });
 
-const Button = ({ children, onClick }) =>
-    new CreateComponent({ tag: "button", children, events: { onClick } });
-
-const Link = ({ children, to }) =>
-    new CreateComponent({
-        tag: "a",
-        children,
-        props: { href: to },
-        style: { scoped: true, normal: { padding: "5px", margin: "5px" } },
-        events: {
-            onClick: (e) => {
-                e.preventDefault();
-                goTo(to);
-            },
-        },
-    });
+const Button = ({ children, onClick }) => new CreateComponent({ tag: "button", children, onClick });
 
 const Home = () => {
     const [value, setvalue] = setState("value", [1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -115,11 +102,11 @@ Render(() => {
                 tag: "div",
                 style: { inline: { display: "flex", flexDirection: "row" } },
                 children: [
-                    Link({ children: "home", to: "/" }),
-                    Link({ children: "set cache", to: "/cache" }),
-                    Link({ children: "get ref", to: "/ref" }),
-                    Link({ children: "nested", to: "/nested/route=:nested;" }),
-                    Link({ children: "cringez", to: "/nested/route=:cringe;" }),
+                    Link({ children: "home", href: "/" }),
+                    Link({ children: "set cache", href: "/cache" }),
+                    Link({ children: "get ref", href: "/ref" }),
+                    Link({ children: "nested", href: "/nested/route=:nested;" }),
+                    Link({ children: "cringez", href: "/nested/route=:cringe;" }),
                 ],
             }),
             renderRoute(),

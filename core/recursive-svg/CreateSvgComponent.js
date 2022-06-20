@@ -1,17 +1,9 @@
 import CreateComponent from "../create-component/CreateComponent.js";
 
 class CreateSvgComponent extends CreateComponent {
-    constructor({
-        tag,
-        children,
-        events,
-        style,
-        props,
-        flags,
-        nameSpace = "http://www.w3.org/2000/svg",
-    }) {
-        super({ tag, children, events, style, props, flags });
-        this.nameSpace = nameSpace || "http://www.w3.org/2000/svg";
+    constructor(props) {
+        super(props);
+        this.nameSpace = props.nameSpace || "http://www.w3.org/2000/svg";
     }
 
     createElement() {

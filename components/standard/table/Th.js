@@ -1,27 +1,11 @@
-import { CreateComponent } from "../../../index.js";
+import { CreateComponent, Props } from "../../View";
 
-export default ({
-    children,
-    abbr,
-    colSpan,
-    headers,
-    rowSpan,
-    scope,
-    props,
-    key,
-    events,
-    hooks,
-    style,
-    flags,
-}) => {
+/**
+ * @param {Props} props
+ */
+export default (props) => {
     return new CreateComponent({
+        ...props,
         tag: "th",
-        children,
-        props: { ...props, abbr, colSpan, headers, rowSpan, scope },
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

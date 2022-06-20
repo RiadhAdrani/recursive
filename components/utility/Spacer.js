@@ -1,5 +1,4 @@
-import { CreateComponent } from "../../index.js";
-import View from "../View";
+import { View, CreateComponent } from "../View";
 
 class Spacer extends View {
     constructor() {

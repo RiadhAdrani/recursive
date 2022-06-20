@@ -1,5 +1,4 @@
-import { CreateComponent } from "../../index.js";
-import View from "../View";
+import { View, Lazy, CreateComponent } from "../View";
 
 class LazyColumnView extends View {
     constructor() {
@@ -8,23 +7,18 @@ class LazyColumnView extends View {
 }
 
 class LazyColumn extends CreateComponent {
-    constructor({ children, onObserved, props, key, events, style, flags, hooks }) {
+    constructor(props) {
         super({
+            ...props,
             tag: "lazy-column",
-            children,
-            onObserved,
-            props,
-            key,
-            events,
-            style,
-            flags,
-            hooks,
         });
 
         this.data = { itemCount: this.children.length };
 
+        const _onRef = this.hooks.onRef || (() => {});
+
         this.hooks.onRef = () => {
-            if (hooks && hooks.onRef && typeof hooks.onRef === "function") hooks.onRef();
+            _onRef();
 
             if (this.children.length === 0 || typeof onObserved != "function") return;
 
@@ -47,15 +41,11 @@ class LazyColumn extends CreateComponent {
 
 View.makeDefaultStyle("lazy-column{display:flex;flex-direction:column;}");
 
-export default ({ children, onObserved, props, key, events, style, flags, hooks }) => {
+/**
+ * @param {Lazy} props
+ */
+export default (props) => {
     return new LazyColumn({
-        onObserved,
-        children,
-        props,
-        key,
-        events,
-        hooks,
-        style,
-        flags,
+        ...props,
     });
 };

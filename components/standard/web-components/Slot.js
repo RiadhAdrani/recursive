@@ -1,14 +1,8 @@
 import { CreateComponent } from "../../../index.js";
 
-export default ({ children, name, props, key, events, hooks, style, flags }) => {
+export default (props) => {
     return new CreateComponent({
+        ...props,
         tag: "slot",
-        children,
-        props: { ...props, name },
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

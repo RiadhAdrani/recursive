@@ -15,7 +15,9 @@ const prepareAttributes = describe("Prepare attributes")
     .start(() => {
         return new CreateComponent({
             tag: "p",
-            props: { id: "test", className: "test", title: "test" },
+            id: "test",
+            className: "test",
+            title: "test",
         }).props;
     });
 
@@ -24,7 +26,7 @@ const invalidAttributes = describe("Invalid attribute")
     .start(() => {
         return new CreateComponent({
             tag: "p",
-            props: { test: "hello" },
+            test: "hello",
         }).props.test;
     });
 
@@ -33,7 +35,7 @@ const prepareEvents = describe("Prepare events")
     .start(() => {
         return new CreateComponent({
             tag: "p",
-            events: { onClick: () => "test" },
+            onClick: () => "test",
         }).events.onClick();
     });
 
@@ -43,7 +45,7 @@ const invalidEvents = describe("Invalid event")
         try {
             return new CreateComponent({
                 tag: "p",
-                events: { onTest: () => "test" },
+                onTest: () => "test",
             }).events.onClick();
         } catch (e) {}
     });
@@ -160,7 +162,7 @@ const validClassName = describe("Valid class name")
     .start(() => {
         return new CreateComponent({
             tag: "p",
-            props: { className: "hello-world" },
+            className: "hello-world",
         }).props.className;
     });
 
@@ -203,7 +205,7 @@ const renderAttributes = describe("Render attributes")
     .start(() => {
         const tree = new CreateComponent({
             tag: "input",
-            props: { value: "hello world" },
+            value: "hello world",
         });
 
         return tree.render().value;
@@ -214,7 +216,7 @@ const renderEvents = describe("Render events")
     .start(() => {
         const tree = new CreateComponent({
             tag: "input",
-            events: { onClick: () => "hello world" },
+            onClick: () => "hello world",
         });
 
         return tree.render().events.onClick();
@@ -229,7 +231,7 @@ const renderChildren = describe("Render children")
                 "Hello World",
                 new CreateComponent({
                     tag: "input",
-                    props: { value: "test" },
+                    value: "test",
                 }),
             ],
         });

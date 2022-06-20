@@ -1,44 +1,11 @@
-import { CreateComponent } from "../../../index.js";
+import { CreateComponent, Props } from "../../View";
 
-export default ({
-    children,
-    async,
-    crossOrigin,
-    defer,
-    fetchPriority,
-    intergrity,
-    noModule,
-    nonce,
-    referrerPolicy,
-    src,
-    type,
-    props,
-    key,
-    events,
-    hooks,
-    style,
-    flags,
-}) => {
+/**
+ * @param {Props} props
+ */
+export default (props) => {
     return new CreateComponent({
+        ...props,
         tag: "script",
-        children,
-        props: {
-            ...props,
-            async,
-            crossOrigin,
-            defer,
-            fetchPriority,
-            intergrity,
-            noModule,
-            nonce,
-            referrerPolicy,
-            src,
-            type,
-        },
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

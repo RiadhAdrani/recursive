@@ -1,46 +1,11 @@
-import { CreateComponent } from "../../../index.js";
+import { CreateComponent, Props } from "../../View";
 
-export default ({
-    alt,
-    crossOrigin,
-    decoding,
-    height,
-    isMap,
-    loading,
-    referrerPolicy,
-    sizes,
-    src,
-    srcSet,
-    width,
-    ueMap,
-    props,
-    key,
-    events,
-    hooks,
-    style,
-    flags,
-}) => {
+/**
+ * @param {Props} props
+ */
+export default (props) => {
     return new CreateComponent({
+        ...props,
         tag: "img",
-        props: {
-            ...props,
-            alt,
-            crossOrigin,
-            decoding,
-            height,
-            isMap,
-            loading,
-            referrerPolicy,
-            sizes,
-            src,
-            srcSet,
-            width,
-            ueMap,
-        },
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

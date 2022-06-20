@@ -1,14 +1,11 @@
-import { CreateComponent } from "../../../index.js";
+import { CreateComponent, Props } from "../../View";
 
-export default ({ children, disabled, label, props, key, events, hooks, style, flags }) => {
+/**
+ * @param {Props} props
+ */
+export default (props) => {
     return new CreateComponent({
+        ...props,
         tag: "optgroup",
-        children,
-        props: { ...props, disabled, label },
-        key,
-        events,
-        hooks,
-        style,
-        flags,
     });
 };

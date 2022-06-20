@@ -9,11 +9,7 @@ import {
 import { is as isEv, getListener, hasHandler, get as getEv } from "../recursive-dom/DomEvents.js";
 import { throwError } from "../recursive-dom/RecursiveError.js";
 import { setRef, updateOn } from "../recursive-state/RecursiveState.js";
-import {
-    endCurrentContext,
-    getContext,
-    startContext,
-} from "../recursive-context/RecursiveContext.js";
+import { endCurrentContext, getContext, startContext } from "./ComponentContext.js";
 import { is as isAttr, get as getAttr, isToggle } from "../recursive-dom/DomAttributes.js";
 import CreateTextNode from "./CreateTextNode.js";
 import RecursiveFlags from "../recursive-flags/RecursiveFlags.js";
@@ -40,37 +36,27 @@ class CreateComponent {
      * @param {JSON} param.flags define flags for component updating.
      * @param {JSON} param.data define data set.
      */
-    constructor({ tag, children, events, style, props, flags, key, hooks, data }) {
-        // tag cannot be
-        if (!tag) {
+    constructor(props) {
+        if (!props.tag) {
             throwError('"tag" should not be empty or null.', [
                 "Make sure to pass an HTML tag to your component.",
             ]);
         }
 
-        // key
-        this.key = key;
-
-        // HTML Attributes
-        this.tag = tag;
-
+        this.tag = props.tag;
+        this.key = props.key;
         this.props = {};
-
         this.children = [];
         this.flags = {};
         this.hooks = {};
         this.events = {};
-        this.data = data || {};
+        this.data = props.data || {};
+        this.style = props.style || {};
 
         this.ref = undefined;
         this.domInstance = undefined;
 
-        if (this.flags.renderIf == false && this.flags.renderIf != undefined) return;
-
-        // props
-        if (style) this.style = style;
-
-        this.prepare(props, events, hooks, flags, children);
+        this.prepare(props, props, props.hooks, props.flags, props.children);
     }
 
     /**
@@ -157,17 +143,8 @@ class CreateComponent {
      */
     prepareEvents(events) {
         for (var event in events) {
-            if (!events[event]) continue;
-
-            if (!isEv(event))
-                throwError(`${event} is not a valid event name or is yet to be implemented.`, [
-                    "Event name is non-existant",
-                ]);
-
-            if (typeof events[event] !== "function")
-                throwError(`${event} is not function.`, ["Event is not of type function"]);
-
-            this.events[event] = events[event];
+            if (isEv(event) && typeof events[event] === "function")
+                this.events[event] = events[event];
         }
     }
 
@@ -189,9 +166,7 @@ class CreateComponent {
      */
     prepareAttributes(attributes) {
         for (var attr in attributes) {
-            if (attributes[attr] === undefined || !isAttr(attr)) continue;
-
-            this.props[attr] = attributes[attr];
+            if (isAttr(attr)) this.props[attr] = attributes[attr];
         }
     }
 

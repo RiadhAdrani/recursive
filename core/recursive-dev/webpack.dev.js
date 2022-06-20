@@ -14,13 +14,4 @@ module.exports = merge(common, {
     },
     devtool: "source-map",
     optimization: { minimize: false },
-    // plugins: [new HtmlWebpackPlugin({ template: "./index.html" })],
-    devServer: {
-        hot: true,
-        liveReload: false,
-        static: {
-            directory: path.join(__dirname, "public"),
-        },
-        historyApiFallback: true,
-    },
 });

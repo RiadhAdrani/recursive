@@ -24,7 +24,7 @@ import { devLogs } from "./core/recursive-logger/ConsoleLogger.js";
 
 /**
  * Render your App.
- * @param {Function} App function returning the tree of components
+ * @param {() => CreateComponent} App function returning the tree of components
  */
 function Render(App) {
     render(App);

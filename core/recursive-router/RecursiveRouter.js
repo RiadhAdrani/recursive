@@ -265,14 +265,12 @@ class RecursiveRouter {
      * Get the params of the current route if they exist.
      * @returns {JSON} object containing `key:value`.
      */
-    static getParams() {
-        if (!RecursiveRouter.singleton || !history.state) return {};
-
+    getParams() {
         const regExp = /:[^:;]*;/gm;
 
         const [currentName] = getReserved("route");
 
-        const current = this.singleton.routes[currentName];
+        const current = this.routes[currentName];
 
         const keys = current.name.match(regExp) || [];
         const data = location.pathname.match(regExp) || [];
@@ -293,6 +291,8 @@ class RecursiveRouter {
     }
 }
 
+const router = () => RecursiveRouter.singleton;
+
 /**
  * return the current route name.
  * @returns {String} route name.
@@ -303,19 +303,21 @@ const getRoute = () => getReserved("route")[0];
  * return the current route parameters if found.
  * @returns {JSON} parameters
  */
-const getParams = () => RecursiveRouter.getParams();
+const getParams = () => (router() ? router().getParams() : {});
 
 /**
  * return the base root of the App.
  * @returns {String} base root provided by the user.
  */
-const getRoot = () => RecursiveRouter.singleton.root;
+const getRoot = () => (router() ? router().root : "");
 
 /**
  * Redirect the App to the route with the given name.
  * @param {string} name Route exact name.
  */
-const goTo = (route) => RecursiveRouter.singleton.goTo(route);
+const goTo = (route) => {
+    if (router()) router().goTo(route);
+};
 
 /**
  * Create the App's Router.
@@ -347,7 +349,7 @@ const route = ({ name, component, title, subRoutes, onLoad, onExit, redirectTo }
  * @param {string} route to be matched with.
  * @returns {Boolean|Route} return a route if it match, else a boolean.
  */
-const findMatch = (route) => RecursiveRouter.singleton.findMatch(route);
+const findMatch = (route) => router().findMatch(route);
 
 /**
  * render the appropriate component representing the current route.
@@ -356,8 +358,8 @@ const findMatch = (route) => RecursiveRouter.singleton.findMatch(route);
 const renderRoute = () => {
     const [route] = getReserved("route");
     setParams();
-    if (RecursiveRouter.singleton.routes[route].title) {
-        document.title = RecursiveRouter.singleton.routes[route].title;
+    if (router() && router().routes[route].title) {
+        document.title = router().routes[route].title;
     }
     return encapsulateRoute({ route }, () => renderFragment());
 };
@@ -366,17 +368,15 @@ const renderRoute = () => {
  * check if the location is different from the root `/` and try to route the app to the given location.
  */
 const onFreshLoad = () => {
-    if (window.location.pathname !== "/") {
-        if (RecursiveRouter.singleton) {
-            const route = RecursiveRouter.singleton.root
-                ? window.location.pathname.replace("/" + RecursiveRouter.singleton.root, "")
-                : window.location.pathname;
+    if (!router()) return;
 
-            const hash = location.hash;
+    if (router().getRoute() === "/") return;
 
-            RecursiveRouter.singleton.replaceWith(route, hash);
-        }
-    }
+    const route = router().getRoute();
+
+    const hash = location.hash;
+
+    router().replaceWith(route, hash);
 };
 
 export {

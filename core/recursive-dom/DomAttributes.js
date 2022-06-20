@@ -330,7 +330,6 @@ const newSVG = {
     strokeMiterlimit: { name: "stroke-miterlimit", type: "normal" },
     strokeOpacity: { name: "stroke-opacity", type: "normal" },
     strokeWidth: { name: "stroke-width", type: "normal" },
-    style: { name: "style", type: "normal" },
     surfaceScale: { name: "surfaceScale", type: "normal" },
     systemLanguage: { name: "systemLanguage", type: "normal" },
     tabindex: { name: "tabindex", type: "normal" },
@@ -403,11 +402,11 @@ function is(key) {
 }
 
 function get(key) {
-    return list[key].name;
+    if (is(key)) return list[key].name;
 }
 
 function isToggle(key) {
-    return list[key].type == "toggle";
+    return is(key) && list[key].type === "toggle";
 }
 
 export { list, is, get, isToggle };
