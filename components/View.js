@@ -1,5 +1,5 @@
 import DefineElement from "../core/create-component/DefineElement.js";
-import { Props, Lazy } from "../types/Props";
+import { Props, Lazy } from "../intellisense/Props";
 import CreateComponent from "../core/create-component/CreateComponent.js";
 import CreateSvgComponent from "../core/recursive-svg/CreateSvgComponent.js";
 

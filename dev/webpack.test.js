@@ -7,7 +7,7 @@ const serve = JSON.parse(process.env.WEBPACK_SERVE || false);
 
 module.exports = merge(common, {
     mode: "development",
-    entry: "./core/recursive-dev/test/test.js",
+    entry: "./dev/test/test.js",
     output: {
         filename: "test.js",
         path: path.resolve(__dirname, "dist"),

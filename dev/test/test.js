@@ -1,8 +1,8 @@
-import CreateComponentTest from "../../create-component/CreateComponent.test.js";
-import RecursiveCSSOMTest from "../../recursive-cssom/RecursiveCSSOM.test.js";
-import { Render, setStyle, setCache } from "../../../index.js";
-import { Column } from "../../../components/utility.js";
-import { Button, Details, H1, H2, Hr, P, Span, Summary } from "../../../components/html.js";
+import CreateComponentTest from "../../core/create-component/CreateComponent.test.js";
+import RecursiveCSSOMTest from "../../core/recursive-cssom/RecursiveCSSOM.test.js";
+import { Render, setStyle, setCache } from "../../index.js";
+import { Column } from "../../components/utility.js";
+import { Button, Details, H1, H2, Hr, P, Span, Summary } from "../../components/html.js";
 
 const tests = [...CreateComponentTest, ...RecursiveCSSOMTest];
 
@@ -75,7 +75,7 @@ const App = () => {
             hover: { color: "inherit" },
         },
         children: [
-            H1({ children: `${tests.length} tests have completed.` }),
+            H1({ children: `${tests.length} tests have completed.`,onClick:() => {}}),
             H2({ children: `${success} have passed.` }),
             H2({ children: `${fail} have failed.`, href: "cringe" }),
             Button({

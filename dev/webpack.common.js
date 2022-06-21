@@ -3,12 +3,12 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 
 module.exports = {
-    entry: "./core/recursive-dev/dev.js",
+    entry: "./dev/dev.js",
     output: {
         filename: "dev.js",
         path: path.resolve(__dirname, "dist"),
     },
-    plugins: [new HtmlWebpackPlugin({ template: "./core/recursive-dev/index.html" })],
+    plugins: [new HtmlWebpackPlugin({ template: "./dev/index.html" })],
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
     },

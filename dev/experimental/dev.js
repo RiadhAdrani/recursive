@@ -1,6 +1,6 @@
-import { Input } from "../../../components/html.js";
-import { Link } from "../../../components/utility.js";
-import { Circle, Svg, Text } from "../../../components/vector.js";
+import { Input } from "../../components/html.js";
+import { Link } from "../../components/utility.js";
+import { Circle, Svg, Text } from "../../components/vector.js";
 import {
     Render,
     CreateComponent,
@@ -11,8 +11,8 @@ import {
     route,
     renderRoute,
     getParams,
-} from "../../../index.js";
-import { devLogs } from "../../recursive-logger/ConsoleLogger.js";
+} from "../../index.js";
+import { devLogs } from "../../core/recursive-logger/ConsoleLogger.js";
 
 devLogs({ render: true, update: true });
 

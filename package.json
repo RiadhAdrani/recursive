@@ -1,6 +1,6 @@
 {
     "name": "@riadh-adrani/recursive",
-    "version": "0.7.14",
+    "version": "0.7.15",
     "description": "Recursive is a Javascript framework to build beautiful component-based web apps.",
     "license": "MIT",
     "main": "index.js",
@@ -9,8 +9,8 @@
         "url": "https://github.com/RiadhAdrani/recursive"
     },
     "scripts": {
-        "start": "webpack-dev-server --config ./core/recursive-dev/webpack.dev.js --open",
-        "test": "webpack-dev-server --config ./core/recursive-dev/webpack.test.js --open"
+        "start": "webpack-dev-server --config ./dev/webpack.dev.js --open",
+        "test": "webpack-dev-server --config ./dev/webpack.test.js --open"
     },
     "keywords": [
         "npm",
