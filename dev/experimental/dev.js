@@ -1,115 +1,50 @@
-import { Input } from "../../components/html.js";
-import { Link } from "../../components/utility.js";
-import { Circle, Svg, Text } from "../../components/vector.js";
-import {
-    Render,
-    CreateComponent,
-    setState,
-    setCache,
-    getRef,
-    createRouter,
-    route,
-    renderRoute,
-    getParams,
-} from "../../index.js";
-import { devLogs } from "../../core/recursive-logger/ConsoleLogger.js";
+const { Render, renderRoute, setState, setStyle, setCache, getRef } = require("../../web");
+const { Div } = require("../../web/components");
 
-devLogs({ render: true, update: true });
+Render({
+    router: {
+        route: { path: "/", component: () => "Home" },
+        base: "hello",
+        scroll: true,
+    },
+    app: () => {
+        const [value, setValue] = setState("value", 0);
+        const [cache, useCache] = setCache("cache", "Cached");
 
-const Button = ({ children, onClick }) => new CreateComponent({ tag: "button", children, onClick });
+        console.log(getRef("Hello", document.createElement("a")));
 
-const Home = () => {
-    const [value, setvalue] = setState("value", [1, 2, 3, 4, 5, 6, 7, 8, 9]);
-
-    return new CreateComponent({
-        tag: "div",
-        children: [
-            ...value.map((number) =>
-                Button({
-                    children: "state " + number,
-                    onClick: () => {
-                        setTimeout(() => setvalue(value.filter((x) => x != number)), 500);
-                    },
-                })
-            ),
-        ],
-    });
-};
-
-const SetCache = () => {
-    const [value, setvalue] = setCache("value", [1, 2, 3, 4, 5, 6, 7, 8, 9]);
-
-    return new CreateComponent({
-        tag: "div",
-        children: [
-            ...value.map((number) =>
-                Button({
-                    children: "cached " + number,
-                    onClick: () => {
-                        setvalue(value.filter((x) => x != number));
-                    },
-                })
-            ),
-        ],
-    });
-};
-
-const GetRef = () => {
-    return new CreateComponent({
-        hooks: { onRef: () => "container" },
-        tag: "div",
-        children: Button({
-            children: "Log route",
-            onClick: () => {
-                console.log(getRef("container"));
+        setStyle({
+            selectors: {
+                div: {
+                    border: value + "px" + " solid yellow",
+                },
             },
-        }),
-    });
-};
+        });
 
-const Nested = () => {
-    return new CreateComponent({
-        tag: "div",
-        children: Button({
-            children: getParams().route,
-        }),
-    });
-};
-
-createRouter(
-    route({
-        name: "/",
-        component: Home,
-        subRoutes: [
-            route({ name: "/cache", component: SetCache }),
-            route({ name: "/ref", component: GetRef }),
-            route({
-                name: "/nested",
-                component: () => renderRoute(),
-                subRoutes: [route({ name: "/route=:route;", component: Nested })],
-            }),
-        ],
-    }),
-    "dev"
-);
-
-Render(() => {
-    return new CreateComponent({
-        tag: "div",
-        style: { inline: { display: "flex", flexDirection: "column" } },
-        children: [
-            new CreateComponent({
-                tag: "div",
-                style: { inline: { display: "flex", flexDirection: "row" } },
-                children: [
-                    Link({ children: "home", href: "/" }),
-                    Link({ children: "set cache", href: "/cache" }),
-                    Link({ children: "get ref", href: "/ref" }),
-                    Link({ children: "nested", href: "/nested/route=:nested;" }),
-                    Link({ children: "cringez", href: "/nested/route=:cringe;" }),
-                ],
-            }),
-            renderRoute(),
-        ],
-    });
+        return Div({
+            children: ["hello", value, cache, renderRoute()],
+            hooks: { onRef: () => "Hello" },
+            onClick: () => {
+                setValue(value + 10);
+                useCache(cache + "hehe");
+            },
+            style: {
+                scoped: true,
+                normal: {
+                    color: "white",
+                    background: "black",
+                    cursor: "pointer",
+                    padding: "10px",
+                    borderRadius: "5px",
+                },
+                focusWithin: {
+                    outlineColor: "red",
+                    outlineOffset: "3px",
+                    outlineWidth: "5px",
+                },
+                hover: { background: "#3e3e3e" },
+            },
+        });
+    },
+    root: document.body,
 });

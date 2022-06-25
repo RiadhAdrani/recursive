@@ -1,5 +1,4 @@
-import { update } from "../recursive-reconciler/RecursiveReconciler.js";
-import { throwError } from "../recursive-dom/RecursiveError.js";
+import { throwError } from "../recursive-error/RecursiveError.js";
 
 const FREE = "free";
 const HANDLING_REQUESTS = "handling-requests";
@@ -17,17 +16,34 @@ const EXEC_ON_INJECTED = "execute-on-injected";
 const CLEAN_STATES = "clean-states";
 
 const updateObj = (sender, uuid) => {
-    return {
+    const object = {
         sender,
         time: Date.now(),
         uuid,
     };
+
+    return object;
 };
 
 class RecursiveOrchestrator {
-    static singleton = new RecursiveOrchestrator();
+    static states = {
+        FREE,
+        COMPUTE_DIFF,
+        COMPUTE_TREE,
+        COMPUTE_STYLE,
+        RENDERING,
+        UPDATING,
+        EXEC_BEFORE_DESTROYED,
+        COMMIT_INTO_DOM,
+        EXEC_ON_CREATED,
+        EXEC_ON_DESTROYED,
+        EXEC_ON_UPDATED,
+        EXEC_ON_INJECTED,
+        CLEAN_STATES,
+    };
 
     constructor() {
+        this.renderer = undefined;
         this.currentTask = { done: true };
         this.step = FREE;
         this.updatesCount = 0;
@@ -39,38 +55,44 @@ class RecursiveOrchestrator {
         this.unhandledRequests = [];
     }
 
+    update() {
+        if (!this.renderer) throwError("No renderer was specified");
+
+        this.renderer.update();
+    }
+
     requestUpdate(sender) {
         if (![FREE, HANDLING_REQUESTS].includes(this.step)) {
-            this.unhandledRequests.push(updateObj(sender));
+            this.unhandledRequests.push(updateObj(sender, sender));
             return;
         }
 
         if (this.step === FREE) {
-            update();
+            this.update();
 
             this.updatesCount++;
             this.countUpdateSinceFree();
 
             if (this.unhandledRequests.length > 0) {
-                RecursiveOrchestrator.changeState(HANDLING_REQUESTS);
+                this.changeState(HANDLING_REQUESTS);
                 this.requestUpdate("unhandled-requests");
             } else {
                 this.free();
             }
             return;
         }
+
         if (this.step === HANDLING_REQUESTS) {
             this.unhandledRequests = [];
-            update();
+            this.update();
             this.updatesCount++;
             if (this.unhandledRequests.length > 0) {
-                RecursiveOrchestrator.changeState(HANDLING_REQUESTS);
+                this.changeState(HANDLING_REQUESTS);
                 this.unhandledRequests = [];
                 this.requestUpdate("unhandled-requests");
             } else {
                 this.free();
             }
-            return;
         }
     }
 
@@ -100,14 +122,14 @@ class RecursiveOrchestrator {
         CLEAN_STATES,
     };
 
-    static changeState(state) {
-        RecursiveOrchestrator.singleton.step = state;
+    changeState(state) {
+        this.step = state;
     }
 
     free() {
         this.updatesCount = 0;
         this.stateChanged = false;
-        RecursiveOrchestrator.changeState(FREE);
+        this.changeState(FREE);
     }
 
     countUpdateSinceFree() {
@@ -119,6 +141,10 @@ class RecursiveOrchestrator {
                 ]);
             }
         }, 2000);
+    }
+
+    notifyStateChanged() {
+        this.stateChanged = true;
     }
 
     startBatching() {
@@ -152,7 +178,7 @@ class RecursiveOrchestrator {
             setTimeout(() => {
                 if (this.batchingRequests.find((req) => req.uuid === uuid)) {
                     console.warn(
-                        "Batch request took too long (more than 100ms). This could be caused by a catched error. Avoid batching your updates in an asynchronous call and using await inside the updateAfter method."
+                        "Batch request took too long (more than 20ms). This could be caused by a catched error. Avoid batching your updates in an asynchronous call and using await inside the updateAfter method."
                     );
                     this.endBatching(sender);
                 }
@@ -161,55 +187,19 @@ class RecursiveOrchestrator {
             this.startBatching();
         }
     }
-}
 
-function batchCallback(callback, batchName = "batch-callback") {
-    if (callback === undefined || typeof callback !== "function") return;
+    batchCallback(callback, batchName = "batch-callback-" + Date.now) {
+        if (callback === undefined || typeof callback !== "function") return;
 
-    if (RecursiveOrchestrator.singleton.batching === true) callback();
-    else {
-        RecursiveOrchestrator.singleton.requestStartBatching(batchName);
+        if (this.batching === true) callback();
+        else {
+            this.requestStartBatching(batchName);
 
-        callback();
+            callback();
 
-        RecursiveOrchestrator.singleton.requestEndBatching(batchName);
+            this.requestEndBatching(batchName);
+        }
     }
 }
 
-function isBatching() {
-    return RecursiveOrchestrator.singleton.batching === true;
-}
-
-function requestUpdate(sender) {
-    RecursiveOrchestrator.singleton.requestUpdate(sender);
-}
-
-function notifyStateChanged() {
-    RecursiveOrchestrator.singleton.stateChanged = true;
-}
-
-function changeState(state) {
-    RecursiveOrchestrator.singleton.step = state;
-}
-
-function free() {
-    RecursiveOrchestrator.singleton.free();
-}
-
-const states = {
-    FREE,
-    COMPUTE_DIFF,
-    COMPUTE_TREE,
-    COMPUTE_STYLE,
-    RENDERING,
-    UPDATING,
-    EXEC_BEFORE_DESTROYED,
-    COMMIT_INTO_DOM,
-    EXEC_ON_CREATED,
-    EXEC_ON_DESTROYED,
-    EXEC_ON_UPDATED,
-    EXEC_ON_INJECTED,
-    CLEAN_STATES,
-};
-
-export { isBatching, requestUpdate, batchCallback, notifyStateChanged, changeState, free, states };
+export default RecursiveOrchestrator;

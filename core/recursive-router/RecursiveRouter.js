@@ -1,97 +1,119 @@
-import CreateComponent from "../create-component/CreateComponent.js";
-import Route from "./RecursiveRoute.js";
-import { encapsulateRoute, renderFragment, setParams } from "./RecursiveRouterContext.js";
-import { pushState, replaceState } from "./RecursiveHistory.js";
-import { setReserved, getReserved } from "../recursive-state/RecursiveState.js";
+import { throwError } from "../recursive-error/RecursiveError";
+import RouteType from "./RouteType";
 
 /**
- * ### Router
- * #### Manage directories in your App.
- * @see {@link Route}
+ * ### `RecursiveRouter`
+ * Create an instance of the Recursive Router.
+ * * These methods should be implemented, otherwise they will throw `errors`
+ * * `useRouterMakeURL`
+ * * `useRouterGetLocationPath`
+ * * `useRouterReplaceState`
+ * * `useRouterPushState`
+ * * `useRouterScrollToTop`
+ * * `useRouterGoToAnchor`
+ * * `useRouterNavigationListener`
+ * * `useRouterGetRoute`
+ * * `useRouterOnLoad`
  */
 class RecursiveRouter {
-    /**
-     * The only instance that should exist if the user decide to use the Router.
-     */
-    static singleton = undefined;
+    static dynamicRegExp = /:[^:;]*;/g;
+    static anchorRegExp = /#[a-zA-Z0-9-._~:?#\[\]\@!$&'()*+,;=]{1,}$/gm;
 
     /**
-     * Create a Router to manage App directories.
-     * @param {Route} routes Define the main route for the App.
+     * Create an instance of the Recursive Router
+     * @param {typeof RouteType} route
+     * @param {string} base
+     * @param {boolean} scroll
      */
-    constructor(routes, prefix = "", scroll) {
-        if (RecursiveRouter.singleton instanceof RecursiveRouter) {
-            throwError("RecursiveRouter cannot have more than one instance", [
-                "RecursiveRouter is an internal class and should not be used in development.",
-                "User createRouter to make a new router.",
-            ]);
-        }
+    constructor(route, base, scroll, stateManager, orchestrator) {
+        this.stateManager = stateManager;
+        this.orchestrator = orchestrator;
 
-        this.root = prefix;
-        this.scroll = scroll;
-        this.routes = {};
-        routes.flatten(this.routes);
+        this.base = base || "";
+        this.scroll = scroll || false;
+        this.routes = this.flattenRoutes(route);
 
-        if (this.routes["/404"]) {
-        } else {
-            this.routes["/404"] = new Route({
-                name: "/404",
+        this.routerContext = {
+            context: undefined,
+            stack: [],
+            depth: 0,
+            fragments: [],
+            anchor: "",
+        };
+
+        if (!this.routes["/404"]) {
+            this.routes["/404"] = {
+                path: "/404",
                 title: "Not Found",
-                component: () => "404 NOT FOUND",
-            });
+                component: () => "404 Not Found",
+            };
         }
 
-        const fTemplate = (() => {
-            for (let r in this.routes) {
-                return this.routes[r].name;
-            }
-        })();
+        const fTemplate = this.routes["/"];
 
-        setReserved("path", "/");
-        setReserved("route", fTemplate);
+        this.stateManager.setReserved("path", "/");
+        this.stateManager.setReserved("route", fTemplate);
 
-        window.addEventListener("popstate", (e) => {
-            let _route;
-
-            if (e.state) {
-                _route = e.state.route;
-            } else {
-                _route = fTemplate;
-            }
-
-            const _to = this.getRoute();
-
-            this.loadRoute(this.routes[_route], _to);
-        });
-    }
-
-    getRoute() {
-        return this.root
-            ? window.location.pathname.replace("/" + this.root, "")
-            : window.location.pathname;
+        this.useRouterNavigationListener();
     }
 
     /**
-     * Check if a given route is dynamic or not.
-     * @param {String} route route name.
-     * @returns {JSON} the type of the route, alongside its template if it is `dynamic`.
+     * Resolve the provided route and return a flat object.
+     * @param {typeof RouteType} route
+     * @returns
+     */
+    flattenRoutes(route) {
+        let list = {};
+
+        if (route && route.path) {
+            list[route.path] = {
+                path: route.path,
+                component: route.component,
+                redirectTo: route.redirectTo,
+                title: route.title,
+            };
+
+            if (Array.isArray(route.routes)) {
+                const parent = route.path;
+                const slash = route.path == "/" ? "" : "/";
+
+                route.routes.forEach((_route) => {
+                    if (_route && _route.path) {
+                        const current = _route.path;
+
+                        _route.path = parent + slash + current;
+
+                        const _list = this.flattenRoutes(_route);
+                        list = { ...list, ..._list };
+                    }
+                });
+            }
+        }
+
+        return list;
+    }
+
+    /**
+     * Check if the provided route is dynamic : contains parameters.
+     * @param {string} route
+     * @returns
      */
     isDynamicRoute(route) {
-        const regExp = /:[^:;]*;/g;
+        const regExp = RecursiveRouter.dynamicRegExp;
 
-        for (let name in this.routes) {
-            const template = name.toString();
+        for (let path in this.routes) {
+            const template = path.toString();
             const tester = "recursive";
 
             const rm = route.match(regExp);
-            const tm = name.match(regExp);
+            const tm = path.match(regExp);
 
             if (!tm || !rm) continue;
 
             try {
                 if (rm.length === tm.length && tm.length > 0) {
                     if (route.replace(regExp, tester) === template.replace(regExp, tester)) {
-                        return { isDynamic: true, template: this.routes[name] };
+                        return { isDynamic: true, template: this.routes[path] };
                     }
                 }
             } catch (e) {
@@ -103,9 +125,9 @@ class RecursiveRouter {
     }
 
     /**
-     * Resolve the given route.
-     * @param {String} route - name of the route to resolve
-     * @returns {JSON} object containing a `path` and the `route`.
+     * Resolve and prepare the route.
+     * @param {string} route
+     * @returns
      */
     resolveRoute(route) {
         const dynamicTemplate = this.isDynamicRoute(route);
@@ -156,124 +178,131 @@ class RecursiveRouter {
     }
 
     /**
-     * try to match the given route.
-     * @param {string} route to be matched with.
-     * @returns {Boolean|Route} return a route if it match, else a boolean.
+     * Find the match of the route
+     * @param {string} route
+     * @returns
      */
     findMatch(route) {
         const res = this.isDynamicRoute(route);
+
         if (res.isDynamic) return res;
-        for (let r in this.routes) {
-            if (route === r) return this.routes[r];
+
+        for (let _route in this.routes) {
+            if (route === _route) return this.routes[_route];
         }
 
-        return false;
+        return this.routes["/404"];
     }
 
     /**
-     * Load the app route specified with `name` and `template`
-     * @param {String} anchor the name of target element
-     * @param {Route} template the template of the route
+     * Load the appropriate route with the given parameters.
+     * @param {Object} template
+     * @param {string} route
+     * @param {string} anchor
+     * @returns
      */
     loadRoute(template, route, anchor) {
-        const [path, setPath] = getReserved("path");
-        const [current, setCurrent] = getReserved("route");
+        const [path, setPath] = this.stateManager.getReserved("path");
+        const [current, setCurrent] = this.stateManager.getReserved("route");
 
         if (path === route) return;
 
-        this.routes[current]?.onExit();
-
         let _template = template;
 
-        setCurrent(_template.name);
-        setPath(route);
+        this.orchestrator.batchCallback(() => {
+            setCurrent(_template.path);
+            setPath(route);
+        });
 
         if (anchor) {
-            const target = document.getElementById(anchor.replace("#", ""));
-            if (target) {
-                target.scrollIntoView();
-            }
+            this.useRouterGoToAnchor(anchor);
         } else {
-            if (this.scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+            this.useRouterScrollToTop();
         }
-
-        _template?.onLoad();
     }
 
-    checkRoute(name) {
-        if (name !== "/") {
-            name = name.replace(/\/$/, "");
+    /**
+     * Check the route for an anchor.
+     * @param {string} path
+     * @returns
+     */
+    checkRoute(path) {
+        if (path !== "/") {
+            path = path.replace(/\/$/, "");
         }
 
-        const anchorRegEx = /#[a-zA-Z0-9-._~:?#\[\]\@!$&'()*+,;=]{1,}$/gm;
+        const anchorRegEx = RecursiveRouter.anchorRegExp;
 
         let anchor = "";
 
-        const res = anchorRegEx.exec(name);
+        const res = anchorRegEx.exec(path);
 
         if (res) anchor = res[0];
 
-        if (anchor) name = name.replace(anchor, "");
+        if (anchor) path = path.replace(anchor, "");
 
-        const [current] = getReserved("route");
+        const [current] = this.stateManager.getReserved("route");
 
-        if (current === name) {
+        if (current === path) {
             if (anchor) {
-                const target = document.getElementById(anchor.replace("#", ""));
-                if (target) target.scrollIntoView();
+                this.useRouterGoToAnchor(anchor);
             }
 
             return [false, ""];
         }
 
-        return [this.resolveRoute(name), anchor];
+        return [this.resolveRoute(path), anchor];
     }
 
     /**
-     * Redirect the App to the route with the given name.
-     * @param {string} name Route exact name.
+     * Used to navigate between routes.
+     * @param {path} path
+     * @returns
      */
-    goTo(name) {
-        if (!name) return;
+    goTo(path) {
+        if (!path) return;
 
-        const [_route, anchor] = this.checkRoute(name);
+        const [_route, anchor] = this.checkRoute(path);
 
         if (_route) {
-            pushState(_route.route.name, _route.route.title, `${_route.path}${anchor}`);
+            this.useRouterPushState(_route);
 
-            this.loadRoute(_route.route, name, anchor);
+            this.loadRoute(_route.route, path, anchor);
         }
     }
 
     /**
-     * replace the current route with this one without adding a history state.
-     * @param {String} name route to be redirected to.
+     * Replace the current route with the given one.
+     * @param {string} path
+     * @param {string} hash
+     * @returns
      */
-    replaceWith(name, hash) {
-        if (!name) return;
+    replace(path, hash) {
+        if (!path) return;
 
-        const [_route, anchor] = this.checkRoute(name);
+        const [_route, anchor] = this.checkRoute(path);
 
         if (_route) {
-            replaceState(_route.route.name, _route.route.title, `${_route.path}${hash}`);
+            this.useRouterPushState(_route, hash);
 
-            this.loadRoute(_route.route, name, hash);
+            this.loadRoute(_route.route, path, hash);
         }
     }
 
     /**
-     * Get the params of the current route if they exist.
-     * @returns {JSON} object containing `key:value`.
+     * Return the parameters of the current route.
+     * @returns
      */
     getParams() {
-        const regExp = /:[^:;]*;/gm;
+        const regExp = RecursiveRouter.dynamicRegExp;
 
-        const [currentName] = getReserved("route");
+        const [currentName] = this.stateManager.getReserved("path");
+        const current = this.isDynamicRoute(currentName);
 
-        const current = this.routes[currentName];
+        if (!current.isDynamic) return {};
 
-        const keys = current.name.match(regExp) || [];
-        const data = location.pathname.match(regExp) || [];
+        const keys = current.template.path.match(regExp) || [];
+        const data = this.useRouterGetLocationPath().match(regExp) || [];
 
         if (keys.length === data.length && keys.length > 0) {
             const comb = {};
@@ -286,107 +315,170 @@ class RecursiveRouter {
 
             return comb;
         }
+    }
 
-        return {};
+    /**
+     * Start a new router context.
+     * @param {any} newContext
+     */
+    startContext(newContext) {
+        const routerContext = this.routerContext;
+
+        routerContext.depth++;
+
+        if (routerContext.context) {
+            routerContext.stack.push(routerContext.context);
+        }
+
+        routerContext.context = newContext;
+    }
+
+    /**
+     * end the current router context.
+     * @param {any} newContext
+     */
+    endContext() {
+        const routerContext = this.routerContext;
+
+        if (routerContext.context) {
+            if (routerContext.stack.length > 0) routerContext.context = routerContext.stack.pop();
+            else routerContext.context = undefined;
+        }
+
+        routerContext.depth--;
+    }
+
+    /**
+     * Encapsulate the given component with the appropriate context.
+     * @param {any} context
+     * @param {any} component
+     * @returns
+     */
+    useRouterContext(context, component) {
+        if (typeof component !== "function") {
+            throwError("Route component is not a function.");
+        }
+
+        this.startContext(context);
+        const fragment = component();
+        this.endContext();
+
+        return fragment;
+    }
+
+    /**
+     * Set parameter for the `routerContext`.
+     */
+    setParams() {
+        const [route] = this.stateManager.getReserved("path");
+
+        this.routerContext.fragments = route
+            .split("/")
+            .slice(1)
+            .map((val) => `/${val}`);
+    }
+
+    /**
+     * Return the component matching the current context.
+     * @returns {any} component
+     */
+    renderFragment() {
+        const routerContext = this.routerContext;
+
+        if (routerContext.depth > routerContext.fragments.length) return "";
+
+        const expected = routerContext.fragments
+            .slice(0, routerContext.depth)
+            .reduce((prev, val) => {
+                return `${prev}${val}`;
+            });
+
+        const fragment = this.findMatch(expected);
+
+        if (fragment) {
+            return fragment.isDynamic ? fragment.template.component() : fragment.component();
+        } else "";
+    }
+
+    /**
+     * Combine `useRouterContext` and `renderFragment`.
+     * Render the route fragment to the tree.
+     * @returns
+     */
+    renderRoute() {
+        const [route] = this.stateManager.getReserved("route");
+        this.setParams();
+
+        return this.useRouterContext({ route }, () => this.renderFragment());
+    }
+
+    /**
+     * Build the URL.
+     * @param {string} path
+     */
+    useRouterMakeURL(path) {
+        throwError("useRouterMakeURL is not implemented");
+    }
+
+    /**
+     * Retreive the current path.
+     */
+    useRouterGetLocationPath() {
+        throwError("useRouterGetLocationPath is not implemented");
+    }
+
+    /**
+     * Replace the current route state.
+     * @param {string} route
+     */
+    useRouterReplaceState(route) {
+        throwError("useRouterReplaceState is not implemented");
+    }
+
+    /**
+     * Push another route state.
+     * @param {string} route
+     * @param {string} hash
+     */
+    useRouterPushState(route, hash) {
+        throwError("useRouterPushState is not implemented");
+    }
+
+    /**
+     * Scroll to the top of the device view.
+     */
+    useRouterScrollToTop() {
+        throwError("useRouterScrollToTop is not implemented");
+    }
+
+    /**
+     * Scroll to the location of the element identified by the given anchor.
+     * @param {string} anchor
+     */
+    useRouterGoToAnchor(anchor) {
+        throwError("useRouterGoToAnchor is not implemented");
+    }
+
+    /**
+     * Attach a listener that watches the actions of pushing and replacing route states
+     */
+    useRouterNavigationListener() {
+        throwError("useRouterNavigationListener is not implemented");
+    }
+
+    /**
+     * Get the current route
+     */
+    useRouterGetRoute() {
+        throwError("useRouterGetRoute is not implemented");
+    }
+
+    /**
+     * Executed when the router has been initialized in the App.
+     */
+    useRouterOnLoad() {
+        throwError("useRouterOnLoad is not implemented");
     }
 }
 
-const router = () => RecursiveRouter.singleton;
-
-/**
- * return the current route name.
- * @returns {String} route name.
- */
-const getRoute = () => getReserved("route")[0];
-
-/**
- * return the current route parameters if found.
- * @returns {JSON} parameters
- */
-const getParams = () => (router() ? router().getParams() : {});
-
-/**
- * return the base root of the App.
- * @returns {String} base root provided by the user.
- */
-const getRoot = () => (router() ? router().root : "");
-
-/**
- * Redirect the App to the route with the given name.
- * @param {string} name Route exact name.
- */
-const goTo = (route) => {
-    if (router()) router().goTo(route);
-};
-
-/**
- * Create the App's Router.
- * @param {Route} route root directory : `/`
- * @param {String} prefix define the prefix that should be added before any route name.
- * @param {Boolean} scroll activate or deactivate the scrolling behavior whenever a new route is loaded.
- */
-const createRouter = (route, prefix, scroll) => {
-    RecursiveRouter.singleton = new RecursiveRouter(route, prefix, scroll);
-};
-
-/**
- * Create a `Route`
- * @param name the name of the directory that will be appended to the url:
- * * Should start with an `\`, and not end with it => example: `\my-route`.
- * * Parameters could be templated by putting the parameter name between `:` and `;` => example : `\user@id=:id;`
- * @param component the component representing the directory.
- * @param title the title of the tab.
- * @param subRoutes an array of routes serving as sub-directories.
- * @param onLoad method to be executed when the route load.
- * @param onExit method to be executed when the route unload.
- */
-const route = ({ name, component, title, subRoutes, onLoad, onExit, redirectTo }) => {
-    return new Route({ name, component, title, subRoutes, onLoad, onExit, redirectTo });
-};
-
-/**
- * try to match the given route.
- * @param {string} route to be matched with.
- * @returns {Boolean|Route} return a route if it match, else a boolean.
- */
-const findMatch = (route) => router().findMatch(route);
-
-/**
- * render the appropriate component representing the current route.
- * @returns {CreateComponent} component representing the current route fragment.
- */
-const renderRoute = () => {
-    const [route] = getReserved("route");
-    setParams();
-    if (router() && router().routes[route].title) {
-        document.title = router().routes[route].title;
-    }
-    return encapsulateRoute({ route }, () => renderFragment());
-};
-
-/**
- * check if the location is different from the root `/` and try to route the app to the given location.
- */
-const onFreshLoad = () => {
-    if (!router()) return;
-
-    if (router().getRoute() === "/") return;
-
-    const route = router().getRoute();
-
-    const hash = location.hash;
-
-    router().replaceWith(route, hash);
-};
-
-export {
-    getRoute,
-    getParams,
-    getRoot,
-    goTo,
-    createRouter,
-    route,
-    findMatch,
-    renderRoute,
-    onFreshLoad,
-};
+export default RecursiveRouter;
