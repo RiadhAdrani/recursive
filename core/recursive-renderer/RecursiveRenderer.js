@@ -151,33 +151,41 @@ class RecursiveRenderer {
         if (![null, undefined].includes(element.children)) {
             let _children = [];
 
-            if (Array.isArray(element.children)) {
-                element.children.forEach((child) => {
-                    const _child = this.prepareElementChild(child);
-
-                    if (_child) _children.push(_child);
-
-                    if (
-                        _element.map !== false &&
-                        _child.key !== undefined &&
-                        _element.map[_child.key] === undefined
-                    ) {
-                        _element.map[_child.key] = {
-                            key: _child.key,
-                            element: _child,
-                            index: _children.length - 1,
-                        };
-                    } else {
-                        _element.map = false;
-                    }
-                });
-            } else {
-                const _child = this.prepareElementChild(element.children, element);
-
-                if (_child) _children = [_child];
+            if (!Array.isArray(element.children)) {
+                element.children = [element.children];
             }
 
+            element.children.forEach((child) => {
+                const _child = this.prepareElementChild(child);
+
+                if (_child) {
+                    if (_child.elementType === "fragment") {
+                        _children.push(..._child.children);
+                    } else {
+                        _children.push(_child);
+                    }
+                }
+            });
+
             _element.children = _children;
+
+            const _map = {};
+
+            for (let i = 0; i < _element.children.length; i++) {
+                if (
+                    _element.children[i].key === undefined ||
+                    _map[_element.children[i].key] !== undefined
+                )
+                    continue;
+
+                _map[_element.children[i].key] = {
+                    key: _element.children[i].key,
+                    element: _element.children[i],
+                    index: i,
+                };
+            }
+
+            if (Object.keys(_map).length === _element.children.length) _element.map = _map;
         }
 
         return _element;
@@ -394,6 +402,7 @@ class RecursiveRenderer {
 
             for (let key in newElement.map) {
                 if (!element.map[key]) {
+                    this.addElement(newElement.map[key].element, element);
                     element.map[key] = {
                         key,
                         element: newElement.map[key].element,
@@ -405,8 +414,8 @@ class RecursiveRenderer {
             for (let key in element.map) {
                 if (element.map[key].index !== newElement.map[key].index) {
                     this.changeElementPosition(
-                        element.children[element.map[key].index],
-                        newElement.children[newElement.map[key].index],
+                        element.map[key].element,
+                        element,
                         newElement.map[key].index
                     );
                 }

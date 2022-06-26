@@ -3,6 +3,8 @@ import RecursiveWebRenderer from "./recursive-web-renderer/RecursiveWebRenderer"
 import RecursiveWebRouter from "./recursive-web-router/RecursiveWebRouter";
 import RecursiveState from "../core/recursive-state/RecursiveState";
 import { useRecursiveWindow } from "./recursive-window/RecursiveWindow.js";
+import GlobalAttributes from "./types/GlobalAttributes";
+import "./recursive-web-components/DefineElements.js";
 
 let appRouter = undefined;
 let appOrchestrator = undefined;
@@ -110,6 +112,40 @@ function setStyle(cssObject) {
     });
 }
 
+const LinkProps = {
+    ...GlobalAttributes,
+    download: "",
+    href: "",
+    hrefLang: "",
+    ping: "",
+    referrerPolicy: "",
+    rel: "",
+    target: "",
+    type: "",
+};
+
+/**
+ * Create `<a>` element.
+ * @param {typeof LinkProps} props
+ */
+function Link(props) {
+    const el = { ...props, elementType: "a" };
+
+    if (appRouter && el.href) {
+        const _onClick = el.onClick || (() => {});
+        el.href = appRouter.useRouterMakeURL(el.href);
+
+        el.onClick = (e) => {
+            e.preventDefault();
+
+            appRouter.goTo(props.href);
+            _onClick();
+        };
+    }
+
+    return el;
+}
+
 /**
  * Render and inject the `app` inside the given `root`.
  */
@@ -145,6 +181,7 @@ export {
     getBase,
     getParams,
     getRoute,
+    Link,
     goTo,
     renderRoute,
     route,

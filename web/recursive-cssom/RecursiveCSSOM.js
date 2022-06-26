@@ -12,12 +12,10 @@ class RecursiveCSSOM {
             ]);
         }
 
-        this.defaultComponentStyle = document.createElement("style");
         this.appStaticStyle = document.createElement("style");
         this.appDynamicStyle = document.createElement("style");
         this.appStyle = document.createElement("style");
 
-        document.querySelector("head").append(this.defaultComponentStyle);
         document.querySelector("head").append(this.appStaticStyle);
         document.querySelector("head").append(this.appStyle);
         document.querySelector("head").append(this.appDynamicStyle);
@@ -46,11 +44,8 @@ class RecursiveCSSOM {
         }
     }
 
-    injectStaticStyle(styleSheet) {
-        const ss = renderStyleSheet(styleSheet);
-        if (ss !== this.staticSheet) {
-            this.appStaticStyle.innerHTML = ss;
-        }
+    addStaticStyle(styleSheet) {
+        this.appStaticStyle.innerHTML += renderStyleSheet(styleSheet);
     }
 
     addDynamicDeclaration(

@@ -33,14 +33,11 @@ class RecursiveWebRenderer extends RecursiveRenderer {
     useRendererCreateInstance(element) {
         if (element.elementType === "#text") return document.createTextNode(element.children);
 
-        const html = "http://www.w3.org/1999/xhtml";
-        const svg = "http://www.w3.org/2000/svg";
-        const math = "http://www.w3.org/1998/Math/MathML";
+        let ns = "http://www.w3.org/1999/xhtml";
 
-        let ns = html;
-
-        if (element.rendererOptions && element.rendererOptions.ns === "svg") ns = svg;
-        if (element.rendererOptions && element.rendererOptions.ns === "math") ns = math;
+        if (element.rendererOptions && element.rendererOptions.ns) {
+            ns = element.rendererOptions.ns;
+        }
 
         return document.createElementNS(ns, element.elementType);
     }
