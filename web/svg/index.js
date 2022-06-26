@@ -1,4 +1,4 @@
-import GlobalAttributes from "./types/GlobalSVGAttributes.js";
+import GlobalAttributes from "../types/GlobalSVGAttributes.js";
 const AProps = { ...GlobalAttributes, href: "", hrefLang: "", target: "", type: "" };
 const AnimateProps = {
     ...GlobalAttributes,

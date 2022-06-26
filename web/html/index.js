@@ -1,5 +1,5 @@
-import GlobalAttributes from "./types/GlobalAttributes.js";
-import CustomElements from "./recursive-web-components/Utilities.js";
+import GlobalAttributes from "../types/GlobalAttributes.js";
+import CustomElements from "../recursive-web-components/Utilities.js";
 const AddressProps = { ...GlobalAttributes };
 const ArticleProps = { ...GlobalAttributes };
 const AsideProps = { ...GlobalAttributes };

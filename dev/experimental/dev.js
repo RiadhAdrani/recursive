@@ -1,6 +1,6 @@
 const { Render, setState, setCache, Link, renderRoute, getRoute } = require("../../web");
-const { LazyColumn, Fragment, P } = require("../../web/Html.elements.js");
-const { Svg, Circle } = require("../../web/Svg.elements");
+const { LazyColumn, Fragment, P } = require("../../web/html/index.js");
+const { Svg, Circle } = require("../../web/svg/index.js");
 
 Render({
     router: {

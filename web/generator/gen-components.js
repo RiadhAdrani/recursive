@@ -66,8 +66,8 @@ const Props = (tag, item) => {
 };
 
 (() => {
-    let imp = `import GlobalAttributes from "./types/GlobalAttributes.js";
-import CustomElements from "./recursive-web-components/Utilities.js"`;
+    let imp = `import GlobalAttributes from "../types/GlobalAttributes.js";
+import CustomElements from "../recursive-web-components/Utilities.js"`;
 
     let elements = "";
     let types = "";
@@ -92,13 +92,13 @@ import CustomElements from "./recursive-web-components/Utilities.js"`;
     const fs = require("fs");
     const path = require("path");
 
-    fs.writeFile(path.resolve(__dirname, "../Html.elements.js"), output, (err) => {
+    fs.writeFile(path.resolve(__dirname, "../html/index.js"), output, (err) => {
         console.log(err ? "Failed" : "Success");
     });
 })();
 
 (() => {
-    let imp = `import GlobalAttributes from "./types/GlobalSVGAttributes.js";`;
+    let imp = `import GlobalAttributes from "../types/GlobalSVGAttributes.js";`;
 
     let elements = "";
     let types = "";
@@ -117,7 +117,7 @@ import CustomElements from "./recursive-web-components/Utilities.js"`;
     const fs = require("fs");
     const path = require("path");
 
-    fs.writeFile(path.resolve(__dirname, "../Svg.elements.js"), output, (err) => {
+    fs.writeFile(path.resolve(__dirname, "../svg/index.js"), output, (err) => {
         console.log(err ? "Failed" : "Success");
     });
 })();
