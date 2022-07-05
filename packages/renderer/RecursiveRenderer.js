@@ -324,7 +324,7 @@ class RecursiveRenderer {
      */
     updateEvents(element, newElement) {
         for (let event in element.events) {
-            if (!newElement.events[event]) {
+            if (newElement.events[event] === undefined) {
                 this.delegateToRenderer("changes", () =>
                     this.useRendererRemoveEvent(event, element.instance)
                 );
@@ -333,7 +333,7 @@ class RecursiveRenderer {
 
         for (let event in newElement.events) {
             this.delegateToRenderer("changes", () =>
-                this.useRendererAddEvent(event, newElement.events[event], element.instance)
+                this.useRendererAddEvent(event, newElement.events[event], element)
             );
         }
     }
@@ -669,9 +669,9 @@ class RecursiveRenderer {
      * Use the renderer to remove an event
      * @param {string} eventName
      * @param {function} callback
-     * @param {any} instance
+     * @param {any} element
      */
-    useRendererAddEvent(eventName, callback, instance) {
+    useRendererAddEvent(eventName, callback, element) {
         throwError("Renderer has no method AddEvent.");
     }
 
