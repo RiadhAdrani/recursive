@@ -106,22 +106,6 @@ class RecursiveOrchestrator {
         return `task-${uuid}-${time}`;
     }
 
-    static states = {
-        FREE,
-        COMPUTE_DIFF,
-        COMPUTE_TREE,
-        COMPUTE_STYLE,
-        RENDERING,
-        UPDATING,
-        EXEC_BEFORE_DESTROYED,
-        COMMIT_INTO_DOM,
-        EXEC_ON_CREATED,
-        EXEC_ON_DESTROYED,
-        EXEC_ON_UPDATED,
-        EXEC_ON_INJECTED,
-        CLEAN_STATES,
-    };
-
     changeState(state) {
         this.step = state;
     }

@@ -30,7 +30,7 @@ import { isHook } from "./RecursiveHooks.js";
 class RecursiveRenderer {
     /**
      * Create a new recursive renderer.
-     * @param {() => typeof ElementType} app function returning the tree of elements
+     * @param {import("../../lib.js").App} app function returning the tree of elements
      * @param {any} root
      */
     constructor(app, root) {
@@ -75,8 +75,8 @@ class RecursiveRenderer {
 
     /**
      * Return a verified element child
-     * @param {typeof ElementType} child
-     * @return {typeof ElementType} element
+     * @param {import("../../lib.js").RawElement} child
+     * @return {import("../../lib.js").RecursiveElement} element
      */
     prepareElementChild(child, parent) {
         if ([null, undefined].includes(child)) return false;
@@ -94,8 +94,8 @@ class RecursiveRenderer {
 
     /**
      * Return a verified tree to be used in rendering or updating
-     * @param {typeof ElementType} element
-     * @return {typeof ElementType} tree
+     * @param {import("../../lib.js").RawElement} element
+     * @return {import("../../lib.js").RecursiveElement} tree
      */
     prepare(element) {
         const _element = {};
@@ -193,7 +193,7 @@ class RecursiveRenderer {
 
     /**
      * Delegate the call of the `onUpdated` hook to the renderer
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      */
     onElementUpdated(element) {
         if (element.hooks) this.delegateToRenderer("onUpdated", element.hooks.onUpdated);
@@ -201,7 +201,7 @@ class RecursiveRenderer {
 
     /**
      * Delegate the call of the `onCreated` hook to the renderer
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      */
     onElementCreated(element) {
         if (element.hooks && element.hooks.onCreated)
@@ -210,7 +210,7 @@ class RecursiveRenderer {
 
     /**
      * Delegate the call of the `beforeDestroyed` hook to the renderer
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      */
     onBeforeElementDestroyed(element) {
         if (element.hooks)
@@ -219,7 +219,7 @@ class RecursiveRenderer {
 
     /**
      * Delegate the call of the `onDestroyed` hook to the renderer
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      */
     onElementDestroyed(element) {
         if (element.hooks) this.delegateToRenderer("onDestroyed", element.hooks.onDestroyed);
@@ -227,7 +227,7 @@ class RecursiveRenderer {
 
     /**
      * Inject the different attributes, events and children into the created instance;
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      * @param {any} instance
      */
     renderInstance(element) {
@@ -254,8 +254,8 @@ class RecursiveRenderer {
 
     /**
      * Replace the given element by the new one.
-     * @param {typeof ElementType} element
-     * @param {typeof ElementType} newElement
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} newElement
      */
     replaceElement(element, newElement) {
         if (element.hooks && element.hooks.beforeDestroyed) {
@@ -279,8 +279,8 @@ class RecursiveRenderer {
 
     /**
      * Append the given element into the provided parent element.
-     * @param {typeof ElementType} element
-     * @param {typeof ElementType} parentElement
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} parentElement
      */
     addElement(element, parentElement) {
         this.delegateToRenderer("changes", () =>
@@ -292,8 +292,8 @@ class RecursiveRenderer {
 
     /**
      * Change the position of the given element.
-     * @param {typeof ElementType} element
-     * @param {typeof ElementType} newElement
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} newElement
      */
     changeElementPosition(element, parentElement, newPosition) {
         this.delegateToRenderer("changes", () =>
@@ -303,7 +303,7 @@ class RecursiveRenderer {
 
     /**
      * Remove the given element from the tree of elements.
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      */
     removeElement(element) {
         if (element.hooks && element.hooks.beforeDestroyed) {
@@ -319,8 +319,8 @@ class RecursiveRenderer {
 
     /**
      * Update events
-     * @param {typeof ElementType} element
-     * @param {typeof ElementType} newElement
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} newElement
      */
     updateEvents(element, newElement) {
         for (let event in element.events) {
@@ -340,8 +340,8 @@ class RecursiveRenderer {
 
     /**
      * Update attributes
-     * @param {typeof ElementType} element
-     * @param {typeof ElementType} newElement
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} newElement
      */
     updateAttributes(element, newElement) {
         for (let attr in element.attributes) {
@@ -363,8 +363,8 @@ class RecursiveRenderer {
 
     /**
      * Update children
-     * @param {Array<typeof ElementType>} elementChildren
-     * @param {Array<typeof ElementType>} newElementChildren
+     * @param {Array<import("../../lib.js").RecursiveElement>} elementChildren
+     * @param {Array<import("../../lib.js").RecursiveElement>} newElementChildren
      */
     updateEqualChildren(elementChildren, newElementChildren) {
         for (let i = 0; i < elementChildren.length; i++) {
@@ -374,8 +374,8 @@ class RecursiveRenderer {
 
     /**
      * Update children
-     * @param {typeof ElementType} element
-     * @param {typeof ElementType} newElement
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} newElement
      */
     updateChildren(element, newElement) {
         for (let i in element.children) {
@@ -446,8 +446,8 @@ class RecursiveRenderer {
 
     /**
      * Update the current element style.
-     * @param {typeof ElementType} element
-     * @param {typeof ElementType} newElement
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} newElement
      */
     updateStyle(element, newElement) {
         this.delegateToRenderer("changes", () => this.useRendererUpdateStyle(element, newElement));
@@ -455,8 +455,8 @@ class RecursiveRenderer {
 
     /**
      * Update the current element.
-     * @param {typeof ElementType} element
-     * @param {typeof ElementType} newElement
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} newElement
      */
     updateElement(element, newElement) {
         const instance = element.instance;
@@ -484,8 +484,8 @@ class RecursiveRenderer {
 
     /**
      * Assign unique identifier to the element
-     * @param {typeof ElementType} element
-     * @param {typeof ElementType} parentElement
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} parentElement
      * @param {number} index
      */
     assignUid(element, parentElement, index = 0) {
@@ -512,7 +512,7 @@ class RecursiveRenderer {
 
     /**
      * Register element into the reference store.
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      */
     setInstanceReference(element) {
         if (element.hooks && typeof element.hooks.onRef === "function") {
@@ -598,8 +598,8 @@ class RecursiveRenderer {
 
     /**
      * Use the renderer to update style
-     * @param {typeof ElementType} textElement
-     * @param {typeof ElementType} newTextElement
+     * @param {import("../../lib.js").RecursiveElement} textElement
+     * @param {import("../../lib.js").RecursiveElement} newTextElement
      */
     useRendererUpdateStyle(textElement, newTextElement) {
         throwError("Renderer has no method updateStyle.");
@@ -607,8 +607,8 @@ class RecursiveRenderer {
 
     /**
      * Use the renderer to update plain text
-     * @param {typeof ElementType} textElement
-     * @param {typeof ElementType} newTextElement
+     * @param {import("../../lib.js").RecursiveElement} textElement
+     * @param {import("../../lib.js").RecursiveElement} newTextElement
      */
     useRendererUpdateText(textElement, newTextElement) {
         throwError("Renderer has no method updateText.");
@@ -642,7 +642,7 @@ class RecursiveRenderer {
      * Set an attribute
      * @param {string} attribute
      * @param {any} value
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      */
     useRendererSetAttribute(attribute, value, element) {
         throwError("Renderer has no method SetAttribute.");
@@ -650,7 +650,7 @@ class RecursiveRenderer {
 
     /**
      * Check if the children are in the tree of elements.
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      */
     useRendererItemInTree(element) {
         throwError("Renderer has no method itemInTree.");
@@ -684,8 +684,8 @@ class RecursiveRenderer {
 
     /**
      * Use renderer to Change the position of the given element.
-     * @param {typeof ElementType} element
-     * @param {typeof ElementType} parentElement
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} parentElement
      * @param {number} newPosition
      */
     useRendererChangeElementPosition(element, parentElement, newPosition) {
@@ -694,7 +694,7 @@ class RecursiveRenderer {
 
     /**
      * Remove the given element from the tree of elements.
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      */
     useRendererRemoveElement(element) {
         throwError("Renderer has no method useRendererRemoveElement");
@@ -702,8 +702,8 @@ class RecursiveRenderer {
 
     /**
      * Use the renderer to append the given element into the provided parent element.
-     * @param {typeof ElementType} element
-     * @param {typeof ElementType} parentElement
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} parentElement
      */
     useRendererAddElement(element, parentElement) {
         throwError("Renderer has no method useRendererAddElement.");
@@ -711,8 +711,8 @@ class RecursiveRenderer {
 
     /**
      * Use the renderer to replace the given element by the new one.
-     * @param {typeof ElementType} element
-     * @param {typeof ElementType} newElement
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} newElement
      */
     useRendererReplaceElement(element, newElement) {
         throwError("Renderer has no method useRendererReplaceElement.");
@@ -738,7 +738,7 @@ class RecursiveRenderer {
 
     /**
      * Create a bare-bone native instance of the provided element.
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      * @return native element
      */
     useRendererCreateInstance(element) {
@@ -747,7 +747,7 @@ class RecursiveRenderer {
 
     /**
      * Inject attributes into the created instance;
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      * @param {any} instance
      */
     useRendererInjectAttributes(element, instance) {
@@ -756,7 +756,7 @@ class RecursiveRenderer {
 
     /**
      * Inject events into the created instance;
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      * @param {any} instance
      */
     useRendererInjectEvents(element, instance) {
@@ -765,7 +765,7 @@ class RecursiveRenderer {
 
     /**
      * Inject children into the created instance;
-     * @param {typeof ElementType} element
+     * @param {import("../../lib.js").RecursiveElement} element
      * @param {any} instance
      */
     useRendererInjectChildren(element, instance) {

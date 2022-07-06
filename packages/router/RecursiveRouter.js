@@ -1,4 +1,6 @@
 import { throwError } from "../error";
+import { RecursiveOrchestrator } from "../orchestrator";
+import { RecursiveState } from "../state";
 import RouteType from "./RouteType";
 
 /**
@@ -21,16 +23,34 @@ class RecursiveRouter {
 
     /**
      * Create an instance of the Recursive Router
-     * @param {typeof RouteType} route
+     * @param {import("../../lib").Route} route
      * @param {string} base
      * @param {boolean} scroll
      */
     constructor(route, base, scroll, stateManager, orchestrator) {
+        /**
+         * @type {RecursiveState}
+         */
         this.stateManager = stateManager;
+
+        /**
+         * @type {RecursiveOrchestrator}
+         */
         this.orchestrator = orchestrator;
 
+        /**
+         * @type {string}
+         */
         this.base = base || "";
+
+        /**
+         * @type {boolean}
+         */
         this.scroll = scroll || false;
+
+        /**
+         * @type {import("../../lib").FlatRoutes}
+         */
         this.routes = this.flattenRoutes(route);
 
         this.routerContext = {
@@ -59,7 +79,7 @@ class RecursiveRouter {
 
     /**
      * Resolve the provided route and return a flat object.
-     * @param {typeof RouteType} route
+     * @param {import("../../lib").Route} route
      * @returns
      */
     flattenRoutes(route) {
