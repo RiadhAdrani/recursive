@@ -166,7 +166,7 @@ class RecursiveRenderer {
             }
 
             element.children.forEach((child, index) => {
-                const _child = this.prepareElementChild(child, _element.eid + "-" + index);
+                const _child = this.prepareElementChild(child, _element.uid + "-" + index);
 
                 if (_child) {
                     if (_child.elementType === "fragment") {

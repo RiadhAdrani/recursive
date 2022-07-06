@@ -1,6 +1,6 @@
 {
     "name": "@riadh-adrani/recursive",
-    "version": "0.7.23",
+    "version": "0.7.25",
     "description": "Recursive is a Javascript framework to build beautiful component-based apps.",
     "license": "MIT",
     "main": "index.js",
