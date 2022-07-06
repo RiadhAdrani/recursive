@@ -1,5 +1,6 @@
 import { throwError } from "../error/index.js";
 import { RecursiveOrchestrator } from "../orchestrator/index.js";
+import { RecursiveState } from "../state/index.js";
 import { isFlag } from "./RecursiveFlags.js";
 import { isHook } from "./RecursiveHooks.js";
 
@@ -33,7 +34,14 @@ class RecursiveRenderer {
      * @param {any} root
      */
     constructor(app, root) {
+        /**
+         * @type {RecursiveOrchestrator}
+         */
         this.orchestrator = undefined;
+
+        /**
+         * @type {RecursiveState}
+         */
         this.stateManager = undefined;
 
         this.app = app;
@@ -75,9 +83,10 @@ class RecursiveRenderer {
     /**
      * Return a verified element child
      * @param {import("../../lib.js").RawElement} child
-     * @return {import("../../lib.js").RecursiveElement} element
+     * @param {string} id
+     * @param {import("../../lib.js").RecursiveElement}
      */
-    prepareElementChild(child, parent) {
+    prepareElementChild(child, id) {
         if ([null, undefined].includes(child)) return false;
 
         if (!child.elementType)
@@ -86,7 +95,7 @@ class RecursiveRenderer {
             if (child.flags && child.flags.renderIf === false) {
                 return false;
             } else {
-                return this.prepare(child, parent);
+                return this.prepare(child, id);
             }
         }
     }
@@ -94,9 +103,10 @@ class RecursiveRenderer {
     /**
      * Return a verified tree to be used in rendering or updating
      * @param {import("../../lib.js").RawElement} element
+     * @param {string} id
      * @return {import("../../lib.js").RecursiveElement} tree
      */
-    prepare(element) {
+    prepare(element, id) {
         const _element = {};
 
         if (!element.elementType) {
@@ -118,6 +128,7 @@ class RecursiveRenderer {
         _element.ref = undefined;
         _element.style = element.style;
         _element.rendererOptions = element.rendererOptions;
+        _element.uid = id;
 
         for (let property in element) {
             if (property === "flag") {
@@ -154,8 +165,8 @@ class RecursiveRenderer {
                 element.children = [element.children];
             }
 
-            element.children.forEach((child) => {
-                const _child = this.prepareElementChild(child);
+            element.children.forEach((child, index) => {
+                const _child = this.prepareElementChild(child, _element.eid + "-" + index);
 
                 if (_child) {
                     if (_child.elementType === "fragment") {
@@ -486,6 +497,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      * @param {import("../../lib.js").RecursiveElement} parentElement
      * @param {number} index
+     * @deprecated
      */
     assignUid(element, parentElement, index = 0) {
         let uid = parentElement ? parentElement.uid : "";
@@ -535,8 +547,10 @@ class RecursiveRenderer {
         if (!this.root) throwError("No root was specified.");
 
         this.orchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
-        this.current = this.prepare(this.app());
-        this.assignUid(this.current, undefined, 0);
+        this.current = this.prepare(this.app(), "0");
+
+        // this.assignUid(this.current, undefined, 0);
+
         this.useRendererOnTreePrepared(this.current);
 
         this.orchestrator.changeState(RecursiveOrchestrator.states.COMMIT_INTO_DOM);
@@ -555,8 +569,10 @@ class RecursiveRenderer {
      */
     update() {
         this.orchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
-        const _new = this.prepare(this.app());
-        this.assignUid(_new, undefined, 0);
+        const _new = this.prepare(this.app(), "0");
+
+        // this.assignUid(_new, undefined, 0);
+
         this.useRendererOnTreePrepared(_new);
 
         this.orchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_DIFF);

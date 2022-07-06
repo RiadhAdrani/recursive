@@ -25,6 +25,10 @@ const updateObj = (sender, uuid) => {
     return object;
 };
 
+/**
+ * #### `Recursive Orchestrator`
+ * Manages and schedule updates.
+ */
 class RecursiveOrchestrator {
     static states = {
         FREE,

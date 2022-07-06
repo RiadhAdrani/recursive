@@ -1,5 +1,15 @@
 import { throwError } from "../error";
 
+/**
+ * #### `RecursiveState`
+ *
+ * Store and manage different types of states.
+ *
+ * * `state` reactive object that will last as long as it is needed.
+ * * `cache` reactive state that will last as long as the App is running.
+ * * `ref` reference an element in the App tree.
+ * * `reserved`  used internally by some modules.
+ */
 class RecursiveState {
     constructor() {
         this.stores = {};

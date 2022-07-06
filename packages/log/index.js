@@ -1,3 +1,6 @@
+/**
+ *
+ */
 class ConsoleLogger {
     static singleton = new ConsoleLogger();
 
