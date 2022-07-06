@@ -1,6 +1,5 @@
 import { throwError } from "../error/index.js";
 import { RecursiveOrchestrator } from "../orchestrator/index.js";
-import { ElementType } from "./RecursiveElement.js";
 import { isFlag } from "./RecursiveFlags.js";
 import { isHook } from "./RecursiveHooks.js";
 

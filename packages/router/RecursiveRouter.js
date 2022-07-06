@@ -1,7 +1,6 @@
 import { throwError } from "../error";
 import { RecursiveOrchestrator } from "../orchestrator";
 import { RecursiveState } from "../state";
-import RouteType from "./RouteType";
 
 /**
  * ### `RecursiveRouter`
