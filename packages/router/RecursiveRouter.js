@@ -84,12 +84,14 @@ class RecursiveRouter {
     flattenRoutes(route) {
         let list = {};
 
-        if (route && route.path) {
+        if (route && route.path && route.component) {
             list[route.path] = {
                 path: route.path,
                 component: route.component,
                 redirectTo: route.redirectTo,
                 title: route.title,
+                onLoad: route.onLoad,
+                onExit: route.onExit,
             };
 
             if (Array.isArray(route.routes)) {
@@ -229,8 +231,12 @@ class RecursiveRouter {
         let _template = template;
 
         this.orchestrator.batchCallback(() => {
-            setCurrent(_template.path);
+            if (typeof current.onExit === "function") current.onExit();
+
+            setCurrent(_template);
             setPath(route);
+
+            if (typeof _template.onLoad === "function") _template.onLoad();
         });
 
         if (anchor) {

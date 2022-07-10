@@ -24,7 +24,7 @@ class RecursiveState {
             function retrieve(key) {
                 const state = manager.getItem(key, store);
 
-                const _value = state.value;
+                const _value = manager.copy(state.value);
                 const _preValue = state.preValue;
                 const _set = (newValue) => {
                     if (!manager.itemExists(key, store)) {
@@ -39,7 +39,7 @@ class RecursiveState {
                 };
                 const _live = () => {
                     return manager.itemExists(key, store)
-                        ? manager.getItem(key, store, undefined).value
+                        ? manager.copy(manager.getItem(key, store, undefined).value)
                         : undefined;
                 };
 
@@ -83,7 +83,7 @@ class RecursiveState {
             function retrieve(key) {
                 const state = manager.getItem(key, store);
 
-                const _value = state.value;
+                const _value = manager.copy(state.value);
                 const _preValue = state.preValue;
                 const _set = (newValue) => {
                     if (!manager.itemExists(key, store)) {
@@ -98,7 +98,7 @@ class RecursiveState {
                 };
                 const _live = () => {
                     return manager.itemExists(key, store)
-                        ? manager.getItem(key, store, undefined).value
+                        ? manager.copy(manager.getItem(key, store, undefined).value)
                         : undefined;
                 };
 
@@ -232,6 +232,22 @@ class RecursiveState {
             return false;
 
         return true;
+    }
+
+    copy(from) {
+        let output = undefined;
+
+        if (Array.isArray(from)) {
+            output = [];
+            Object.assign(output, from);
+        } else if (typeof from == "object") {
+            output = {};
+            Object.assign(output, from);
+        } else {
+            output = from;
+        }
+
+        return output;
     }
 
     getItem(key, store, defaultValue = undefined) {
