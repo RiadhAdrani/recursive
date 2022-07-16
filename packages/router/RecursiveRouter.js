@@ -15,6 +15,7 @@ import { RecursiveState } from "../state";
  * * `useRouterNavigationListener`
  * * `useRouterGetRoute`
  * * `useRouterOnLoad`
+ * * `useRouterSetTitle`
  */
 class RecursiveRouter {
     static dynamicRegExp = /:[^:;]*;/g;
@@ -232,6 +233,8 @@ class RecursiveRouter {
 
         this.orchestrator.batchCallback(() => {
             if (typeof current.onExit === "function") current.onExit();
+
+            if (typeof template.title === "string") this.useRouterSetTitle(template.title);
 
             setCurrent(_template);
             setPath(route);
@@ -503,6 +506,13 @@ class RecursiveRouter {
      */
     useRouterOnLoad() {
         throwError("useRouterOnLoad is not implemented");
+    }
+
+    /**
+     * Change the tab title of the browser.
+     */
+    useRouterSetTitle(title) {
+        throwError("useRouterSetTitle is not implemented");
     }
 }
 

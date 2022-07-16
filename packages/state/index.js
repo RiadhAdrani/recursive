@@ -1,4 +1,8 @@
 import { throwError } from "../error";
+import CreateCacheStore from "./cache";
+import CreateRefStore from "./ref";
+import CreateReservedStore from "./reserved";
+import CreateStateStore from "./state";
 
 /**
  * #### `RecursiveState`
@@ -15,196 +19,12 @@ class RecursiveState {
         this.stores = {};
         this.history = [this.stores];
         this.orchestrator = undefined;
+        this.cacheSize = 1000;
 
-        const manager = this;
-
-        (() => {
-            const store = "state";
-
-            function retrieve(key) {
-                const state = manager.getItem(key, store);
-
-                const _value = manager.copy(state.value);
-                const _preValue = state.preValue;
-                const _set = (newValue) => {
-                    if (!manager.itemExists(key, store)) {
-                        return;
-                    }
-
-                    manager.updateItem(key, newValue, store, () => {
-                        manager.orchestrator.batchCallback(() => {
-                            manager.orchestrator.notifyStateChanged();
-                        }, "set-state-" + Date.now());
-                    });
-                };
-                const _live = () => {
-                    return manager.itemExists(key, store)
-                        ? manager.copy(manager.getItem(key, store, undefined).value)
-                        : undefined;
-                };
-
-                return [_value, _set, _live, _preValue];
-            }
-
-            this.createStore({
-                name: store,
-                set: (key, value, onInit, onRemoved) => {
-                    const first = !manager.itemExists(key, store);
-
-                    if (first) manager.addItem(key, value, store, onInit, onRemoved);
-
-                    manager.stores[store].used.push(key);
-
-                    return retrieve(key);
-                },
-                get: (key) => {
-                    if (!manager.itemExists(key, store)) {
-                        throwError("State with the uid " + key + " does not exists.");
-                    }
-
-                    return retrieve(key);
-                },
-                clear: () => {
-                    for (let key in manager.stores[store].items) {
-                        if (!manager.stores[store].used.includes(key)) {
-                            manager.removeItem(key, store);
-                        }
-                    }
-
-                    manager.stores[store].used = [];
-                },
-                flush: () => {},
-            });
-        })();
-
-        (() => {
-            const store = "cache";
-
-            function retrieve(key) {
-                const state = manager.getItem(key, store);
-
-                const _value = manager.copy(state.value);
-                const _preValue = state.preValue;
-                const _set = (newValue) => {
-                    if (!manager.itemExists(key, store)) {
-                        return;
-                    }
-
-                    manager.updateItem(key, newValue, store, () => {
-                        manager.orchestrator.batchCallback(() => {
-                            manager.orchestrator.notifyStateChanged();
-                        }, "set-cache-" + Date.now());
-                    });
-                };
-                const _live = () => {
-                    return manager.itemExists(key, store)
-                        ? manager.copy(manager.getItem(key, store, undefined).value)
-                        : undefined;
-                };
-
-                return [_value, _set, _live, _preValue];
-            }
-
-            this.createStore({
-                name: store,
-                set: (key, value, onInit, onRemoved) => {
-                    const first = !manager.itemExists(key, store);
-
-                    if (first) manager.addItem(key, value, store, onInit, onRemoved);
-
-                    return retrieve(key);
-                },
-                get: (key) => {
-                    if (!manager.itemExists(key, store)) {
-                        throwError("State with the uid " + key + " does not exists.");
-                    }
-
-                    return retrieve(key);
-                },
-                clear: () => {},
-                flush: () => {},
-            });
-        })();
-
-        (() => {
-            const store = "reserved";
-
-            function retrieve(key) {
-                const state = manager.getItem(key, store);
-
-                const _value = state.value;
-                const _preValue = state.preValue;
-                const _set = (newValue) => {
-                    if (!manager.itemExists(key, store)) {
-                        return;
-                    }
-
-                    manager.updateItem(key, newValue, store, () => {
-                        manager.orchestrator.batchCallback(() => {
-                            manager.orchestrator.notifyStateChanged();
-                        }, "set-reserved-" + Date.now());
-                    });
-                };
-                const _live = () => {
-                    return manager.itemExists(key, store)
-                        ? manager.getItem(key, store, undefined).value
-                        : undefined;
-                };
-
-                return [_value, _set, _live, _preValue];
-            }
-
-            this.createStore({
-                name: store,
-                set: (key, value, onInit, onRemoved) => {
-                    const first = !manager.itemExists(key, store);
-
-                    if (first) manager.addItem(key, value, store, onInit, onRemoved);
-
-                    return retrieve(key);
-                },
-                get: (key) => {
-                    if (!manager.itemExists(key, store)) {
-                        throwError("Reserved State with the uid " + key + " does not exists.");
-                    }
-
-                    return retrieve(key);
-                },
-                clear: () => {},
-                flush: () => {},
-            });
-        })();
-
-        (() => {
-            const store = "ref";
-
-            function retrieve(key, defaultValue) {
-                if (manager.itemExists(key, store)) return manager.getItem(key, store).value;
-                else return manager.getItem(key, store, defaultValue);
-            }
-
-            this.createStore({
-                name: store,
-                set: (key, value, onInit, onRemoved) => {
-                    manager.addItem(key, value, store, onInit, onRemoved);
-
-                    manager.stores[store].used.push(key);
-                },
-                get: (key, defaultValue) => {
-                    return retrieve(key, defaultValue);
-                },
-                clear: () => {
-                    for (let key in manager.stores[store].items) {
-                        if (!manager.stores[store].used.includes(key)) {
-                            manager.removeItem(key, store);
-                        }
-                    }
-
-                    manager.stores[store].used = [];
-                },
-                flush: () => {},
-            });
-        })();
+        this.createStore(CreateStateStore(this));
+        this.createStore(CreateReservedStore(this));
+        this.createStore(CreateCacheStore(this));
+        this.createStore(CreateRefStore(this));
     }
 
     addItem(key, value = undefined, store, onAdded, onRemoved) {
@@ -218,13 +38,22 @@ class RecursiveState {
         const _object = {
             value,
             preValue: undefined,
-            history: [undefined],
+            history: [value],
             onRemoved,
+            unsubscribe: () => {},
+            addOrder: Object.keys(this.stores[store].items).length,
         };
 
         this.stores[store].items[key] = _object;
 
-        if (onAdded && typeof onAdded === "function") (() => onAdded())();
+        if (onAdded && typeof onAdded === "function")
+            (async () => {
+                const unsubscribe = await onAdded();
+
+                if (typeof unsubscribe === "function" && this.itemExists(key, store)) {
+                    this.stores[store].items[key].unsubscribe = unsubscribe;
+                }
+            })();
     }
 
     itemExists(key, store) {
@@ -237,7 +66,14 @@ class RecursiveState {
     copy(from) {
         let output = undefined;
 
-        if (Array.isArray(from)) {
+        if (
+            ["bigint", "boolean", "function", "number", "string", "symbol", "undefined"].includes(
+                typeof from
+            ) ||
+            from === null
+        ) {
+            output = from;
+        } else if (Array.isArray(from)) {
             output = [];
             Object.assign(output, from);
         } else if (typeof from == "object") {
@@ -272,8 +108,12 @@ class RecursiveState {
         }
 
         const fn = this.stores[store].items[key].onRemoved;
+        const unsub = this.stores[store].items[key].unsubscribe;
 
-        if (fn && typeof fn === "function") (() => fn())();
+        (() => {
+            if (typeof fn === "function") fn();
+            unsub();
+        })();
 
         delete this.stores[store].items[key];
     }
@@ -331,6 +171,20 @@ class RecursiveState {
             clear,
             flush,
         };
+    }
+
+    useBatchCallback(callback, batchName) {
+        this.orchestrator.batchCallback(callback, batchName);
+    }
+
+    setItemUsed(storeName, key) {
+        if (!this.stores[storeName]) return;
+
+        this.stores[storeName].used.push(key);
+    }
+
+    itemIsUsed(storeName, key) {
+        return this.stores[storeName].used.includes(key);
     }
 
     getState(key) {
