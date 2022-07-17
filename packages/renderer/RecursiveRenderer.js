@@ -1,4 +1,5 @@
-import { throwError } from "../error/index.js";
+import RecursiveConsole from "../console/index.js";
+import RecursiveContext from "../context/index.js";
 import { RecursiveOrchestrator } from "../orchestrator/index.js";
 import { RecursiveState } from "../state/index.js";
 import { isFlag } from "./RecursiveFlags.js";
@@ -43,6 +44,11 @@ class RecursiveRenderer {
          * @type {RecursiveState}
          */
         this.stateManager = undefined;
+
+        /**
+         * @type {RecursiveContext}
+         */
+        this.contextManager = new RecursiveContext();
 
         this.app = app;
         this.root = root;
@@ -95,7 +101,13 @@ class RecursiveRenderer {
             if (child.flags && child.flags.renderIf === false) {
                 return false;
             } else {
-                return this.prepare(child, id);
+                let _prepared = false;
+
+                this.contextManager.useContext(() => {
+                    _prepared = this.prepare(child, id);
+                }, id);
+
+                return _prepared;
             }
         }
     }
@@ -110,7 +122,7 @@ class RecursiveRenderer {
         const _element = {};
 
         if (!element.elementType) {
-            throwError('"elementType" should not be empty of null', [
+            RecursiveConsole.error('"elementType" should not be empty of null', [
                 "Make sure to provide a type for your element (ex: div in web)",
             ]);
         }
@@ -471,7 +483,7 @@ class RecursiveRenderer {
     updateElement(element, newElement) {
         const instance = element.instance;
         if (!instance) {
-            throwError("Element not found, This error should not happen.");
+            RecursiveConsole.error("Element not found, This error should not happen.");
         }
 
         if (element.flags && element.flags.forceRerender === true) {
@@ -542,12 +554,15 @@ class RecursiveRenderer {
      * Render the tree of elements.
      */
     render() {
-        if (typeof this.app !== "function") throwError("App is not of type function");
+        if (typeof this.app !== "function") RecursiveConsole.error("App is not of type function");
 
-        if (!this.root) throwError("No root was specified.");
+        if (!this.root) RecursiveConsole.error("No root was specified.");
 
         this.orchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
-        this.current = this.prepare(this.app(), "0");
+
+        this.contextManager.useContext(() => {
+            this.current = this.prepare(this.app(), "0");
+        }, "0");
 
         // this.assignUid(this.current, undefined, 0);
 
@@ -569,7 +584,12 @@ class RecursiveRenderer {
      */
     update() {
         this.orchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
-        const _new = this.prepare(this.app(), "0");
+
+        let _new;
+
+        this.contextManager.useContext(() => {
+            _new = this.prepare(this.app(), "0");
+        }, "0");
 
         // this.assignUid(_new, undefined, 0);
 
@@ -617,7 +637,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} newTextElement
      */
     useRendererUpdateStyle(textElement, newTextElement) {
-        throwError("Renderer has no method updateStyle.");
+        RecursiveConsole.error("Renderer has no method updateStyle.");
     }
 
     /**
@@ -626,14 +646,14 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} newTextElement
      */
     useRendererUpdateText(textElement, newTextElement) {
-        throwError("Renderer has no method updateText.");
+        RecursiveConsole.error("Renderer has no method updateText.");
     }
 
     /**
      * Perform renderer specific cleaning.
      */
     useRendererClean() {
-        throwError("Renderer has no method clean.");
+        RecursiveConsole.error("Renderer has no method clean.");
     }
 
     /**
@@ -641,7 +661,7 @@ class RecursiveRenderer {
      * @param {tyepof ElementType} tree
      */
     useRendererOnTreePrepared(tree) {
-        throwError("Renderer has no method onTreePrepared.");
+        RecursiveConsole.error("Renderer has no method onTreePrepared.");
     }
 
     /**
@@ -650,7 +670,7 @@ class RecursiveRenderer {
      * @param {any} instance
      */
     useRendererRemoveAttribute(attribute, instance) {
-        throwError("Renderer has no method RemoveAttribute.");
+        RecursiveConsole.error("Renderer has no method RemoveAttribute.");
     }
 
     /**
@@ -660,7 +680,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      */
     useRendererSetAttribute(attribute, value, element) {
-        throwError("Renderer has no method SetAttribute.");
+        RecursiveConsole.error("Renderer has no method SetAttribute.");
     }
 
     /**
@@ -668,7 +688,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      */
     useRendererItemInTree(element) {
-        throwError("Renderer has no method itemInTree.");
+        RecursiveConsole.error("Renderer has no method itemInTree.");
     }
 
     /**
@@ -677,7 +697,7 @@ class RecursiveRenderer {
      * @param {any} instance
      */
     useRendererRemoveEvent(eventName, instance) {
-        throwError("Renderer has no method RemoveEvent.");
+        RecursiveConsole.error("Renderer has no method RemoveEvent.");
     }
 
     /**
@@ -687,14 +707,14 @@ class RecursiveRenderer {
      * @param {any} element
      */
     useRendererAddEvent(eventName, callback, element) {
-        throwError("Renderer has no method AddEvent.");
+        RecursiveConsole.error("Renderer has no method AddEvent.");
     }
 
     /**
      * Render the application tree.
      */
     useRendererRenderTree() {
-        throwError("Renderer has no method renderTree.");
+        RecursiveConsole.error("Renderer has no method renderTree.");
     }
 
     /**
@@ -704,7 +724,7 @@ class RecursiveRenderer {
      * @param {number} newPosition
      */
     useRendererChangeElementPosition(element, parentElement, newPosition) {
-        throwError("Renderer has no method useRendererChangeElementPosition.");
+        RecursiveConsole.error("Renderer has no method useRendererChangeElementPosition.");
     }
 
     /**
@@ -712,7 +732,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      */
     useRendererRemoveElement(element) {
-        throwError("Renderer has no method useRendererRemoveElement");
+        RecursiveConsole.error("Renderer has no method useRendererRemoveElement");
     }
 
     /**
@@ -721,7 +741,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} parentElement
      */
     useRendererAddElement(element, parentElement) {
-        throwError("Renderer has no method useRendererAddElement.");
+        RecursiveConsole.error("Renderer has no method useRendererAddElement.");
     }
 
     /**
@@ -730,7 +750,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} newElement
      */
     useRendererReplaceElement(element, newElement) {
-        throwError("Renderer has no method useRendererReplaceElement.");
+        RecursiveConsole.error("Renderer has no method useRendererReplaceElement.");
     }
 
     /**
@@ -739,7 +759,7 @@ class RecursiveRenderer {
      * @return {boolean}
      */
     useRendererIsAttribute(attribute) {
-        throwError("Renderer has no method isAttribute.");
+        RecursiveConsole.error("Renderer has no method isAttribute.");
     }
 
     /**
@@ -748,7 +768,7 @@ class RecursiveRenderer {
      * @return {boolean}
      */
     useRendererIsEvent(event) {
-        throwError("Renderer has no method isEvent.");
+        RecursiveConsole.error("Renderer has no method isEvent.");
     }
 
     /**
@@ -757,7 +777,7 @@ class RecursiveRenderer {
      * @return native element
      */
     useRendererCreateInstance(element) {
-        throwError("Renderer has no method createInstance.");
+        RecursiveConsole.error("Renderer has no method createInstance.");
     }
 
     /**
@@ -766,7 +786,7 @@ class RecursiveRenderer {
      * @param {any} instance
      */
     useRendererInjectAttributes(element, instance) {
-        throwError("Renderer has no method injectAttributes.");
+        RecursiveConsole.error("Renderer has no method injectAttributes.");
     }
 
     /**
@@ -775,7 +795,7 @@ class RecursiveRenderer {
      * @param {any} instance
      */
     useRendererInjectEvents(element, instance) {
-        throwError("Renderer has no method injectEvents.");
+        RecursiveConsole.error("Renderer has no method injectEvents.");
     }
 
     /**
@@ -784,7 +804,7 @@ class RecursiveRenderer {
      * @param {any} instance
      */
     useRendererInjectChildren(element, instance) {
-        throwError("Renderer has no method injectChildren.");
+        RecursiveConsole.error("Renderer has no method injectChildren.");
     }
 }
 

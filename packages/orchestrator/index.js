@@ -1,4 +1,4 @@
-import { throwError } from "../error/index.js";
+import RecursiveConsole from "../console/index.js";
 
 const FREE = "free";
 const HANDLING_REQUESTS = "handling-requests";
@@ -59,12 +59,20 @@ class RecursiveOrchestrator {
         this.unhandledRequests = [];
     }
 
+    /**
+     * Update the application using the current renderer.
+     */
     update() {
-        if (!this.renderer) throwError("No renderer was specified");
+        if (!this.renderer) RecursiveConsole.error("No renderer was specified");
 
         this.renderer.update();
     }
 
+    /**
+     * Request an update. If the orchestrator is busy,
+     * the update will be added to the `unhandled requests` to be executed later.
+     * @param {string} sender
+     */
     requestUpdate(sender) {
         if (![FREE, HANDLING_REQUESTS].includes(this.step)) {
             this.unhandledRequests.push(updateObj(sender, sender));
@@ -100,6 +108,11 @@ class RecursiveOrchestrator {
         }
     }
 
+    /**
+     * Generate a unique Task identifer.
+     * @param {bigint} time
+     * @returns {string} uid
+     */
     static generateTaskUUID(time) {
         let uuid = "";
 
@@ -110,20 +123,30 @@ class RecursiveOrchestrator {
         return `task-${uuid}-${time}`;
     }
 
+    /**
+     * Change the current state of the orchestrator.
+     * @param {string} state
+     */
     changeState(state) {
         this.step = state;
     }
 
+    /**
+     * Change the state of the orchestrator to free.
+     */
     free() {
         this.updatesCount = 0;
         this.stateChanged = false;
         this.changeState(FREE);
     }
 
+    /**
+     * Count the number of updates since the execution of the method.
+     */
     countUpdateSinceFree() {
         setTimeout(() => {
             if (this.updatesCount > 200) {
-                throwError("Infinite re-render detected", [
+                RecursiveConsole.error("Infinite re-render detected", [
                     "This error occured because the RecursiveDOM detected the need of a large amount of updates in a short period of time.",
                     "Avoid updating the state without any condition specially in hooks",
                 ]);
@@ -131,15 +154,25 @@ class RecursiveOrchestrator {
         }, 2000);
     }
 
+    /**
+     * Notify the orchestrator of a change of state.
+     */
     notifyStateChanged() {
         this.stateChanged = true;
     }
 
+    /**
+     * Notify the orchestrator to start batching incoming state changes into one update.
+     */
     startBatching() {
         this.batchingStartTime = Date.now();
         this.batching = true;
     }
 
+    /**
+     * End the batching operation and request an update if a state change is detected.
+     * @param {string} sender source
+     */
     endBatching(sender) {
         this.batchingLastDuration = Date.now() - this.batchingStartTime;
         this.batchingRequests = [];
@@ -149,6 +182,10 @@ class RecursiveOrchestrator {
         }
     }
 
+    /**
+     * End the batching task requested by the `sender`.
+     * @param {string} sender source
+     */
     requestEndBatching(sender) {
         if (this.batchingRequests.length > 0) {
             this.batchingRequests = this.batchingRequests.filter((req) => req.uuid !== sender);
@@ -159,13 +196,17 @@ class RecursiveOrchestrator {
         }
     }
 
+    /**
+     * Start a batching task.
+     * @param {string} sender source
+     */
     requestStartBatching(sender) {
         if (this.batching) {
             const uuid = RecursiveOrchestrator.generateTaskUUID(20);
             this.batchingRequests.push(updateObj(sender, uuid));
             setTimeout(() => {
                 if (this.batchingRequests.find((req) => req.uuid === uuid)) {
-                    console.warn(
+                    RecursiveConsole.warn(
                         "Batch request took too long (more than 20ms). This could be caused by a catched error. Avoid batching your updates in an asynchronous call and using await inside the updateAfter method."
                     );
                     this.endBatching(sender);
@@ -176,6 +217,12 @@ class RecursiveOrchestrator {
         }
     }
 
+    /**
+     * Batch update resulting from the callback.
+     * @param {Function} callback
+     * @param {string} batchName
+     * @returns
+     */
     batchCallback(callback, batchName = "batch-callback-" + Date.now) {
         if (callback === undefined || typeof callback !== "function") return;
 

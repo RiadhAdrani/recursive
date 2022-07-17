@@ -1,4 +1,4 @@
-import { throwError } from "../error";
+import RecursiveConsole from "../console";
 import CreateCacheStore from "./cache";
 import CreateRefStore from "./ref";
 import CreateReservedStore from "./reserved";
@@ -29,10 +29,12 @@ class RecursiveState {
 
     addItem(key, value = undefined, store, onAdded, onRemoved) {
         if ([undefined, null, ""].includes(key))
-            throwError("State UID cannot be one of these : '' or 'undefined' or 'null' ");
+            RecursiveConsole.error(
+                "State UID cannot be one of these : '' or 'undefined' or 'null' "
+            );
 
         if (this.stores[store] === undefined) {
-            throwError("Invalid store name.");
+            RecursiveConsole.error("Invalid store name.");
         }
 
         const _object = {
@@ -88,7 +90,7 @@ class RecursiveState {
 
     getItem(key, store, defaultValue = undefined) {
         if (this.stores[store] === undefined) {
-            throwError("Invalid store name.");
+            RecursiveConsole.error("Invalid store name.");
         }
 
         if (this.stores[store].items[key] === undefined) {
@@ -100,11 +102,11 @@ class RecursiveState {
 
     removeItem(key, store) {
         if (this.stores[store] === undefined) {
-            throwError("Invalid store name.");
+            RecursiveConsole.error("Invalid store name.");
         }
 
         if (this.stores[store].items[key] === undefined) {
-            throwError("State does not exist in the current store.");
+            RecursiveConsole.error("State does not exist in the current store.");
         }
 
         const fn = this.stores[store].items[key].onRemoved;
@@ -120,11 +122,11 @@ class RecursiveState {
 
     updateItem(key, newValue, store, onChanged, forceUpdate) {
         if (this.stores[store] === undefined) {
-            throwError("Invalid store name.");
+            RecursiveConsole.error("Invalid store name.");
         }
 
         if (this.stores[store].items[key] === undefined) {
-            throwError("State does not exist in the current store.");
+            RecursiveConsole.error("State does not exist in the current store.");
         }
 
         if (this.stores[store].items[key].value !== newValue || forceUpdate) {
@@ -148,19 +150,19 @@ class RecursiveState {
     flush() {}
 
     createStore({ name, set, get, clear, flush, obj }) {
-        if (typeof name !== "string") throwError(`name is not a string`);
+        if (typeof name !== "string") RecursiveConsole.error(`name is not a string`);
 
-        if (typeof set !== "function") throwError("set is not a function");
+        if (typeof set !== "function") RecursiveConsole.error("set is not a function");
 
-        if (typeof get !== "function") throwError("get is not a function");
+        if (typeof get !== "function") RecursiveConsole.error("get is not a function");
 
-        if (typeof clear !== "function") throwError("clear is not a function");
+        if (typeof clear !== "function") RecursiveConsole.error("clear is not a function");
 
-        if (typeof flush !== "function") throwError("flush is not a function");
+        if (typeof flush !== "function") RecursiveConsole.error("flush is not a function");
 
         const _name = name.trim();
 
-        if (this.stores[_name]) throwError("store already exists");
+        if (this.stores[_name]) RecursiveConsole.error("store already exists");
 
         this.stores[_name] = {
             items: {},

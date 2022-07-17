@@ -1,4 +1,4 @@
-import { throwError } from "../../error";
+import RecursiveConsole from "../../console";
 import { retrieveStatefulObject } from "../common";
 import { RecursiveState } from "../index";
 
@@ -27,7 +27,7 @@ const CreateCacheStore = (store) => {
 
     function get(key) {
         if (!store.itemExists(key, storeName))
-            throwError("State with the uid " + key + " does not exists.");
+            RecursiveConsole.error("State with the uid " + key + " does not exists.");
 
         return retrieve(key);
     }

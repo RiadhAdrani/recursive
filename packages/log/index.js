@@ -50,4 +50,4 @@ function devLogs(options = { render: false, update: false }) {
     ConsoleLogger.singleton.options = options;
 }
 
-export { devLogs, renderTime, renderTimeEnd, updateTime, updateTimeEnd };
+module.exports = { devLogs, renderTime, renderTimeEnd, updateTime, updateTimeEnd };

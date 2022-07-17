@@ -1,17 +1,12 @@
-# [Recursive](https://riadhadrani.github.io/recursive-website/) [![Version](https://img.shields.io/npm/v/@riadh-adrani/recursive?color=blue)](https://www.npmjs.com/package/@riadh-adrani/recursive) [![Licence](https://img.shields.io/npm/l/@riadh-adrani/recursive)](https://github.com/RiadhAdrani/recursive/issues)
+# Recursive [![Version](https://img.shields.io/npm/v/@riadh-adrani/recursive?color=blue)](https://www.npmjs.com/package/@riadh-adrani/recursive) ![Licence](https://img.shields.io/npm/l/@riadh-adrani/recursive)
 
-Recursive is a javascript framework to build a declarative, component-based, Javascript only apps.
-
-## Installation
-
-Recursive is still not 100% production-ready, but you can help us test features despite the fact that it could be drastically changed from version to version.
+Recursive is a _`blueprint`_ that create app-makers and frameworks using Javascript.
 
 ## Features
 
 -   `Virtual DOM` : Just like React and Flutter, this framework relies on a virtual DOM to make changes to the real application.
 -   `State Management` : Declare states with unique identifier to access them from anywhere in the Tree of components.
 -   `Router` : Create the illusion of directories for your website.
--   `Hooks` : control components' life cycle with preset functions.
 
 ## Small projects made with Recursive.js
 
@@ -24,7 +19,3 @@ Recursive is still not 100% production-ready, but you can help us test features 
 -   `Dwidder` `v0.5` : [Check it](https://github.com/RiadhAdrani/dwidder).
 
 -   `Color Noter` `v0.4` : [Check it](https://github.com/RiadhAdrani/color-noter-web).
-
-## Documentation
-
-Not yet ...

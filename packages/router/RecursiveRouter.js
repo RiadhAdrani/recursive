@@ -1,11 +1,12 @@
-import { throwError } from "../error";
+import RecursiveConsole from "../console";
 import { RecursiveOrchestrator } from "../orchestrator";
 import { RecursiveState } from "../state";
 
 /**
  * ### `RecursiveRouter`
  * Create an instance of the Recursive Router.
- * * These methods should be implemented, otherwise they will throw `errors`
+ *
+ * These methods should be implemented, otherwise they will throw `errors`.
  * * `useRouterMakeURL`
  * * `useRouterGetLocationPath`
  * * `useRouterReplaceState`
@@ -384,7 +385,7 @@ class RecursiveRouter {
      */
     useRouterContext(context, component) {
         if (typeof component !== "function") {
-            throwError("Route component is not a function.");
+            RecursiveConsole.error("Route component is not a function.");
         }
 
         this.startContext(context);
@@ -445,14 +446,14 @@ class RecursiveRouter {
      * @param {string} path
      */
     useRouterMakeURL(path) {
-        throwError("useRouterMakeURL is not implemented");
+        RecursiveConsole.error("useRouterMakeURL is not implemented");
     }
 
     /**
      * Retreive the current path.
      */
     useRouterGetLocationPath() {
-        throwError("useRouterGetLocationPath is not implemented");
+        RecursiveConsole.error("useRouterGetLocationPath is not implemented");
     }
 
     /**
@@ -460,7 +461,7 @@ class RecursiveRouter {
      * @param {string} route
      */
     useRouterReplaceState(route) {
-        throwError("useRouterReplaceState is not implemented");
+        RecursiveConsole.error("useRouterReplaceState is not implemented");
     }
 
     /**
@@ -469,14 +470,14 @@ class RecursiveRouter {
      * @param {string} hash
      */
     useRouterPushState(route, hash) {
-        throwError("useRouterPushState is not implemented");
+        RecursiveConsole.error("useRouterPushState is not implemented");
     }
 
     /**
      * Scroll to the top of the device view.
      */
     useRouterScrollToTop() {
-        throwError("useRouterScrollToTop is not implemented");
+        RecursiveConsole.error("useRouterScrollToTop is not implemented");
     }
 
     /**
@@ -484,35 +485,35 @@ class RecursiveRouter {
      * @param {string} anchor
      */
     useRouterGoToAnchor(anchor) {
-        throwError("useRouterGoToAnchor is not implemented");
+        RecursiveConsole.error("useRouterGoToAnchor is not implemented");
     }
 
     /**
      * Attach a listener that watches the actions of pushing and replacing route states
      */
     useRouterNavigationListener() {
-        throwError("useRouterNavigationListener is not implemented");
+        RecursiveConsole.error("useRouterNavigationListener is not implemented");
     }
 
     /**
      * Get the current route
      */
     useRouterGetRoute() {
-        throwError("useRouterGetRoute is not implemented");
+        RecursiveConsole.error("useRouterGetRoute is not implemented");
     }
 
     /**
      * Executed when the router has been initialized in the App.
      */
     useRouterOnLoad() {
-        throwError("useRouterOnLoad is not implemented");
+        RecursiveConsole.error("useRouterOnLoad is not implemented");
     }
 
     /**
      * Change the tab title of the browser.
      */
     useRouterSetTitle(title) {
-        throwError("useRouterSetTitle is not implemented");
+        RecursiveConsole.error("useRouterSetTitle is not implemented");
     }
 }
 
