@@ -1,4 +1,7 @@
 import RecursiveConsole from "../console/index.js";
+import RecursiveRenderer from "../renderer/RecursiveRenderer.js";
+import createTaskId from "./src/createTaskId.js";
+import createUpdateObject from "./src/createUpdateObject.js";
 
 const FREE = "free";
 const HANDLING_REQUESTS = "handling-requests";
@@ -8,55 +11,57 @@ const RENDERING = "rendering";
 const UPDATING = "updating";
 const COMPUTE_DIFF = "calculating-diff";
 const EXEC_BEFORE_DESTROYED = "execute-before-destroyed";
-const COMMIT_INTO_DOM = "commit-into-dom";
+const COMMIT_INTO_TREE = "commit-into-tree";
 const EXEC_ON_DESTROYED = "execute-on-destroyed";
 const EXEC_ON_CREATED = "execute-on-created";
 const EXEC_ON_UPDATED = "execute-on-updated";
 const EXEC_ON_INJECTED = "execute-on-injected";
 const CLEAN_STATES = "clean-states";
 
-const updateObj = (sender, uuid) => {
-    const object = {
-        sender,
-        time: Date.now(),
-        uuid,
-    };
-
-    return object;
-};
-
 /**
  * #### `Recursive Orchestrator`
  * Manages and schedule updates.
  */
 class RecursiveOrchestrator {
-    static states = {
-        FREE,
-        COMPUTE_DIFF,
-        COMPUTE_TREE,
-        COMPUTE_STYLE,
-        RENDERING,
-        UPDATING,
-        EXEC_BEFORE_DESTROYED,
-        COMMIT_INTO_DOM,
-        EXEC_ON_CREATED,
-        EXEC_ON_DESTROYED,
-        EXEC_ON_UPDATED,
-        EXEC_ON_INJECTED,
-        CLEAN_STATES,
-    };
-
     constructor() {
+        /**
+         * @type {RecursiveRenderer}
+         */
         this.renderer = undefined;
+
         this.currentTask = { done: true };
+
         this.step = FREE;
+
         this.updatesCount = 0;
+
         this.batching = false;
+
         this.stateChanged = false;
+
         this.batchingStartTime = Date.now();
+
         this.batchingLastDuration = 0;
+
         this.batchingRequests = [];
+
         this.unhandledRequests = [];
+
+        this.setStep = {
+            free: () => (this.step = FREE),
+            handlingRequests: () => (this.step = HANDLING_REQUESTS),
+            computeTree: () => (this.step = COMPUTE_TREE),
+            computeStyle: () => (this.step = COMPUTE_STYLE),
+            rendering: () => (this.step = RENDERING),
+            updating: () => (this.step = UPDATING),
+            computeDiff: () => (this.step = COMPUTE_DIFF),
+            commit: () => (this.step = COMMIT_INTO_TREE),
+            execBeforeDestroyed: () => (this.step = EXEC_BEFORE_DESTROYED),
+            execOnDestroyed: () => (this.step = EXEC_ON_DESTROYED),
+            execOnCreated: () => (this.step = EXEC_ON_CREATED),
+            execOnUpdated: () => (this.step = EXEC_ON_UPDATED),
+            cleanStates: () => (this.step = CLEAN_STATES),
+        };
     }
 
     /**
@@ -75,7 +80,7 @@ class RecursiveOrchestrator {
      */
     requestUpdate(sender) {
         if (![FREE, HANDLING_REQUESTS].includes(this.step)) {
-            this.unhandledRequests.push(updateObj(sender, sender));
+            this.unhandledRequests.push(createUpdateObject(sender, sender));
             return;
         }
 
@@ -86,7 +91,7 @@ class RecursiveOrchestrator {
             this.countUpdateSinceFree();
 
             if (this.unhandledRequests.length > 0) {
-                this.changeState(HANDLING_REQUESTS);
+                this.setStep.handlingRequests();
                 this.requestUpdate("unhandled-requests");
             } else {
                 this.free();
@@ -98,8 +103,9 @@ class RecursiveOrchestrator {
             this.unhandledRequests = [];
             this.update();
             this.updatesCount++;
+
             if (this.unhandledRequests.length > 0) {
-                this.changeState(HANDLING_REQUESTS);
+                this.setStep.handlingRequests();
                 this.unhandledRequests = [];
                 this.requestUpdate("unhandled-requests");
             } else {
@@ -109,35 +115,12 @@ class RecursiveOrchestrator {
     }
 
     /**
-     * Generate a unique Task identifer.
-     * @param {bigint} time
-     * @returns {string} uid
-     */
-    static generateTaskUUID(time) {
-        let uuid = "";
-
-        for (let i = 0; i < 5; i++) {
-            uuid += Math.random() * i * 10 * Math.random();
-        }
-
-        return `task-${uuid}-${time}`;
-    }
-
-    /**
-     * Change the current state of the orchestrator.
-     * @param {string} state
-     */
-    changeState(state) {
-        this.step = state;
-    }
-
-    /**
      * Change the state of the orchestrator to free.
      */
     free() {
         this.updatesCount = 0;
         this.stateChanged = false;
-        this.changeState(FREE);
+        this.setStep.free();
     }
 
     /**
@@ -202,8 +185,8 @@ class RecursiveOrchestrator {
      */
     requestStartBatching(sender) {
         if (this.batching) {
-            const uuid = RecursiveOrchestrator.generateTaskUUID(20);
-            this.batchingRequests.push(updateObj(sender, uuid));
+            const uuid = createTaskId(20);
+            this.batchingRequests.push(createUpdateObject(sender, uuid));
             setTimeout(() => {
                 if (this.batchingRequests.find((req) => req.uuid === uuid)) {
                     RecursiveConsole.warn(

@@ -4,6 +4,20 @@ import { RecursiveOrchestrator } from "../orchestrator/index.js";
 import { RecursiveState } from "../state/index.js";
 import { isFlag } from "./RecursiveFlags.js";
 import { isHook } from "./RecursiveHooks.js";
+import addElement from "./src/addElement.js";
+import changeElementPosition from "./src/changeElementPosition.js";
+import prepareElement from "./src/prepareElement.js";
+import removeElement from "./src/removeElement.js";
+import render from "./src/render.js";
+import renderInstance from "./src/renderInstance.js";
+import replaceElement from "./src/replaceElement.js";
+import setInstanceReference from "./src/setInstanceReference.js";
+import update from "./src/update.js";
+import updateAttributes from "./src/updateAttributes.js";
+import updateChildrenEqual from "./src/updateChildren.Equal.js";
+import updateChildren from "./src/updateChildren.js";
+import updateElement from "./src/updateElement.js";
+import updateEvents from "./src/updateEvent.js";
 
 /**
  * ### `RecursiveRenderer`
@@ -87,133 +101,6 @@ class RecursiveRenderer {
     }
 
     /**
-     * Return a verified element child
-     * @param {import("../../lib.js").RawElement} child
-     * @param {string} id
-     * @param {import("../../lib.js").RecursiveElement}
-     */
-    prepareElementChild(child, id) {
-        if ([null, undefined].includes(child)) return false;
-
-        if (!child.elementType)
-            return { elementType: "#text", children: child, instance: undefined };
-        else {
-            if (child.flags && child.flags.renderIf === false) {
-                return false;
-            } else {
-                let _prepared = false;
-
-                this.contextManager.useContext(() => {
-                    _prepared = this.prepare(child, id);
-                }, id);
-
-                return _prepared;
-            }
-        }
-    }
-
-    /**
-     * Return a verified tree to be used in rendering or updating
-     * @param {import("../../lib.js").RawElement} element
-     * @param {string} id
-     * @return {import("../../lib.js").RecursiveElement} tree
-     */
-    prepare(element, id) {
-        const _element = {};
-
-        if (!element.elementType) {
-            RecursiveConsole.error('"elementType" should not be empty of null', [
-                "Make sure to provide a type for your element (ex: div in web)",
-            ]);
-        }
-
-        _element.elementType = element.elementType;
-        _element.events = {};
-        _element.attributes = {};
-        _element.children = [];
-        _element.hooks = {};
-        _element.flags = {};
-        _element.instance = {};
-        _element.style = {};
-        _element.map = false;
-        _element.key = element.key;
-        _element.ref = undefined;
-        _element.style = element.style;
-        _element.rendererOptions = element.rendererOptions;
-        _element.uid = id;
-
-        for (let property in element) {
-            if (property === "flag") {
-                for (let flag in element.flags) {
-                    if (isFlag(flag)) {
-                        _element.flags[flag] = element.flags[flag];
-                    }
-                }
-            }
-
-            if (property === "hooks") {
-                for (let hook in element.hooks) {
-                    if (isHook(hook, element.hooks[hook])) {
-                        _element.hooks[hook] = element.hooks[hook];
-                    }
-                }
-            }
-
-            if (this.useRendererIsEvent(property)) {
-                _element.events[property] = element[property];
-                continue;
-            }
-
-            if (this.useRendererIsAttribute(property)) {
-                _element.attributes[property] = element[property];
-                continue;
-            }
-        }
-
-        if (![null, undefined].includes(element.children)) {
-            let _children = [];
-
-            if (!Array.isArray(element.children)) {
-                element.children = [element.children];
-            }
-
-            element.children.forEach((child, index) => {
-                const _child = this.prepareElementChild(child, _element.uid + "-" + index);
-
-                if (_child) {
-                    if (_child.elementType === "fragment") {
-                        _children.push(..._child.children);
-                    } else {
-                        _children.push(_child);
-                    }
-                }
-            });
-
-            _element.children = _children;
-
-            const _map = {};
-
-            for (let i = 0; i < _element.children.length; i++) {
-                if (
-                    _element.children[i].key === undefined ||
-                    _map[_element.children[i].key] !== undefined
-                )
-                    continue;
-
-                _map[_element.children[i].key] = {
-                    key: _element.children[i].key,
-                    element: _element.children[i],
-                    index: i,
-                };
-            }
-
-            if (Object.keys(_map).length === _element.children.length) _element.map = _map;
-        }
-
-        return _element;
-    }
-
-    /**
      * Delegate the call of the `onUpdated` hook to the renderer
      * @param {import("../../lib.js").RecursiveElement} element
      */
@@ -253,25 +140,7 @@ class RecursiveRenderer {
      * @param {any} instance
      */
     renderInstance(element) {
-        const _instance = this.useRendererCreateInstance(element);
-
-        if (element.attributes) {
-            this.useRendererInjectAttributes(element, _instance);
-        }
-
-        if (element.events) {
-            this.useRendererInjectEvents(element, _instance);
-        }
-
-        if (Array.isArray(element.children)) {
-            this.useRendererInjectChildren(element, _instance);
-        }
-
-        element.instance = _instance;
-
-        this.onElementCreated(element);
-
-        return _instance;
+        return renderInstance(element, this);
     }
 
     /**
@@ -280,23 +149,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} newElement
      */
     replaceElement(element, newElement) {
-        if (element.hooks && element.hooks.beforeDestroyed) {
-            this.delegateToRenderer("beforeDestroyed", element.hooks.beforeDestroyed);
-        }
-
-        this.delegateToRenderer("changes", () =>
-            this.useRendererReplaceElement(element, newElement)
-        );
-
-        if (element.hooks && element.hooks.onDestroyed) {
-            this.delegateToRenderer("onDestroyed", element.hooks.onDestroyed);
-        }
-
-        if (newElement.hooks && newElement.hooks.onCreated) {
-            this.delegateToRenderer("onCreated", newElement.hooks.onCreated);
-        }
-
-        newElement.instance = element.instance;
+        replaceElement(element, newElement, this);
     }
 
     /**
@@ -305,11 +158,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} parentElement
      */
     addElement(element, parentElement) {
-        this.delegateToRenderer("changes", () =>
-            this.useRendererAddElement(element, parentElement)
-        );
-
-        this.onElementCreated(element);
+        addElement(element, parentElement, this);
     }
 
     /**
@@ -318,9 +167,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} newElement
      */
     changeElementPosition(element, parentElement, newPosition) {
-        this.delegateToRenderer("changes", () =>
-            this.useRendererChangeElementPosition(element, parentElement, newPosition)
-        );
+        changeElementPosition(element, parentElement, newPosition, this);
     }
 
     /**
@@ -328,15 +175,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      */
     removeElement(element) {
-        if (element.hooks && element.hooks.beforeDestroyed) {
-            this.delegateToRenderer("beforeDestroyed", element.hooks.beforeDestroyed);
-        }
-
-        this.delegateToRenderer("changes", () => this.useRendererRemoveElement(element));
-
-        if (element.hooks && element.hooks.onDestroyed) {
-            this.delegateToRenderer("onDestroyed", element.hooks.onDestroyed);
-        }
+        removeElement(element, this);
     }
 
     /**
@@ -345,19 +184,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} newElement
      */
     updateEvents(element, newElement) {
-        for (let event in element.events) {
-            if (newElement.events[event] === undefined) {
-                this.delegateToRenderer("changes", () =>
-                    this.useRendererRemoveEvent(event, element.instance)
-                );
-            }
-        }
-
-        for (let event in newElement.events) {
-            this.delegateToRenderer("changes", () =>
-                this.useRendererAddEvent(event, newElement.events[event], element)
-            );
-        }
+        updateEvents(element, newElement, this);
     }
 
     /**
@@ -366,21 +193,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} newElement
      */
     updateAttributes(element, newElement) {
-        for (let attr in element.attributes) {
-            if (newElement.attributes[attr] === undefined) {
-                this.delegateToRenderer("changes", () =>
-                    this.useRendererRemoveAttribute(attr, element.instance)
-                );
-            }
-        }
-
-        for (let attr in newElement.attributes) {
-            if (newElement.attributes[attr] !== element.attributes[attr]) {
-                this.delegateToRenderer("changes", () =>
-                    this.useRendererSetAttribute(attr, newElement.attributes[attr], element)
-                );
-            }
-        }
+        updateAttributes(element, newElement, this);
     }
 
     /**
@@ -389,9 +202,7 @@ class RecursiveRenderer {
      * @param {Array<import("../../lib.js").RecursiveElement>} newElementChildren
      */
     updateEqualChildren(elementChildren, newElementChildren) {
-        for (let i = 0; i < elementChildren.length; i++) {
-            this.updateElement(elementChildren[i], newElementChildren[i]);
-        }
+        updateChildrenEqual(elementChildren, newElementChildren, this);
     }
 
     /**
@@ -400,70 +211,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} newElement
      */
     updateChildren(element, newElement) {
-        for (let i in element.children) {
-            if (!this.useRendererItemInTree(element.children[i])) {
-                this.replaceElement(element, newElement);
-                return;
-            }
-        }
-
-        if (element.map && newElement.map) {
-            for (let key in element.map) {
-                if (!newElement.map[key]) {
-                    this.removeElement(element.children[element.map[key].index]);
-                    delete element.map[key];
-                }
-            }
-
-            for (let key in element.map) {
-                this.updateElement(
-                    element.children[element.map[key].index],
-                    newElement.children[newElement.map[key].index]
-                );
-            }
-
-            for (let key in newElement.map) {
-                if (!element.map[key]) {
-                    this.addElement(newElement.map[key].element, element);
-                    element.map[key] = {
-                        key,
-                        element: newElement.map[key].element,
-                        index: Object.keys(element.map).length,
-                    };
-                }
-            }
-
-            for (let key in element.map) {
-                if (element.map[key].index !== newElement.map[key].index) {
-                    this.changeElementPosition(
-                        element.map[key].element,
-                        element,
-                        newElement.map[key].index
-                    );
-                }
-            }
-        } else {
-            if (element.children.length == newElement.children.length) {
-                this.updateEqualChildren(element.children, newElement.children);
-            } else if (element.children.length > newElement.children.length) {
-                while (element.children.length > newElement.children.length) {
-                    this.removeElement(element.children.pop());
-                }
-                this.updateEqualChildren(
-                    element.children.slice(0, newElement.children.length),
-                    newElement.children
-                );
-            } else {
-                for (let i = element.children.length; i < newElement.children.length; i++) {
-                    this.addElement(newElement.children[i], element);
-                }
-
-                this.updateEqualChildren(
-                    element.children,
-                    newElement.children.slice(0, element.children.length)
-                );
-            }
-        }
+        updateChildren(element, newElement, this);
     }
 
     /**
@@ -481,56 +229,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} newElement
      */
     updateElement(element, newElement) {
-        const instance = element.instance;
-        if (!instance) {
-            RecursiveConsole.error("Element not found, This error should not happen.");
-        }
-
-        if (element.flags && element.flags.forceRerender === true) {
-            this.replaceElement(element, newElement);
-        } else if (element.elementType !== newElement.elementType) {
-            this.replaceElement(element, newElement);
-        } else if (element.elementType === "#text" && newElement.elementType === "#text") {
-            if (element.children !== newElement.children) {
-                this.useRendererUpdateText(element, newElement);
-            }
-        } else {
-            this.updateEvents(element, newElement);
-            this.updateAttributes(element, newElement);
-            this.updateStyle(element, newElement);
-            this.updateChildren(element, newElement);
-        }
-
-        newElement.instance = instance;
-    }
-
-    /**
-     * Assign unique identifier to the element
-     * @param {import("../../lib.js").RecursiveElement} element
-     * @param {import("../../lib.js").RecursiveElement} parentElement
-     * @param {number} index
-     * @deprecated
-     */
-    assignUid(element, parentElement, index = 0) {
-        let uid = parentElement ? parentElement.uid : "";
-
-        function convert(uid) {
-            return [...uid]
-                .map((char, i) => {
-                    return ((n) => {
-                        return String.fromCharCode((n % 25) + 97);
-                    })(char == "-" ? i : char.charCodeAt());
-                })
-                .join("");
-        }
-
-        element.uid = `${uid}${convert(`-${index}`)}`;
-
-        if (Array.isArray(element.children)) {
-            element.children.forEach((child, childIndex) => {
-                this.assignUid(child, element, childIndex);
-            });
-        }
+        updateElement(element, newElement, this);
     }
 
     /**
@@ -538,82 +237,21 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      */
     setInstanceReference(element) {
-        if (element.hooks && typeof element.hooks.onRef === "function") {
-            const ref = element.hooks.onRef(element.instance);
-
-            if (typeof ref === "string") {
-                this.stateManager.setRef(ref, element.instance);
-            }
-        }
-
-        if (Array.isArray(element.children))
-            element.children.forEach((child) => this.setInstanceReference(child));
+        setInstanceReference(element, this);
     }
 
     /**
      * Render the tree of elements.
      */
     render() {
-        if (typeof this.app !== "function") RecursiveConsole.error("App is not of type function");
-
-        if (!this.root) RecursiveConsole.error("No root was specified.");
-
-        this.orchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
-
-        this.contextManager.useContext(() => {
-            this.current = this.prepare(this.app(), "0");
-        }, "0");
-
-        // this.assignUid(this.current, undefined, 0);
-
-        this.useRendererOnTreePrepared(this.current);
-
-        this.orchestrator.changeState(RecursiveOrchestrator.states.COMMIT_INTO_DOM);
-        this.useRendererRenderTree();
-
-        this.orchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_CREATED);
-        this.runPhase("onCreated");
-        this.setInstanceReference(this.current);
-        this.clean();
-
-        this.orchestrator.changeState(RecursiveOrchestrator.states.FREE);
+        render(this);
     }
 
     /**
      * Update the tree of elements
      */
     update() {
-        this.orchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_TREE);
-
-        let _new;
-
-        this.contextManager.useContext(() => {
-            _new = this.prepare(this.app(), "0");
-        }, "0");
-
-        // this.assignUid(_new, undefined, 0);
-
-        this.useRendererOnTreePrepared(_new);
-
-        this.orchestrator.changeState(RecursiveOrchestrator.states.COMPUTE_DIFF);
-        this.updateElement(this.current, _new);
-        this.current = _new;
-
-        this.orchestrator.changeState(RecursiveOrchestrator.states.EXEC_BEFORE_DESTROYED);
-        this.runPhase("beforeDestroyed");
-
-        this.orchestrator.changeState(RecursiveOrchestrator.states.COMMIT_INTO_DOM);
-        this.runPhase("changes");
-
-        this.orchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_DESTROYED);
-        this.runPhase("onDestroyed");
-
-        this.orchestrator.changeState(RecursiveOrchestrator.states.EXEC_ON_UPDATED);
-        this.runPhase("onUpdated");
-
-        this.orchestrator.changeState(RecursiveOrchestrator.states.CLEAN_STATES);
-        this.setInstanceReference(this.current);
-        this.clean();
+        update(this);
     }
 
     /**
