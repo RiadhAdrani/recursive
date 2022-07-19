@@ -1,7 +1,7 @@
-import { isFlag } from "../flags";
-import { isHook } from "../hooks";
-import { RecursiveRenderer } from "../";
-import prepareChild from "./prepareChild.js";
+const { isFlag } = require("../flags");
+const { isHook } = require("../hooks");
+const { RecursiveRenderer } = require("../");
+const { ELEMENT_TYPE_FRAGMENT, ELEMENT_TYPE_TEXT_NODE } = require("../../constants");
 
 /**
  * Return a verified tree to be used in rendering or updating
@@ -10,7 +10,7 @@ import prepareChild from "./prepareChild.js";
  * @param {RecursiveRenderer} renderer
  * @return {import("../../../lib.js").RecursiveElement} tree
  */
-function prepareElement(element, id, renderer) {
+const prepareElement = (element, id, renderer) => {
     const _element = {};
 
     if (!element.elementType) {
@@ -35,7 +35,7 @@ function prepareElement(element, id, renderer) {
     _element.uid = id;
 
     for (let property in element) {
-        if (property === "flag") {
+        if (property === "flags") {
             for (let flag in element.flags) {
                 if (isFlag(flag)) {
                     _element.flags[flag] = element.flags[flag];
@@ -75,7 +75,7 @@ function prepareElement(element, id, renderer) {
             const _child = prepareChild(child, uid, renderer);
 
             if (_child) {
-                if (_child.elementType === "fragment") {
+                if (_child.elementType === ELEMENT_TYPE_FRAGMENT) {
                     _children.push(..._child.children);
                 } else {
                     _children.push(_child);
@@ -105,6 +105,31 @@ function prepareElement(element, id, renderer) {
     }
 
     return _element;
+};
+
+/**
+ * Return a verified element child
+ * @param {import("../../../lib.js").RawElement} child
+ * @param {string} id
+ * @param {RecursiveRenderer} renderer
+ * @param {import("../../../lib.js").RecursiveElement}
+ */
+function prepareChild(child, id, renderer) {
+    if ([null, undefined].includes(child)) return false;
+
+    if (!child.elementType)
+        return { elementType: ELEMENT_TYPE_TEXT_NODE, children: child, instance: undefined };
+    else {
+        if (child.flags && child.flags.renderIf === false) {
+            return false;
+        } else {
+            let _prepared = false;
+
+            _prepared = prepareElement(child, id, renderer);
+
+            return _prepared;
+        }
+    }
 }
 
-export default prepareElement;
+module.exports = prepareElement;

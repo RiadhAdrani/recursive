@@ -1,4 +1,5 @@
-import { RecursiveRouter } from "../";
+const { RecursiveRouter } = require("..");
+const { ROUTER_DYNAMIC_REG_EXP } = require("../../constants");
 
 /**
  * Check if the provided route is dynamic : contains parameters.
@@ -7,7 +8,7 @@ import { RecursiveRouter } from "../";
  * @returns
  */
 function isDynamicRoute(route, router) {
-    const regExp = RecursiveRouter.dynamicRegExp;
+    const regExp = ROUTER_DYNAMIC_REG_EXP;
 
     for (let path in router.routes) {
         const template = path.toString();
@@ -32,4 +33,4 @@ function isDynamicRoute(route, router) {
     return { isDynamic: false };
 }
 
-export default isDynamicRoute;
+module.exports = isDynamicRoute;

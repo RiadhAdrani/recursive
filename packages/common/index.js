@@ -1,4 +1,4 @@
-import copy from "./src/copy";
-import isDevMode from "./src/isDevMode";
+const copy = require("./src/copy");
+const isDevMode = require("./src/isDevMode");
 
-export { copy, isDevMode };
+module.exports = { copy, isDevMode };

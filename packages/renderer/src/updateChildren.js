@@ -1,4 +1,4 @@
-import { RecursiveRenderer } from "../";
+const { RecursiveRenderer } = require("../");
 
 /**
  * Update children
@@ -73,4 +73,4 @@ function updateChildren(element, newElement, renderer) {
     }
 }
 
-export default updateChildren;
+module.exports = updateChildren;

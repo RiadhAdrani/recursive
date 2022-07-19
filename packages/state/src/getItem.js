@@ -1,5 +1,5 @@
-import { RecursiveState } from "..";
-import RecursiveConsole from "../../console";
+const { RecursiveState } = require("..");
+const { RecursiveConsole } = require("../../console");
 
 /**
  *
@@ -21,4 +21,4 @@ function getItem(key, store, defaultValue = undefined, stateManager) {
     return stateManager.stores[store].items[key];
 }
 
-export default getItem;
+module.exports = getItem;

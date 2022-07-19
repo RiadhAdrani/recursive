@@ -13,4 +13,4 @@ function createTaskId(time) {
     return `task-${uuid}-${time}`;
 }
 
-export default createTaskId;
+module.exports = createTaskId;

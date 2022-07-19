@@ -1,5 +1,10 @@
-import { RecursiveRenderer } from "../";
-import prepareElement from "./prepareElement";
+const { RecursiveRenderer } = require("../");
+const {
+    RENDERER_PHASE_ON_DESTROYED,
+    RENDERER_PHASE_CHANGES,
+    RENDERER_PHASE_ON_UPDATED,
+} = require("../../constants");
+const prepareElement = require("./prepareElement");
 
 /**
  * Update the tree of elements
@@ -10,9 +15,7 @@ function update(renderer) {
 
     let _new;
 
-    renderer.contextManager.useContext(() => {
-        _new = prepareElement(renderer.app(), "0", renderer);
-    }, "0");
+    _new = prepareElement(renderer.app(), "0", renderer);
 
     renderer.useRendererOnTreePrepared(_new);
 
@@ -21,20 +24,20 @@ function update(renderer) {
     renderer.current = _new;
 
     renderer.orchestrator.setStep.execBeforeDestroyed();
-    renderer.runPhase("beforeDestroyed");
+    renderer.runPhase(RENDERER_PHASE_ON_DESTROYED);
 
     renderer.orchestrator.setStep.commit();
-    renderer.runPhase("changes");
+    renderer.runPhase(RENDERER_PHASE_CHANGES);
 
     renderer.orchestrator.setStep.execOnDestroyed();
-    renderer.runPhase("onDestroyed");
+    renderer.runPhase(RENDERER_PHASE_ON_DESTROYED);
 
     renderer.orchestrator.setStep.execOnUpdated();
-    renderer.runPhase("onUpdated");
+    renderer.runPhase(RENDERER_PHASE_ON_UPDATED);
 
     renderer.orchestrator.setStep.cleanStates();
     renderer.setInstanceReference(renderer.current);
     renderer.clean();
 }
 
-export default update;
+module.exports = update;

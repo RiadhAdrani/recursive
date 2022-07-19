@@ -1,4 +1,4 @@
-import { RecursiveRenderer } from "../";
+const { RecursiveRenderer } = require("../");
 
 /**
  * Update equal children
@@ -12,4 +12,4 @@ function updateChildrenEqual(elementChildren, newElementChildren, renderer) {
     }
 }
 
-export default updateChildrenEqual;
+module.exports = updateChildrenEqual;

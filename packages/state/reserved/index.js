@@ -1,13 +1,14 @@
-import RecursiveConsole from "../../console";
-import { retrieveStatefulObject } from "../common";
-import { RecursiveState } from "../index";
+const { RecursiveConsole } = require("../../console");
+const { retrieveStatefulObject } = require("../common");
+const { RecursiveState } = require("..");
+const { STATE_RESERVED_STORE } = require("../../constants");
 
 /**
  * Create a new reserved state store.
  * @param {RecursiveState} store
  */
 const CreateReservedStore = (store) => {
-    const storeName = "reserved";
+    const storeName = STATE_RESERVED_STORE;
 
     function retrieve(key) {
         return retrieveStatefulObject(store, storeName, key);
@@ -39,4 +40,4 @@ const CreateReservedStore = (store) => {
     return { set, get, clear, flush, name: storeName };
 };
 
-export default CreateReservedStore;
+module.exports = CreateReservedStore;

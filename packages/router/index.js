@@ -1,14 +1,15 @@
-import RecursiveConsole from "../console";
-import { RecursiveOrchestrator } from "../orchestrator";
-import { RecursiveState } from "../state";
-import checkRoute from "./src/checkRoute";
-import flattenRoutes from "./src/flattenRoutes";
-import getParams from "./src/getParams";
-import goTo from "./src/goTo";
-import loadRoute from "./src/loadRoute";
-import renderFragment from "./src/renderFragment";
-import renderRoute from "./src/renderRoute";
-import replace from "./src/replace";
+const { RecursiveConsole } = require("../console");
+const { ROUTER_PATH_STATE, ROUTER_ROUTE_STATE, ROUTER_NOT_FOUND_ROUTE } = require("../constants");
+const { RecursiveOrchestrator } = require("../orchestrator");
+const { RecursiveState } = require("../state");
+const checkRoute = require("./src/checkRoute");
+const flattenRoutes = require("./src/flattenRoutes");
+const getParams = require("./src/getParams");
+const goTo = require("./src/goTo");
+const loadRoute = require("./src/loadRoute");
+const renderFragment = require("./src/renderFragment");
+const renderRoute = require("./src/renderRoute");
+const replace = require("./src/replace");
 
 /**
  * ### `RecursiveRouter`
@@ -27,12 +28,6 @@ import replace from "./src/replace";
  * * `useRouterSetTitle`
  */
 class RecursiveRouter {
-    static dynamicRegExp = /:[^:;]*;/g;
-    static anchorRegExp = /#[a-zA-Z0-9-._~:?#\[\]\@!$&'()*+,;=]{1,}$/gm;
-
-    static PATH = "path";
-    static ROUTE = "route";
-
     /**
      * Create an instance of the Recursive Router
      * @param {import("../../lib").Route} route
@@ -73,9 +68,9 @@ class RecursiveRouter {
             anchor: "",
         };
 
-        if (!this.routes["/404"]) {
-            this.routes["/404"] = {
-                path: "/404",
+        if (!this.routes[ROUTER_NOT_FOUND_ROUTE]) {
+            this.routes[ROUTER_NOT_FOUND_ROUTE] = {
+                path: ROUTER_NOT_FOUND_ROUTE,
                 title: "Not Found",
                 component: () => "404 Not Found",
             };
@@ -83,8 +78,8 @@ class RecursiveRouter {
 
         const fTemplate = this.routes["/"];
 
-        this.stateManager.setReserved(RecursiveRouter.PATH, "/");
-        this.stateManager.setReserved(RecursiveRouter.ROUTE, fTemplate);
+        this.stateManager.setReserved(ROUTER_PATH_STATE, "/");
+        this.stateManager.setReserved(ROUTER_ROUTE_STATE, fTemplate);
 
         this.useRouterNavigationListener();
     }
@@ -101,11 +96,11 @@ class RecursiveRouter {
     }
 
     getPathState() {
-        return this.stateManager.getReserved(RecursiveRouter.PATH);
+        return this.stateManager.getReserved(ROUTER_PATH_STATE);
     }
 
     getRouteState() {
-        return this.stateManager.getReserved(RecursiveRouter.ROUTE);
+        return this.stateManager.getReserved(ROUTER_ROUTE_STATE);
     }
 
     /**
@@ -237,4 +232,4 @@ class RecursiveRouter {
     }
 }
 
-export { RecursiveRouter };
+module.exports = { RecursiveRouter };

@@ -1,6 +1,6 @@
-import { RecursiveRouter } from "../";
-import endContext from "./endContext";
-import startContext from "./startContext";
+const { RecursiveRouter } = require("..");
+const endContext = require("./endContext");
+const startContext = require("./startContext");
 
 /**
  * Encapsulate the given component with the appropriate context.
@@ -23,4 +23,4 @@ function useRouterContext(context, componentCallback, router) {
     return fragment;
 }
 
-export default useRouterContext;
+module.exports = useRouterContext;

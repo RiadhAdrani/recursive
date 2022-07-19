@@ -1,5 +1,5 @@
-import { RecursiveRouter } from "../";
-import loadRoute from "./loadRoute";
+const { RecursiveRouter } = require("..");
+const loadRoute = require("./loadRoute");
 
 /**
  * Replace the current route with the given one.
@@ -20,4 +20,4 @@ function replace(path, hash, router) {
     }
 }
 
-export default replace;
+module.exports = replace;

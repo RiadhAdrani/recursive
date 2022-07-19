@@ -1,4 +1,4 @@
-import { RecursiveRouter } from "../";
+const { RecursiveRouter } = require("..");
 
 /**
  * Start a new router context.
@@ -17,4 +17,4 @@ function startContext(newContext, router) {
     routerContext.context = newContext;
 }
 
-export default startContext;
+module.exports = startContext;

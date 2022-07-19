@@ -1,5 +1,5 @@
-import { RecursiveRouter } from "../";
-import findMatch from "./findMath";
+const { RecursiveRouter } = require("..");
+const findMatch = require("./findMatch");
 
 /**
  * Return the component matching the current context.
@@ -22,4 +22,4 @@ function renderFragment(router) {
     } else "";
 }
 
-export default renderFragment;
+module.exports = renderFragment;

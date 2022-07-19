@@ -1,5 +1,6 @@
-import { RecursiveRouter } from "../";
-import resolveRoute from "./resolveRoute";
+const { RecursiveRouter } = require("..");
+const { ROUTER_ANCHOR_REG_EXP } = require("../../constants");
+const resolveRoute = require("./resolveRoute");
 
 /**
  * Check the route for an anchor.
@@ -12,7 +13,7 @@ function checkRoute(path, router) {
         path = path.replace(/\/$/, "");
     }
 
-    const anchorRegEx = RecursiveRouter.anchorRegExp;
+    const anchorRegEx = ROUTER_ANCHOR_REG_EXP;
 
     let anchor = "";
 
@@ -22,7 +23,7 @@ function checkRoute(path, router) {
 
     if (anchor) path = path.replace(anchor, "");
 
-    const [current] = router.stateManager.getReserved("route");
+    const [current] = router.getRouteState();
 
     if (current === path) {
         if (anchor) {
@@ -35,4 +36,4 @@ function checkRoute(path, router) {
     return [resolveRoute(path, router), anchor];
 }
 
-export default checkRoute;
+module.exports = checkRoute;

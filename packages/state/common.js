@@ -1,4 +1,4 @@
-import { RecursiveState } from ".";
+const { RecursiveState } = require(".");
 
 /**
  *
@@ -45,4 +45,4 @@ function retrieveStatefulObject(store, storeName, key) {
     return [_value, _set, _live, _reset, _preValue];
 }
 
-export { retrieveStatefulObject };
+module.exports = { retrieveStatefulObject };

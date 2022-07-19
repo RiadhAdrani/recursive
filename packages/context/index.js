@@ -52,4 +52,4 @@ class RecursiveContext {
     }
 }
 
-export default RecursiveContext;
+module.exports = { RecursiveContext };

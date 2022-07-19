@@ -1,4 +1,5 @@
-import { RecursiveRenderer } from "../";
+const { RecursiveRenderer } = require("../");
+const { RENDERER_PHASE_CHANGES } = require("../../constants");
 
 /**
  * Update attributes
@@ -14,15 +15,15 @@ function updateAttributes(element, newElement, renderer) {
 
     for (let attr in combined) {
         if (newElement.attributes[attr] === undefined) {
-            renderer.delegateToRenderer("changes", () => {
+            renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
                 renderer.useRendererRemoveAttribute(attr, element.instance);
             });
         } else {
-            renderer.delegateToRenderer("changes", () => {
+            renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
                 renderer.useRendererSetAttribute(attr, newElement.attributes[attr], element);
             });
         }
     }
 }
 
-export default updateAttributes;
+module.exports = updateAttributes;

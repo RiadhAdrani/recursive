@@ -1,5 +1,5 @@
-import { RecursiveRouter } from "../";
-import loadRoute from "./loadRoute";
+const { RecursiveRouter } = require("..");
+const loadRoute = require("./loadRoute");
 
 /**
  * Used to navigate between routes.
@@ -20,4 +20,4 @@ function goTo(path, router) {
     }
 }
 
-export default goTo;
+module.exports = goTo;

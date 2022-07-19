@@ -1,4 +1,4 @@
-import { RecursiveRouter } from "../";
+const { RecursiveRouter } = require("..");
 
 /**
  * end the current router context.
@@ -16,4 +16,4 @@ function endContext(router) {
     routerContext.depth--;
 }
 
-export default endContext;
+module.exports = endContext;

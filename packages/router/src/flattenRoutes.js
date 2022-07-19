@@ -36,4 +36,4 @@ function flattenRoutes(route) {
     return list;
 }
 
-export default flattenRoutes;
+module.exports = flattenRoutes;

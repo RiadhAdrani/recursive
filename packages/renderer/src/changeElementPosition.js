@@ -1,4 +1,5 @@
-import { RecursiveRenderer } from "../";
+const { RecursiveRenderer } = require("../");
+const { RENDERER_PHASE_CHANGES } = require("../../constants");
 
 /**
  * Change the position of the given element.
@@ -7,9 +8,9 @@ import { RecursiveRenderer } from "../";
  * @param {RecursiveRenderer} renderer
  */
 function changeElementPosition(element, parentElement, newPosition, renderer) {
-    renderer.delegateToRenderer("changes", () =>
+    renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () =>
         renderer.useRendererChangeElementPosition(element, parentElement, newPosition)
     );
 }
 
-export default changeElementPosition;
+module.exports = changeElementPosition;

@@ -1,4 +1,4 @@
-import { RecursiveState } from "..";
+const { RecursiveState } = require("..");
 
 /**
  * Check if an element exists in the given `store`.
@@ -17,4 +17,4 @@ function itemExists(key, store, stateManager) {
     return true;
 }
 
-export default itemExists;
+module.exports = itemExists;

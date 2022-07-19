@@ -1,5 +1,5 @@
-import { RecursiveState } from "..";
-import RecursiveConsole from "../../console";
+const { RecursiveState } = require("..");
+const { RecursiveConsole } = require("../../console");
 
 /**
  * Remove the item with the key from the store.
@@ -27,4 +27,4 @@ function removeItem(key, store, stateManager) {
     delete stateManager.stores[store].items[key];
 }
 
-export default removeItem;
+module.exports = removeItem;

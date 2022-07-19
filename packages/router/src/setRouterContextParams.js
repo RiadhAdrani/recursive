@@ -1,11 +1,11 @@
-import { RecursiveRouter } from "../";
+const { RecursiveRouter } = require("..");
 
 /**
  * Set parameter for the `routerContext`.
  * @param {RecursiveRouter} router
  */
 function setRouterContextParams(router) {
-    const [route] = router.stateManager.getReserved("path");
+    const [route] = router.getPathState();
 
     router.routerContext.fragments = route
         .split("/")
@@ -13,4 +13,4 @@ function setRouterContextParams(router) {
         .map((val) => `/${val}`);
 }
 
-export default setRouterContextParams;
+module.exports = setRouterContextParams;

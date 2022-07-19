@@ -1,5 +1,5 @@
-import { RecursiveState } from "..";
-import RecursiveConsole from "../../console";
+const { RecursiveState } = require("..");
+const { RecursiveConsole } = require("../../console");
 
 /**
  * Add an create a new store to the `stateManager`.
@@ -39,4 +39,4 @@ function createStore(params, stateManager) {
     };
 }
 
-export default createStore;
+module.exports = createStore;

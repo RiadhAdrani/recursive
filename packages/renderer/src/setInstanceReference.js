@@ -1,4 +1,4 @@
-import { RecursiveRenderer } from "../";
+const { RecursiveRenderer } = require("../");
 
 /**
  * Register element into the reference store.
@@ -20,4 +20,4 @@ function setInstanceReference(element, renderer) {
         });
 }
 
-export default setInstanceReference;
+module.exports = setInstanceReference;

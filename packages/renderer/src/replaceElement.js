@@ -1,4 +1,10 @@
-import { RecursiveRenderer } from "../";
+const { RecursiveRenderer } = require("../");
+const {
+    RENDERER_PHASE_BEFORE_DESTROYED,
+    RENDERER_PHASE_CHANGES,
+    RENDERER_PHASE_ON_DESTROYED,
+    RENDERER_PHASE_ON_CREATED,
+} = require("../../constants");
 
 /**
  * Replace the given element by the new one.
@@ -8,22 +14,22 @@ import { RecursiveRenderer } from "../";
  */
 function replaceElement(element, newElement, renderer) {
     if (element.hooks && element.hooks.beforeDestroyed) {
-        renderer.delegateToRenderer("beforeDestroyed", element.hooks.beforeDestroyed);
+        renderer.delegateToRenderer(RENDERER_PHASE_BEFORE_DESTROYED, element.hooks.beforeDestroyed);
     }
 
-    renderer.delegateToRenderer("changes", () =>
+    renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () =>
         renderer.useRendererReplaceElement(element, newElement)
     );
 
     if (element.hooks && element.hooks.onDestroyed) {
-        renderer.delegateToRenderer("onDestroyed", element.hooks.onDestroyed);
+        renderer.delegateToRenderer(RENDERER_PHASE_ON_DESTROYED, element.hooks.onDestroyed);
     }
 
     if (newElement.hooks && newElement.hooks.onCreated) {
-        renderer.delegateToRenderer("onCreated", newElement.hooks.onCreated);
+        renderer.delegateToRenderer(RENDERER_PHASE_ON_CREATED, newElement.hooks.onCreated);
     }
 
     newElement.instance = element.instance;
 }
 
-export default replaceElement;
+module.exports = replaceElement;

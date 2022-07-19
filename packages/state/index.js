@@ -1,15 +1,23 @@
-import { copy } from "../common";
-import CreateCacheStore from "./cache";
-import CreateRefStore from "./ref";
-import CreateReservedStore from "./reserved";
-import addItem from "./src/addItem";
-import clear from "./src/clear";
-import createStore from "./src/createStore";
-import getItem from "./src/getItem";
-import itemExists from "./src/itemExists";
-import removeItem from "./src/removeItem";
-import updateItem from "./src/updateItem";
-import CreateStateStore from "./state";
+const { copy } = require("../common");
+
+const CreateCacheStore = require("./cache");
+const CreateReservedStore = require("./reserved");
+const CreateRefStore = require("./ref");
+const CreateStateStore = require("./state");
+
+const addItem = require("./src/addItem");
+const clear = require("./src/clear");
+const createStore = require("./src/createStore");
+const getItem = require("./src/getItem");
+const itemExists = require("./src/itemExists");
+const removeItem = require("./src/removeItem");
+const updateItem = require("./src/updateItem");
+const {
+    STATE_STATE_STORE,
+    STATE_CACHE_STORE,
+    STATE_RESERVED_STORE,
+    STATE_REF_STORE,
+} = require("../constants");
 
 /**
  * #### `RecursiveState`
@@ -89,36 +97,36 @@ class RecursiveState {
     }
 
     getState(key) {
-        return this.stores.state.get(key);
+        return this.stores[STATE_STATE_STORE].get(key);
     }
 
     setState(key, value, onInit, onRemoved) {
-        return this.stores.state.set(key, value, onInit, onRemoved);
+        return this.stores[STATE_STATE_STORE].set(key, value, onInit, onRemoved);
     }
 
     getCache(key) {
-        return this.stores.cache.get(key);
+        return this.stores[STATE_CACHE_STORE].get(key);
     }
 
     setCache(key, value, onInit, onRemoved) {
-        return this.stores.cache.set(key, value, onInit, onRemoved);
+        return this.stores[STATE_CACHE_STORE].set(key, value, onInit, onRemoved);
     }
 
     setReserved(key, value) {
-        return this.stores.reserved.set(key, value);
+        return this.stores[STATE_RESERVED_STORE].set(key, value);
     }
 
     getReserved(key) {
-        return this.stores.reserved.get(key);
+        return this.stores[STATE_RESERVED_STORE].get(key);
     }
 
     setRef(key, value) {
-        return this.stores.ref.set(key, value);
+        return this.stores[STATE_REF_STORE].set(key, value);
     }
 
     getRef(key, defaultValue) {
-        return this.stores.ref.get(key, defaultValue);
+        return this.stores[STATE_REF_STORE].get(key, defaultValue);
     }
 }
 
-export { RecursiveState };
+module.exports = { RecursiveState };

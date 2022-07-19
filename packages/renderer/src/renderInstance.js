@@ -1,4 +1,4 @@
-import { RecursiveRenderer } from "../";
+const { RecursiveRenderer } = require("../");
 
 /**
  * Inject the different attributes, events and children into the created instance;
@@ -28,4 +28,4 @@ function renderInstance(element, renderer) {
     return _instance;
 }
 
-export default renderInstance;
+module.exports = renderInstance;

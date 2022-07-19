@@ -1,4 +1,5 @@
-import { RecursiveRenderer } from "../";
+const { RecursiveRenderer } = require("../");
+const { RENDERER_PHASE_CHANGES } = require("../../constants");
 
 /**
  * Update events
@@ -14,15 +15,15 @@ function updateEvents(element, newElement, renderer) {
 
     for (let event in combined) {
         if (newElement.events[event]) {
-            renderer.delegateToRenderer("changes", () => {
+            renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
                 renderer.useRendererAddEvent(event, newElement.events[event], element);
             });
         } else {
-            renderer.delegateToRenderer("changes", () => {
+            renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
                 renderer.useRendererRemoveEvent(event, element.instance);
             });
         }
     }
 }
 
-export default updateEvents;
+module.exports = updateEvents;

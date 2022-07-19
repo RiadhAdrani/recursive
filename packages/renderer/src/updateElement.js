@@ -1,4 +1,5 @@
-import { RecursiveRenderer } from "../";
+const { RecursiveRenderer } = require("../");
+const { ELEMENT_TYPE_TEXT_NODE } = require("../../constants");
 
 /**
  * Update the current element.
@@ -16,7 +17,10 @@ function updateElement(element, newElement, renderer) {
         renderer.replaceElement(element, newElement);
     } else if (element.elementType !== newElement.elementType) {
         renderer.replaceElement(element, newElement);
-    } else if (element.elementType === "#text" && newElement.elementType === "#text") {
+    } else if (
+        element.elementType === ELEMENT_TYPE_TEXT_NODE &&
+        newElement.elementType === ELEMENT_TYPE_TEXT_NODE
+    ) {
         if (element.children !== newElement.children) {
             renderer.useRendererUpdateText(element, newElement);
         }
@@ -30,4 +34,4 @@ function updateElement(element, newElement, renderer) {
     newElement.instance = instance;
 }
 
-export default updateElement;
+module.exports = updateElement;

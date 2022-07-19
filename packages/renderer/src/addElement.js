@@ -1,4 +1,5 @@
-import { RecursiveRenderer } from "../";
+const { RecursiveRenderer } = require("../");
+const { RENDERER_PHASE_CHANGES } = require("../../constants");
 
 /**
  * Append the given element into the provided parent element.
@@ -7,11 +8,11 @@ import { RecursiveRenderer } from "../";
  * @param {RecursiveRenderer} renderer
  */
 function addElement(element, parentElement, renderer) {
-    renderer.delegateToRenderer("changes", () =>
+    renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () =>
         renderer.useRendererAddElement(element, parentElement)
     );
 
     renderer.onElementCreated(element);
 }
 
-export default addElement;
+module.exports = addElement;

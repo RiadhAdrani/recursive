@@ -14,4 +14,4 @@ function createUpdateObject(sender, uuid) {
     return object;
 }
 
-export default createUpdateObject;
+module.exports = createUpdateObject;

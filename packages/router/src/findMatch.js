@@ -1,5 +1,6 @@
-import { RecursiveRouter } from "../";
-import isDynamicRoute from "./isDynamicRoute";
+const { RecursiveRouter } = require("..");
+const { ROUTER_NOT_FOUND_ROUTE } = require("../../constants");
+const isDynamicRoute = require("./isDynamicRoute");
 
 /**
  * Find the match of the route
@@ -16,7 +17,7 @@ function findMatch(route, router) {
         if (route === _route) return router.routes[_route];
     }
 
-    return router.routes["/404"];
+    return router.routes[ROUTER_NOT_FOUND_ROUTE];
 }
 
-export default findMatch;
+module.exports = findMatch;

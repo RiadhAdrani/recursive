@@ -1,4 +1,6 @@
-const list = { forceRerender: "force-rerender", renderIf: "render-if" };
+const { FLAGS_RENDER_IF, FLAGS_FORCE_RERENDER } = require("../../constants");
+
+const list = { forceRerender: FLAGS_FORCE_RERENDER, renderIf: FLAGS_RENDER_IF };
 
 function isFlag(flag) {
     if (!list[flag]) return false;
@@ -6,4 +8,4 @@ function isFlag(flag) {
     return true;
 }
 
-export { isFlag };
+module.exports = { isFlag, list };

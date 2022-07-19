@@ -26,4 +26,4 @@ function copy(from) {
     return output;
 }
 
-export default copy;
+module.exports = copy;

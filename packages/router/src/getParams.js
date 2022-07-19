@@ -1,5 +1,5 @@
-import { RecursiveRouter } from "../";
-import isDynamicRoute from "./isDynamicRoute";
+const { RecursiveRouter } = require("..");
+const isDynamicRoute = require("./isDynamicRoute");
 
 /**
  * Return the parameters of the current route.
@@ -9,7 +9,7 @@ import isDynamicRoute from "./isDynamicRoute";
 function getParams(router) {
     const regExp = RecursiveRouter.dynamicRegExp;
 
-    const [currentName] = router.stateManager.getReserved("path");
+    const [currentName] = router.getPathState();
     const current = isDynamicRoute(currentName, router);
 
     if (!current.isDynamic) return {};
@@ -30,4 +30,4 @@ function getParams(router) {
     }
 }
 
-export default getParams;
+module.exports = getParams;

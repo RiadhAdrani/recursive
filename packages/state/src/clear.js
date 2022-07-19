@@ -1,5 +1,5 @@
-import { RecursiveState } from "..";
-import { copy } from "../../common";
+const { copy } = require("../../common");
+const { RecursiveState } = require("..");
 
 /**
  * Perform post-update cleaning and state preservation.
@@ -14,4 +14,4 @@ function clear(stateManager) {
     }
 }
 
-export default clear;
+module.exports = clear;

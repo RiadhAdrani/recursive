@@ -1,5 +1,5 @@
-import { RecursiveState } from "../";
-import RecursiveConsole from "../../console";
+const { RecursiveState } = require("..");
+const { RecursiveConsole } = require("../../console");
 
 /**
  * Update a state entry.
@@ -32,4 +32,4 @@ function updateItem(key, newValue, store, onChanged, forceUpdate, stateManager) 
     }
 }
 
-export default updateItem;
+module.exports = updateItem;

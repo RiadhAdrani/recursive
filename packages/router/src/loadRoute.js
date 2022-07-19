@@ -1,4 +1,4 @@
-import { RecursiveRouter } from "../";
+const { RecursiveRouter } = require("..");
 
 /**
  * Load the appropriate route with the given parameters.
@@ -9,8 +9,8 @@ import { RecursiveRouter } from "../";
  * @returns
  */
 function loadRoute(template, route, anchor, router) {
-    const [path, setPath] = router.stateManager.getReserved("path");
-    const [current, setCurrent] = router.stateManager.getReserved("route");
+    const [path, setPath] = router.getPathState();
+    const [current, setCurrent] = router.getRouteState();
 
     if (path === route) return;
 
@@ -34,4 +34,4 @@ function loadRoute(template, route, anchor, router) {
     }
 }
 
-export default loadRoute;
+module.exports = loadRoute;

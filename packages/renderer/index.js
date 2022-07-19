@@ -1,20 +1,28 @@
-import RecursiveConsole from "../console/index.js";
-import RecursiveContext from "../context/index.js";
-import { RecursiveOrchestrator } from "../orchestrator/index.js";
-import { RecursiveState } from "../state/index.js";
-import addElement from "./src/addElement.js";
-import changeElementPosition from "./src/changeElementPosition.js";
-import removeElement from "./src/removeElement.js";
-import render from "./src/render.js";
-import renderInstance from "./src/renderInstance.js";
-import replaceElement from "./src/replaceElement.js";
-import setInstanceReference from "./src/setInstanceReference.js";
-import update from "./src/update.js";
-import updateAttributes from "./src/updateAttributes.js";
-import updateChildrenEqual from "./src/updateChildren.Equal.js";
-import updateChildren from "./src/updateChildren.js";
-import updateElement from "./src/updateElement.js";
-import updateEvents from "./src/updateEvent.js";
+const { RecursiveConsole } = require("../console");
+const { RecursiveContext } = require("../context");
+const { RecursiveOrchestrator } = require("../orchestrator/");
+const { RecursiveState } = require("../state/");
+
+const addElement = require("./src/addElement");
+const changeElementPosition = require("./src/changeElementPosition");
+const removeElement = require("./src/removeElement");
+const render = require("./src/render");
+const renderInstance = require("./src/renderInstance");
+const replaceElement = require("./src/replaceElement");
+const setInstanceReference = require("./src/setInstanceReference");
+const update = require("./src/update");
+const updateAttributes = require("./src/updateAttributes");
+const updateChildrenEqual = require("./src/updateChildren.Equal");
+const updateChildren = require("./src/updateChildren");
+const updateElement = require("./src/updateElement");
+const updateEvents = require("./src/updateEvent");
+const {
+    RENDERER_PHASE_ON_CREATED,
+    RENDERER_PHASE_ON_UPDATED,
+    RENDERER_PHASE_BEFORE_DESTROYED,
+    RENDERER_PHASE_ON_DESTROYED,
+    RENDERER_PHASE_CHANGES,
+} = require("../constants");
 
 /**
  * ### `RecursiveRenderer`
@@ -65,11 +73,11 @@ class RecursiveRenderer {
         this.root = root;
         this.current = undefined;
         this.phases = {
-            onCreated: [],
-            onUpdated: [],
-            beforeDestroyed: [],
-            onDestroyed: [],
-            changes: [],
+            [RENDERER_PHASE_ON_CREATED]: [],
+            [RENDERER_PHASE_ON_UPDATED]: [],
+            [RENDERER_PHASE_BEFORE_DESTROYED]: [],
+            [RENDERER_PHASE_ON_DESTROYED]: [],
+            [RENDERER_PHASE_CHANGES]: [],
         };
     }
 
@@ -102,7 +110,8 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      */
     onElementUpdated(element) {
-        if (element.hooks) this.delegateToRenderer("onUpdated", element.hooks.onUpdated);
+        if (element.hooks)
+            this.delegateToRenderer(RENDERER_PHASE_ON_UPDATED, element.hooks.onUpdated);
     }
 
     /**
@@ -111,7 +120,9 @@ class RecursiveRenderer {
      */
     onElementCreated(element) {
         if (element.hooks && element.hooks.onCreated)
-            this.delegateToRenderer("onCreated", () => element.hooks.onCreated(element.instance));
+            this.delegateToRenderer(RENDERER_PHASE_ON_CREATED, () =>
+                element.hooks.onCreated(element.instance)
+            );
     }
 
     /**
@@ -120,7 +131,7 @@ class RecursiveRenderer {
      */
     onBeforeElementDestroyed(element) {
         if (element.hooks)
-            this.delegateToRenderer("beforeDestroyed", element.hooks.beforeDestroyed);
+            this.delegateToRenderer(RENDERER_PHASE_BEFORE_DESTROYED, element.hooks.beforeDestroyed);
     }
 
     /**
@@ -128,7 +139,8 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      */
     onElementDestroyed(element) {
-        if (element.hooks) this.delegateToRenderer("onDestroyed", element.hooks.onDestroyed);
+        if (element.hooks)
+            this.delegateToRenderer(RENDERER_PHASE_ON_DESTROYED, element.hooks.onDestroyed);
     }
 
     /**
@@ -217,7 +229,9 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} newElement
      */
     updateStyle(element, newElement) {
-        this.delegateToRenderer("changes", () => this.useRendererUpdateStyle(element, newElement));
+        this.delegateToRenderer(RENDERER_PHASE_CHANGES, () =>
+            this.useRendererUpdateStyle(element, newElement)
+        );
     }
 
     /**
@@ -257,11 +271,11 @@ class RecursiveRenderer {
     clean() {
         this.stateManager.clear();
         this.phases = {
-            onCreated: [],
-            onUpdated: [],
-            beforeDestroyed: [],
-            onDestroyed: [],
-            changes: [],
+            [RENDERER_PHASE_ON_CREATED]: [],
+            [RENDERER_PHASE_ON_UPDATED]: [],
+            [RENDERER_PHASE_BEFORE_DESTROYED]: [],
+            [RENDERER_PHASE_ON_DESTROYED]: [],
+            [RENDERER_PHASE_CHANGES]: [],
         };
         this.useRendererClean();
     }
@@ -443,4 +457,4 @@ class RecursiveRenderer {
     }
 }
 
-export { RecursiveRenderer };
+module.exports = { RecursiveRenderer };

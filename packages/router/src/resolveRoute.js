@@ -1,5 +1,6 @@
-import { RecursiveRouter } from "../";
-import isDynamicRoute from "./isDynamicRoute";
+const { RecursiveRouter } = require("..");
+const { ROUTER_NOT_FOUND_ROUTE } = require("../../constants");
+const isDynamicRoute = require("./isDynamicRoute");
 
 /**
  * Resolve and prepare the route.
@@ -16,7 +17,8 @@ function resolveRoute(route, router) {
     } else {
         // route is not dynamic
         if (router.routes[route]) {
-            if (router.routes[route].redirectTo) {
+            // Fix this
+            if (false && router.routes[route].redirectTo) {
                 // route should re direct
                 const _redirectRoute = router.routes[route].redirectTo;
 
@@ -40,7 +42,7 @@ function resolveRoute(route, router) {
                         // route not found, render 404
                         return {
                             path: _redirectRoute,
-                            route: router.routes["/404"],
+                            route: router.routes[ROUTER_NOT_FOUND_ROUTE],
                         };
                     }
                 }
@@ -50,9 +52,9 @@ function resolveRoute(route, router) {
             }
         } else {
             // route not found, render 404
-            return { path: route, route: router.routes["/404"] };
+            return { path: route, route: router.routes[ROUTER_NOT_FOUND_ROUTE] };
         }
     }
 }
 
-export default resolveRoute;
+module.exports = resolveRoute;

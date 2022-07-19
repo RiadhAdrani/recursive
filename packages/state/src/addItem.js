@@ -1,5 +1,5 @@
-import { RecursiveState } from "..";
-import RecursiveConsole from "../../console";
+const { RecursiveConsole } = require("../../console");
+const { RecursiveState } = require("..");
 
 /**
  * Add a stateful object in the `store` within the global repository `stateManager`.
@@ -39,4 +39,4 @@ function addItem(key, value = undefined, store, onAdded, onRemoved, stateManager
         })();
 }
 
-export default addItem;
+module.exports = addItem;

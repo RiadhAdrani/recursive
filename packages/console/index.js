@@ -1,4 +1,4 @@
-import { isDevMode } from "../common";
+const { isDevMode } = require("../common");
 
 /**
  * Utility function to throw errors.
@@ -48,4 +48,4 @@ const RecursiveConsole = {
     log,
 };
 
-export default RecursiveConsole;
+module.exports = { RecursiveConsole };

@@ -1,5 +1,6 @@
-import { RecursiveRenderer } from "../";
-import prepareElement from "./prepareElement";
+const { RecursiveRenderer } = require("../");
+const { RENDERER_PHASE_ON_CREATED } = require("../../constants");
+const prepareElement = require("./prepareElement");
 
 /**
  * Render the tree of elements.
@@ -12,9 +13,7 @@ function render(renderer) {
 
     renderer.orchestrator.setStep.computeTree();
 
-    renderer.contextManager.useContext(() => {
-        renderer.current = prepareElement(renderer.app(), "0", renderer);
-    }, "0");
+    renderer.current = prepareElement(renderer.app(), "0", renderer);
 
     renderer.useRendererOnTreePrepared(renderer.current);
 
@@ -22,11 +21,11 @@ function render(renderer) {
     renderer.useRendererRenderTree();
 
     renderer.orchestrator.setStep.execOnCreated();
-    renderer.runPhase("onCreated");
+    renderer.runPhase(RENDERER_PHASE_ON_CREATED);
     renderer.setInstanceReference(renderer.current);
     renderer.clean();
 
     renderer.orchestrator.setStep.free();
 }
 
-export default render;
+module.exports = render;
