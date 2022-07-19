@@ -1,5 +1,5 @@
 ## `RecursiveContext`
 
-_`experimental module`_
+_`experimental`_
 
 Execute functions inside a specified context.

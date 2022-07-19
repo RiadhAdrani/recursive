@@ -1,4 +1,4 @@
-import RecursiveRenderer from "../RecursiveRenderer.js";
+import { RecursiveRenderer } from "../";
 
 /**
  * Remove the given element from the tree of elements.

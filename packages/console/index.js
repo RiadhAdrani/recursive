@@ -1,6 +1,4 @@
-function isInDevMode() {
-    return process.env.NODE_ENV === "development";
-}
+import { isDevMode } from "../common";
 
 /**
  * Utility function to throw errors.
@@ -9,7 +7,7 @@ function isInDevMode() {
  * @param {Array} help
  */
 function error(msg, help) {
-    if (!isInDevMode() || !msg) return;
+    if (!isDevMode() || !msg) return;
 
     let helpMsg = "";
 
@@ -27,7 +25,7 @@ function error(msg, help) {
  * @param {Array} help
  */
 function warn(msg) {
-    if (!isInDevMode() || !msg) return;
+    if (!isDevMode() || !msg) return;
 
     console.warn(msg);
 }
@@ -39,7 +37,7 @@ function warn(msg) {
  * @param {Array} help
  */
 function log(msg) {
-    if (!isInDevMode() || !msg) return;
+    if (!isDevMode() || !msg) return;
 
     console.log(msg);
 }

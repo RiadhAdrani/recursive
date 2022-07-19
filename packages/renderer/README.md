@@ -1,6 +1,6 @@
 ## `RecursiveRenderer`
 
-`create`, `render` and `update` the application.
+Used to, `create`, `render` and `update` the application.
 
 This is like an `abstract` class, non-implemented methods should be overriden with platform-specific methods in order for the renderer to work correctly :
 

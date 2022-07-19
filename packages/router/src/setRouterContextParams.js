@@ -1,4 +1,4 @@
-import RecursiveRouter from "../RecursiveRouter";
+import { RecursiveRouter } from "../";
 
 /**
  * Set parameter for the `routerContext`.

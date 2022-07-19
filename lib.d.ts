@@ -44,3 +44,34 @@ export interface Route {
 export interface FlatRoutes {
     [key: string]: Route;
 }
+
+export interface StateEntry {
+    value: any;
+    preValue: any;
+    history: Array<any>;
+    onRemoved: Function;
+    unsubscribe: Function;
+    addOrder: number;
+}
+
+export interface StateStores {
+    [key: string]: {
+        items: { [key: string]: StateEntry };
+        used: Array<String>;
+        set: (newValue: any) => void;
+        get: () => any;
+        clear: () => void;
+        flush: () => void;
+    };
+}
+
+export interface StoreParams {
+    name: String;
+    set: (newValue: any) => void;
+    get: () => any;
+    clear: () => void;
+    flush: () => void;
+    obj: any;
+}
+
+export type StateArray = [any, (newValue: any) => void, () => any, () => void, any];

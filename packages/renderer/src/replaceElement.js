@@ -1,4 +1,4 @@
-import RecursiveRenderer from "../RecursiveRenderer.js";
+import { RecursiveRenderer } from "../";
 
 /**
  * Replace the given element by the new one.

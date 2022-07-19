@@ -5,13 +5,15 @@ import { RecursiveState } from ".";
  * @param {RecursiveState} store
  * @param {string} storeName
  * @param {string} key
- * @returns
+ * @returns {import("../../lib").StateArray}
  */
 function retrieveStatefulObject(store, storeName, key) {
     const state = store.getItem(key, storeName);
 
     const _value = store.copy(state.value);
+
     const _preValue = store.copy(state.preValue);
+
     const _set = function (newValue) {
         if (!store.itemExists(key, storeName)) return;
 

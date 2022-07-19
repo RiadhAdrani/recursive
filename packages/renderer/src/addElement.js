@@ -1,4 +1,4 @@
-import RecursiveRenderer from "../RecursiveRenderer.js";
+import { RecursiveRenderer } from "../";
 
 /**
  * Append the given element into the provided parent element.

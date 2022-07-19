@@ -1,4 +1,4 @@
-import RecursiveRouter from "../RecursiveRouter";
+import { RecursiveRouter } from "../";
 
 /**
  * Load the appropriate route with the given parameters.

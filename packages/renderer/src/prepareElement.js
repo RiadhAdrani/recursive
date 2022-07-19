@@ -1,6 +1,6 @@
-import { isFlag } from "../RecursiveFlags.js";
-import { isHook } from "../RecursiveHooks.js";
-import RecursiveRenderer from "../RecursiveRenderer.js";
+import { isFlag } from "../flags";
+import { isHook } from "../hooks";
+import { RecursiveRenderer } from "../";
 import prepareChild from "./prepareChild.js";
 
 /**

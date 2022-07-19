@@ -1,4 +1,4 @@
-import RecursiveRenderer from "../RecursiveRenderer";
+import { RecursiveRenderer } from "../";
 import prepareElement from "./prepareElement";
 
 /**

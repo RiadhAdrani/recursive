@@ -1,4 +1,4 @@
-import RecursiveRouter from "../RecursiveRouter";
+import { RecursiveRouter } from "../";
 
 /**
  * Check if the provided route is dynamic : contains parameters.

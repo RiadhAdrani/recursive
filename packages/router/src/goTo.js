@@ -1,4 +1,4 @@
-import RecursiveRouter from "../RecursiveRouter";
+import { RecursiveRouter } from "../";
 import loadRoute from "./loadRoute";
 
 /**
@@ -11,8 +11,9 @@ function goTo(path, router) {
     if (!path) return;
 
     const [_route, anchor] = router.checkRoute(path);
+    const [oldPath] = router.getPathState();
 
-    if (_route) {
+    if (_route && oldPath !== path) {
         router.useRouterPushState(_route);
 
         loadRoute(_route.route, path, anchor, router);

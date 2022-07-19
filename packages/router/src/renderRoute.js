@@ -1,4 +1,4 @@
-import RecursiveRouter from "../RecursiveRouter";
+import { RecursiveRouter } from "../";
 import renderFragment from "./renderFragment";
 import setRouterContextParams from "./setRouterContextParams";
 import useRouterContext from "./useRouterContext";
@@ -11,6 +11,7 @@ import useRouterContext from "./useRouterContext";
  */
 function renderRoute(router) {
     const [route] = router.stateManager.getReserved("route");
+
     setRouterContextParams(router);
 
     return useRouterContext({ route }, () => renderFragment(router), router);

@@ -1,5 +1,5 @@
 import RecursiveConsole from "../console/index.js";
-import RecursiveRenderer from "../renderer/RecursiveRenderer.js";
+import { RecursiveRenderer } from "../renderer";
 import createTaskId from "./src/createTaskId.js";
 import createUpdateObject from "./src/createUpdateObject.js";
 
@@ -15,7 +15,6 @@ const COMMIT_INTO_TREE = "commit-into-tree";
 const EXEC_ON_DESTROYED = "execute-on-destroyed";
 const EXEC_ON_CREATED = "execute-on-created";
 const EXEC_ON_UPDATED = "execute-on-updated";
-const EXEC_ON_INJECTED = "execute-on-injected";
 const CLEAN_STATES = "clean-states";
 
 /**
