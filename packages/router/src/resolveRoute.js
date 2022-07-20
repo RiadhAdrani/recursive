@@ -18,7 +18,7 @@ function resolveRoute(route, router) {
         // route is not dynamic
         if (router.routes[route]) {
             // Fix this
-            if (false && router.routes[route].redirectTo) {
+            if (router.routes[route].redirectTo) {
                 // route should re direct
                 const _redirectRoute = router.routes[route].redirectTo;
 
@@ -29,6 +29,7 @@ function resolveRoute(route, router) {
                     return {
                         path: _redirectRoute,
                         route: _redirect.template,
+                        redirected: true,
                     };
                 } else {
                     // redirect route is not dynamic
@@ -37,12 +38,14 @@ function resolveRoute(route, router) {
                         return {
                             path: _redirectRoute,
                             route: router.routes[_redirectRoute],
+                            redirected: true,
                         };
                     } else {
                         // route not found, render 404
                         return {
                             path: _redirectRoute,
                             route: router.routes[ROUTER_NOT_FOUND_ROUTE],
+                            redirected: true,
                         };
                     }
                 }

@@ -16,7 +16,9 @@ function goTo(path, router) {
     if (_route && oldPath !== path) {
         router.useRouterPushState(_route);
 
-        loadRoute(_route.route, path, anchor, router);
+        const _path = _route.redirected ? _route.path : path;
+
+        loadRoute(_route.route, _path, anchor, router);
     }
 }
 

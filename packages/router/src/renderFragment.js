@@ -17,9 +17,17 @@ function renderFragment(router) {
 
     const fragment = findMatch(expected, router);
 
+    let fragmentComponent;
+
     if (fragment) {
-        return fragment.isDynamic ? fragment.template.component() : fragment.component();
-    } else "";
+        fragmentComponent = fragment.isDynamic
+            ? fragment.template.component()
+            : fragment.component();
+    } else {
+        fragmentComponent = "";
+    }
+
+    return fragmentComponent;
 }
 
 module.exports = renderFragment;
