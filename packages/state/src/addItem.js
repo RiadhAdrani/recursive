@@ -11,11 +11,19 @@ const { RecursiveState } = require("..");
  * @param {RecursiveState} stateManager
  */
 function addItem(key, value = undefined, store, onAdded, onRemoved, stateManager) {
-    if ([undefined, null, ""].includes(key))
-        RecursiveConsole.error("State UID cannot be one of these : '' or 'undefined' or 'null' ");
+    if (typeof key != "string") {
+        RecursiveConsole.error("State UID is not of type string.");
+        return;
+    }
+
+    if ([undefined, null, ""].includes(key.trim())) {
+        RecursiveConsole.error("State UID cannot be one of these : '' or 'undefined' or 'null'.");
+        return;
+    }
 
     if (stateManager.stores[store] === undefined) {
         RecursiveConsole.error("Invalid store name.");
+        return;
     }
 
     const _object = {

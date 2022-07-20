@@ -14,19 +14,42 @@ function createStore(params, stateManager) {
     const obj = params.obj;
     const clear = params.clear;
 
-    if (typeof name !== "string") RecursiveConsole.error(`name is not a string`);
+    if (typeof name !== "string") {
+        RecursiveConsole.error(`name is not a string`);
+        return;
+    }
 
-    if (typeof set !== "function") RecursiveConsole.error("set is not a function");
+    if (!name.trim()) {
+        RecursiveConsole.error(`name is not valid`);
+        return;
+    }
 
-    if (typeof get !== "function") RecursiveConsole.error("get is not a function");
+    if (typeof set !== "function") {
+        RecursiveConsole.error("set is not a function");
+        return;
+    }
 
-    if (typeof clear !== "function") RecursiveConsole.error("clear is not a function");
+    if (typeof get !== "function") {
+        RecursiveConsole.error("get is not a function");
+        return;
+    }
 
-    if (typeof flush !== "function") RecursiveConsole.error("flush is not a function");
+    if (typeof clear !== "function") {
+        RecursiveConsole.error("clear is not a function");
+        return;
+    }
+
+    if (typeof flush !== "function") {
+        RecursiveConsole.error("flush is not a function");
+        return;
+    }
 
     const _name = name.trim();
 
-    if (stateManager.stores[_name]) RecursiveConsole.error("store already exists");
+    if (stateManager.stores[_name]) {
+        RecursiveConsole.error("store already exists");
+        return;
+    }
 
     stateManager.stores[_name] = {
         items: {},

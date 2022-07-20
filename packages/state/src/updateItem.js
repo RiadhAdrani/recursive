@@ -1,5 +1,6 @@
 const { RecursiveState } = require("..");
 const { RecursiveConsole } = require("../../console");
+const itemExists = require("./itemExists");
 
 /**
  * Update a state entry.
@@ -13,10 +14,12 @@ const { RecursiveConsole } = require("../../console");
 function updateItem(key, newValue, store, onChanged, forceUpdate, stateManager) {
     if (stateManager.stores[store] === undefined) {
         RecursiveConsole.error("Invalid store name.");
+        return;
     }
 
-    if (stateManager.stores[store].items[key] === undefined) {
+    if (!itemExists(key, store, stateManager)) {
         RecursiveConsole.error("State does not exist in the current store.");
+        return;
     }
 
     if (stateManager.stores[store].items[key].value !== newValue || forceUpdate) {

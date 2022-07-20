@@ -39,7 +39,7 @@ const CreateCacheStore = (store) => {
 
         if (length > store.cacheSize) {
             for (let key in items) {
-                if (items[key].addOrder <= length - store.cacheSize)
+                if (items[key].addOrder < length - store.cacheSize)
                     store.removeItem(key, storeName);
             }
 

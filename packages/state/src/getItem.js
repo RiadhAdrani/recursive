@@ -12,6 +12,7 @@ const { RecursiveConsole } = require("../../console");
 function getItem(key, store, defaultValue = undefined, stateManager) {
     if (stateManager.stores[store] === undefined) {
         RecursiveConsole.error("Invalid store name.");
+        return;
     }
 
     if (stateManager.stores[store].items[key] === undefined) {
