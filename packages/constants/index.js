@@ -42,6 +42,8 @@ const RENDERER_PHASE_ON_DESTROYED = "onDestroyed";
 const RENDERER_PHASE_BEFORE_DESTROYED = "beforeDestroyed";
 const RENDERER_PHASE_CHANGES = "changes";
 
+const RECURSIVE_ELEMENT_SYMBOL = Symbol();
+
 // STATE
 
 const STATE_STATE_STORE = "state";
@@ -94,4 +96,6 @@ module.exports = {
     RENDERER_PHASE_ON_CREATED,
     RENDERER_PHASE_ON_DESTROYED,
     RENDERER_PHASE_ON_UPDATED,
+
+    RECURSIVE_ELEMENT_SYMBOL,
 };

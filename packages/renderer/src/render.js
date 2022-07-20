@@ -13,7 +13,7 @@ function render(renderer) {
 
     renderer.orchestrator.setStep.computeTree();
 
-    renderer.current = prepareElement(renderer.app(), "0", renderer);
+    renderer.current = prepareElement(renderer.app(), "0", null, renderer);
 
     renderer.useRendererOnTreePrepared(renderer.current);
 

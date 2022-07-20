@@ -19,6 +19,7 @@ export interface RawElement {
     hooks: Hooks;
     rendererOptions: { [item: string]: any };
     children: Array<any>;
+    $$_RecursiveSymbol: Symbol;
     [item: string]: any;
 }
 
@@ -27,6 +28,8 @@ export interface RecursiveElement extends RawElement {
     attributes: { [item: string]: any };
     events: { [item: string]: any };
     map: { [item: string]: any };
+    parent: RecursiveElement;
+    children: Array<RecursiveElement>;
 }
 
 export type App = () => RawElement;

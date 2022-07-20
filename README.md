@@ -1,4 +1,4 @@
-# Recursive [![Version](https://img.shields.io/npm/v/@riadh-adrani/recursive?color=blue)](https://www.npmjs.com/package/@riadh-adrani/recursive) ![Licence](https://img.shields.io/npm/l/@riadh-adrani/recursive)
+# Recursive [![Version](https://img.shields.io/npm/v/@riadh-adrani/recursive?color=blue)](https://www.npmjs.com/package/@riadh-adrani/recursive) ![Licence](https://img.shields.io/npm/l/@riadh-adrani/recursive) [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FRiadhAdrani%2Frecursive%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/RiadhAdrani/recursive/goto?ref=master)
 
 Recursive is a _`blueprint`_ that create app-makers and frameworks using Javascript.
 

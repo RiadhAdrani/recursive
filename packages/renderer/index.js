@@ -3,6 +3,7 @@ const { RecursiveContext } = require("../context");
 const { RecursiveOrchestrator } = require("../orchestrator/");
 const { RecursiveState } = require("../state/");
 
+const createRecursiveElement = require("./element");
 const addElement = require("./src/addElement");
 const changeElementPosition = require("./src/changeElementPosition");
 const removeElement = require("./src/removeElement");
@@ -282,15 +283,35 @@ class RecursiveRenderer {
 
     /**
      * Use the renderer to update style
-     * @param {import("../../lib.js").RecursiveElement} textElement
-     * @param {import("../../lib.js").RecursiveElement} newTextElement
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * Used to update inline style.
+     *
+     * ----
+     *
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} newElement
      */
-    useRendererUpdateStyle(textElement, newTextElement) {
+    useRendererUpdateStyle(element, newElement) {
         RecursiveConsole.error("Renderer has no method updateStyle.");
     }
 
     /**
      * Use the renderer to update plain text
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * update content of elements created using `RECURSIVE_ELEMENT_TEXT_NODE` tag
+     * by comparing both element children (which is in this case a string),
+     * then change `element.instance.data` if there is a difference.
+     *
+     * ----
+     *
      * @param {import("../../lib.js").RecursiveElement} textElement
      * @param {import("../../lib.js").RecursiveElement} newTextElement
      */
@@ -300,13 +321,35 @@ class RecursiveRenderer {
 
     /**
      * Perform renderer specific cleaning.
+     *
+     * Used to reset some platform specific flags, or renderer specific variables.
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * #### `unused`
+     *
+     * ----
+     *
      */
     useRendererClean() {
         RecursiveConsole.error("Renderer has no method clean.");
     }
 
     /**
-     * Executed when the tree has been prepared
+     * Executed when the tree has been prepared.
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * Used to collect style
+     * and convert it into string and then it is
+     * injected into the DOM within a `<style>` tag.
+     *
+     * ----
+     *
      * @param {tyepof ElementType} tree
      */
     useRendererOnTreePrepared(tree) {
@@ -315,6 +358,16 @@ class RecursiveRenderer {
 
     /**
      * Remove an attribute
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * We use `instance.remvoeAttribute()` to remove the attribute.
+     *
+     * ----
+     *
+     *
      * @param {string} attribute
      * @param {any} instance
      */
@@ -324,6 +377,17 @@ class RecursiveRenderer {
 
     /**
      * Set an attribute
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * Depnding on the type of the attribute,
+     * we use `element.instance.setAttribute()` or `element.instance.toggleAttribute()`
+     * to update its value.
+     *
+     * ----
+     *
      * @param {string} attribute
      * @param {any} value
      * @param {import("../../lib.js").RecursiveElement} element
@@ -334,6 +398,15 @@ class RecursiveRenderer {
 
     /**
      * Check if the children are in the tree of elements.
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * We just return the value of `document.contains(element.instance)`
+     *
+     * ----
+     *
      * @param {import("../../lib.js").RecursiveElement} element
      */
     useRendererItemInTree(element) {
@@ -342,6 +415,14 @@ class RecursiveRenderer {
 
     /**
      * Use the renderer to remove an event
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * We set `instance.events[eventName]` to an empty arrow function.
+     *
+     *
      * @param {string} eventName
      * @param {any} instance
      */
@@ -351,6 +432,19 @@ class RecursiveRenderer {
 
     /**
      * Use the renderer to remove an event
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * Check if the event listener exists.
+     * We set `element.instance.events[eventName]` with the `callback`.
+     *
+     * If the listener is not initialized,
+     * we use `addEventListener` to add `eventName`.
+     *
+     * ----
+     *
      * @param {string} eventName
      * @param {function} callback
      * @param {any} element
@@ -361,6 +455,14 @@ class RecursiveRenderer {
 
     /**
      * Render the application tree.
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * We use the `root.append()` method to inject tree resulted from `renderInstance()`.
+     *
+     *
      */
     useRendererRenderTree() {
         RecursiveConsole.error("Renderer has no method renderTree.");
@@ -368,6 +470,16 @@ class RecursiveRenderer {
 
     /**
      * Use renderer to Change the position of the given element.
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * We use `parentElement.instance.insertBefore` to change the position of the element.
+     *
+     * ----
+     *
+     *
      * @param {import("../../lib.js").RecursiveElement} element
      * @param {import("../../lib.js").RecursiveElement} parentElement
      * @param {number} newPosition
@@ -378,6 +490,15 @@ class RecursiveRenderer {
 
     /**
      * Remove the given element from the tree of elements.
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * We use `element.remove()` to delete it from the DOM.
+     *
+     * ----
+     *
      * @param {import("../../lib.js").RecursiveElement} element
      */
     useRendererRemoveElement(element) {
@@ -386,6 +507,15 @@ class RecursiveRenderer {
 
     /**
      * Use the renderer to append the given element into the provided parent element.
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * We use `parentElement.append()` to add the element into the children node.
+     *
+     * ----
+     *
      * @param {import("../../lib.js").RecursiveElement} element
      * @param {import("../../lib.js").RecursiveElement} parentElement
      */
@@ -395,6 +525,15 @@ class RecursiveRenderer {
 
     /**
      * Use the renderer to replace the given element by the new one.
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * We use `element.replaceWith` and `renderInstance(newElement)` as its argument.
+     *
+     * ----
+     *
      * @param {import("../../lib.js").RecursiveElement} element
      * @param {import("../../lib.js").RecursiveElement} newElement
      */
@@ -404,6 +543,15 @@ class RecursiveRenderer {
 
     /**
      * Return if the given attribute is valid for this renderer
+     *
+     * ----
+     *
+     * **``Recursive-Web``**
+     *
+     * Check if the given attribute exists in the repository of `DomAttributes`.
+     *
+     * ----
+     *
      * @param {string} attribute to be checked
      * @return {boolean}
      */
@@ -413,6 +561,15 @@ class RecursiveRenderer {
 
     /**
      * Return if the given event is valid for this renderer
+     *
+     * ----
+     *
+     * **``Recursive-Web``**
+     *
+     * Check if the given event exists in the repository of `DomEvents`.
+     *
+     * ----
+     *
      * @param {string} event to be checked
      * @return {boolean}
      */
@@ -422,6 +579,13 @@ class RecursiveRenderer {
 
     /**
      * Create a bare-bone native instance of the provided element.
+     *
+     * **``Recursive-Web``**
+     *
+     * return a DOM element using
+     * _`document.createElementNS`_ (for HTML and SVG elements)
+     * or
+     * _`document.createTextNode`_ (for plain text elements).
      * @param {import("../../lib.js").RecursiveElement} element
      * @return native element
      */
@@ -430,7 +594,21 @@ class RecursiveRenderer {
     }
 
     /**
-     * Inject attributes into the created instance;
+     * Inject attributes into the created instance.
+     *
+     * Executes within `renderInstance()`.
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * We loop over the `element.attributes`'s keys
+     * and use either `instance.toggleAttribute()` or `instance.setAttribute()`
+     * depending on the type.
+     * `dataSet` attribute is treated on its own.
+     *
+     * ----
+     *
      * @param {import("../../lib.js").RecursiveElement} element
      * @param {any} instance
      */
@@ -440,6 +618,19 @@ class RecursiveRenderer {
 
     /**
      * Inject events into the created instance;
+     *
+     * Executes within `renderInstance()`
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * We loop over the `element.events`'s keys
+     * and use `addEventListener()` to inject the events into the instance.
+     * Some custom events has a `handler` which will be executed instead.
+     *
+     * ----
+     *
      * @param {import("../../lib.js").RecursiveElement} element
      * @param {any} instance
      */
@@ -449,6 +640,19 @@ class RecursiveRenderer {
 
     /**
      * Inject children into the created instance;
+     *
+     * Executes within `renderInstance()`
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * We loop over the `element.children`'s items
+     * and use `instance.append()` with `renderInstance(child)` as an argument
+     * to recursively build the element.
+     *
+     * ----
+     *
      * @param {import("../../lib.js").RecursiveElement} element
      * @param {any} instance
      */
@@ -457,4 +661,4 @@ class RecursiveRenderer {
     }
 }
 
-module.exports = { RecursiveRenderer };
+module.exports = { RecursiveRenderer, createRecursiveElement };

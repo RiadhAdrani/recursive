@@ -15,7 +15,7 @@ function update(renderer) {
 
     let _new;
 
-    _new = prepareElement(renderer.app(), "0", renderer);
+    _new = prepareElement(renderer.app(), "0", null, renderer);
 
     renderer.useRendererOnTreePrepared(_new);
 
