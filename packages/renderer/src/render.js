@@ -1,4 +1,5 @@
 const { RecursiveRenderer } = require("../");
+const { RecursiveConsole } = require("../../console");
 const { RENDERER_PHASE_ON_CREATED } = require("../../constants");
 const prepareElement = require("./prepareElement");
 

@@ -1,14 +1,16 @@
-import { RecursiveOrchestrator } from "./packages/orchestrator";
-import { RecursiveRenderer, createRecursiveElement } from "./packages/renderer";
-import { RecursiveRouter } from "./packages/router";
-import { RecursiveState } from "./packages/state";
-import { RecursiveConsole } from "./packages/console";
+const { RecursiveOrchestrator } = require("./packages/orchestrator");
+const { RecursiveRenderer, createRecursiveElement } = require("./packages/renderer");
+const { RecursiveRouter } = require("./packages/router");
+const { RecursiveState } = require("./packages/state");
+const { RecursiveConsole } = require("./packages/console");
+const { RecursiveApp } = require("./packages/app");
 
-export {
+module.exports = {
     RecursiveOrchestrator,
     RecursiveRenderer,
     RecursiveRouter,
     RecursiveState,
     RecursiveConsole,
     createRecursiveElement,
+    RecursiveApp,
 };

@@ -77,4 +77,14 @@ export interface StoreParams {
     obj: any;
 }
 
+export interface Route {
+    path: string;
+    component: RawElement;
+    title: string;
+    routes: Array<Route>;
+    redirectTo: string;
+    onLoad: Function;
+    onExit: Function;
+}
+
 export type StateArray = [any, (newValue: any) => void, () => any, () => void, any];
