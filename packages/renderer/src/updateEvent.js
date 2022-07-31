@@ -1,5 +1,6 @@
 const { RecursiveRenderer } = require("../");
 const { RENDERER_PHASE_CHANGES } = require("../../constants");
+const { makeDiffList } = require("../utility");
 
 /**
  * Update events
@@ -8,21 +9,24 @@ const { RENDERER_PHASE_CHANGES } = require("../../constants");
  * @param {RecursiveRenderer} renderer
  */
 function updateEvents(element, newElement, renderer) {
-    let combined = {};
+    const combined = makeDiffList(element.events, newElement.events);
 
-    if (element.events) combined = { ...combined, ...element.events };
-    if (newElement.events) combined = { ...combined, ...newElement.events };
+    for (let key in combined.toUpdate) {
+        renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+            renderer.useRendererAddEvent(key, combined.toUpdate[key], element);
+        });
+    }
 
-    for (let event in combined) {
-        if (newElement.events[event]) {
-            renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
-                renderer.useRendererAddEvent(event, newElement.events[event], element);
-            });
-        } else {
-            renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
-                renderer.useRendererRemoveEvent(event, element.instance);
-            });
-        }
+    for (let key in combined.toAdd) {
+        renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+            renderer.useRendererAddEvent(key, combined.toAdd[key], element);
+        });
+    }
+
+    for (let key in combined.toRemove) {
+        renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+            renderer.useRendererRemoveEvent(key, element.instance);
+        });
     }
 }
 

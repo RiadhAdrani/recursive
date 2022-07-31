@@ -1,5 +1,6 @@
 const { RecursiveRenderer } = require("../");
 const { RENDERER_PHASE_CHANGES } = require("../../constants");
+const { makeDiffList } = require("../utility");
 
 /**
  * Update attributes
@@ -8,21 +9,24 @@ const { RENDERER_PHASE_CHANGES } = require("../../constants");
  * @param {RecursiveRenderer} renderer
  */
 function updateAttributes(element, newElement, renderer) {
-    let combined = {};
+    const combined = makeDiffList(element.attributes, newElement.attributes);
 
-    if (element.attributes) combined = { ...combined, ...element.attributes };
-    if (newElement.attributes) combined = { ...combined, ...newElement.attributes };
+    for (let key in combined.toUpdate) {
+        renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+            renderer.useRendererSetAttribute(key, combined.toUpdate[key], element);
+        });
+    }
 
-    for (let attr in combined) {
-        if (newElement.attributes[attr] === undefined) {
-            renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
-                renderer.useRendererRemoveAttribute(attr, element.instance);
-            });
-        } else {
-            renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
-                renderer.useRendererSetAttribute(attr, newElement.attributes[attr], element);
-            });
-        }
+    for (let key in combined.toAdd) {
+        renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+            renderer.useRendererSetAttribute(key, combined.toAdd[key], element);
+        });
+    }
+
+    for (let key in combined.toRemove) {
+        renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+            renderer.useRendererRemoveAttribute(key, element.instance);
+        });
     }
 }
 

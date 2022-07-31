@@ -7,6 +7,7 @@ const {
     ELEMENT_TYPE_TEXT_NODE,
     RECURSIVE_ELEMENT_SYMBOL,
 } = require("../../constants");
+const { checkChildIsValid } = require("../utility");
 
 /**
  * Return a verified tree to be used in rendering or updating
@@ -93,7 +94,9 @@ const prepareElement = (element, id, parent, renderer) => {
                 if (_child.elementType === ELEMENT_TYPE_FRAGMENT) {
                     _children.push(..._child.children);
                 } else {
-                    _children.push(_child);
+                    if (checkChildIsValid(_child)) {
+                        _children.push(_child);
+                    }
                 }
             }
         });
