@@ -10,8 +10,8 @@ const { RENDERER_PHASE_CHANGES } = require("../../constants");
 function updateEvents(element, newElement, renderer) {
     let combined = {};
 
-    if (element.events) combined = { ...element.events };
-    if (newElement.events) combined = { ...newElement.events };
+    if (element.events) combined = { ...combined, ...element.events };
+    if (newElement.events) combined = { ...combined, ...newElement.events };
 
     for (let event in combined) {
         if (newElement.events[event]) {

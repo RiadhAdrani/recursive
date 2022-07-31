@@ -10,8 +10,8 @@ const { RENDERER_PHASE_CHANGES } = require("../../constants");
 function updateAttributes(element, newElement, renderer) {
     let combined = {};
 
-    if (element.attributes) combined = { ...element.attributes };
-    if (newElement.attributes) combined = { ...newElement.attributes };
+    if (element.attributes) combined = { ...combined, ...element.attributes };
+    if (newElement.attributes) combined = { ...combined, ...newElement.attributes };
 
     for (let attr in combined) {
         if (newElement.attributes[attr] === undefined) {
