@@ -3,20 +3,20 @@ const loadRoute = require("./loadRoute");
 
 /**
  * Replace the current route with the given one.
- * @param {string} path
- * @param {string} hash
+ * @param {string} routePath
+ * @param {string} routeAnchor
  * @param {RecursiveRouter} router
  * @returns
  */
-function replace(path, hash, router) {
-    if (!path) return;
+function replace(routePath, routeAnchor, router) {
+    if (!routePath) return;
 
-    const [_route, anchor] = router.checkRoute(path);
+    const [_route] = router.resolveRouteAnchor(routePath);
 
     if (_route) {
-        router.useRouterPushState(_route, hash);
+        router.useRouterReplaceState(_route, routeAnchor);
 
-        loadRoute(_route.route, path, hash, router);
+        loadRoute(_route.route, routePath, routeAnchor, router);
     }
 }
 

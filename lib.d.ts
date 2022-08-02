@@ -44,6 +44,17 @@ export interface Route {
     onExit: () => void;
 }
 
+export interface RouteTemplate {
+    isDynamic: boolean;
+    template: Route;
+}
+
+export interface ResolvedRoute {
+    path: String;
+    route: Route;
+    redirected: any;
+}
+
 export interface FlatRoutes {
     [key: string]: Route;
 }
@@ -75,16 +86,6 @@ export interface StoreParams {
     clear: () => void;
     flush: () => void;
     obj: any;
-}
-
-export interface Route {
-    path: string;
-    component: RawElement;
-    title: string;
-    routes: Array<Route>;
-    redirectTo: string;
-    onLoad: Function;
-    onExit: Function;
 }
 
 export type StateArray = [any, (newValue: any) => void, () => any, () => void, any];

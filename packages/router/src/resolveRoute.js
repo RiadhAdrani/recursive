@@ -6,9 +6,9 @@ const isDynamicRoute = require("./isDynamicRoute");
  * Resolve and prepare the route.
  * @param {string} route
  * @param {RecursiveRouter} router
- * @returns
+ * @returns {import("../../../lib").ResolvedRoute}
  */
-function resolveRoute(route, router) {
+function resolveRouteWithRedirection(route, router) {
     const dynamicTemplate = isDynamicRoute(route, router);
 
     if (dynamicTemplate.isDynamic) {
@@ -51,13 +51,13 @@ function resolveRoute(route, router) {
                 }
             } else {
                 // route should render as is
-                return { path: route, route: router.routes[route] };
+                return { path: route, route: router.routes[route], redirected: false };
             }
         } else {
             // route not found, render 404
-            return { path: route, route: router.routes[ROUTER_NOT_FOUND_ROUTE] };
+            return { path: route, route: router.routes[ROUTER_NOT_FOUND_ROUTE], redirected: false };
         }
     }
 }
 
-module.exports = resolveRoute;
+module.exports = resolveRouteWithRedirection;

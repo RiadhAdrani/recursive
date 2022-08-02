@@ -2,7 +2,7 @@ const { RecursiveConsole } = require("../console");
 const { ROUTER_PATH_STATE, ROUTER_ROUTE_STATE, ROUTER_NOT_FOUND_ROUTE } = require("../constants");
 const { RecursiveOrchestrator } = require("../orchestrator");
 const { RecursiveState } = require("../state");
-const checkRoute = require("./src/checkRoute");
+const resolveRouteAnchor = require("./src/resolveRouteAnchor");
 const flattenRoutes = require("./src/flattenRoutes");
 const getParams = require("./src/getParams");
 const goTo = require("./src/goTo");
@@ -95,21 +95,30 @@ class RecursiveRouter {
         loadRoute(templateRoute, path, anchor, this);
     }
 
+    /**
+     * Return the current path state.
+     * @returns {[String, () => void]}
+     */
     getPathState() {
         return this.stateManager.getReserved(ROUTER_PATH_STATE);
     }
 
+    /**
+     * Return the current route object state.
+     * @returns {[import("../../lib").Route, () => void]}
+     */
     getRouteState() {
         return this.stateManager.getReserved(ROUTER_ROUTE_STATE);
     }
 
     /**
-     * Check the route for an anchor.
+     * Resolve the route
+     * and its anchor if it exists.
      * @param {string} path
      * @returns
      */
-    checkRoute(path) {
-        return checkRoute(path, this);
+    resolveRouteAnchor(path) {
+        return resolveRouteAnchor(path, this);
     }
 
     /**

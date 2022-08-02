@@ -2,35 +2,47 @@ const { RecursiveRouter } = require("..");
 
 /**
  * Load the appropriate route with the given parameters.
- * @param {Object} template
- * @param {string} route
- * @param {string} anchor
+ * @param {import("../../../lib").Route} routeTemplate route object.
+ * @param {string} routePath  because the path could be dynamic, we cannot use the path of the template.
+ * @param {string} routeAnchor identifier of the element that we should scroll to.
  * @param {RecursiveRouter} router
- * @returns
  */
-function loadRoute(template, route, anchor, router) {
-    const [path, setPath] = router.getPathState();
-    const [current, setCurrent] = router.getRouteState();
+function loadRoute(routeTemplate, routePath, routeAnchor, router) {
+    const [currentPath, setCurrentPath] = router.getPathState();
+    const [currentRoute, setCurrentRoute] = router.getRouteState();
 
-    if (path === route) return;
-
-    let _template = template;
+    if (currentPath === routePath) return;
 
     router.orchestrator.batchCallback(() => {
-        if (typeof current.onExit === "function") current.onExit();
+        if (typeof currentRoute.onExit === "function") currentRoute.onExit();
 
-        if (typeof template.title === "string") router.useRouterSetTitle(template.title);
+        if (typeof routeTemplate.title === "string") router.useRouterSetTitle(routeTemplate.title);
 
-        setCurrent(_template);
-        setPath(route);
+        /**
+         * Update the current stateful route object
+         */
+        setCurrentRoute(routeTemplate);
 
-        if (typeof _template.onLoad === "function") _template.onLoad();
+        /**
+         * Update the current stateful route path
+         */
+        setCurrentPath(routePath);
+
+        if (typeof routeTemplate.onLoad === "function") routeTemplate.onLoad();
     });
 
-    if (anchor) {
-        router.useRouterGoToAnchor(anchor);
+    if (routeAnchor) {
+        /**
+         * Scroll into anchor element.
+         */
+        router.useRouterGoToAnchor(routeAnchor);
     } else {
-        router.useRouterScrollToTop();
+        if (router.scroll) {
+            /**
+             * Correct scrolling position
+             */
+            router.useRouterScrollToTop();
+        }
     }
 }
 

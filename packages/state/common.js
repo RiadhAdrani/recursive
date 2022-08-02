@@ -1,7 +1,8 @@
 const { RecursiveState } = require(".");
 
 /**
- *
+ * Common a stateful object from the store.
+ * Used for sotres: `state`, `cache` and `reserved`.
  * @param {RecursiveState} store
  * @param {string} storeName
  * @param {string} key
@@ -10,10 +11,20 @@ const { RecursiveState } = require(".");
 function retrieveStatefulObject(store, storeName, key) {
     const state = store.getItem(key, storeName);
 
+    /**
+     * A new value instance.
+     */
     const _value = store.copy(state.value);
 
+    /**
+     * A new previous value instance.
+     */
     const _preValue = store.copy(state.preValue);
 
+    /**
+     * Update the value of the state.
+     * @param {any} newValue
+     */
     const _set = function (newValue) {
         if (!store.itemExists(key, storeName)) return;
 
@@ -24,12 +35,19 @@ function retrieveStatefulObject(store, storeName, key) {
         });
     };
 
+    /**
+     * Get the current value of the state.
+     * @returns {any} value
+     */
     const _live = function () {
         if (store.itemExists(key, storeName))
             return store.copy(store.getItem(key, storeName, undefined).value);
         else return undefined;
     };
 
+    /**
+     * Reset the state to the initial value.
+     */
     const _reset = function () {
         if (!store.itemExists(key, storeName)) return;
 
