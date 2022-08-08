@@ -24,8 +24,6 @@
         "framework"
     ],
     "devDependencies": {
-        "jest": "^28.1.3",
-        "ts-loader": "^9.3.0",
-        "typescript": "^4.7.4"
+        "jest": "^28.1.3"
     }
 }

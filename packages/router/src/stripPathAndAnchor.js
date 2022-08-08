@@ -6,6 +6,9 @@ const { ROUTER_ANCHOR_REG_EXP } = require("../../constants");
  * @return {[String,String]} result
  */
 function stripPathAndAnchor(destination) {
+    /**
+     * We only accept `string` as the only type of input.
+     */
     if (typeof destination !== "string") return ["", ""];
 
     const regEx = ROUTER_ANCHOR_REG_EXP;

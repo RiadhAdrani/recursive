@@ -1,34 +1,27 @@
 const { RecursiveRouter } = require("..");
-const loadRoute = require("./loadRoute");
+const mountNewRoute = require("./mountNewRoute");
+const resolvePath = require("./resolveInputRoute");
 
 /**
  * Used to navigate between routes.
- * @param {path} path
+ * @param {String} destination
  * @param {RecursiveRouter} router
  * @returns
  */
-function goTo(path, router) {
-    if (!path) return;
+function goTo(destination, router) {
+    if (!destination) return;
 
-    const [_route, anchor] = router.resolveRouteAnchor(path);
-    const [oldPath] = router.getPathState();
+    const [newPath, routeForm, anchor] = resolvePath(destination, router.routes);
+    const [currentPath] = router.getPathState();
 
     /**
      * We should check if the wanted route
      * is a different from the current one.
      */
-    if (_route && oldPath !== path) {
-        router.useRouterPushState(_route);
+    if (currentPath !== newPath) {
+        router.useRouterPushState(routeForm);
 
-        /**
-         * we check if this route has a redirection.
-         */
-        const _path = _route.redirected ? _route.path : path;
-
-        /**
-         * load the route
-         */
-        loadRoute(_route.route, _path, anchor, router);
+        mountNewRoute(newPath, routeForm, anchor);
     }
 }
 

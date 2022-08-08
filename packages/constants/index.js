@@ -1,6 +1,6 @@
 // Router
 const ROUTER_DYNAMIC_REG_EXP = /:[^:;]*;/g;
-const ROUTER_ANCHOR_REG_EXP = /#[a-zA-Z0-9-._~:?#\[\]\@!$&'()*+,;=]{1,}$/gm;
+const ROUTER_ANCHOR_REG_EXP = /#[\w.~:?#[\]@!$&'()*+,;=-]+$/;
 const ROUTER_PATH_STATE = "path";
 const ROUTER_ROUTE_STATE = "route";
 const ROUTER_NOT_FOUND_ROUTE = "/404";
