@@ -18,7 +18,7 @@ function mountNewRoute(path, routeForm, anchor, router) {
             currentRoute.onExit();
         }
 
-        if (routeTemplate.title) router.useRouterSetTitle(routeTemplate);
+        if (routeTemplate.title) router.useRouterSetTitle(routeTemplate.title);
 
         setCurrentRoute(routeTemplate);
         setCurrentPath(path);

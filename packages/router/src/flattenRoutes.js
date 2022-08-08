@@ -1,3 +1,5 @@
+const { RecursiveConsole } = require("../../console");
+
 /**
  * Resolve the provided route and return a flat object.
  * @param {import("../../../lib").Route} route
@@ -13,13 +15,28 @@ function flattenRoutes(route) {
      * - contains a component
      */
     if (route && route.path && route.component) {
+        const onLoad = typeof route.onLoad == "function" ? route.onLoad : () => {};
+        const onExit = typeof route.onExit == "function" ? route.onExit : () => {};
+        const title = typeof route.title == "string" ? route.title : null;
+        const redirectTo = typeof route.redirectTo == "string" ? route.redirectTo : null;
+
+        if (typeof route.component != "function") {
+            RecursiveConsole.error(
+                "Recursive Router : router's component should be of type function."
+            );
+        }
+
+        if (typeof route.path != "string") {
+            RecursiveConsole.error("Recursive Router : router's path should be of type string.");
+        }
+
         list[route.path] = {
             path: route.path,
             component: route.component,
-            redirectTo: route.redirectTo,
-            title: route.title,
-            onLoad: route.onLoad,
-            onExit: route.onExit,
+            redirectTo,
+            title,
+            onLoad,
+            onExit,
         };
 
         if (Array.isArray(route.routes)) {

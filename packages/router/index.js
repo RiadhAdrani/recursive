@@ -2,7 +2,6 @@ const { RecursiveConsole } = require("../console");
 const { ROUTER_PATH_STATE, ROUTER_ROUTE_STATE, ROUTER_NOT_FOUND_ROUTE } = require("../constants");
 const { RecursiveOrchestrator } = require("../orchestrator");
 const { RecursiveState } = require("../state");
-const resolveRouteAnchor = require("./src/resolveRouteAnchor");
 const flattenRoutes = require("./src/flattenRoutes");
 const getParams = require("./src/getParams");
 const goTo = require("./src/goTo");
@@ -10,6 +9,8 @@ const loadRoute = require("./src/loadRoute");
 const renderFragment = require("./src/renderFragment");
 const renderRoute = require("./src/renderRoute");
 const replace = require("./src/replace");
+const resolvePath = require("./src/resolveInputRoute");
+const mountNewRoute = require("./src/mountNewRoute");
 
 /**
  * ### `RecursiveRouter`
@@ -76,6 +77,12 @@ class RecursiveRouter {
             };
         }
 
+        if (this.routes[ROUTER_NOT_FOUND_ROUTE].redirectTo) {
+            RecursiveConsole.error(
+                "Recursive Router : The 404 not found route cannot have a redirection path."
+            );
+        }
+
         const fTemplate = this.routes["/"];
 
         this.stateManager.setReserved(ROUTER_PATH_STATE, "/");
@@ -109,16 +116,6 @@ class RecursiveRouter {
      */
     getRouteState() {
         return this.stateManager.getReserved(ROUTER_ROUTE_STATE);
-    }
-
-    /**
-     * Resolve the route
-     * and its anchor if it exists.
-     * @param {string} path
-     * @returns
-     */
-    resolveRouteAnchor(path) {
-        return resolveRouteAnchor(path, this);
     }
 
     /**
@@ -166,6 +163,18 @@ class RecursiveRouter {
     }
 
     /**
+     * resolve path.
+     * @param {String} path
+     */
+    resolvePath(path) {
+        return resolvePath(path);
+    }
+
+    mountNewRoute(path, route, anchor) {
+        mountNewRoute(path, route, anchor, this);
+    }
+
+    /**
      * Build the URL.
      * @param {string} path
      */
@@ -182,18 +191,21 @@ class RecursiveRouter {
 
     /**
      * Replace the current route state.
-     * @param {string} route
+     * @param {String} destination
+     * @param {String} routeForm
+     * @param {String} hash
      */
-    useRouterReplaceState(route) {
+    useRouterReplaceState(destination, routeForm, hash) {
         RecursiveConsole.error("useRouterReplaceState is not implemented");
     }
 
     /**
-     * Push another route state.
-     * @param {string} route
-     * @param {string} hash
+     * Push a new route state.
+     * @param {String} destination
+     * @param {String} routeForm
+     * @param {String} hash
      */
-    useRouterPushState(route, hash) {
+    useRouterPushState(destination, routeForm, hash) {
         RecursiveConsole.error("useRouterPushState is not implemented");
     }
 

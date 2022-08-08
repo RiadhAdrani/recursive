@@ -1,5 +1,6 @@
 const { RecursiveRouter } = require("..");
-const loadRoute = require("./loadRoute");
+const mountNewRoute = require("./mountNewRoute");
+const resolvePath = require("./resolveInputRoute");
 
 /**
  * Replace the current route with the given one.
@@ -11,12 +12,12 @@ const loadRoute = require("./loadRoute");
 function replace(routePath, routeAnchor, router) {
     if (!routePath) return;
 
-    const [_route] = router.resolveRouteAnchor(routePath);
+    const [newPath, routeForm, anchor] = resolvePath(routePath, router.routes);
 
-    if (_route) {
-        router.useRouterReplaceState(_route, routeAnchor);
+    if (newPath) {
+        router.useRouterReplaceState(newPath, routeForm, anchor);
 
-        loadRoute(_route.route, routePath, routeAnchor, router);
+        mountNewRoute(newPath, routeForm, routeAnchor, router);
     }
 }
 

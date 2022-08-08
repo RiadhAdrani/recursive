@@ -1,5 +1,8 @@
 const { RecursiveRouter } = require("..");
 const findRouteForFragment = require("./findRouteForFragment");
+const findRouteOfForm = require("./findRouteOfForm");
+const isDynamicRoute = require("./isDynamicRoute");
+const stripPathAndAnchor = require("./stripPathAndAnchor");
 
 /**
  * Return the component matching the current context.
@@ -25,11 +28,19 @@ function renderFragment(router) {
         return `${prev}${val}`;
     });
 
+    let [routeForm] = stripPathAndAnchor(expected);
+
+    const isDynamic = isDynamicRoute(expected, router);
+
+    if (isDynamic.isDynamic) {
+        routeForm = isDynamic.template.path;
+    }
+
     /**
      * The appropriate fragment route
      * calculated using the `expected` route.
      */
-    const fragmentRoute = findRouteForFragment(expected, router);
+    let fragmentRoute = router.routes[routeForm] || router.routes["/404"] || false;
 
     /**
      * Route fragment element.

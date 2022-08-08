@@ -19,9 +19,9 @@ function goTo(destination, router) {
      * is a different from the current one.
      */
     if (currentPath !== newPath) {
-        router.useRouterPushState(routeForm);
+        router.useRouterPushState(newPath, routeForm, anchor);
 
-        mountNewRoute(newPath, routeForm, anchor);
+        mountNewRoute(newPath, routeForm, anchor, router);
     }
 }
 
