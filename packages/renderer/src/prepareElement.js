@@ -21,13 +21,21 @@ const prepareElement = (element, id, parent, renderer) => {
     const _element = {};
 
     if (!element.$$_RecursiveSymbol || element.$$_RecursiveSymbol != RECURSIVE_ELEMENT_SYMBOL) {
-        RecursiveConsole.error("Element does not have the RecursiveElement signature symbol.");
+        RecursiveConsole.error(
+            "Recursive Renderer : Element does not have the RecursiveElement signature symbol.",
+            ['You should create an element only using "createRecursiveElement" method.']
+        );
         return false;
     }
 
-    if (!element.elementType || !element.elementType.toString().trim()) {
-        RecursiveConsole.error('"elementType" should not be empty of null', [
-            "Make sure to provide a type for your element (ex: div in web)",
+    if (
+        typeof element.elementType != "string" ||
+        !element.elementType ||
+        !element.elementType.toString().trim()
+    ) {
+        RecursiveConsole.error('Recursive Renderer : "elementType" should not be empty or null.', [
+            "Element type should be of type string.",
+            "Make sure to provide a type for your element (ex: div in web).",
         ]);
         return false;
     }
@@ -68,6 +76,11 @@ const prepareElement = (element, id, parent, renderer) => {
         }
 
         if (renderer.useRendererIsEvent(property)) {
+            if (typeof element[property] != "function") {
+                RecursiveConsole.error(
+                    `Recursive Renderer : Event "${property}" is not a function.`
+                );
+            }
             _element.events[property] = element[property];
             continue;
         }

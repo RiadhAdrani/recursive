@@ -1,4 +1,5 @@
 const { RecursiveRenderer } = require("../");
+const { RecursiveConsole } = require("../../console");
 const { ELEMENT_TYPE_TEXT_NODE } = require("../../constants");
 
 /**
@@ -9,8 +10,11 @@ const { ELEMENT_TYPE_TEXT_NODE } = require("../../constants");
  */
 function updateElement(element, newElement, renderer) {
     const instance = element.instance;
+
     if (!instance) {
-        RecursiveConsole.error("Element not found, renderer error should not happen.");
+        RecursiveConsole.error(
+            "Recursive Renderer : Element not found, renderer error should not happen."
+        );
     }
 
     if (element.flags && element.flags.forceRerender === true) {
@@ -25,8 +29,13 @@ function updateElement(element, newElement, renderer) {
             renderer.useRendererUpdateText(element, newElement);
         }
     } else {
-        renderer.updateEvents(element, newElement);
-        renderer.updateAttributes(element, newElement);
+        const eventsDidChange = renderer.updateEvents(element, newElement);
+        const attributesDidChange = renderer.updateAttributes(element, newElement);
+
+        if (eventsDidChange || attributesDidChange) {
+            renderer.onElementUpdated(element);
+        }
+
         renderer.updateStyle(element, newElement);
         renderer.updateChildren(element, newElement);
     }

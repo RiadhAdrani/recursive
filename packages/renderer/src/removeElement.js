@@ -11,17 +11,13 @@ const {
  * @param {RecursiveRenderer} renderer
  */
 function removeElement(element, renderer) {
-    if (element.hooks && element.hooks.beforeDestroyed) {
-        renderer.delegateToRenderer(RENDERER_PHASE_BEFORE_DESTROYED, element.hooks.beforeDestroyed);
-    }
+    renderer.onBeforeElementDestroyed(element);
 
     renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
         renderer.useRendererRemoveElement(element);
     });
 
-    if (element.hooks && element.hooks.onDestroyed) {
-        renderer.delegateToRenderer(RENDERER_PHASE_ON_DESTROYED, element.hooks.onDestroyed);
-    }
+    renderer.onElementDestroyed(element);
 }
 
 module.exports = removeElement;

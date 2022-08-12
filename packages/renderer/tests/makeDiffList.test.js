@@ -13,6 +13,17 @@ it.each([
     [{ color: "red" }, {}, { toRemove: { color: "red" }, toUpdate: {}, toAdd: {} }],
     [{}, { color: "red" }, { toRemove: {}, toUpdate: {}, toAdd: { color: "red" } }],
     [{ color: "blue" }, { color: "red" }, { toRemove: {}, toUpdate: { color: "red" }, toAdd: {} }],
+    [{ color: "red" }, { color: "red" }, { toRemove: {}, toUpdate: {}, toAdd: {} }],
+    [
+        { data: { color: "red" } },
+        { data: { color: "red" } },
+        { toRemove: {}, toUpdate: {}, toAdd: {} },
+    ],
+    [
+        { data: { color: "red" } },
+        { data: { color: "blue" } },
+        { toRemove: {}, toUpdate: { data: { color: "blue" } }, toAdd: {} },
+    ],
     [
         { color: "blue", border: "1px" },
         { color: "red", background: "orange" },

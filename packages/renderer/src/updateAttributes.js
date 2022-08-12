@@ -28,6 +28,12 @@ function updateAttributes(element, newElement, renderer) {
             renderer.useRendererRemoveAttribute(key, element.instance);
         });
     }
+
+    return (
+        Object.keys(combined.toRemove).length > 0 ||
+        Object.keys(combined.toAdd).length > 0 ||
+        Object.keys(combined.toUpdate).length > 0
+    );
 }
 
 module.exports = updateAttributes;

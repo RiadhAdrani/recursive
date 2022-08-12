@@ -111,8 +111,10 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      */
     onElementUpdated(element) {
-        if (element.hooks)
-            this.delegateToRenderer(RENDERER_PHASE_ON_UPDATED, element.hooks.onUpdated);
+        if (element.hooks && element.hooks.onUpdated)
+            this.delegateToRenderer(RENDERER_PHASE_ON_UPDATED, () =>
+                element.hooks.onUpdated(element.instance)
+            );
     }
 
     /**
@@ -120,10 +122,11 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      */
     onElementCreated(element) {
-        if (element.hooks && element.hooks.onCreated)
+        if (element.hooks && element.hooks.onCreated) {
             this.delegateToRenderer(RENDERER_PHASE_ON_CREATED, () =>
                 element.hooks.onCreated(element.instance)
             );
+        }
     }
 
     /**
@@ -194,7 +197,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} newElement
      */
     updateEvents(element, newElement) {
-        updateEvents(element, newElement, this);
+        return updateEvents(element, newElement, this);
     }
 
     /**
@@ -203,7 +206,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} newElement
      */
     updateAttributes(element, newElement) {
-        updateAttributes(element, newElement, this);
+        return updateAttributes(element, newElement, this);
     }
 
     /**

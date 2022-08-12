@@ -27,9 +27,16 @@ function makeDiffList(oldList, newList) {
 
     for (let key in combined) {
         if (newList.hasOwnProperty(key)) {
-            if (oldList.hasOwnProperty(key) && oldList[key] !== newList[key]) {
-                toUpdate[key] = combined[key];
-            } else {
+            if (oldList.hasOwnProperty(key)) {
+                if (
+                    typeof oldList[key] == typeof newList[key] &&
+                    typeof newList[key] == "function"
+                ) {
+                    toUpdate[key] = combined[key];
+                } else if (JSON.stringify(oldList[key]) != JSON.stringify(newList[key])) {
+                    toUpdate[key] = combined[key];
+                }
+            } else if (!oldList.hasOwnProperty(key)) {
                 toAdd[key] = combined[key];
             }
         } else {

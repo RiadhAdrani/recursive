@@ -7,6 +7,7 @@ const { makeDiffList } = require("../utility");
  * @param {import("../../../lib.js").RecursiveElement} element
  * @param {import("../../../lib.js").RecursiveElement} newElement
  * @param {RecursiveRenderer} renderer
+ * @param {boolean}
  */
 function updateEvents(element, newElement, renderer) {
     const combined = makeDiffList(element.events, newElement.events);
@@ -28,6 +29,8 @@ function updateEvents(element, newElement, renderer) {
             renderer.useRendererRemoveEvent(key, element.instance);
         });
     }
+
+    return Object.keys(combined.toRemove).length > 0 || Object.keys(combined.toAdd).length > 0;
 }
 
 module.exports = updateEvents;

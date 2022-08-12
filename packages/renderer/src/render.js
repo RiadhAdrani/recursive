@@ -1,6 +1,6 @@
 const { RecursiveRenderer } = require("../");
 const { RecursiveConsole } = require("../../console");
-const { RENDERER_PHASE_ON_CREATED } = require("../../constants");
+const { RENDERER_PHASE_ON_CREATED, RECURSIVE_ELEMENT_SYMBOL } = require("../../constants");
 const prepareElement = require("./prepareElement");
 
 /**
@@ -8,13 +8,25 @@ const prepareElement = require("./prepareElement");
  * @param {RecursiveRenderer} renderer
  */
 function render(renderer) {
-    if (typeof renderer.app !== "function") RecursiveConsole.error("App is not of type function");
+    if (typeof renderer.app !== "function") {
+        RecursiveConsole.error("App is not of type function.");
+    }
 
-    if (!renderer.root) RecursiveConsole.error("No root was specified.");
+    if (!renderer.root) {
+        RecursiveConsole.error("No root was specified.");
+    }
 
     renderer.orchestrator.setStep.computeTree();
 
-    renderer.current = prepareElement(renderer.app(), "0", null, renderer);
+    const initialRender = renderer.app();
+
+    if (initialRender.$$_RecursiveSymbol != RECURSIVE_ELEMENT_SYMBOL) {
+        RecursiveConsole.error("Root element is not of type RecursiveElement.", [
+            "Use createRecursiveElement to create a valid element.",
+        ]);
+    }
+
+    renderer.current = prepareElement(initialRender, "0", null, renderer);
 
     renderer.useRendererOnTreePrepared(renderer.current);
 

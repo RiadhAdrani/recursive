@@ -18,8 +18,6 @@ function mountNewRoute(path, routeForm, anchor, router) {
             currentRoute.onExit();
         }
 
-        if (routeTemplate.title) router.useRouterSetTitle(routeTemplate.title);
-
         setCurrentRoute(routeTemplate);
         setCurrentPath(path);
 
@@ -34,6 +32,10 @@ function mountNewRoute(path, routeForm, anchor, router) {
         if (router.scroll) {
             router.useRouterScrollToTop();
         }
+    }
+
+    if (routeTemplate.title) {
+        router.useRouterSetTitle(routeTemplate.title);
     }
 }
 

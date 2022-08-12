@@ -32,7 +32,7 @@ export interface RecursiveElement extends RawElement {
     children: Array<RecursiveElement>;
 }
 
-export type App = () => RawElement;
+export type App = () => RecursiveElement;
 
 export interface Route {
     path: string;

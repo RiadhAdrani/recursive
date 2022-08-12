@@ -5,7 +5,6 @@ const { RecursiveState } = require("../state");
 const flattenRoutes = require("./src/flattenRoutes");
 const getParams = require("./src/getParams");
 const goTo = require("./src/goTo");
-const loadRoute = require("./src/loadRoute");
 const renderFragment = require("./src/renderFragment");
 const renderRoute = require("./src/renderRoute");
 const replace = require("./src/replace");
@@ -92,17 +91,6 @@ class RecursiveRouter {
     }
 
     /**
-     * Load the appropriate route with the given parameters.
-     * @param {Object} templateRoute
-     * @param {string} path
-     * @param {string} anchor
-     * @returns
-     */
-    loadRoute(templateRoute, path, anchor) {
-        loadRoute(templateRoute, path, anchor, this);
-    }
-
-    /**
      * Return the current path state.
      * @returns {[String, () => void]}
      */
@@ -167,7 +155,7 @@ class RecursiveRouter {
      * @param {String} path
      */
     resolvePath(path) {
-        return resolvePath(path);
+        return resolvePath(path, this.routes);
     }
 
     mountNewRoute(path, route, anchor) {
