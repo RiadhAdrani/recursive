@@ -6,6 +6,7 @@ const {
     ELEMENT_TYPE_FRAGMENT,
     ELEMENT_TYPE_TEXT_NODE,
     RECURSIVE_ELEMENT_SYMBOL,
+    ELEMENT_TYPE_RAW,
 } = require("../../constants");
 const { checkChildIsValid } = require("../utility");
 
@@ -115,6 +116,17 @@ const prepareElement = (element, id, parent, renderer) => {
         });
 
         _element.children = _children;
+
+        if (
+            _element.elementType === ELEMENT_TYPE_RAW &&
+            _element.children.some((child) => child.elementType != ELEMENT_TYPE_TEXT_NODE)
+        ) {
+            RecursiveConsole.warn(
+                "Recursive Renderer : " +
+                    "You are using the raw element while one or more children are not of type string." +
+                    " They will be converted to string."
+            );
+        }
 
         const _map = {};
 

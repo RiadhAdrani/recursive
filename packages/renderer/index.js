@@ -559,7 +559,7 @@ class RecursiveRenderer {
      * @return {boolean}
      */
     useRendererIsAttribute(attribute) {
-        RecursiveConsole.error("Renderer has no method isAttribute.");
+        RecursiveConsole.error("Renderer has no method useRendererIsAttribute.");
     }
 
     /**
@@ -577,7 +577,7 @@ class RecursiveRenderer {
      * @return {boolean}
      */
     useRendererIsEvent(event) {
-        RecursiveConsole.error("Renderer has no method isEvent.");
+        RecursiveConsole.error("Renderer has no method useRendererIsEvent.");
     }
 
     /**
@@ -593,7 +593,7 @@ class RecursiveRenderer {
      * @return native element
      */
     useRendererCreateInstance(element) {
-        RecursiveConsole.error("Renderer has no method createInstance.");
+        RecursiveConsole.error("Renderer has no method useRendererCreateInstance.");
     }
 
     /**
@@ -616,7 +616,7 @@ class RecursiveRenderer {
      * @param {any} instance
      */
     useRendererInjectAttributes(element, instance) {
-        RecursiveConsole.error("Renderer has no method injectAttributes.");
+        RecursiveConsole.error("Renderer has no method useRendererInjectAttributes.");
     }
 
     /**
@@ -638,7 +638,7 @@ class RecursiveRenderer {
      * @param {any} instance
      */
     useRendererInjectEvents(element, instance) {
-        RecursiveConsole.error("Renderer has no method injectEvents.");
+        RecursiveConsole.error("Renderer has no method useRendererInjectEvents.");
     }
 
     /**
@@ -660,7 +660,47 @@ class RecursiveRenderer {
      * @param {any} instance
      */
     useRendererInjectChildren(element, instance) {
-        RecursiveConsole.error("Renderer has no method injectChildren.");
+        RecursiveConsole.error("Renderer has no method useRendererInjectChildren.");
+    }
+
+    /**
+     * Used to create a raw element.
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * Used to create an element,
+     * in which we will not inject children normally,
+     * instead, we will use `element.innerHTML`.
+     *
+     * ----
+     *
+     * @param {import("../../lib.js").RecursiveElement} element
+     */
+    useRendererCreateRawContainer(element) {
+        RecursiveConsole.error("Renderer has no method useRendererCreateRawContainer.");
+    }
+
+    /**
+     *
+     * Used in the update phase, when both the current element and the new one have the `#raw` tag.
+     *
+     * ----
+     *
+     * _**``Recursive-Web implementation example``**_
+     *
+     * We update the `element.innerHTML` with the new value.
+     *
+     * ----
+     *
+     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} newElement
+     */
+    useRendererUpdateRawContainersAgainstEachOthers(element, newElement) {
+        RecursiveConsole.error(
+            "Renderer has no method useRendererUpdateRawContainersAgainstEachOthers."
+        );
     }
 }
 

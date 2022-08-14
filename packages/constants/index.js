@@ -35,6 +35,7 @@ const HOOKS_BEFORE_DESTROYED = "beforeDestroyed";
 
 const ELEMENT_TYPE_FRAGMENT = "fragment";
 const ELEMENT_TYPE_TEXT_NODE = "#text";
+const ELEMENT_TYPE_RAW = "#raw";
 
 const RENDERER_PHASE_ON_CREATED = "onCreated";
 const RENDERER_PHASE_ON_UPDATED = "onUpdated";
@@ -90,6 +91,7 @@ module.exports = {
 
     ELEMENT_TYPE_FRAGMENT,
     ELEMENT_TYPE_TEXT_NODE,
+    ELEMENT_TYPE_RAW,
 
     RENDERER_PHASE_BEFORE_DESTROYED,
     RENDERER_PHASE_CHANGES,
