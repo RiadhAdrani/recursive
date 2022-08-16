@@ -46,8 +46,28 @@ function updateElement(element, newElement, renderer) {
          * We perform the classic routine of recursively
          * comparing attributes, events and children.
          */
+
+        /**
+         * A boolean indicating if at least a change in events happened.
+         */
         const eventsDidChange = renderer.updateEvents(element, newElement);
-        const attributesDidChange = renderer.updateAttributes(element, newElement);
+        /**
+         * A boolean indicating if at least a change in attributes happened.
+         * Performing the update twice
+         * Because some attributes should be updated before others,
+         * we don't know the specific order.
+         * If it is not updated on the first run,
+         * it will surely be updated on the second one.
+         * This operation could costly on some platforms,
+         * but it surely reduce performance.
+         *
+         * This is but a temporary fix.
+         * The real checking should be performed within
+         * `recursive-web`.
+         */
+        const attributesDidChange =
+            renderer.updateAttributes(element, newElement) &&
+            renderer.updateAttributes(element, newElement);
 
         renderer.updateStyle(element, newElement);
 
