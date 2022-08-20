@@ -47,6 +47,8 @@ const {
  * * `useRendererCreateInstance`
  * * `useRendererInjectEvents`
  * * `useRendererInjectChildren`
+ * * `useRendererCreateRawContainer`
+ * * `useRendererUpdateRawContainersAgainstEachOthers`
  */
 class RecursiveRenderer {
     /**

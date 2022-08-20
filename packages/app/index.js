@@ -4,6 +4,9 @@ const { RecursiveRenderer } = require("../renderer");
 const { RecursiveRouter } = require("../router");
 const { RecursiveState } = require("../state");
 
+/**
+ * ## `Recursive app boostrapper`
+ */
 class RecursiveApp {
     constructor({ renderer, buildRouter = () => {}, cacheSize = 1000, onAppInit = () => {} }) {
         /**
@@ -64,8 +67,13 @@ class RecursiveApp {
         this.router.useRouterOnLoad();
     }
 
-    route(param) {
-        return param;
+    /**
+     * Helper function to create route template.
+     * @param {import("../../lib").Route} params
+     * @returns {import("../../lib").Route}
+     */
+    route(params) {
+        return arguments[0];
     }
 
     getRoute() {

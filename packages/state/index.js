@@ -104,6 +104,7 @@ class RecursiveState {
     }
 
     /**
+     * Update a given item within the provided store.
      * @param {String} key
      * @param {any} newValue
      * @param {String} store

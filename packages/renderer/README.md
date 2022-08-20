@@ -21,3 +21,5 @@ This is like an `abstract` class, non-implemented methods should be overriden wi
 -   `useRendererCreateInstance`
 -   `useRendererInjectEvents`
 -   `useRendererInjectChildren`
+-   `useRendererCreateRawContainer`
+-   `useRendererUpdateRawContainersAgainstEachOthers`

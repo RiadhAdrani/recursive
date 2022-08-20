@@ -1,7 +1,7 @@
 /**
  * ### `RecursiveContext`
  *
- * Surround function within a `context`.
+ * Surround functionS within a `context`.
  */
 class RecursiveContext {
     constructor() {
@@ -47,8 +47,10 @@ class RecursiveContext {
         if (typeof callback != "function") return;
 
         this.startContext(data);
-        callback();
+        const result = callback();
         this.endCurrentContext();
+
+        return result;
     }
 }
 
