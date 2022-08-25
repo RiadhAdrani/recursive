@@ -8,11 +8,11 @@ const isRecursiveElement = require("./isRecursiveElement");
  * @param {import("../../../lib.js").RecursiveElement} parentElement
  * @param {RecursiveRenderer} renderer
  */
-function addElement(element, index, renderer) {
+function addElement(element, parentElement, index, renderer) {
     if (!isRecursiveElement(element)) return;
 
     renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () =>
-        renderer.useRendererAddElement(element, index)
+        renderer.useRendererAddElement(element, parentElement, index)
     );
 
     renderer.onElementCreated(element);

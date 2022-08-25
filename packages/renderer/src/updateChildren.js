@@ -41,7 +41,7 @@ function updateChildren(element, newElement, renderer) {
                  * If the new element does not exist in the old map
                  * we should append it in the correct position.
                  */
-                renderer.addElement(newChild, newPosition);
+                renderer.addElement(newChild, element, newPosition);
             } else {
                 /**
                  * If the element already exits,

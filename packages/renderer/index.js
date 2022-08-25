@@ -172,10 +172,11 @@ class RecursiveRenderer {
     /**
      * Append the given element into the provided parent element.
      * @param {import("../../lib.js").RecursiveElement} element
+     * @param {import("../../lib.js").RecursiveElement} parentElement
      * @param {number} index
      */
-    addElement(element, index) {
-        addElement(element, index, this);
+    addElement(element, parentElement, index) {
+        addElement(element, parentElement, index, this);
     }
 
     /**
@@ -525,7 +526,7 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      * @param {import("../../lib.js").RecursiveElement} parentElement
      */
-    useRendererAddElement(element, parentElement) {
+    useRendererAddElement(element, parentElement, index) {
         RecursiveConsole.error("Renderer has no method useRendererAddElement.");
     }
 
