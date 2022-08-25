@@ -60,10 +60,6 @@ describe("Renderer", () => {
         expect(typeof Renderer.updateChildren).toBe("function");
     });
 
-    test("renderer-class update-equal-children test", () => {
-        expect(typeof Renderer.updateEqualChildren).toBe("function");
-    });
-
     test("renderer-class update-style test", () => {
         expect(typeof Renderer.updateStyle).toBe("function");
     });

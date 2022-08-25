@@ -166,7 +166,7 @@ function prepareChild(child, id, parent, renderer) {
 }
 
 /**
- *
+ * Create a map with the given children or return false.
  * @param {Array<import("../../../lib.js").RawElement>} children
  */
 function prepareMap(children) {

@@ -43,8 +43,6 @@ class RecursiveApp {
             } else {
                 RecursiveConsole.error("Router is not of type RecursiveRouter.");
             }
-        } else {
-            RecursiveConsole.error("Router is not of type RecursiveRouter.");
         }
 
         if (typeof cacheSize == "number" && cacheSize != this.stateManager.cacheSize) {
@@ -61,6 +59,9 @@ class RecursiveApp {
         this.renderer.orchestrator = this.orchestrator;
     }
 
+    /**
+     * Inject the application into its container.
+     */
     render() {
         this.renderer.render();
 
@@ -68,7 +69,7 @@ class RecursiveApp {
     }
 
     /**
-     * Helper function to create route template.
+     * Create a route object.
      * @param {import("../../lib").Route} params
      * @returns {import("../../lib").Route}
      */

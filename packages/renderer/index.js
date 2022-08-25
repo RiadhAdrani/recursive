@@ -13,7 +13,6 @@ const replaceElement = require("./src/replaceElement");
 const setInstanceReference = require("./src/setInstanceReference");
 const update = require("./src/update");
 const updateAttributes = require("./src/updateAttributes");
-const updateChildrenEqual = require("./src/updateChildren.Equal");
 const updateChildren = require("./src/updateChildren");
 const updateElement = require("./src/updateElement");
 const updateEvents = require("./src/updateEvent");
@@ -39,6 +38,7 @@ const {
  * * `useRendererAddEvent`
  * * `useRendererRenderTree`
  * * `useRendererChangeElementPosition`
+ * * `useRendererGetElementPosition`
  * * `useRendererRemoveElement`
  * * `useRendererAddElement`
  * * `useRendererReplaceElement`
@@ -211,15 +211,6 @@ class RecursiveRenderer {
      */
     updateAttributes(element, newElement) {
         return updateAttributes(element, newElement, this);
-    }
-
-    /**
-     * Update children
-     * @param {Array<import("../../lib.js").RecursiveElement>} elementChildren
-     * @param {Array<import("../../lib.js").RecursiveElement>} newElementChildren
-     */
-    updateEqualChildren(elementChildren, newElementChildren) {
-        updateChildrenEqual(elementChildren, newElementChildren, this);
     }
 
     /**
@@ -493,6 +484,14 @@ class RecursiveRenderer {
      */
     useRendererChangeElementPosition(element, parentElement, newPosition) {
         RecursiveConsole.error("Renderer has no method useRendererChangeElementPosition.");
+    }
+
+    /**
+     * Return the element position within its siblings.
+     * @param {import("../../lib.js").RecursiveElement} element
+     */
+    useRendererGetElementPosition(element) {
+        RecursiveConsole.error("Renderer has no method useRendererGetElementPosition.");
     }
 
     /**
