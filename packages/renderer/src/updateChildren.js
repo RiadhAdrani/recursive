@@ -16,37 +16,21 @@ function updateChildren(element, newElement, renderer) {
 
     if (element.map && newElement.map) {
         for (let key in element.map) {
-            if (!newElement.map[key]) {
-                renderer.removeElement(element.children[element.map[key].index]);
-                delete element.map[key];
+            if (newElement.map[key] == undefined) {
+                renderer.removeElement(element.children[element.map[key]]);
             }
-        }
-
-        for (let key in element.map) {
-            renderer.updateElement(
-                element.children[element.map[key].index],
-                newElement.children[newElement.map[key].index]
-            );
         }
 
         for (let key in newElement.map) {
-            if (!element.map[key]) {
-                renderer.addElement(newElement.map[key].element, element);
-                element.map[key] = {
-                    key,
-                    element: newElement.map[key].element,
-                    index: Object.keys(element.map).length,
-                };
-            }
-        }
-
-        for (let key in element.map) {
-            if (element.map[key].index !== newElement.map[key].index) {
-                renderer.changeElementPosition(
-                    element.map[key].element,
-                    element,
-                    newElement.map[key].index
-                );
+            const newPosition = newElement.map[key];
+            const newChild = newElement.children[newPosition];
+            if (element.map[key] == undefined) {
+                renderer.addElement(newChild, newPosition);
+            } else {
+                const oldPosition = element.map[key];
+                const oldChild = element.children[oldPosition];
+                renderer.changeElementPosition(oldChild, newPosition);
+                renderer.updateElement(oldChild, newChild);
             }
         }
     } else {

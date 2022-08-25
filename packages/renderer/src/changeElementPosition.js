@@ -7,9 +7,9 @@ const { RENDERER_PHASE_CHANGES } = require("../../constants");
  * @param {import("../../../lib.js").RecursiveElement} newElement
  * @param {RecursiveRenderer} renderer
  */
-function changeElementPosition(element, parentElement, newPosition, renderer) {
+function changeElementPosition(element, newPosition, renderer) {
     renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () =>
-        renderer.useRendererChangeElementPosition(element, parentElement, newPosition)
+        renderer.useRendererChangeElementPosition(element, newPosition)
     );
 }
 

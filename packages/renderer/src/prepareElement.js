@@ -128,23 +128,7 @@ const prepareElement = (element, id, parent, renderer) => {
             );
         }
 
-        const _map = {};
-
-        for (let i = 0; i < _element.children.length; i++) {
-            if (
-                _element.children[i].key === undefined ||
-                _map[_element.children[i].key] !== undefined
-            )
-                continue;
-
-            _map[_element.children[i].key] = {
-                key: _element.children[i].key,
-                element: _element.children[i],
-                index: i,
-            };
-        }
-
-        if (Object.keys(_map).length === _element.children.length) _element.map = _map;
+        _element.map = prepareMap(_element.children);
     }
 
     return _element;
@@ -179,6 +163,34 @@ function prepareChild(child, id, parent, renderer) {
             return _prepared;
         }
     }
+}
+
+/**
+ *
+ * @param {Array<import("../../../lib.js").RawElement>} children
+ */
+function prepareMap(children) {
+    const map = {};
+
+    let index = 0;
+
+    for (let child of children) {
+        if (["string", "number"].includes(typeof child.key)) {
+            if (map[child.key] != undefined) {
+                RecursiveConsole.warn(
+                    "Recursive Renderer : Duplicate keys detected. Each child should have a unique key."
+                );
+                return false;
+            }
+            map[child.key] = index;
+        } else {
+            return false;
+        }
+
+        index++;
+    }
+
+    return map;
 }
 
 module.exports = prepareElement;

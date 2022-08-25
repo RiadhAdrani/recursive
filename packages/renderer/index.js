@@ -172,10 +172,10 @@ class RecursiveRenderer {
     /**
      * Append the given element into the provided parent element.
      * @param {import("../../lib.js").RecursiveElement} element
-     * @param {import("../../lib.js").RecursiveElement} parentElement
+     * @param {number} index
      */
-    addElement(element, parentElement) {
-        addElement(element, parentElement, this);
+    addElement(element, index) {
+        addElement(element, index, this);
     }
 
     /**
@@ -183,8 +183,8 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      * @param {import("../../lib.js").RecursiveElement} newElement
      */
-    changeElementPosition(element, parentElement, newPosition) {
-        changeElementPosition(element, parentElement, newPosition, this);
+    changeElementPosition(element, newPosition) {
+        changeElementPosition(element, newPosition, this);
     }
 
     /**
