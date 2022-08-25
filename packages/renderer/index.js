@@ -45,8 +45,10 @@ const {
  * * `useRendererIsAttribute`
  * * `useRendererIsEvent`
  * * `useRendererCreateInstance`
- * * `useRendererInjectEvents`
- * * `useRendererInjectChildren`
+ * * `useRendererInjectEvent`
+ * * `useRendererInjectChild`
+ * * `useRendererInjectAttribute`
+ * * `useRendererInjectStyle`
  * * `useRendererCreateRawContainer`
  * * `useRendererUpdateRawContainersAgainstEachOthers`
  */
@@ -614,11 +616,22 @@ class RecursiveRenderer {
      *
      * ----
      *
-     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {string} attributeName
+     * @param {any} value
      * @param {any} instance
      */
-    useRendererInjectAttributes(element, instance) {
-        RecursiveConsole.error("Renderer has no method useRendererInjectAttributes.");
+    useRendererInjectAttribute(attributeName, value, instance) {
+        RecursiveConsole.error("Renderer has no method useRendererInjectAttribute.");
+    }
+
+    /**
+     * Inject element style.
+     *
+     * @param {any} style
+     * @param {any} instance
+     */
+    useRendererInjectStyle(style, instance) {
+        RecursiveConsole.error("Renderer has no method useRendererInjectStyle.");
     }
 
     /**
@@ -631,7 +644,7 @@ class RecursiveRenderer {
      * _**``Recursive-Web implementation example``**_
      *
      * We loop over the `element.events`'s keys
-     * and use `addEventListener()` to inject the events into the instance.
+     * and inject events in their respective property.
      * Some custom events has a `handler` which will be executed instead.
      *
      * ----
@@ -639,8 +652,8 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      * @param {any} instance
      */
-    useRendererInjectEvents(element, instance) {
-        RecursiveConsole.error("Renderer has no method useRendererInjectEvents.");
+    useRendererInjectEvent(event, callback, instance) {
+        RecursiveConsole.error("Renderer has no method useRendererInjectEvent.");
     }
 
     /**
@@ -661,8 +674,8 @@ class RecursiveRenderer {
      * @param {import("../../lib.js").RecursiveElement} element
      * @param {any} instance
      */
-    useRendererInjectChildren(element, instance) {
-        RecursiveConsole.error("Renderer has no method useRendererInjectChildren.");
+    useRendererInjectChild(child, instance) {
+        RecursiveConsole.error("Renderer has no method useRendererInjectChild.");
     }
 
     /**

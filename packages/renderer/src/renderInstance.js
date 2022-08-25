@@ -14,11 +14,19 @@ function renderInstance(element, renderer) {
             : renderer.useRendererCreateInstance(element);
 
     if (element.attributes) {
-        renderer.useRendererInjectAttributes(element, _instance);
+        for (let attr in element.attributes) {
+            renderer.useRendererInjectAttribute(attr, element.attributes[attr], _instance);
+        }
+    }
+
+    if (element.style) {
+        renderer.useRendererInjectStyle(element.style, _instance);
     }
 
     if (element.events) {
-        renderer.useRendererInjectEvents(element, _instance);
+        for (let ev in element.events) {
+            renderer.useRendererInjectEvent(ev, element.events[ev], _instance);
+        }
     }
 
     /**
@@ -26,7 +34,9 @@ function renderInstance(element, renderer) {
      * It is the responsibility of useRendererCreateRawContainer
      */
     if (Array.isArray(element.children) && element.elementType !== ELEMENT_TYPE_RAW) {
-        renderer.useRendererInjectChildren(element, _instance);
+        for (let child of element.children) {
+            renderer.useRendererInjectChild(child, _instance);
+        }
     }
 
     element.instance = _instance;
