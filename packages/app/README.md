@@ -2,7 +2,7 @@
 
 Create an App instance.
 
-Automatically bind `Orchestrator`, `StateManager`, `Renderer` and `Router`.
+Automatically initialize `Orchestrator`, `State`, `Renderer` and `Router`.
 
 Exposed methods:
 

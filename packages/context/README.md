@@ -2,4 +2,4 @@
 
 _`experimental`_
 
-Execute functions inside a specified context.
+Execute synchronous callbacks within a `context`.

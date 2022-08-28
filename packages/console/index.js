@@ -42,6 +42,9 @@ function log(msg) {
     console.log(msg);
 }
 
+/**
+ * Display errors, warnings and log messages within the development mode.
+ */
 const RecursiveConsole = {
     error,
     warn,

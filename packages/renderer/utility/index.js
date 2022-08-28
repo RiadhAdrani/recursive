@@ -10,6 +10,12 @@ function checkChildIsValid(child) {
     return true;
 }
 
+/**
+ * Return the difference between two objects.
+ * @param {object} oldList old list.
+ * @param {object} newList new list.
+ * @returns {object} containing three keys `toRemove`, `toUpdate` and `toAdd`.
+ */
 function makeDiffList(oldList, newList) {
     const toRemove = {};
     const toUpdate = {};

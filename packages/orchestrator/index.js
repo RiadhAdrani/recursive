@@ -19,34 +19,78 @@ const {
 } = require("../constants");
 
 /**
- * #### `Recursive Orchestrator`
- * Manages and schedule updates.
+ * Recieve, manages and schedule application updates.
  */
 class RecursiveOrchestrator {
+    /**
+     * Create a new orchestrator instance.
+     *
+     * Use `RecursiveApp` to create an app using the orchestrator.
+     */
     constructor() {
         /**
          * @type {RecursiveRenderer}
          */
         this.renderer = undefined;
 
+        /**
+         * Currently executing task.
+         * @type {object}
+         */
         this.currentTask = { done: true };
 
+        /**
+         * Current orchestration phase.
+         * @type {string}
+         */
         this.step = ORCHESTRATOR_FREE;
 
+        /**
+         * The number of updates since the app has been created.
+         * @type {number}
+         */
         this.updatesCount = 0;
 
+        /**
+         * Boolean indicating if requests should be batched or not.
+         * @type {boolean}
+         */
         this.batching = false;
 
+        /**
+         * Boolean indicating if the state has really changed.
+         * @type {boolean}
+         */
         this.stateChanged = false;
 
+        /**
+         * Time in which the last batching has started.
+         * @type {number}
+         */
         this.batchingStartTime = Date.now();
 
+        /**
+         * The duration of the last batching.
+         * @type {number}
+         */
         this.batchingLastDuration = 0;
 
+        /**
+         * Contains queued batching requests.
+         * @type {Array<object>}
+         */
         this.batchingRequests = [];
 
+        /**
+         * Array containing unhandled update requests.
+         * @type {Array<object>}
+         */
         this.unhandledRequests = [];
 
+        /**
+         * Change the current orchestrator `step`.
+         * @type {object}
+         */
         this.setStep = {
             free: () => (this.step = ORCHESTRATOR_FREE),
             handlingRequests: () => (this.step = ORCHESTRATOR_HANDLING_REQUESTS),
@@ -66,9 +110,12 @@ class RecursiveOrchestrator {
 
     /**
      * Update the application using the current renderer.
+     *
+     * @throws an error if the renderer is falsy.
      */
     update() {
-        if (!this.renderer) RecursiveConsole.error("No renderer was specified");
+        if (!this.renderer)
+            RecursiveConsole.error("Recursive Orchestrator : No renderer was specified");
 
         this.renderer.update();
     }
@@ -76,39 +123,75 @@ class RecursiveOrchestrator {
     /**
      * Request an update. If the orchestrator is busy,
      * the update will be added to the `unhandled requests` to be executed later.
-     * @param {string} sender
+     * @param {string} sender sender or the reason of the update request.
      */
     requestUpdate(sender) {
         if (![ORCHESTRATOR_FREE, ORCHESTRATOR_HANDLING_REQUESTS].includes(this.step)) {
+            /**
+             * The orchestrator is busy right now,
+             * add the current request to the unhandled requests.
+             */
             this.unhandledRequests.push(createUpdateObject(sender, sender));
             return;
         }
 
         if (this.step === ORCHESTRATOR_FREE) {
+            /**
+             * The orchestrator is free, we can trigger an update.
+             */
             this.update();
 
             this.updatesCount++;
             this.countUpdateSinceFree();
 
+            /**
+             * we check if there are some remaining update requests.
+             */
             if (this.unhandledRequests.length > 0) {
+                /**
+                 * if true,
+                 * we request a new update.
+                 */
                 this.setStep.handlingRequests();
                 this.requestUpdate("unhandled-requests");
             } else {
+                /**
+                 * if false,
+                 * we are free to go.
+                 */
                 this.free();
             }
+
             return;
         }
 
+        /**
+         * If we are handling requests.
+         */
         if (this.step === ORCHESTRATOR_HANDLING_REQUESTS) {
+            /**
+             * empty unhandled request and update the app.
+             */
             this.unhandledRequests = [];
             this.update();
             this.updatesCount++;
 
+            /**
+             * we check if there are some remaining update requests.
+             */
             if (this.unhandledRequests.length > 0) {
+                /**
+                 * if true,
+                 * we request a new update.
+                 */
                 this.setStep.handlingRequests();
                 this.unhandledRequests = [];
                 this.requestUpdate("unhandled-requests");
             } else {
+                /**
+                 * if false,
+                 * we are free to go.
+                 */
                 this.free();
             }
         }
@@ -138,7 +221,7 @@ class RecursiveOrchestrator {
     }
 
     /**
-     * Notify the orchestrator of a change of state.
+     * Notify the orchestrator of a change in the state.
      */
     notifyStateChanged() {
         this.stateChanged = true;
@@ -190,7 +273,10 @@ class RecursiveOrchestrator {
             setTimeout(() => {
                 if (this.batchingRequests.find((req) => req.uuid === uuid)) {
                     RecursiveConsole.warn(
-                        "Batch request took too long (more than 100ms). This could be caused by a catched error. Avoid batching your updates in an asynchronous call and using await inside the updateAfter method."
+                        "Recursive Orchestrator : " +
+                            "Batch request took too long (more than 100ms)." +
+                            " This could be caused by a catched error." +
+                            " Avoid batching your updates in an asynchronous call and using await inside the updateAfter method."
                     );
                     this.endBatching(sender);
                 }
@@ -202,9 +288,8 @@ class RecursiveOrchestrator {
 
     /**
      * Batch update resulting from the callback.
-     * @param {Function} callback
-     * @param {string} batchName
-     * @returns
+     * @param {Function} callback batched callback.
+     * @param {string} batchName source of the batching. used for debugging.
      */
     batchCallback(callback, batchName = "batch-callback-" + Date.now) {
         if (callback === undefined || typeof callback !== "function") return;

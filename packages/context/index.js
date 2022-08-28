@@ -1,9 +1,10 @@
 /**
- * ### `RecursiveContext`
- *
- * Surround functionS within a `context`.
+ * Execute synchronous callbacks within a `context`.
  */
 class RecursiveContext {
+    /**
+     * Create new context store instance.
+     */
     constructor() {
         this.context = undefined;
         this.stack = [];

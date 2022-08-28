@@ -21,9 +21,7 @@ const {
 const { RecursiveOrchestrator } = require("../orchestrator");
 
 /**
- * #### `RecursiveState`
- *
- * Store and manage different types of states.
+ * Store and manage app state.
  *
  * * `state` reactive object that will last as long as it is needed.
  * * `cache` reactive state that will last as long as the App is running.

@@ -30,9 +30,11 @@ const mountNewRoute = require("./src/mountNewRoute");
 class RecursiveRouter {
     /**
      * Create an instance of the Recursive Router
-     * @param {import("../../lib").Route} route
-     * @param {string} base
-     * @param {boolean} scroll
+     * @param {import("../../lib").Route} route Route tree.
+     * @param {string} base application base.
+     * @param {boolean} scroll boolean indicating if the application should correct the current scrolling when a new route is mounted.
+     * @param {RecursiveState} stateManager application state manager.
+     * @param {RecursiveOrchestrator} orchestrator application orchestrator.
      */
     constructor(route, base, scroll, stateManager, orchestrator) {
         /**
@@ -60,6 +62,9 @@ class RecursiveRouter {
          */
         this.routes = flattenRoutes(route);
 
+        /**
+         * Routing context.
+         */
         this.routerContext = {
             context: undefined,
             stack: [],
@@ -78,11 +83,15 @@ class RecursiveRouter {
 
         if (this.routes[ROUTER_NOT_FOUND_ROUTE].redirectTo) {
             RecursiveConsole.error(
-                "Recursive Router : The 404 not found route cannot have a redirection path."
+                "Recursive Router : The reserved '/404' route cannot have a redirection path."
             );
         }
 
         const fTemplate = this.routes["/"];
+
+        if (!fTemplate) {
+            RecursiveConsole.error("Recursive Router : The '/' root route was not found.");
+        }
 
         this.stateManager.setReserved(ROUTER_PATH_STATE, "/");
         this.stateManager.setReserved(ROUTER_ROUTE_STATE, fTemplate);
@@ -92,7 +101,7 @@ class RecursiveRouter {
 
     /**
      * Return the current path state.
-     * @returns {[String, () => void]}
+     * @returns {import("../../lib").StateArray} State array.
      */
     getPathState() {
         return this.stateManager.getReserved(ROUTER_PATH_STATE);
@@ -100,7 +109,7 @@ class RecursiveRouter {
 
     /**
      * Return the current route object state.
-     * @returns {[import("../../lib").Route, () => void]}
+     * @returns {import("../../lib").StateArray} State array.
      */
     getRouteState() {
         return this.stateManager.getReserved(ROUTER_ROUTE_STATE);
@@ -109,7 +118,6 @@ class RecursiveRouter {
     /**
      * Used to navigate between routes.
      * @param {path} path
-     * @returns
      */
     goTo(path) {
         goTo(path, this);
@@ -158,6 +166,12 @@ class RecursiveRouter {
         return resolvePath(path, this.routes);
     }
 
+    /**
+     * Mount the route with the given parameters.
+     * @param {string} path route path.
+     * @param {import("../../lib").RouteTemplate} route route template
+     * @param {string} anchor route anchor
+     */
     mountNewRoute(path, route, anchor) {
         mountNewRoute(path, route, anchor, this);
     }

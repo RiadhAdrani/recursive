@@ -25,10 +25,12 @@ const {
 } = require("../constants");
 
 /**
- * ### `RecursiveRenderer`
- * Used as a template to implement a native renderer.
+ * Blueprint of a ``Recursive Renderer``.
  *
- * These methods should be implemented, otherwise they will throw `errors`
+ * Render and update the tree of elements.
+ *
+ * These methods should be implemented,
+ * otherwise they will throw `errors` :
  * * `useRendererClean`
  * * `useRendererOnTreePrepared`
  * * `useRendererRemoveAttribute`
@@ -56,7 +58,7 @@ class RecursiveRenderer {
     /**
      * Create a new recursive renderer.
      * @param {import("../../lib.js").App} app function returning the tree of elements
-     * @param {any} root
+     * @param {any} root application container.
      */
     constructor(app, root) {
         /**
@@ -74,9 +76,27 @@ class RecursiveRenderer {
          */
         this.contextManager = new RecursiveContext();
 
+        /**
+         * Callback used to build the tree of elements.
+         * @type {import("../../lib.js").App}
+         */
         this.app = app;
+
+        /**
+         * App container.
+         * @type {any}
+         */
         this.root = root;
+
+        /**
+         * Currently rendered tree.
+         * @type {import("../../lib.js").RecursiveElement}
+         */
         this.current = undefined;
+
+        /**
+         * Phases pending callbacks.
+         */
         this.phases = {
             [RENDERER_PHASE_ON_CREATED]: [],
             [RENDERER_PHASE_ON_UPDATED]: [],

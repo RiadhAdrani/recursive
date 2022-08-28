@@ -2,11 +2,11 @@ const { RECURSIVE_ELEMENT_SYMBOL } = require("../../constants");
 
 /**
  * Create an element with the recursive signature symbol.
- * @param {string} elmentType element type
- * @param  {any} props element properties.
- * @returns {import("../../../lib").RecursiveElement}
+ * @param {string} elementType Element type
+ * @param  {any} props Element properties.
+ * @returns {import("../../../lib").RecursiveElement} Recursive Element.
  */
-function createRecursiveElement(elementType, props) {
+function createElement(elementType, props) {
     return {
         ...props,
         elementType,
@@ -14,4 +14,4 @@ function createRecursiveElement(elementType, props) {
     };
 }
 
-module.exports = createRecursiveElement;
+module.exports = createElement;

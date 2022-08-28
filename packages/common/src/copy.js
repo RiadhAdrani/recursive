@@ -1,26 +1,26 @@
 /**
  * Create a new instance from the given object.
- * @param {any} from
- * @returns
+ * @param {any} source Source object.
+ * @returns {any} New instance.
  */
-function copy(from) {
+function copy(source) {
     let output = undefined;
 
     if (
         ["bigint", "boolean", "function", "number", "string", "symbol", "undefined"].includes(
-            typeof from
+            typeof source
         ) ||
-        from === null
+        source === null
     ) {
-        output = from;
-    } else if (Array.isArray(from)) {
+        output = source;
+    } else if (Array.isArray(source)) {
         output = [];
-        Object.assign(output, from);
-    } else if (typeof from == "object") {
+        Object.assign(output, source);
+    } else if (typeof source == "object") {
         output = {};
-        Object.assign(output, from);
+        Object.assign(output, source);
     } else {
-        output = from;
+        output = source;
     }
 
     return output;
