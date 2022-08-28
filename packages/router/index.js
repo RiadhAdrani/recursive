@@ -12,8 +12,9 @@ const resolvePath = require("./src/resolveInputRoute");
 const mountNewRoute = require("./src/mountNewRoute");
 
 /**
- * ### `RecursiveRouter`
- * Create an instance of the Recursive Router.
+ * Blueprint of a ``Recursive Router``.
+ *
+ * Manage App routing.
  *
  * These methods should be implemented, otherwise they will throw `errors`.
  * * `useRouterMakeURL`
