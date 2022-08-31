@@ -1,54 +1,52 @@
 const { isDevMode } = require("../common");
 
 /**
- * Utility function to throw errors.
- * @env development
- * @param {String} msg
- * @param {Array} help
+ * Display Error messages, logs and warnings in development mode.
  */
-function error(msg, help) {
-    if (!isDevMode() || !msg) return;
+class RecursiveConsole {
+    constructor() {}
 
-    let helpMsg = "";
+    /**
+     * Utility function to throw errors.
+     * @env development
+     * @param {String} msg
+     * @param {Array} help
+     */
+    static error(msg, help) {
+        if (!isDevMode() || !msg) return;
 
-    if (Array.isArray(help) && help.length > 0) {
-        helpMsg += "- Help - " + help.join(", ");
+        let helpMsg = "";
+
+        if (Array.isArray(help) && help.length > 0) {
+            helpMsg += "- Help - " + help.join(", ");
+        }
+
+        throw new Error(`${msg} ${helpMsg}`);
     }
 
-    throw new Error(`${msg} ${helpMsg}`);
+    /**
+     * Utility function to display logs.
+     * @env development
+     * @param {String} msg
+     * @param {Array} help
+     */
+    static log(msg) {
+        if (!isDevMode() || !msg) return;
+
+        console.log(msg);
+    }
+
+    /**
+     * Utility function to display warnings.
+     * @env development
+     * @param {String} msg
+     * @param {Array} help
+     */
+    static warn(msg) {
+        if (!isDevMode() || !msg) return;
+
+        console.warn(msg);
+    }
 }
-
-/**
- * Utility function to display warnings.
- * @env development
- * @param {String} msg
- * @param {Array} help
- */
-function warn(msg) {
-    if (!isDevMode() || !msg) return;
-
-    console.warn(msg);
-}
-
-/**
- * Utility function to display logs.
- * @env development
- * @param {String} msg
- * @param {Array} help
- */
-function log(msg) {
-    if (!isDevMode() || !msg) return;
-
-    console.log(msg);
-}
-
-/**
- * Display errors, warnings and log messages within the development mode.
- */
-const RecursiveConsole = {
-    error,
-    warn,
-    log,
-};
 
 module.exports = { RecursiveConsole };

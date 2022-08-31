@@ -1,5 +1,5 @@
 const { RecursiveOrchestrator } = require("./packages/orchestrator");
-const { RecursiveRenderer, createRecursiveElement } = require("./packages/renderer");
+const { RecursiveRenderer } = require("./packages/renderer");
 const { RecursiveRouter } = require("./packages/router");
 const { RecursiveState } = require("./packages/state");
 const { RecursiveConsole } = require("./packages/console");
@@ -11,6 +11,5 @@ module.exports = {
     RecursiveRouter,
     RecursiveState,
     RecursiveConsole,
-    createRecursiveElement,
     RecursiveApp,
 };

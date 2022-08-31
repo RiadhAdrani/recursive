@@ -1,9 +1,10 @@
 const { RecursiveConsole } = require("../console");
 const { RecursiveOrchestrator } = require("../orchestrator");
 const { RecursiveRenderer } = require("../renderer");
-const createElement = require("../renderer/element");
 const { RecursiveRouter } = require("../router");
 const { RecursiveState } = require("../state");
+
+const { Route, RecursiveElement, StateArray } = require("../../lib");
 
 /**
  * Recursive Application Bootstrapper.
@@ -71,10 +72,10 @@ class RecursiveApp {
      *
      * @param {string} elementType Element type.
      * @param {object} props Element properties.
-     * @returns {import("../../lib").RecursiveElement} Recursive Element.
+     * @returns {RecursiveElement} Recursive Element.
      */
     createElement(elementType, props) {
-        return createElement(elementType, props);
+        return this.renderer.createElement(elementType, props);
     }
 
     /**
@@ -93,9 +94,9 @@ class RecursiveApp {
 
     /**
      * Create a route tree object.
-     * @param {import("../../lib").Route} params Route properties.
+     * @param {Route} params Route properties.
      *
-     * @returns {import("../../lib").Route} Route.
+     * @returns {Route} Route.
      */
     route(params) {
         return arguments[0];
@@ -170,7 +171,7 @@ class RecursiveApp {
      * Could be used recursively within nested routes to render the appropriate components.
      *
      * @throws an error when the router is not initialized.
-     * @returns {import("../../lib").RecursiveElement} The current route fragment element.
+     * @returns {RecursiveElement} The current route fragment element.
      */
     renderRoute() {
         if (this.router) {
@@ -186,7 +187,7 @@ class RecursiveApp {
      * Retrieve an existing stateful object from the `state` store if it exists.
      * @param {string} key identifier
      * @throw an error if the state does not exist.
-     * @returns {import("../../lib").StateArray} StateArray
+     * @returns {StateArray} StateArray
      */
     getState(key) {
         return this.stateManager.getState(key);
@@ -202,7 +203,7 @@ class RecursiveApp {
      * If the return value of this function is a function itself,
      * it will be executed whe the state is destroyed.
      * @param {Function} onRemoved a function that will execute when the state has been destroyed.
-     * @returns {import("../../lib").StateArray} StateArray
+     * @returns {StateArray} StateArray
      */
     setState(key, value, onInit, onRemoved) {
         return this.stateManager.setState(...arguments);
@@ -212,7 +213,7 @@ class RecursiveApp {
      * Retrieve an existing stateful object from the `cache` store if it exists.
      * @param {string} key identifier
      * @throw an error if the state does not exist.
-     * @returns {import("../../lib").StateArray} StateArray
+     * @returns {StateArray} StateArray
      */
     getCache(key) {
         return this.stateManager.getCache(key);
@@ -232,7 +233,7 @@ class RecursiveApp {
      * If the return value of this function is a function itself,
      * it will be executed whe the state is destroyed.
      * @param {Function} onRemoved a function that will execute when the state has been destroyed.
-     * @returns {import("../../lib").StateArray} StateArray
+     * @returns {StateArray} StateArray
      */
     setCache(key, value, onInit, onRemoved) {
         return this.stateManager.setCache(...arguments);

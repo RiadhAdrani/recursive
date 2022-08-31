@@ -22,6 +22,7 @@ const {
     RENDERER_PHASE_BEFORE_DESTROYED,
     RENDERER_PHASE_ON_DESTROYED,
     RENDERER_PHASE_CHANGES,
+    RECURSIVE_ELEMENT_SYMBOL,
 } = require("../constants");
 
 /**
@@ -103,6 +104,20 @@ class RecursiveRenderer {
             [RENDERER_PHASE_BEFORE_DESTROYED]: [],
             [RENDERER_PHASE_ON_DESTROYED]: [],
             [RENDERER_PHASE_CHANGES]: [],
+        };
+    }
+
+    /**
+     * Create an element with the recursive signature symbol.
+     * @param {string} elementType Element type
+     * @param  {any} props Element properties.
+     * @returns {import("../../lib").RecursiveElement} Recursive Element.
+     */
+    createElement(elementType, props) {
+        return {
+            ...props,
+            elementType,
+            $$_RecursiveSymbol: RECURSIVE_ELEMENT_SYMBOL,
         };
     }
 
