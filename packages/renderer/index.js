@@ -3,7 +3,6 @@ const { RecursiveContext } = require("../context");
 const { RecursiveOrchestrator } = require("../orchestrator/");
 const { RecursiveState } = require("../state/");
 
-const createRecursiveElement = require("./element");
 const addElement = require("./src/addElement");
 const changeElementPosition = require("./src/changeElementPosition");
 const removeElement = require("./src/removeElement");
@@ -684,11 +683,22 @@ class RecursiveRenderer {
      *
      * ----
      *
-     * @param {import("../../lib.js").RecursiveElement} element
+     * @param {string} event
+     * @param {Function} callback
      * @param {any} instance
      */
     useRendererInjectEvent(event, callback, instance) {
         RecursiveConsole.error("Renderer has no method useRendererInjectEvent.");
+    }
+
+    /**
+     *
+     * @param {string} event
+     * @param {Function} callback
+     * @param {import("../../lib.js").RecursiveElement} instance
+     */
+    useRendererUpdateEvent(event, callback, element) {
+        RecursiveConsole.error("Renderer has no method useRendererUpdateEvent.");
     }
 
     /**
@@ -754,4 +764,4 @@ class RecursiveRenderer {
     }
 }
 
-module.exports = { RecursiveRenderer, createRecursiveElement };
+module.exports = { RecursiveRenderer };

@@ -14,13 +14,13 @@ function updateEvents(element, newElement, renderer) {
 
     for (let key in combined.toUpdate) {
         renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
-            renderer.useRendererAddEvent(key, combined.toUpdate[key], element);
+            renderer.useRendererUpdateEvent(key, newElement.events[key], element);
         });
     }
 
     for (let key in combined.toAdd) {
         renderer.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
-            renderer.useRendererAddEvent(key, combined.toAdd[key], element);
+            renderer.useRendererAddEvent(key, newElement.events[key], element);
         });
     }
 
