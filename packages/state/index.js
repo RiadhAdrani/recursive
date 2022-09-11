@@ -17,8 +17,10 @@ const {
     STATE_CACHE_STORE,
     STATE_RESERVED_STORE,
     STATE_REF_STORE,
+    STATE_EFFECT_STORE,
 } = require("../constants");
 const { RecursiveOrchestrator } = require("../orchestrator");
+const CreateEffectStore = require("./effect");
 
 /**
  * Store and manage app state.
@@ -48,6 +50,7 @@ class RecursiveState {
         this.createStore(CreateReservedStore(this));
         this.createStore(CreateCacheStore(this));
         this.createStore(CreateRefStore(this));
+        this.createStore(CreateEffectStore(this));
     }
 
     /**
@@ -166,6 +169,23 @@ class RecursiveState {
     }
 
     /**
+     * Execute unsubscription callback for a given item in a given store.
+     * @param {string} key object key
+     * @param {string} storeName store identifier
+     */
+    runUnsubscriptionCallback(key, storeName) {
+        if (this.itemExists(key, storeName)) {
+            const callback = this.getItem(key, storeName).unsubscribe;
+
+            if (typeof callback === "function") {
+                (() => {
+                    callback();
+                })();
+            }
+        }
+    }
+
+    /**
      * Retrieve an existing stateful object from the `state` store if it exists.
      * @param {string} key identifier
      * @throw an error if the state does not exist.
@@ -257,6 +277,16 @@ class RecursiveState {
      */
     getRef(key, defaultValue) {
         return this.stores[STATE_REF_STORE].get(key, defaultValue);
+    }
+
+    /**
+     * Create and execute a new effect.
+     * @param {string} key identifier.
+     * @param {Function} callback callback to be executed.
+     * @param {Array<>} dependencies effect dependencies that will decide if the effect should be called again.
+     */
+    setEffect(key, callback, dependencies) {
+        this.stores[STATE_EFFECT_STORE].set(key, callback, dependencies);
     }
 }
 

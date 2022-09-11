@@ -51,12 +51,14 @@ const STATE_STATE_STORE = "state";
 const STATE_CACHE_STORE = "cache";
 const STATE_REF_STORE = "ref";
 const STATE_RESERVED_STORE = "reserved";
+const STATE_EFFECT_STORE = "effect";
 
 module.exports = {
     STATE_CACHE_STORE,
     STATE_REF_STORE,
     STATE_RESERVED_STORE,
     STATE_STATE_STORE,
+    STATE_EFFECT_STORE,
 
     ROUTER_ANCHOR_REG_EXP,
     ROUTER_DYNAMIC_REG_EXP,

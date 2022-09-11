@@ -288,6 +288,16 @@ class RecursiveApp {
     updateOn(callback) {
         this.orchestrator.batchCallback(callback, "update-on-" + Date.now());
     }
+
+    /**
+     * Execute an effect.
+     * @param {string} key identifier.
+     * @param {Function} callback callback to be executed.
+     * @param {Array<>} dependencies effect dependencies that will decide if the effect should be called again.
+     */
+    setEffect(key, callback, dependencies) {
+        this.stateManager.setEffect(key, callback, dependencies);
+    }
 }
 
 module.exports = { RecursiveApp };
