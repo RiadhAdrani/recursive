@@ -51,7 +51,7 @@ function retrieveStatefulObject(store, storeName, key) {
     const _reset = function () {
         if (!store.itemExists(key, storeName)) return;
 
-        const newValue = state.history[0];
+        const newValue = store.copy(state.history[0]);
 
         store.updateItem(key, newValue, storeName, () => {
             store.useBatchCallback(() => {

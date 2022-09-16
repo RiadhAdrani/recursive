@@ -29,6 +29,7 @@ const CreateEffectStore = require("./effect");
  * * `cache` reactive state that will last as long as the App is running.
  * * `ref` reference an element in the App tree.
  * * `reserved`  used internally by some modules.
+ * * `effect` launch side effects.
  */
 class RecursiveState {
     constructor() {
@@ -37,7 +38,7 @@ class RecursiveState {
          */
         this.stores = {};
 
-        this.history = [this.stores];
+        this.history = [this.copy(this.stores)];
 
         /**
          * @type {RecursiveOrchestrator}

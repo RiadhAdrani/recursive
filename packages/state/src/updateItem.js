@@ -24,7 +24,7 @@ function updateItem(key, newValue, store, onChanged, forceUpdate, stateManager) 
 
     if (stateManager.stores[store].items[key].value !== newValue || forceUpdate) {
         stateManager.stores[store].items[key].history.push(
-            stateManager.stores[store].items[key].value
+            stateManager.copy(stateManager.stores[store].items[key].value)
         );
         stateManager.stores[store].items[key].preValue =
             stateManager.stores[store].items[key].value;
