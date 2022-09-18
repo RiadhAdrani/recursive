@@ -12,6 +12,15 @@ function preparePath(destination) {
 
     let prepared = destination.trim();
 
+    if (prepared !== "/") {
+        while (prepared[prepared.length - 1] === "/") {
+            prepared = prepared.slice(0, prepared.length - 1);
+        }
+    }
+
+    if (prepared[prepared.length - 1]) {
+    }
+
     if (prepared === "") {
         RecursiveConsole.error("Recursive Router : path is empty.", []);
     }
