@@ -1,3 +1,8 @@
+import { RecursiveOrchestrator } from "./packages/orchestrator";
+import { RecursiveRenderer } from "./packages/renderer";
+import { RecursiveRouter } from "./packages/router";
+import { RecursiveState } from "./packages/state";
+
 export interface Flags {
     renderIf: boolean;
     forceRerender: boolean;
@@ -89,3 +94,38 @@ export interface StoreParams {
 }
 
 export type StateArray = [any, (newValue: any) => void, () => any, () => void, any];
+
+export class RecursiveApp {
+    public orchestrator: RecursiveOrchestrator;
+    public stateManager: RecursiveState;
+    public router: RecursiveRouter;
+    public renderer: RecursiveRenderer;
+
+    createElement(elementType: string, props: object): RecursiveElement;
+
+    render(): void;
+
+    getRoute(): string;
+
+    getParams(): object;
+
+    getBase(): string;
+
+    goTo(path: string): void;
+
+    renderRoute(): RecursiveElement;
+
+    getState(key: string): StateArray;
+
+    setState<T>(key: string, value: T, onInit: () => Function, onRemoved: () => void): StateArray;
+
+    getCache(key: string): StateArray;
+
+    setCache<T>(key: string, value: T, onInit: () => Function, onRemoved: () => void): StateArray;
+
+    getRef(key: string): any;
+
+    setEffect(key: string, dependencies: Array<any>, callback: () => Function): void;
+
+    updateOn(callback: () => void): void;
+}

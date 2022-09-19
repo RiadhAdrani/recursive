@@ -91,16 +91,6 @@ class RecursiveApp {
     }
 
     /**
-     * Create a route tree object.
-     * @param {import("../../lib").Route} params Route properties.
-     *
-     * @returns {import("../../lib").Route} Route.
-     */
-    route(params) {
-        return arguments[0];
-    }
-
-    /**
      * Retrieve the current route as string.
      * @throws an error when the router is not initialized.
      *
@@ -191,18 +181,6 @@ class RecursiveApp {
         return this.stateManager.getState(key);
     }
 
-    /**
-     * Create and save a stateful object in the `state` store within the global `StateStore`.
-     *
-     * Objects created by this method are deleted when they are not used or called in a rendering iteration.
-     * @param {string} key unique identifier of the state whithin its store.
-     * @param {any} value initial value
-     * @param {Function} onInit a function that will execute when the state is initialized.
-     * If the return value of this function is a function itself,
-     * it will be executed whe the state is destroyed.
-     * @param {Function} onRemoved a function that will execute when the state has been destroyed.
-     * @returns {import("../../lib").StateArray} StateArray
-     */
     setState(key, value, onInit, onRemoved) {
         return this.stateManager.setState(...arguments);
     }
