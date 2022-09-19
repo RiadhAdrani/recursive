@@ -1,12 +1,45 @@
-import { RecursiveElement } from "../../lib";
+import { RecursiveElement, StateArray } from "../../lib";
+import { RecursiveOrchestrator } from "../orchestrator";
+import { RecursiveRenderer } from "../renderer";
+import { RecursiveRouter } from "../router";
+import { RecursiveState } from "../state";
 
-type StateArray<T = any> = [T, (value: T) => void, () => T, () => void, T];
+interface RecursiveAppConstructorParams {
+    /**
+     * application renderer.
+     */
+    renderer: RecursiveRenderer;
+    /**
+     * maximum number of cached states.
+     */
+    cacheSize: number;
+    /**
+     * a method returning the application router.
+     * The `RecursiveRouter` cannot be initialized without
+     * an instance of `RecursiveOrchestrator` and `RecursiveState`.
+     */
+    buildRouter: (app: RecursiveApp) => RecursiveRouter;
+    /**
+     * a callback that will execute when the app is initialized,
+     * but before the rendering phase.
+     */
+    onAppInit: (app: RecursiveApp) => void;
+}
 
+/**
+ * Recursive Application Bootstrapper.
+ */
 export class RecursiveApp {
     public orchestrator: RecursiveOrchestrator;
     public stateManager: RecursiveState;
     public router: RecursiveRouter;
     public renderer: RecursiveRenderer;
+
+    /**
+     * Create a new Recusive Application instance.
+     * @param params application parameters.
+     */
+    constructor(params: RecursiveAppConstructorParams);
 
     /**
      * Create a new element.
