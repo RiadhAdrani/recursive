@@ -1,4 +1,5 @@
 const { RecursiveState } = require("..");
+const { copy } = require("../../common");
 const { RecursiveConsole } = require("../../console");
 const itemExists = require("./itemExists");
 
@@ -24,7 +25,7 @@ function updateItem(key, newValue, store, onChanged, forceUpdate, stateManager) 
 
     if (stateManager.stores[store].items[key].value !== newValue || forceUpdate) {
         stateManager.stores[store].items[key].history.push(
-            stateManager.copy(stateManager.stores[store].items[key].value)
+            copy(stateManager.stores[store].items[key].value)
         );
         stateManager.stores[store].items[key].preValue =
             stateManager.stores[store].items[key].value;

@@ -136,7 +136,7 @@ const prepareElement = (element, id, parent, renderer) => {
 
 /**
  * Return a verified element child
- * @param {import("../../../lib.js").RawElement} child
+ * @param {import("../../../lib.js").BaseElement} child
  * @param {string} id
  * @param {RecursiveRenderer} renderer
  * @param {import("../../../lib.js").RecursiveElement}
@@ -167,7 +167,7 @@ function prepareChild(child, id, parent, renderer) {
 
 /**
  * Create a map with the given children or return false.
- * @param {Array<import("../../../lib.js").RawElement>} children
+ * @param {Array<import("../../../lib.js").BaseElement>} children
  */
 function prepareMap(children) {
     const map = {};
