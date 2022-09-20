@@ -97,7 +97,7 @@ class RecursiveApp {
             return this.router.renderRoute();
         } else {
             RecursiveConsole.error(
-                "Recursive Router : You can not use the method 'goTo()' because no Router has been initialized."
+                "Recursive Router : You can not use the method 'renderRoute()' because no Router has been initialized."
             );
         }
     }
