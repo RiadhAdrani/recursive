@@ -6,13 +6,13 @@ import { RecursiveState } from "../state";
 
 interface RecursiveAppConstructorParams {
     /**
-     * application renderer.
-     */
-    renderer: RecursiveRenderer;
-    /**
      * maximum number of cached states.
      */
     cacheSize: number;
+    /**
+     * application renderer.
+     */
+    buildRenderer: (app: RecursiveApp) => RecursiveRenderer;
     /**
      * a method returning the application router.
      * The `RecursiveRouter` cannot be initialized without

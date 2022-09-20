@@ -1,4 +1,5 @@
 import { NativeElement, RawElement, RecursiveElement } from "../../lib";
+import { RecursiveApp } from "../app";
 import { RecursiveContext } from "../context";
 import { RecursiveOrchestrator } from "../orchestrator";
 import { RecursiveState } from "../state";
@@ -31,20 +32,24 @@ import { RecursiveState } from "../state";
  * * `useRendererUpdateRawContainersAgainstEachOthers`
  */
 export class RecursiveRenderer {
-    public orchestrator: RecursiveOrchestrator;
-    public stateManager: RecursiveState;
+    public bootstrapper: RecursiveApp;
     public contextManager: RecursiveContext;
     public app: () => RecursiveElement;
     public root: NativeElement;
     public current: RecursiveElement;
     public phases: { [key: string]: Array<Function> };
 
+    get stateManager(): RecursiveState;
+
+    get orchestrator(): RecursiveOrchestrator;
+
     /**
      * Create an instance of the recursive renderer.
      * @param app a callback returning the tree of element/components.
      * @param root native element in which the UI will be injected.
+     * @param bootstrapper bootstrapping recursive application instance.
      */
-    constructor(app: () => RecursiveElement, root: NativeElement);
+    constructor(app: () => RecursiveElement, root: NativeElement, bootstrapper: RecursiveApp);
 
     /**
      * Create an element with the recursive signature symbol.

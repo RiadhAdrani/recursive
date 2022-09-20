@@ -10,10 +10,8 @@ const resolvePath = require("./src/resolveInputRoute");
 const mountNewRoute = require("./src/mountNewRoute");
 
 class RecursiveRouter {
-    constructor(route, base, scroll, stateManager, orchestrator) {
-        this.stateManager = stateManager;
-
-        this.orchestrator = orchestrator;
+    constructor(route, base, scroll, boostrapper) {
+        this.boostrapper = boostrapper;
 
         this.base = base || "";
 
@@ -53,6 +51,14 @@ class RecursiveRouter {
         this.stateManager.setReserved(ROUTER_ROUTE_STATE, fTemplate);
 
         this.useRouterNavigationListener();
+    }
+
+    get stateManager() {
+        return this.boostrapper.stateManager;
+    }
+
+    get orchestrator() {
+        return this.boostrapper.orchestrator;
     }
 
     getPathState() {

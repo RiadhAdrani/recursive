@@ -1,4 +1,5 @@
 import { RecursiveElement, Route, RouteTemplate, StateArray } from "../../lib";
+import { RecursiveApp } from "../app";
 import { RecursiveOrchestrator } from "../orchestrator";
 import { RecursiveState } from "../state";
 
@@ -28,28 +29,23 @@ interface RouterContext {
  * * `useRouterSetTitle`
  */
 export class RecursiveRouter {
-    public stateManager: RecursiveState;
-    public orchestrator: RecursiveOrchestrator;
     public base: string;
     public scroll: boolean;
     public routes: Array<Route>;
     public routerContext: RouterContext;
+    public bootstrapper: RecursiveApp;
+
+    get stateManager(): RecursiveState;
+    get orchestrator(): RecursiveOrchestrator;
 
     /**
      * create an instance of the Recursive Router
      * @param route route  tree.
      * @param base application basename.
      * @param scroll boolean indicating if the application should correct the current scrolling when a new route is mounted.
-     * @param stateManager application state manager.
-     * @param orchestrator application orchestrator.
+     * @param bootstrapper the bootstrapping recursive application module
      */
-    constructor(
-        route: Route,
-        base: string,
-        scroll: boolean,
-        stateManager: RecursiveRouter,
-        orchestrator: RecursiveOrchestrator
-    );
+    constructor(route: Route, base: string, scroll: boolean, bootstrapper: RecursiveApp);
 
     /**
      * return the current path state.

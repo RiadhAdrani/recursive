@@ -22,10 +22,10 @@ const {
 const CreateEffectStore = require("./effect");
 
 class RecursiveState {
-    constructor() {
+    constructor(bootstrapper) {
         this.stores = {};
         this.history = [this.copy(this.stores)];
-        this.orchestrator = undefined;
+        this.bootstrapper = bootstrapper;
         this.cacheSize = 1000;
 
         this.createStore(CreateStateStore(this));
@@ -33,6 +33,10 @@ class RecursiveState {
         this.createStore(CreateCacheStore(this));
         this.createStore(CreateRefStore(this));
         this.createStore(CreateEffectStore(this));
+    }
+
+    get orchestrator() {
+        return this.bootstrapper.orchestrator;
     }
 
     addItem(key, value = undefined, store, onAdded, onRemoved) {

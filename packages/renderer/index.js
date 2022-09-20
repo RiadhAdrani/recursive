@@ -1,7 +1,5 @@
 const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
-const { RecursiveOrchestrator } = require("../orchestrator/");
-const { RecursiveState } = require("../state/");
 
 const addElement = require("./src/addElement");
 const changeElementPosition = require("./src/changeElementPosition");
@@ -25,10 +23,8 @@ const {
 } = require("../constants");
 
 class RecursiveRenderer {
-    constructor(app, root) {
-        this.orchestrator = undefined;
-
-        this.stateManager = undefined;
+    constructor(app, root, bootstrapper) {
+        this.bootstrapper = bootstrapper;
 
         this.contextManager = new RecursiveContext();
 
@@ -45,6 +41,14 @@ class RecursiveRenderer {
             [RENDERER_PHASE_ON_DESTROYED]: [],
             [RENDERER_PHASE_CHANGES]: [],
         };
+    }
+
+    get orchestrator() {
+        return this.bootstrapper.orchestrator;
+    }
+
+    get stateManager() {
+        return this.bootstrapper.stateManager;
     }
 
     createElement(elementType, props) {

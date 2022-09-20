@@ -1,4 +1,5 @@
 import { StateArray } from "../../lib";
+import { RecursiveApp } from "../app";
 import { RecursiveOrchestrator } from "../orchestrator";
 
 interface Store {
@@ -31,13 +32,15 @@ interface StoreParams {
 export class RecursiveState {
     public stores: { [key: string]: Store };
     public history: [{ [key: string]: Store }];
-    public orchestrator: RecursiveOrchestrator;
     public cacheSize: 1000;
+
+    get orchestrator(): RecursiveOrchestrator;
 
     /**
      * create an instance of the Recursive State Manager.
+     * @param bootstrapper bootstrapping recursive app instance.
      */
-    constructor();
+    constructor(bootstrapper: RecursiveApp);
 
     /**
      * create a new stateful object within a given store.

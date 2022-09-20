@@ -1,4 +1,5 @@
 const { RecursiveRenderer } = require("..");
+const { RecursiveApp } = require("../../app");
 const { RENDERER_PHASE_ON_CREATED } = require("../../constants");
 
 describe("Renderer", () => {
@@ -7,7 +8,12 @@ describe("Renderer", () => {
     };
     const root = {};
 
-    const Renderer = new RecursiveRenderer(app, root);
+    const BootstrapperApp = new RecursiveApp({
+        buildRenderer: () => {
+            return new RecursiveRenderer(app, root);
+        },
+    });
+    const Renderer = BootstrapperApp.renderer;
 
     test("run-phase valid-callbacks test", () => {
         expect(

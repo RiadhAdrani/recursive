@@ -5,16 +5,22 @@ const { RecursiveRouter } = require("../router");
 const { RecursiveState } = require("../state");
 
 class RecursiveApp {
-    constructor({ renderer, buildRouter, cacheSize = 1000, onAppInit }) {
-        this.orchestrator = new RecursiveOrchestrator();
-        this.stateManager = new RecursiveState();
+    constructor({ buildRenderer, buildRouter, cacheSize = 1000, onAppInit }) {
         this.router = null;
         this.renderer = null;
+        this.orchestrator = new RecursiveOrchestrator(this);
+        this.stateManager = new RecursiveState(this);
 
-        if (renderer instanceof RecursiveRenderer) {
-            this.renderer = renderer;
+        if (typeof buildRenderer !== "function") {
+            RecursiveConsole.error("Recursive App : buildRenderer is not a function.");
         } else {
-            RecursiveConsole.error("Renderer is not of type RecursiveRenderer.");
+            let builtRenderer = buildRenderer(this);
+
+            if (builtRenderer instanceof RecursiveRenderer) {
+                this.renderer = builtRenderer;
+            } else {
+                RecursiveConsole.error("Renderer is not of type RecursiveRenderer.");
+            }
         }
 
         if (typeof buildRouter == "function") {
@@ -32,11 +38,6 @@ class RecursiveApp {
         if (typeof onAppInit == "function") {
             onAppInit(this);
         }
-
-        this.stateManager.orchestrator = this.orchestrator;
-        this.orchestrator.renderer = this.renderer;
-        this.renderer.stateManager = this.stateManager;
-        this.renderer.orchestrator = this.orchestrator;
     }
 
     createElement(elementType, props) {
@@ -106,7 +107,7 @@ class RecursiveApp {
     }
 
     setState(key, value, onInit, onRemoved) {
-        return this.stateManager.setState(...arguments);
+        return this.stateManager.setState(key, value, onInit, onRemoved);
     }
 
     getCache(key) {
@@ -114,7 +115,7 @@ class RecursiveApp {
     }
 
     setCache(key, value, onInit, onRemoved) {
-        return this.stateManager.setCache(...arguments);
+        return this.stateManager.setCache(key, value, onInit, onRemoved);
     }
 
     getRef(key) {
