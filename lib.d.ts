@@ -3,7 +3,7 @@ export interface Flags {
     forceRerender: boolean;
 }
 
-export interface Hooks<T> {
+export interface Hooks<T = any> {
     onCreated: (el: T) => void;
     onUpdated: (el: T) => void;
     onRef: (el: T) => void;
