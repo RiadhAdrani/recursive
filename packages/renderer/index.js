@@ -1,6 +1,7 @@
 const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
 
+const { createElement } = require("./element");
 const addElement = require("./src/addElement");
 const changeElementPosition = require("./src/changeElementPosition");
 const removeElement = require("./src/removeElement");
@@ -267,4 +268,4 @@ class RecursiveRenderer {
     }
 }
 
-module.exports = { RecursiveRenderer };
+module.exports = { RecursiveRenderer, createElement };

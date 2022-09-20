@@ -1,8 +1,11 @@
-import { NativeElement, RawElement, RecursiveElement } from "../../lib";
+import { NativeElement, RecursiveElement } from "../../lib";
 import { RecursiveApp } from "../app";
 import { RecursiveContext } from "../context";
 import { RecursiveOrchestrator } from "../orchestrator";
 import { RecursiveState } from "../state";
+import { createElement } from "./element";
+
+export { createElement };
 
 /**
  * A blue print for a `RecursiveRenderer`, used to render and update the tree of elements.

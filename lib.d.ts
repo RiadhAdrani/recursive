@@ -11,6 +11,15 @@ export interface Hooks<T = any> {
     onDestroyed: () => void;
 }
 
+export interface CommonProps<T = any> {
+    elementType: string;
+    $$_RecursiveSymbol: Symbol;
+    rendererOptions: { [item: string]: any };
+    hooks: Hooks<T>;
+    flags: Flags;
+    key: string;
+}
+
 export interface BaseElement {
     elementType: string;
     $$_RecursiveSymbol: Symbol;
