@@ -2,7 +2,6 @@ const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
 
 const { createElement } = require("./element");
-const addElement = require("./src/addElement");
 const changeElementPosition = require("./src/changeElementPosition");
 const removeElement = require("./src/removeElement");
 const render = require("./src/render");
@@ -22,6 +21,7 @@ const {
     RENDERER_PHASE_CHANGES,
     RECURSIVE_ELEMENT_SYMBOL,
 } = require("../constants");
+const isRecursiveElement = require("./src/isRecursiveElement");
 
 class RecursiveRenderer {
     constructor(app, root, bootstrapper) {
@@ -108,7 +108,13 @@ class RecursiveRenderer {
     }
 
     addElement(element, parentElement, index) {
-        addElement(element, parentElement, index, this);
+        if (!isRecursiveElement(element)) return;
+
+        this.delegateToRenderer(RENDERER_PHASE_CHANGES, () =>
+            this.useRendererAddElement(element, parentElement, index)
+        );
+
+        this.onElementCreated(element);
     }
 
     changeElementPosition(element, newPosition) {
