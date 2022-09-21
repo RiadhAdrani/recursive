@@ -2,7 +2,6 @@ const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
 
 const { createElement } = require("./element");
-const replaceElement = require("./src/replaceElement");
 const setInstanceReference = require("./src/setInstanceReference");
 const update = require("./src/update");
 const updateAttributes = require("./src/updateAttributes");
@@ -141,7 +140,15 @@ class RecursiveRenderer {
     }
 
     replaceElement(element, newElement) {
-        replaceElement(element, newElement, this);
+        this.onBeforeElementDestroyed(element);
+
+        this.delegateToRenderer(RENDERER_PHASE_CHANGES, () =>
+            this.useRendererReplaceElement(element, newElement)
+        );
+
+        this.onElementDestroyed(element);
+
+        newElement.instance = element.instance;
     }
 
     addElement(element, parentElement, index) {
