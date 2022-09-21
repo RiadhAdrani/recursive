@@ -2,7 +2,6 @@ const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
 
 const { createElement } = require("./element");
-const renderInstance = require("./src/renderInstance");
 const replaceElement = require("./src/replaceElement");
 const setInstanceReference = require("./src/setInstanceReference");
 const update = require("./src/update");
@@ -103,7 +102,42 @@ class RecursiveRenderer {
     }
 
     renderInstance(element) {
-        return renderInstance(element, this);
+        const _instance =
+            element.elementType === ELEMENT_TYPE_RAW
+                ? this.useRendererCreateRawContainer(element)
+                : this.useRendererCreateInstance(element);
+
+        if (element.attributes) {
+            for (let attr in element.attributes) {
+                this.useRendererInjectAttribute(attr, element.attributes[attr], _instance);
+            }
+        }
+
+        if (element.style) {
+            this.useRendererInjectStyle(element.style, _instance);
+        }
+
+        if (element.events) {
+            for (let ev in element.events) {
+                this.useRendererInjectEvent(ev, element.events[ev], _instance);
+            }
+        }
+
+        /**
+         * We do not inject children in case of a raw type element.
+         * It is the responsibility of useRendererCreateRawContainer
+         */
+        if (Array.isArray(element.children) && element.elementType !== ELEMENT_TYPE_RAW) {
+            for (let child of element.children) {
+                this.useRendererInjectChild(child, _instance);
+            }
+        }
+
+        element.instance = _instance;
+
+        this.onElementCreated(element);
+
+        return _instance;
     }
 
     replaceElement(element, newElement) {
