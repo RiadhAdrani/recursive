@@ -2,8 +2,6 @@ const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
 
 const { createElement } = require("./element");
-const updateChildren = require("./src/updateChildren");
-const updateElement = require("./src/updateElement");
 const updateEvents = require("./src/updateEvent");
 const {
     RENDERER_PHASE_ON_CREATED,
@@ -207,7 +205,97 @@ class RecursiveRenderer {
     }
 
     updateChildren(element, newElement) {
-        updateChildren(element, newElement, this);
+        const updateEqualChildrenRecursively = (elementChildren, newElementChildren) => {
+            for (let i = 0; i < elementChildren.length; i++) {
+                this.updateElement(elementChildren[i], newElementChildren[i]);
+            }
+        };
+
+        /**
+         * We check if all elements are in the tree.
+         * If one child is missing,
+         * we correct the tree by directly replacing the current one with the new one.
+         */
+        for (let i in element.children) {
+            if (!this.useRendererItemInTree(element.children[i])) {
+                this.replaceElement(element, newElement);
+                return;
+            }
+        }
+
+        if (element.map && newElement.map) {
+            /**
+             * We start by removing the excess elements
+             */
+            for (let key in element.map) {
+                if (newElement.map[key] == undefined) {
+                    this.removeElement(element.children[element.map[key]]);
+                }
+            }
+
+            /**
+             * then, we iterate through the new elements
+             */
+            for (let key in newElement.map) {
+                const newPosition = newElement.map[key];
+                const newChild = newElement.children[newPosition];
+
+                if (element.map[key] == undefined) {
+                    /**
+                     * If the new element does not exist in the old map
+                     * we should append it in the correct position.
+                     */
+                    this.addElement(newChild, element, newPosition);
+                } else {
+                    /**
+                     * If the element already exits,
+                     * we change its position if it needs to be changed.
+                     */
+                    const oldPosition = element.map[key];
+                    const oldChild = element.children[oldPosition];
+
+                    if (this.useRendererGetElementPosition(oldChild) != newPosition) {
+                        this.changeElementPosition(oldChild, newPosition);
+                    }
+
+                    this.updateElement(oldChild, newChild);
+                }
+            }
+        } else {
+            if (element.children.length == newElement.children.length) {
+                /**
+                 * If both elements have the same number of children
+                 * we diff them directly
+                 */
+                updateEqualChildrenRecursively(element.children, newElement.children);
+            } else if (element.children.length > newElement.children.length) {
+                /**
+                 * If the currently rendered element have more children
+                 * we remove elements till their numbers are equal.
+                 */
+                while (element.children.length > newElement.children.length) {
+                    this.removeElement(element.children.pop());
+                }
+
+                updateEqualChildrenRecursively(
+                    element.children.slice(0, newElement.children.length),
+                    newElement.children
+                );
+            } else {
+                /**
+                 * New element have more children
+                 * We add the excess and update the rest.
+                 */
+                for (let i = element.children.length; i < newElement.children.length; i++) {
+                    this.addElement(newElement.children[i], element);
+                }
+
+                updateEqualChildrenRecursively(
+                    element.children,
+                    newElement.children.slice(0, element.children.length)
+                );
+            }
+        }
     }
 
     updateStyle(element, newElement) {
@@ -217,7 +305,84 @@ class RecursiveRenderer {
     }
 
     updateElement(element, newElement) {
-        updateElement(element, newElement, this);
+        const instance = element.instance;
+
+        if (!instance) {
+            RecursiveConsole.error("Recursive Renderer : Instance of the element not found", [
+                "This error can happen when you manipulate the dom directly.",
+            ]);
+        }
+
+        if (element.flags && element.flags.forceRerender === true) {
+            /**
+             * The element requires to be rerendered
+             * or/and replaced by the new Element
+             */
+            this.replaceElement(element, newElement);
+        } else if (element.elementType !== newElement.elementType) {
+            /**
+             * Elements does not have the same type.
+             * Just replace the old with the new one.
+             */
+            this.replaceElement(element, newElement);
+        } else if (
+            element.elementType === ELEMENT_TYPE_TEXT_NODE &&
+            newElement.elementType === ELEMENT_TYPE_TEXT_NODE
+        ) {
+            /**
+             * Both element are text nodes
+             * we compare their children.
+             */
+            if (element.children !== newElement.children) {
+                this.useRendererUpdateText(element, newElement);
+            }
+        } else {
+            /**
+             * Both elements have the same type.
+             * We perform the classic routine of recursively
+             * comparing attributes, events and children.
+             */
+
+            /**
+             * A boolean indicating if at least a change in events happened.
+             */
+            const eventsDidChange = this.updateEvents(element, newElement);
+            /**
+             * A boolean indicating if at least a change in attributes happened.
+             * Performing the update twice
+             * Because some attributes should be updated before others,
+             * we don't know the specific order.
+             * If it is not updated on the first run,
+             * it will surely be updated on the second one.
+             * This operation could costly on some platforms,
+             * but it surely reduce performance.
+             *
+             * This is but a temporary fix.
+             * The real checking should be performed within
+             * `recursive-web`.
+             */
+            const attributesDidChange =
+                this.updateAttributes(element, newElement) &&
+                this.updateAttributes(element, newElement);
+
+            this.updateStyle(element, newElement);
+
+            if (element.elementType === ELEMENT_TYPE_RAW) {
+                /**
+                 * We have two raw elements,
+                 * the implemented renderer should resolve the issue.
+                 */
+                this.useRendererUpdateRawContainersAgainstEachOthers(element, newElement);
+            } else {
+                this.updateChildren(element, newElement);
+            }
+
+            if (eventsDidChange || attributesDidChange) {
+                this.onElementUpdated(element);
+            }
+        }
+
+        newElement.instance = instance;
     }
 
     setInstanceReference(element) {
