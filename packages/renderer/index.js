@@ -2,7 +2,6 @@ const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
 
 const { createElement } = require("./element");
-const update = require("./src/update");
 const updateAttributes = require("./src/updateAttributes");
 const updateChildren = require("./src/updateChildren");
 const updateElement = require("./src/updateElement");
@@ -248,7 +247,42 @@ class RecursiveRenderer {
     }
 
     update() {
-        update(this);
+        this.orchestrator.setStep.computeTree();
+
+        let _new;
+
+        _new = this.prepareElement(this.app(), "0", null);
+
+        if (_new.$$_RecursiveSymbol != RECURSIVE_ELEMENT_SYMBOL) {
+            RecursiveConsole.error("Root element is not of type RecursiveElement.", [
+                "Use createRecursiveElement to create a valid element.",
+            ]);
+        }
+
+        this.useRendererOnTreePrepared(_new);
+
+        this.orchestrator.setStep.computeDiff();
+        this.updateElement(this.current, _new);
+        this.current = _new;
+
+        this.orchestrator.setStep.execBeforeDestroyed();
+        this.runPhase(RENDERER_PHASE_BEFORE_DESTROYED);
+
+        this.orchestrator.setStep.commit();
+        this.runPhase(RENDERER_PHASE_CHANGES);
+
+        this.orchestrator.setStep.execOnDestroyed();
+        this.runPhase(RENDERER_PHASE_ON_DESTROYED);
+
+        this.orchestrator.setStep.execOnUpdated();
+        this.runPhase(RENDERER_PHASE_ON_UPDATED);
+
+        this.orchestrator.setStep.execOnCreated();
+        this.runPhase(RENDERER_PHASE_ON_CREATED);
+
+        this.orchestrator.setStep.cleanStates();
+        this.setInstanceReference(this.current);
+        this.clean();
     }
 
     clean() {
