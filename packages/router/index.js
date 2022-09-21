@@ -1,10 +1,10 @@
 const { RecursiveConsole } = require("../console");
 const { ROUTER_PATH_STATE, ROUTER_ROUTE_STATE, ROUTER_NOT_FOUND_ROUTE } = require("../constants");
 const flattenRoutes = require("./src/flattenRoutes");
-const renderFragment = require("./src/renderFragment");
 const renderRoute = require("./src/renderRoute");
 const replace = require("./src/replace");
 const resolvePath = require("./src/resolveInputRoute");
+const stripPathAndAnchor = require("./src/stripPathAndAnchor");
 
 class RecursiveRouter {
     constructor(route, base, scroll, boostrapper) {
@@ -203,7 +203,60 @@ class RecursiveRouter {
     }
 
     renderFragment() {
-        return renderFragment(this);
+        const routerContext = this.routerContext;
+
+        /**
+         * If the current router context depth is superior to the length of the fragments list,
+         * we know that we are out of context and we should return an empty string
+         * which will not be added to the tree of component.
+         */
+        if (routerContext.depth > routerContext.fragments.length) return "";
+
+        /**
+         * Contains the value of the expected route path at the current context depth.
+         * We assume that we are at a reasonable depth value.
+         * @type {string}
+         */
+        const expected = routerContext.fragments
+            .slice(0, routerContext.depth)
+            .reduce((prev, val) => {
+                return `${prev}${val}`;
+            });
+
+        let [routeForm] = stripPathAndAnchor(expected);
+
+        const isDynamic = this.isDynamicRoute(expected);
+
+        if (isDynamic.isDynamic) {
+            routeForm = isDynamic.template.path;
+        }
+
+        /**
+         * The appropriate fragment route
+         * calculated using the `expected` route.
+         */
+        let fragmentRoute = this.routes[routeForm] || this.routes["/404"] || false;
+
+        /**
+         * Route fragment element.
+         * This should be transformed by the renderer
+         * into platform-specific component.
+         * @type {import("../../lib").RecursiveElement}
+         */
+        let fragmentComponent;
+
+        if (fragmentRoute) {
+            fragmentComponent = fragmentRoute.isDynamic
+                ? fragmentRoute.template.component()
+                : fragmentRoute.component();
+        } else {
+            /**
+             * This branch should be unreachable,
+             */
+            fragmentComponent = "";
+        }
+
+        return fragmentComponent;
     }
 
     renderRoute() {

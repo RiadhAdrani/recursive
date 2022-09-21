@@ -1,5 +1,4 @@
 const { RecursiveRouter } = require("..");
-const renderFragment = require("./renderFragment");
 const setRouterContextParams = require("./setRouterContextParams");
 const useRouterContext = require("./useRouterContext");
 
@@ -17,7 +16,7 @@ function renderRoute(router) {
     /**
      * We wrap the fragment rendering function within a context.
      */
-    return useRouterContext({ route }, () => renderFragment(router), router);
+    return useRouterContext({ route }, () => router.renderFragment(), router);
 }
 
 module.exports = renderRoute;
