@@ -2,7 +2,11 @@ const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
 
 const { createElement } = require("./element");
-const updateEvents = require("./src/updateEvent");
+const isRecursiveElement = require("./src/isRecursiveElement");
+const { isFlag } = require("./flags");
+const { isHook } = require("./hooks");
+const { checkChildIsValid, makeDiffList } = require("./utility");
+
 const {
     RENDERER_PHASE_ON_CREATED,
     RENDERER_PHASE_ON_UPDATED,
@@ -14,10 +18,6 @@ const {
     ELEMENT_TYPE_RAW,
     ELEMENT_TYPE_TEXT_NODE,
 } = require("../constants");
-const isRecursiveElement = require("./src/isRecursiveElement");
-const { isFlag } = require("./flags");
-const { isHook } = require("./hooks");
-const { checkChildIsValid, makeDiffList } = require("./utility");
 
 class RecursiveRenderer {
     constructor(app, root, bootstrapper) {
@@ -173,7 +173,27 @@ class RecursiveRenderer {
     }
 
     updateEvents(element, newElement) {
-        return updateEvents(element, newElement, this);
+        const combined = makeDiffList(element.events, newElement.events);
+
+        for (let key in combined.toUpdate) {
+            this.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+                this.useRendererUpdateEvent(key, newElement.events[key], element);
+            });
+        }
+
+        for (let key in combined.toAdd) {
+            this.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+                this.useRendererAddEvent(key, newElement.events[key], element);
+            });
+        }
+
+        for (let key in combined.toRemove) {
+            this.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+                this.useRendererRemoveEvent(key, element.instance);
+            });
+        }
+
+        return Object.keys(combined.toRemove).length > 0 || Object.keys(combined.toAdd).length > 0;
     }
 
     updateAttributes(element, newElement) {
