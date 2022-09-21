@@ -2,7 +2,6 @@ const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
 
 const { createElement } = require("./element");
-const removeElement = require("./src/removeElement");
 const render = require("./src/render");
 const renderInstance = require("./src/renderInstance");
 const replaceElement = require("./src/replaceElement");
@@ -126,7 +125,13 @@ class RecursiveRenderer {
     }
 
     removeElement(element) {
-        removeElement(element, this);
+        this.onBeforeElementDestroyed(element);
+
+        this.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+            this.useRendererRemoveElement(element);
+        });
+
+        this.onElementDestroyed(element);
     }
 
     updateEvents(element, newElement) {
