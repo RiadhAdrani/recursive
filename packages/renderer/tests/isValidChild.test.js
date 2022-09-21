@@ -1,4 +1,4 @@
-const { checkChildIsValid } = require("../utility");
+const { isValidChild } = require("../utility");
 
 it.each([
     [undefined, false],
@@ -6,5 +6,5 @@ it.each([
     ["", false],
     ["Hello World", true],
 ])("should evalute '%s' expected -> '%s'", (child, expected) => {
-    expect(checkChildIsValid(child)).toBe(expected);
+    expect(isValidChild(child)).toBe(expected);
 });

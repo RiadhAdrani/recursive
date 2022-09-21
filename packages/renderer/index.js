@@ -2,10 +2,9 @@ const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
 
 const { createElement } = require("./element");
-const isRecursiveElement = require("./src/isRecursiveElement");
 const { isFlag } = require("./flags");
 const { isHook } = require("./hooks");
-const { checkChildIsValid, makeDiffList } = require("./utility");
+const { isValidChild, makeDiffList, isRecursiveElement } = require("./utility");
 
 const {
     RENDERER_PHASE_ON_CREATED,
@@ -598,7 +597,7 @@ class RecursiveRenderer {
                     if (_child.elementType === ELEMENT_TYPE_FRAGMENT) {
                         _children.push(..._child.children);
                     } else {
-                        if (checkChildIsValid(_child)) {
+                        if (isValidChild(_child)) {
                             _children.push(_child);
                         }
                     }
