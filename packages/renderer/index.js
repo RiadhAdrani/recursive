@@ -2,7 +2,6 @@ const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
 
 const { createElement } = require("./element");
-const setInstanceReference = require("./src/setInstanceReference");
 const update = require("./src/update");
 const updateAttributes = require("./src/updateAttributes");
 const updateChildren = require("./src/updateChildren");
@@ -200,7 +199,18 @@ class RecursiveRenderer {
     }
 
     setInstanceReference(element) {
-        setInstanceReference(element, this);
+        if (element.hooks && typeof element.hooks.onRef === "function") {
+            const ref = element.hooks.onRef(element.instance);
+
+            if (typeof ref === "string") {
+                this.stateManager.setRef(ref, element.instance);
+            }
+        }
+
+        if (Array.isArray(element.children))
+            element.children.forEach((child) => {
+                this.setInstanceReference(child);
+            });
     }
 
     render() {
