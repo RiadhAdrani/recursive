@@ -2,7 +2,6 @@ const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
 
 const { createElement } = require("./element");
-const updateAttributes = require("./src/updateAttributes");
 const updateChildren = require("./src/updateChildren");
 const updateElement = require("./src/updateElement");
 const updateEvents = require("./src/updateEvent");
@@ -20,7 +19,7 @@ const {
 const isRecursiveElement = require("./src/isRecursiveElement");
 const { isFlag } = require("./flags");
 const { isHook } = require("./hooks");
-const { checkChildIsValid } = require("./utility");
+const { checkChildIsValid, makeDiffList } = require("./utility");
 
 class RecursiveRenderer {
     constructor(app, root, bootstrapper) {
@@ -180,7 +179,31 @@ class RecursiveRenderer {
     }
 
     updateAttributes(element, newElement) {
-        return updateAttributes(element, newElement, this);
+        const combined = makeDiffList(element.attributes, newElement.attributes);
+
+        for (let key in combined.toUpdate) {
+            this.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+                this.useRendererSetAttribute(key, combined.toUpdate[key], element);
+            });
+        }
+
+        for (let key in combined.toAdd) {
+            this.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+                this.useRendererSetAttribute(key, combined.toAdd[key], element);
+            });
+        }
+
+        for (let key in combined.toRemove) {
+            this.delegateToRenderer(RENDERER_PHASE_CHANGES, () => {
+                this.useRendererRemoveAttribute(key, element.instance);
+            });
+        }
+
+        return (
+            Object.keys(combined.toRemove).length > 0 ||
+            Object.keys(combined.toAdd).length > 0 ||
+            Object.keys(combined.toUpdate).length > 0
+        );
     }
 
     updateChildren(element, newElement) {
