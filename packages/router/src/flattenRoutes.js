@@ -61,6 +61,7 @@ function flattenRoutes(route) {
                      * and add them to the global list.
                      */
                     const _list = flattenRoutes(_route);
+
                     list = { ...list, ..._list };
                 }
             });

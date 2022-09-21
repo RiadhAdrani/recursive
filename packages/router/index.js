@@ -1,8 +1,6 @@
 const { RecursiveConsole } = require("../console");
 const { ROUTER_PATH_STATE, ROUTER_ROUTE_STATE, ROUTER_NOT_FOUND_ROUTE } = require("../constants");
 const flattenRoutes = require("./src/flattenRoutes");
-const getParams = require("./src/getParams");
-const goTo = require("./src/goTo");
 const renderFragment = require("./src/renderFragment");
 const renderRoute = require("./src/renderRoute");
 const replace = require("./src/replace");
@@ -70,7 +68,20 @@ class RecursiveRouter {
     }
 
     goTo(path) {
-        goTo(path, this);
+        if (!path) return;
+
+        const [newPath, routeForm, anchor] = resolvePath(path, this.routes);
+        const [currentPath] = this.getPathState();
+
+        /**
+         * We should check if the wanted route
+         * is a different from the current one.
+         */
+        if (currentPath !== newPath) {
+            this.useRouterPushState(newPath, routeForm, anchor);
+
+            this.mountNewRoute(newPath, routeForm, anchor);
+        }
     }
 
     replace(path, hash) {
@@ -78,7 +89,48 @@ class RecursiveRouter {
     }
 
     getParams() {
-        return getParams(this);
+        const regExp = ROUTER_DYNAMIC_REG_EXP;
+
+        const [currentName] = this.getPathState();
+        const current = isDynamicRoute(currentName, router);
+
+        /**
+         * If the current route is not dynamic,
+         * we return an empty object.
+         */
+        if (!current.isDynamic) return {};
+
+        /**
+         * We match the given template against router dynamic regular expression
+         * and we extract he keys and the data.
+         */
+        const keys = current.template.path.match(regExp) || [];
+        const data = this.useRouterGetLocationPath().match(regExp) || [];
+
+        /**
+         * If the lengths or the keys and data arrays are equal and not null,
+         * It means that we have valid params.
+         */
+        if (keys.length === data.length && keys.length > 0) {
+            const params = {};
+
+            for (let i = 0; i < keys.length; i++) {
+                /**
+                 * for each index of the arrays,
+                 * we remove the delimiter ":" and ";" from both the key and its data,
+                 * because the dynamic route option should be of form "/:id;".
+                 * and we add it to the output params.
+                 */
+                const key = keys[i].replace(":", "").replace(";", "");
+                const keyData = data[i].replace(":", "").replace(";", "");
+
+                params[key] = keyData;
+            }
+
+            return params;
+        }
+
+        return {};
     }
 
     renderFragment() {
