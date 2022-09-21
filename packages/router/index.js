@@ -1,7 +1,6 @@
 const { RecursiveConsole } = require("../console");
 const { ROUTER_PATH_STATE, ROUTER_ROUTE_STATE, ROUTER_NOT_FOUND_ROUTE } = require("../constants");
 const flattenRoutes = require("./src/flattenRoutes");
-const renderRoute = require("./src/renderRoute");
 const replace = require("./src/replace");
 const resolvePath = require("./src/resolveInputRoute");
 const stripPathAndAnchor = require("./src/stripPathAndAnchor");
@@ -260,7 +259,72 @@ class RecursiveRouter {
     }
 
     renderRoute() {
-        return renderRoute(this);
+        const setRouterContextParams = () => {
+            const [route] = this.getPathState();
+
+            this.routerContext.fragments = route
+                .split("/")
+                .slice(1)
+                .map((val) => `/${val}`);
+        };
+
+        const useRouterContext = (context, componentCallback) => {
+            if (typeof componentCallback !== "function") {
+                RecursiveConsole.error("Route component is not a function.");
+            }
+
+            const startContext = (newContext) => {
+                const routerContext = this.routerContext;
+
+                routerContext.depth++;
+
+                if (routerContext.context) {
+                    routerContext.stack.push(routerContext.context);
+                }
+
+                routerContext.context = newContext;
+            };
+
+            const endContext = () => {
+                const routerContext = this.routerContext;
+
+                /**
+                 * We check if a context already exists
+                 */
+                if (routerContext.context) {
+                    /**
+                     * if the stack is not empty,
+                     * we set the current context to the previous one
+                     * which we popped from the stack.
+                     */
+                    if (routerContext.stack.length > 0)
+                        routerContext.context = routerContext.stack.pop();
+                    /**
+                     *  if the stack is empty
+                     *  we set the context to an undefined state.
+                     */ else routerContext.context = undefined;
+                }
+
+                routerContext.depth--;
+            };
+
+            startContext(context);
+
+            const fragment = componentCallback();
+
+            endContext();
+
+            return fragment;
+        };
+
+        const [route] = this.getRouteState();
+
+        setRouterContextParams();
+
+        /**
+         * We wrap the fragment rendering function within a context.
+         */
+        return useRouterContext({ route }, () => this.renderFragment());
     }
 
     resolvePath(path) {
