@@ -1,6 +1,5 @@
 const { RecursiveConsole } = require("../console");
-const createTaskId = require("./src/createTaskId");
-const createUpdateObject = require("./src/createUpdateObject");
+const { createTaskId, createUpdateObject } = require("./utility");
 const {
     ORCHESTRATOR_FREE,
     ORCHESTRATOR_HANDLING_REQUESTS,
@@ -17,75 +16,57 @@ const {
     ORCHESTRATOR_CLEAN_STATES,
 } = require("../constants");
 
-/**
- * Recieve, manages and schedule application updates.
- */
 class RecursiveOrchestrator {
-    /**
-     * Create a new orchestrator instance.
-     *
-     * Use `RecursiveApp` to create an app using the orchestrator.
-     */
     constructor(boostrapper) {
         this.boostrapper = boostrapper;
 
         /**
-         * Currently executing task.
          * @type {object}
          */
         this.currentTask = { done: true };
 
         /**
-         * Current orchestration phase.
          * @type {string}
          */
         this.step = ORCHESTRATOR_FREE;
 
         /**
-         * The number of updates since the app has been created.
          * @type {number}
          */
         this.updatesCount = 0;
 
         /**
-         * Boolean indicating if requests should be batched or not.
          * @type {boolean}
          */
         this.batching = false;
 
         /**
-         * Boolean indicating if the state has really changed.
          * @type {boolean}
          */
         this.stateChanged = false;
 
         /**
-         * Time in which the last batching has started.
          * @type {number}
          */
         this.batchingStartTime = Date.now();
 
         /**
-         * The duration of the last batching.
          * @type {number}
          */
         this.batchingLastDuration = 0;
 
         /**
-         * Contains queued batching requests.
          * @type {Array<object>}
          */
         this.batchingRequests = [];
 
         /**
-         * Array containing unhandled update requests.
          * @type {Array<object>}
          */
         this.unhandledRequests = [];
 
         /**
-         * Change the current orchestrator `step`.
-         * @type {object}
+         * @type {Map<string,() => {}>}
          */
         this.setStep = {
             free: () => (this.step = ORCHESTRATOR_FREE),
@@ -108,11 +89,6 @@ class RecursiveOrchestrator {
         return this.boostrapper.renderer;
     }
 
-    /**
-     * Update the application using the current renderer.
-     *
-     * @throws an error if the renderer is falsy.
-     */
     update() {
         if (!this.renderer)
             RecursiveConsole.error("Recursive Orchestrator : No renderer was specified");
@@ -121,8 +97,6 @@ class RecursiveOrchestrator {
     }
 
     /**
-     * Request an update. If the orchestrator is busy,
-     * the update will be added to the `unhandled requests` to be executed later.
      * @param {string} sender sender or the reason of the update request.
      */
     requestUpdate(sender) {
@@ -197,18 +171,12 @@ class RecursiveOrchestrator {
         }
     }
 
-    /**
-     * Change the state of the orchestrator to free.
-     */
     free() {
         this.updatesCount = 0;
         this.stateChanged = false;
         this.setStep.free();
     }
 
-    /**
-     * Count the number of updates since the execution of the method.
-     */
     countUpdateSinceFree() {
         setTimeout(() => {
             if (this.updatesCount > 200) {
@@ -220,23 +188,16 @@ class RecursiveOrchestrator {
         }, 2000);
     }
 
-    /**
-     * Notify the orchestrator of a change in the state.
-     */
     notifyStateChanged() {
         this.stateChanged = true;
     }
 
-    /**
-     * Notify the orchestrator to start batching incoming state changes into one update.
-     */
     startBatching() {
         this.batchingStartTime = Date.now();
         this.batching = true;
     }
 
     /**
-     * End the batching operation and request an update if a state change is detected.
      * @param {string} sender source
      */
     endBatching(sender) {
@@ -249,7 +210,6 @@ class RecursiveOrchestrator {
     }
 
     /**
-     * End the batching task requested by the `sender`.
      * @param {string} sender source
      */
     requestEndBatching(sender) {
@@ -263,7 +223,6 @@ class RecursiveOrchestrator {
     }
 
     /**
-     * Start a batching task.
      * @param {string} sender source
      */
     requestStartBatching(sender) {
@@ -287,7 +246,6 @@ class RecursiveOrchestrator {
     }
 
     /**
-     * Batch update resulting from the callback.
      * @param {Function} callback batched callback.
      * @param {string} batchName source of the batching. used for debugging.
      */

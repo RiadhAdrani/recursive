@@ -5,8 +5,6 @@ export class RecursiveContext {
     public context: any;
     public stack: Array<any>;
 
-    constructor() {}
-
     /**
      * Retrieve the current context's data.
      * @returns {any} data
