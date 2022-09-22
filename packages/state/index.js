@@ -5,7 +5,6 @@ const CreateReservedStore = require("./reserved");
 const CreateRefStore = require("./ref");
 const CreateStateStore = require("./state");
 
-const removeItem = require("./src/removeItem");
 const updateItem = require("./src/updateItem");
 const {
     STATE_STATE_STORE,
@@ -99,7 +98,23 @@ class RecursiveState {
     }
 
     removeItem(key, store) {
-        removeItem(key, store, this);
+        if (this.stores[store] === undefined) {
+            RecursiveConsole.error("Invalid store name.");
+        }
+
+        if (!this.itemExists(key, store)) {
+            RecursiveConsole.error("State does not exist in the current store.");
+        }
+
+        const fn = this.stores[store].items[key].onRemoved;
+        const unsub = this.stores[store].items[key].unsubscribe;
+
+        (() => {
+            if (typeof fn === "function") fn();
+            unsub();
+        })();
+
+        delete this.stores[store].items[key];
     }
 
     updateItem(key, newValue, store, onChanged, forceUpdate) {

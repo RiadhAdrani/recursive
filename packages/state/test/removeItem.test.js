@@ -1,6 +1,5 @@
 const { RecursiveState } = require("..");
 const { STATE_STATE_STORE } = require("../../constants");
-const removeItem = require("../src/removeItem");
 
 describe("RecursiveState.itemExists", () => {
     let stateManager = new RecursiveState();
@@ -15,7 +14,7 @@ describe("RecursiveState.itemExists", () => {
 
         stateManager.addItem(key, "lorem", name, 0, 0);
 
-        removeItem(key, name, stateManager);
+        stateManager.removeItem(key, name, stateManager);
 
         expect(stateManager.stores[STATE_STATE_STORE].items[key]).toBeFalsy();
     });
