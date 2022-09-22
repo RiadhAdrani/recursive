@@ -1,63 +1,39 @@
 const { RecursiveState } = require("..");
 const { STATE_STATE_STORE } = require("../../constants");
-const addItem = require("../src/addItem");
 
 describe("RecursiveState.addItem", () => {
-    let StateManager = new RecursiveState();
+    let stateManager = new RecursiveState();
 
     beforeEach(() => {
-        StateManager = new RecursiveState();
+        stateManager = new RecursiveState();
     });
 
     const storeName = STATE_STATE_STORE;
 
     it("should add an item to a valid store", () => {
-        expect(
-            (() => {
-                addItem("test", "test", storeName, 0, 0, StateManager);
+        stateManager.addItem("test", "test", storeName, 0, 0);
 
-                return Object.keys(StateManager.stores[storeName].items).length;
-            })()
-        ).toBe(1);
+        expect(Object.keys(stateManager.stores[storeName].items).length).toBe(1);
     });
 
-    it.each([
-        [undefined, 0],
-        [null, 0],
-        ["", 0],
-        [" ", 0],
-    ])("should reject invalid key = %s", (key, result) => {
-        expect(
-            (() => {
-                addItem(key, "test", storeName, 0, 0, StateManager);
+    it.each([[undefined], [null], [""], [" "]])("should reject invalid key = %s", (key) => {
+        stateManager.addItem(key, "test", storeName, 0, 0);
 
-                return Object.keys(StateManager.stores[storeName].items).length;
-            })()
-        ).toBe(result);
+        expect(Object.keys(stateManager.stores[storeName].items).length).toBe(0);
     });
 
     it.each([
         [null, 0],
         [undefined, 0],
         ["", 0],
-        ["anything", 0],
-    ])("should reject invalid key = %s", (key, result) => {
-        expect(
-            (() => {
-                addItem("test", "test", key, 0, 0, StateManager);
+        ["anything", 1],
+    ])("should not add item in the wrong store", (key, result) => {
+        stateManager.addItem(key, "test", storeName, 0, 0);
 
-                const sum = (() => {
-                    let sum = 0;
+        const sum = Object.keys(stateManager.stores).reduce((acc, store) => {
+            return acc + Object.keys(stateManager.stores[store].items).length;
+        }, 0);
 
-                    for (let store in StateManager.stores) {
-                        sum += Object.keys(StateManager.stores[store].items).length;
-                    }
-
-                    return sum;
-                })();
-
-                return sum;
-            })()
-        ).toBe(result);
+        expect(sum).toBe(result);
     });
 });

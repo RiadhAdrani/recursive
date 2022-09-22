@@ -1,23 +1,22 @@
 const { RecursiveState } = require("..");
 const { STATE_STATE_STORE } = require("../../constants");
-const addItem = require("../src/addItem");
 const removeItem = require("../src/removeItem");
 
 describe("RecursiveState.itemExists", () => {
-    let StateManager = new RecursiveState();
+    let stateManager = new RecursiveState();
 
     beforeEach(() => {
-        StateManager = new RecursiveState();
+        stateManager = new RecursiveState();
     });
 
     it("should remove item", () => {
         const name = STATE_STATE_STORE;
         const key = "key";
 
-        addItem(key, "lorem", name, 0, 0, StateManager);
+        stateManager.addItem(key, "lorem", name, 0, 0);
 
-        removeItem(key, name, StateManager);
+        removeItem(key, name, stateManager);
 
-        expect(StateManager.stores[STATE_STATE_STORE].items[key]).toBeFalsy();
+        expect(stateManager.stores[STATE_STATE_STORE].items[key]).toBeFalsy();
     });
 });

@@ -1,29 +1,23 @@
 const { RecursiveState } = require("..");
 const { STATE_STATE_STORE } = require("../../constants");
-const addItem = require("../src/addItem");
 const getItem = require("../src/getItem");
-const itemExists = require("../src/itemExists");
 const updateItem = require("../src/updateItem");
 
 describe("RecursiveState.itemExists", () => {
-    let StateManager = new RecursiveState();
+    let stateManager = new RecursiveState();
 
     beforeEach(() => {
-        StateManager = new RecursiveState();
+        stateManager = new RecursiveState();
     });
 
     it.each([[STATE_STATE_STORE, "value_key"]])("should update the item correctly", (name, key) => {
         const newValue = "new_lorem";
 
-        expect(
-            (() => {
-                addItem(key, "lorem", name, 0, 0, StateManager);
+        stateManager.addItem(key, "lorem", name, 0, 0);
 
-                updateItem(key, newValue, name, 0, 0, StateManager);
+        updateItem(key, newValue, name, 0, 0, stateManager);
 
-                return getItem(key, name, undefined, StateManager).value;
-            })()
-        ).toBe(newValue);
+        expect(getItem(key, name, undefined, stateManager).value).toBe(newValue);
     });
 
     it.each([
@@ -33,14 +27,10 @@ describe("RecursiveState.itemExists", () => {
         const value = "lorem";
         const newValue = "new_lorem";
 
-        expect(
-            (() => {
-                addItem(key, value, name, 0, 0, StateManager);
+        stateManager.addItem(key, value, name, 0, 0);
 
-                updateItem(upKey, newValue, upName, 0, 0, StateManager);
+        updateItem(upKey, newValue, upName, 0, 0, stateManager);
 
-                return getItem(key, name, undefined, StateManager).value;
-            })()
-        ).toBe(value);
+        expect(getItem(key, name, undefined, stateManager).value).toBe(value);
     });
 });

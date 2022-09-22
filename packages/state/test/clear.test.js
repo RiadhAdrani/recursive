@@ -5,14 +5,13 @@ const {
     STATE_CACHE_STORE,
     STATE_RESERVED_STORE,
 } = require("../../constants");
-const addItem = require("../src/addItem");
 const clear = require("../src/clear");
 
 describe("RecursiveState.clear", () => {
-    let StateManager = new RecursiveState();
+    let stateManager = new RecursiveState();
 
     beforeEach(() => {
-        StateManager = new RecursiveState();
+        stateManager = new RecursiveState();
     });
 
     it.each([
@@ -21,28 +20,24 @@ describe("RecursiveState.clear", () => {
         [STATE_CACHE_STORE, 1],
         [STATE_RESERVED_STORE, 1],
     ])("should correctly clear items of store = %s", (store, result) => {
-        expect(
-            (() => {
-                addItem("test", "test", store, 0, 0, StateManager);
+        stateManager.addItem("test", "test", store, 0, 0, stateManager);
 
-                clear(StateManager);
+        clear(stateManager);
 
-                return Object.keys(StateManager.stores[store].items).length;
-            })()
-        ).toBe(result);
+        const sum = Object.keys(stateManager.stores[store].items).length;
+
+        expect(sum).toBe(result);
     });
 
     it("should remove the excess from the cache store", () => {
-        expect(
-            (() => {
-                for (let i = 0; i < 1500; i++) {
-                    addItem("test" + i, "test", STATE_CACHE_STORE, 0, 0, StateManager);
-                }
+        for (let i = 0; i < 1500; i++) {
+            stateManager.addItem("test" + i, "test", STATE_CACHE_STORE, 0, 0);
+        }
 
-                clear(StateManager);
+        clear(stateManager);
 
-                return Object.keys(StateManager.stores[STATE_CACHE_STORE].items).length;
-            })()
-        ).toBe(1000);
+        const sum = Object.keys(stateManager.stores[STATE_CACHE_STORE].items).length;
+
+        expect(sum).toBe(1000);
     });
 });

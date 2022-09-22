@@ -5,7 +5,6 @@ const CreateReservedStore = require("./reserved");
 const CreateRefStore = require("./ref");
 const CreateStateStore = require("./state");
 
-const addItem = require("./src/addItem");
 const clear = require("./src/clear");
 const createStore = require("./src/createStore");
 const getItem = require("./src/getItem");
@@ -20,6 +19,7 @@ const {
     STATE_EFFECT_STORE,
 } = require("../constants");
 const CreateEffectStore = require("./effect");
+const { RecursiveConsole } = require("../console");
 
 class RecursiveState {
     constructor(bootstrapper) {
@@ -40,7 +40,42 @@ class RecursiveState {
     }
 
     addItem(key, value = undefined, store, onAdded, onRemoved) {
-        addItem(key, value, store, onAdded, onRemoved, this);
+        if (typeof key != "string") {
+            RecursiveConsole.error("Recursive State : State UID is not of type string.");
+            return;
+        }
+
+        if ([undefined, null, ""].includes(key.trim())) {
+            RecursiveConsole.error(
+                "Recursive State : State UID cannot be one of these : '' or 'undefined' or 'null'."
+            );
+            return;
+        }
+
+        if (this.stores[store] === undefined) {
+            RecursiveConsole.error("Recursive State : Invalid store name.");
+            return;
+        }
+
+        const _object = {
+            value,
+            preValue: undefined,
+            history: [value],
+            onRemoved,
+            unsubscribe: () => {},
+            addOrder: Object.keys(this.stores[store].items).length,
+        };
+
+        this.stores[store].items[key] = _object;
+
+        if (onAdded && typeof onAdded === "function")
+            (async () => {
+                const unsubscribe = await onAdded();
+
+                if (typeof unsubscribe === "function" && this.itemExists(key, store)) {
+                    this.stores[store].items[key].unsubscribe = unsubscribe;
+                }
+            })();
     }
 
     itemExists(key, store) {

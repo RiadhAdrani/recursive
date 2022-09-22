@@ -2,7 +2,7 @@ import { StateArray } from "../../lib";
 import { RecursiveApp } from "../app";
 import { RecursiveOrchestrator } from "../orchestrator";
 
-interface Store {
+export interface Store {
     items: { [key: string]: StateEntry };
     used: Array<String>;
     set: (newValue: any) => void;
@@ -11,7 +11,7 @@ interface Store {
     flush: () => void;
 }
 
-interface StoreParams {
+export interface StoreParams {
     name: String;
     set: (newValue: any) => void;
     get: () => any;
@@ -67,11 +67,27 @@ export class RecursiveState {
     getItem(key: string, store: string, defaultValue: any): StateArray<any>;
 
     /**
-     * update the given item in the provided store.
+     * remove the given item in the provided store.
      * @param key item identifier.
      * @param store store name.
      */
     removeItem(key: string, store: string): void;
+
+    /**
+     * update the given item with the new value.
+     * @param key item identifier.
+     * @param newValue the new value.
+     * @param store store name.
+     * @param onChanged callback to be executed if the value is really updated.
+     * @param forceUpdate boolean value, used to force the update and execute the `onChange` callback.
+     */
+    updateItem<T>(
+        key: string,
+        newValue: T,
+        store: string,
+        onChanged: () => void,
+        forceUpdate: boolean
+    ): void;
 
     /**
      * clear out of scope and unused stateful objects.
