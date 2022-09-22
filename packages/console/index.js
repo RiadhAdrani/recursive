@@ -7,8 +7,11 @@ class RecursiveConsole {
     constructor() {}
 
     /**
-     * Utility function to throw errors.
-     * @env development
+     * @param {Map<string,any>} params
+     */
+    static showDeveloperHelp(params) {}
+
+    /**
      * @param {String} msg
      * @param {Array} help
      */
@@ -21,12 +24,12 @@ class RecursiveConsole {
             helpMsg += "- Help - " + help.join(", ");
         }
 
+        this.showDeveloperHelp({ msg, help });
+
         throw new Error(`${msg} ${helpMsg}`);
     }
 
     /**
-     * Utility function to display logs.
-     * @env development
      * @param {String} msg
      * @param {Array} help
      */
@@ -37,13 +40,12 @@ class RecursiveConsole {
     }
 
     /**
-     * Utility function to display warnings.
-     * @env development
      * @param {String} msg
-     * @param {Array} help
      */
     static warn(msg) {
         if (!isDevMode() || !msg) return;
+
+        this.showDeveloperHelp({ msg });
 
         console.warn(msg);
     }
