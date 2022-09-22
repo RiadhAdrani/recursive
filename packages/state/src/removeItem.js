@@ -1,6 +1,5 @@
 const { RecursiveState } = require("..");
 const { RecursiveConsole } = require("../../console");
-const itemExists = require("./itemExists");
 
 /**
  * Remove the item with the key from the store.
@@ -13,7 +12,7 @@ function removeItem(key, store, stateManager) {
         RecursiveConsole.error("Invalid store name.");
     }
 
-    if (!itemExists(key, store, stateManager)) {
+    if (!stateManager.itemExists(key, store)) {
         RecursiveConsole.error("State does not exist in the current store.");
     }
 

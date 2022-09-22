@@ -1,7 +1,6 @@
 const { RecursiveState } = require("..");
 const { copy } = require("../../common");
 const { RecursiveConsole } = require("../../console");
-const itemExists = require("./itemExists");
 
 /**
  * Update a state entry.
@@ -18,7 +17,7 @@ function updateItem(key, newValue, store, onChanged, forceUpdate, stateManager) 
         return;
     }
 
-    if (!itemExists(key, store, stateManager)) {
+    if (!stateManager.itemExists(key, store)) {
         RecursiveConsole.error("State does not exist in the current store.");
         return;
     }

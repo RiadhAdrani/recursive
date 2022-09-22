@@ -5,7 +5,6 @@ const CreateReservedStore = require("./reserved");
 const CreateRefStore = require("./ref");
 const CreateStateStore = require("./state");
 
-const itemExists = require("./src/itemExists");
 const removeItem = require("./src/removeItem");
 const updateItem = require("./src/updateItem");
 const {
@@ -76,7 +75,14 @@ class RecursiveState {
     }
 
     itemExists(key, store) {
-        return itemExists(key, store, this);
+        if (
+            !this.stores.hasOwnProperty(store) ||
+            !this.stores[store].hasOwnProperty("items") ||
+            !this.stores[store].items.hasOwnProperty(key)
+        )
+            return false;
+
+        return true;
     }
 
     getItem(key, store, defaultValue = undefined) {
