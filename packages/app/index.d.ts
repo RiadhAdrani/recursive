@@ -4,7 +4,7 @@ import { RecursiveRenderer } from "../renderer";
 import { RecursiveRouter } from "../router";
 import { RecursiveState } from "../state";
 
-interface RecursiveAppConstructorParams {
+export interface RecursiveAppConstructorParams {
     /**
      * maximum number of cached states.
      */
@@ -44,8 +44,12 @@ export class RecursiveApp {
     /**
      * Create a new element.
      *
+     * This method is deprecated,
+     * use `createElement` from the renderer package instead.
+     *
      * @param {string} elementType Element type.
      * @param {object} props Element properties.
+     * @deprecated
      * @returns {RecursiveElement} Recursive Element.
      */
     createElement(elementType: string, props: object): RecursiveElement;

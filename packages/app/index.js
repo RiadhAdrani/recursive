@@ -5,10 +5,29 @@ const { RecursiveRouter } = require("../router");
 const { RecursiveState } = require("../state");
 
 class RecursiveApp {
+    /**
+     * create a new recursive app instance.
+     * @param {import(".").RecursiveAppConstructorParams} param0
+     */
     constructor({ buildRenderer, buildRouter, cacheSize = 1000, onAppInit }) {
+        /**
+         * @type {RecursiveRouter}
+         */
         this.router = null;
+
+        /**
+         * @type {RecursiveRenderer}
+         */
         this.renderer = null;
+
+        /**
+         * @type {RecursiveOrchestrator}
+         */
         this.orchestrator = new RecursiveOrchestrator(this);
+
+        /**
+         * @type {RecursiveState}
+         */
         this.stateManager = new RecursiveState(this);
 
         if (typeof buildRenderer !== "function") {
@@ -40,6 +59,12 @@ class RecursiveApp {
         }
     }
 
+    /**
+     * @param {string} elementType
+     * @param {object} props
+     * @deprecated
+     * @returns
+     */
     createElement(elementType, props) {
         return this.renderer.createElement(elementType, props);
     }
