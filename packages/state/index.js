@@ -1,9 +1,10 @@
 const { copy } = require("../common");
 
-const CreateCacheStore = require("./cache");
-const CreateReservedStore = require("./reserved");
-const CreateRefStore = require("./ref");
-const CreateStateStore = require("./state");
+const cacheStore = require("./cache");
+const reservedStore = require("./reserved");
+const refStore = require("./ref");
+const stateStore = require("./state");
+const effectStore = require("./effect");
 
 const {
     STATE_STATE_STORE,
@@ -12,7 +13,7 @@ const {
     STATE_REF_STORE,
     STATE_EFFECT_STORE,
 } = require("../constants");
-const CreateEffectStore = require("./effect");
+
 const { RecursiveConsole } = require("../console");
 
 class RecursiveState {
@@ -22,11 +23,11 @@ class RecursiveState {
         this.bootstrapper = bootstrapper;
         this.cacheSize = 1000;
 
-        this.createStore(CreateStateStore(this));
-        this.createStore(CreateReservedStore(this));
-        this.createStore(CreateCacheStore(this));
-        this.createStore(CreateRefStore(this));
-        this.createStore(CreateEffectStore(this));
+        this.createStore(stateStore(this));
+        this.createStore(reservedStore(this));
+        this.createStore(cacheStore(this));
+        this.createStore(refStore(this));
+        this.createStore(effectStore(this));
     }
 
     get orchestrator() {

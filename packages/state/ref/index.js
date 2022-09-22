@@ -5,7 +5,7 @@ const { STATE_REF_STORE } = require("../../constants");
  * Create a new reference store.
  * @param {RecursiveState} store
  */
-const CreateRefStore = (store) => {
+const refStore = (store) => {
     const storeName = STATE_REF_STORE;
 
     function retrieve(key, defaultValue) {
@@ -38,4 +38,4 @@ const CreateRefStore = (store) => {
     return { set, get, clear, flush, name: storeName };
 };
 
-module.exports = CreateRefStore;
+module.exports = refStore;

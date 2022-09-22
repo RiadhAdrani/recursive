@@ -1,5 +1,5 @@
 const { RecursiveConsole } = require("../../console");
-const { retrieveStatefulObject } = require("../common");
+const { retrieveStatefulObject } = require("../utility");
 const { RecursiveState } = require("..");
 const { STATE_CACHE_STORE } = require("../../constants");
 
@@ -7,7 +7,7 @@ const { STATE_CACHE_STORE } = require("../../constants");
  * Create a new cache store.
  * @param {RecursiveState} store
  */
-const CreateCacheStore = (store) => {
+const cacheStore = (store) => {
     const storeName = STATE_CACHE_STORE;
 
     function retrieve(key) {
@@ -52,4 +52,4 @@ const CreateCacheStore = (store) => {
     return { set, get, clear, flush, name: storeName };
 };
 
-module.exports = CreateCacheStore;
+module.exports = cacheStore;

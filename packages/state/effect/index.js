@@ -6,7 +6,7 @@ const { STATE_EFFECT_STORE } = require("../../constants");
  * Create a new effect store.
  * @param {RecursiveState} store
  */
-const CreateEffectStore = (store) => {
+const effectStore = (store) => {
     const storeName = STATE_EFFECT_STORE;
 
     function runEffect(callback) {
@@ -77,4 +77,4 @@ const CreateEffectStore = (store) => {
     return { set, get, clear, flush, name: storeName };
 };
 
-module.exports = CreateEffectStore;
+module.exports = effectStore;

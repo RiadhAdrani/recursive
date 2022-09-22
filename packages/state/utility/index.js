@@ -1,5 +1,5 @@
-const { RecursiveState } = require(".");
-const { copy } = require("../common");
+const { RecursiveState } = require("..");
+const { copy } = require("../../common");
 
 /**
  * Common a stateful object from the store.
@@ -7,7 +7,7 @@ const { copy } = require("../common");
  * @param {RecursiveState} store
  * @param {string} storeName
  * @param {string} key
- * @returns {import("../../lib").StateArray}
+ * @returns {import("../../../lib").StateArray}
  */
 function retrieveStatefulObject(store, storeName, key) {
     const state = store.getItem(key, storeName);
