@@ -127,30 +127,64 @@ class RecursiveApp {
         }
     }
 
+    /**
+     * @param {string} key
+     * @returns {import("../../lib").StateArray}
+     */
     getState(key) {
         return this.stateManager.getState(key);
     }
 
+    /**
+     * @param {string} key
+     * @param {any} value
+     * @param {() => Function} onInit
+     * @param {() => void} onRemoved
+     * @returns {import("../../lib").StateArray}
+     */
     setState(key, value, onInit, onRemoved) {
         return this.stateManager.setState(key, value, onInit, onRemoved);
     }
 
+    /**
+     * @param {string} key
+     * @returns {import("../../lib").StateArray}
+     */
     getCache(key) {
         return this.stateManager.getCache(key);
     }
 
+    /**
+     * @param {string} key
+     * @param {any} value
+     * @param {() => Function} onInit
+     * @param {() => void} onRemoved
+     * @returns {import("../../lib").StateArray}
+     */
     setCache(key, value, onInit, onRemoved) {
         return this.stateManager.setCache(key, value, onInit, onRemoved);
     }
 
+    /**
+     * @param {string} key
+     * @returns {import("../../lib").NativeElement}
+     */
     getRef(key) {
         return this.stateManager.getRef(key);
     }
 
+    /**
+     * @param {() => void} callback
+     */
     updateOn(callback) {
         this.orchestrator.batchCallback(callback, "update-on-" + Date.now());
     }
 
+    /**
+     * @param {string} key
+     * @param {Array<any>} dependencies
+     * @param {() => void} callback
+     */
     setEffect(key, dependencies, callback) {
         this.stateManager.setEffect(key, callback, dependencies);
     }
