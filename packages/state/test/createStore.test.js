@@ -1,5 +1,4 @@
 const { RecursiveState } = require("..");
-const createStore = require("../src/createStore");
 
 describe("RecursiveState.createStore", () => {
     let stateManager = new RecursiveState();
@@ -9,7 +8,7 @@ describe("RecursiveState.createStore", () => {
     });
 
     it.each([["storage"]])("should create store with valid input", (name) => {
-        createStore(
+        stateManager.createStore(
             {
                 name,
                 clear: () => {},
@@ -34,7 +33,7 @@ describe("RecursiveState.createStore", () => {
         ["storage", () => {}, () => {}, null, () => {}],
         ["storage", () => {}, () => {}, () => {}, null],
     ])("should decline any invalid property", (name, clear, flush, get, set) => {
-        createStore(
+        stateManager.createStore(
             {
                 name,
                 clear,
