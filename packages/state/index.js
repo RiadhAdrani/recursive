@@ -1,4 +1,4 @@
-const { copy } = require("../common");
+const { copy, areEqual } = require("../common");
 
 const cacheStore = require("./cache");
 const reservedStore = require("./reserved");
@@ -128,7 +128,7 @@ class RecursiveState {
             return;
         }
 
-        if (this.stores[store].items[key].value !== newValue || forceUpdate) {
+        if (!areEqual(this.stores[store].items[key].value, newValue) || forceUpdate) {
             this.stores[store].items[key].history.push(copy(this.stores[store].items[key].value));
             this.stores[store].items[key].preValue = this.stores[store].items[key].value;
 
