@@ -5,7 +5,6 @@ const CreateReservedStore = require("./reserved");
 const CreateRefStore = require("./ref");
 const CreateStateStore = require("./state");
 
-const clear = require("./src/clear");
 const createStore = require("./src/createStore");
 const getItem = require("./src/getItem");
 const itemExists = require("./src/itemExists");
@@ -24,7 +23,7 @@ const { RecursiveConsole } = require("../console");
 class RecursiveState {
     constructor(bootstrapper) {
         this.stores = {};
-        this.history = [this.copy(this.stores)];
+        this.history = [copy(this.stores)];
         this.bootstrapper = bootstrapper;
         this.cacheSize = 1000;
 
@@ -82,10 +81,6 @@ class RecursiveState {
         return itemExists(key, store, this);
     }
 
-    copy(from) {
-        return copy(from);
-    }
-
     getItem(key, store, defaultValue = undefined) {
         return getItem(key, store, defaultValue, this);
     }
@@ -99,7 +94,11 @@ class RecursiveState {
     }
 
     clear() {
-        clear(this);
+        this.history.push(copy(this.stores));
+
+        for (let store in this.stores) {
+            if (typeof this.stores[store].clear === "function") this.stores[store].clear();
+        }
     }
 
     flush() {}
