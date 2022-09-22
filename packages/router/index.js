@@ -6,7 +6,6 @@ const {
     ROUTER_DYNAMIC_REG_EXP,
 } = require("../constants");
 const flattenRoutes = require("./src/flattenRoutes");
-const replace = require("./src/replace");
 const resolvePath = require("./src/resolveInputRoute");
 const stripPathAndAnchor = require("./src/stripPathAndAnchor");
 
@@ -87,8 +86,16 @@ class RecursiveRouter {
         }
     }
 
-    replace(path, hash) {
-        replace(path, hash, this);
+    replace(routePath, routeAnchor) {
+        if (!routePath) return;
+
+        const [newPath, routeForm, anchor] = resolvePath(routePath, this.routes);
+
+        if (newPath) {
+            this.useRouterReplaceState(newPath, routeForm, anchor);
+
+            this.mountNewRoute(newPath, routeForm, routeAnchor);
+        }
     }
 
     getParams() {
