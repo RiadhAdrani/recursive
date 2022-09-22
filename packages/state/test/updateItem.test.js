@@ -1,6 +1,5 @@
 const { RecursiveState } = require("..");
 const { STATE_STATE_STORE } = require("../../constants");
-const getItem = require("../src/getItem");
 const updateItem = require("../src/updateItem");
 
 describe("RecursiveState.itemExists", () => {
@@ -17,7 +16,7 @@ describe("RecursiveState.itemExists", () => {
 
         updateItem(key, newValue, name, 0, 0, stateManager);
 
-        expect(getItem(key, name, undefined, stateManager).value).toBe(newValue);
+        expect(stateManager.getItem(key, name, undefined, stateManager).value).toBe(newValue);
     });
 
     it.each([
@@ -31,6 +30,6 @@ describe("RecursiveState.itemExists", () => {
 
         updateItem(upKey, newValue, upName, 0, 0, stateManager);
 
-        expect(getItem(key, name, undefined, stateManager).value).toBe(value);
+        expect(stateManager.getItem(key, name, undefined, stateManager).value).toBe(value);
     });
 });

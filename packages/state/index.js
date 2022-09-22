@@ -5,7 +5,6 @@ const CreateReservedStore = require("./reserved");
 const CreateRefStore = require("./ref");
 const CreateStateStore = require("./state");
 
-const getItem = require("./src/getItem");
 const itemExists = require("./src/itemExists");
 const removeItem = require("./src/removeItem");
 const updateItem = require("./src/updateItem");
@@ -81,7 +80,16 @@ class RecursiveState {
     }
 
     getItem(key, store, defaultValue = undefined) {
-        return getItem(key, store, defaultValue, this);
+        if (this.stores[store] === undefined) {
+            RecursiveConsole.error("Invalid store name.");
+            return;
+        }
+
+        if (this.stores[store].items[key] === undefined) {
+            return defaultValue;
+        }
+
+        return this.stores[store].items[key];
     }
 
     removeItem(key, store) {

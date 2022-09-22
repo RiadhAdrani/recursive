@@ -1,6 +1,5 @@
 const { RecursiveState } = require("..");
 const { STATE_STATE_STORE } = require("../../constants");
-const getItem = require("../src/getItem");
 
 describe("RecursiveState.getItem", () => {
     let stateManager = new RecursiveState();
@@ -14,7 +13,7 @@ describe("RecursiveState.getItem", () => {
         (name, key, value) => {
             stateManager.addItem(key, value, name, 0, 0);
 
-            expect(getItem(key, name, undefined, stateManager).value).toBe(value);
+            expect(stateManager.getItem(key, name, undefined, stateManager).value).toBe(value);
         }
     );
 
@@ -28,6 +27,6 @@ describe("RecursiveState.getItem", () => {
     ])("should be falsy value", (name, key, value) => {
         stateManager.addItem(key, value, name, 0, 0);
 
-        expect(getItem(key, name, undefined, stateManager)).toBeFalsy();
+        expect(stateManager.getItem(key, name, undefined, stateManager)).toBeFalsy();
     });
 });
