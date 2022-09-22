@@ -9,12 +9,24 @@ const { flattenRoute, resolvePath, stripPathAndAnchor, isDynamicRoute } = requir
 
 class RecursiveRouter {
     constructor(route, base, scroll, boostrapper) {
+        /**
+         * @type {import("../app").RecursiveApp}
+         */
         this.boostrapper = boostrapper;
 
+        /**
+         * @type {string}
+         */
         this.base = base || "";
 
+        /**
+         * @type {boolean}
+         */
         this.scroll = scroll || false;
 
+        /**
+         * @type {import("../../lib").FlatRoutes}
+         */
         this.routes = flattenRoute(route);
 
         this.routerContext = {
@@ -67,6 +79,9 @@ class RecursiveRouter {
         return this.stateManager.getReserved(ROUTER_ROUTE_STATE);
     }
 
+    /**
+     * @param {string} path
+     */
     goTo(path) {
         if (!path) return;
 
@@ -84,6 +99,10 @@ class RecursiveRouter {
         }
     }
 
+    /**
+     * @param {string} routePath
+     * @param {string} routeAnchor
+     */
     replace(routePath, routeAnchor) {
         if (!routePath) return;
 
@@ -271,6 +290,11 @@ class RecursiveRouter {
         return resolvePath(path, this.routes);
     }
 
+    /**
+     * @param {string} path
+     * @param {import("../../lib").RouteTemplate} routeForm
+     * @param {string} anchor
+     */
     mountNewRoute(path, routeForm, anchor) {
         const [currentPath, setCurrentPath] = this.getPathState();
         const [currentRoute, setCurrentRoute] = this.getRouteState();
@@ -303,6 +327,9 @@ class RecursiveRouter {
         }
     }
 
+    /**
+     * @param {string} path
+     */
     useRouterMakeURL(path) {
         RecursiveConsole.error("useRouterMakeURL is not implemented");
     }
@@ -311,10 +338,20 @@ class RecursiveRouter {
         RecursiveConsole.error("useRouterGetLocationPath is not implemented");
     }
 
+    /**
+     * @param {string} destination
+     * @param {string} routeForm
+     * @param {string} hash
+     */
     useRouterReplaceState(destination, routeForm, hash) {
         RecursiveConsole.error("useRouterReplaceState is not implemented");
     }
 
+    /**
+     * @param {string} destination
+     * @param {string} routeForm
+     * @param {string} hash
+     */
     useRouterPushState(destination, routeForm, hash) {
         RecursiveConsole.error("useRouterPushState is not implemented");
     }
@@ -323,6 +360,9 @@ class RecursiveRouter {
         RecursiveConsole.error("useRouterScrollToTop is not implemented");
     }
 
+    /**
+     * @param {string} anchor
+     */
     useRouterGoToAnchor(anchor) {
         RecursiveConsole.error("useRouterGoToAnchor is not implemented");
     }
@@ -339,6 +379,9 @@ class RecursiveRouter {
         RecursiveConsole.error("useRouterOnLoad is not implemented");
     }
 
+    /**
+     * @param {string} title
+     */
     useRouterSetTitle(title) {
         RecursiveConsole.error("useRouterSetTitle is not implemented");
     }
