@@ -521,15 +521,7 @@ class RecursiveRenderer {
 
         this.orchestrator.setStep.computeTree();
 
-        const initialRender = this.app();
-
-        if (!isRecursiveElement(initialRender)) {
-            RecursiveConsole.error("Root element is not of type RecursiveElement.", [
-                "Use createRecursiveElement to create a valid element.",
-            ]);
-        }
-
-        this.current = this.prepareElement(initialRender, "0", null);
+        this.current = this.prepareElementsTree();
 
         this.useRendererOnTreePrepared(this.current);
 
@@ -547,21 +539,13 @@ class RecursiveRenderer {
     update() {
         this.orchestrator.setStep.computeTree();
 
-        let _new;
+        const newRender = this.prepareElementsTree();
 
-        _new = this.prepareElement(this.app(), "0", null);
-
-        if (_new.$$_RecursiveSymbol != RECURSIVE_ELEMENT_SYMBOL) {
-            RecursiveConsole.error("Root element is not of type RecursiveElement.", [
-                "Use createRecursiveElement to create a valid element.",
-            ]);
-        }
-
-        this.useRendererOnTreePrepared(_new);
+        this.useRendererOnTreePrepared(newRender);
 
         this.orchestrator.setStep.computeDiff();
-        this.updateElement(this.current, _new);
-        this.current = _new;
+        this.updateElement(this.current, newRender);
+        this.current = newRender;
 
         this.orchestrator.setStep.execBeforeDestroyed();
         this.runPhase(RENDERER_PHASE_BEFORE_DESTROYED);
@@ -770,6 +754,18 @@ class RecursiveRenderer {
         }
 
         return map;
+    }
+
+    prepareElementsTree() {
+        const tree = this.prepareElement(this.app(), "0", null);
+
+        if (!isRecursiveElement(tree)) {
+            RecursiveConsole.error("Root element is not of type RecursiveElement.", [
+                "Use createRecursiveElement to create a valid element.",
+            ]);
+        }
+
+        return tree;
     }
 
     /**

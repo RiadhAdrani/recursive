@@ -34,7 +34,7 @@ export { createElement };
  * * `useRendererCreateRawContainer`
  * * `useRendererUpdateRawContainersAgainstEachOthers`
  */
-export class RecursiveRenderer {
+export abstract class RecursiveRenderer {
     public bootstrapper: RecursiveApp;
     public contextManager: RecursiveContext;
     public app: () => RecursiveElement;
@@ -181,6 +181,11 @@ export class RecursiveRenderer {
      * Perform store cleaning and renderer specific operations.
      */
     clean(): void;
+
+    /**
+     * Compute elements and return a prepared tree.
+     */
+    prepareElementsTree(): RecursiveElement;
 
     /**
      * Use the renderer to update style

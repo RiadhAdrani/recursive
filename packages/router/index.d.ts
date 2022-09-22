@@ -28,7 +28,7 @@ interface RouterContext {
  * * `useRouterOnLoad`
  * * `useRouterSetTitle`
  */
-export class RecursiveRouter {
+export abstract class RecursiveRouter {
     public base: string;
     public scroll: boolean;
     public routes: Array<Route>;
