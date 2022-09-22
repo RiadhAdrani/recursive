@@ -1,4 +1,4 @@
-const preparePath = require("../src/preparePath");
+const { preparePath } = require("../utility");
 
 it.each([
     ["/", "/"],
