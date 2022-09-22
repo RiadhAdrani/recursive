@@ -20,6 +20,15 @@ export interface StoreParams {
     obj: any;
 }
 
+export interface StoreItem<T = any> {
+    value: T;
+    preValue: T;
+    history: Array<T>;
+    onRemoved: () => void;
+    unsubscribe: () => void;
+    addOrder: number;
+}
+
 /**
  * Store and manage app state.
  *
@@ -64,7 +73,7 @@ export class RecursiveState {
      * @param store store name.
      * @param defaultValue backup default value.
      */
-    getItem(key: string, store: string, defaultValue: any): StateArray<any>;
+    getItem(key: string, store: string, defaultValue: any): StoreItem<any>;
 
     /**
      * remove the given item in the provided store.

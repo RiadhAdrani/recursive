@@ -18,9 +18,24 @@ const { RecursiveConsole } = require("../console");
 
 class RecursiveState {
     constructor(bootstrapper) {
+        /**
+         * @type {Map<string,import(".").Store>}
+         */
         this.stores = {};
+
+        /**
+         * @type {Array<Map<string,import(".").Store>>}
+         */
         this.history = [copy(this.stores)];
+
+        /**
+         * @type {import("../app").RecursiveApp}
+         */
         this.bootstrapper = bootstrapper;
+
+        /**
+         * @type {number}
+         */
         this.cacheSize = 1000;
 
         this.createStore(stateStore(this));
@@ -34,6 +49,13 @@ class RecursiveState {
         return this.bootstrapper.orchestrator;
     }
 
+    /**
+     * @param {string} key
+     * @param {any} value
+     * @param {string} store
+     * @param {() => Function} onAdded
+     * @param {() => void} onRemoved
+     */
     addItem(key, value = undefined, store, onAdded, onRemoved) {
         if (typeof key != "string") {
             RecursiveConsole.error("Recursive State : State UID is not of type string.");
@@ -73,6 +95,10 @@ class RecursiveState {
             })();
     }
 
+    /**
+     * @param {string} key
+     * @param {string} store
+     */
     itemExists(key, store) {
         if (
             !this.stores.hasOwnProperty(store) ||
@@ -84,6 +110,12 @@ class RecursiveState {
         return true;
     }
 
+    /**
+     * @param {string} key
+     * @param {string} store
+     * @param {any} defaultValue
+     * @returns {import(".").StoreItem<any>}
+     */
     getItem(key, store, defaultValue = undefined) {
         if (this.stores[store] === undefined) {
             RecursiveConsole.error("Invalid store name.");
@@ -97,6 +129,10 @@ class RecursiveState {
         return this.stores[store].items[key];
     }
 
+    /**
+     * @param {string} key
+     * @param {string} store
+     */
     removeItem(key, store) {
         if (this.stores[store] === undefined) {
             RecursiveConsole.error("Invalid store name.");
@@ -117,6 +153,14 @@ class RecursiveState {
         delete this.stores[store].items[key];
     }
 
+    /**
+     * @param {string} key
+     * @param {any} newValue
+     * @param {string} store
+     * @param {() => void} onChanged
+     * @param {boolean} forceUpdate
+     * @returns
+     */
     updateItem(key, newValue, store, onChanged, forceUpdate) {
         if (this.stores[store] === undefined) {
             RecursiveConsole.error("Invalid store name.");
@@ -148,6 +192,10 @@ class RecursiveState {
 
     flush() {}
 
+    /**
+     * @param {import(".").StoreParams} params
+     * @returns {import(".").Store}
+     */
     createStore(params) {
         const name = params.name;
         const set = params.set;
@@ -204,22 +252,39 @@ class RecursiveState {
         };
     }
 
+    /**
+     * @param {() => void} callback
+     * @param {string} batchName
+     */
     useBatchCallback(callback, batchName) {
         if (this.orchestrator) {
             this.orchestrator.batchCallback(callback, batchName);
         }
     }
 
+    /**
+     * @param {string} storeName
+     * @param {string} key
+     */
     setItemUsed(storeName, key) {
         if (!this.stores[storeName]) return;
 
         this.stores[storeName].used.push(key);
     }
 
+    /**
+     * @param {string} storeName
+     * @param {string} key
+     * @returns {boolean}
+     */
     itemIsUsed(storeName, key) {
         return this.stores[storeName].used.includes(key);
     }
 
+    /**
+     * @param {string} key
+     * @param {string} storeName
+     */
     runUnsubscriptionCallback(key, storeName) {
         if (this.itemExists(key, storeName)) {
             const callback = this.getItem(key, storeName).unsubscribe;
@@ -232,38 +297,84 @@ class RecursiveState {
         }
     }
 
+    /**
+     * @param {string} key
+     * @returns {import("../../lib").StateArray}
+     */
     getState(key) {
         return this.stores[STATE_STATE_STORE].get(key);
     }
 
+    /**
+     * @param {string} key
+     * @param {any} value
+     * @param {() => Function} onInit
+     * @param {() => void} onRemoved
+     * @returns {import("../../lib").StateArray}
+     */
     setState(key, value, onInit, onRemoved) {
         return this.stores[STATE_STATE_STORE].set(key, value, onInit, onRemoved);
     }
 
+    /**
+     * @param {string} key
+     * @returns {import("../../lib").StateArray}
+     */
     getCache(key) {
         return this.stores[STATE_CACHE_STORE].get(key);
     }
 
+    /**
+     * @param {string} key
+     * @param {any} value
+     * @param {() => Function} onInit
+     * @param {() => void} onRemoved
+     * @returns {import("../../lib").StateArray}
+     */
     setCache(key, value, onInit, onRemoved) {
         return this.stores[STATE_CACHE_STORE].set(key, value, onInit, onRemoved);
     }
 
+    /**
+     * @param {string} key
+     * @param {any} value
+     * @returns {import("../../lib").StateArray}
+     */
     setReserved(key, value) {
         return this.stores[STATE_RESERVED_STORE].set(key, value);
     }
 
+    /**
+     * @param {string} key
+     * @returns {import("../../lib").StateArray}
+     */
     getReserved(key) {
         return this.stores[STATE_RESERVED_STORE].get(key);
     }
 
+    /**
+     * @param {string} key
+     * @param {import("../../lib").NativeElement} value
+     * @returns {import("../../lib").NativeElement}
+     */
     setRef(key, value) {
         return this.stores[STATE_REF_STORE].set(key, value);
     }
 
+    /**
+     * @param {string} key
+     * @param {any} defaultValue
+     * @returns {import("../../lib").NativeElement}
+     */
     getRef(key, defaultValue) {
         return this.stores[STATE_REF_STORE].get(key, defaultValue);
     }
 
+    /**
+     * @param {string} key
+     * @param {() => Function} callback
+     * @param {Array<string>} dependencies
+     */
     setEffect(key, callback, dependencies) {
         this.stores[STATE_EFFECT_STORE].set(key, callback, dependencies);
     }
