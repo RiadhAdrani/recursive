@@ -1,5 +1,10 @@
 const { RecursiveConsole } = require("../console");
-const { ROUTER_PATH_STATE, ROUTER_ROUTE_STATE, ROUTER_NOT_FOUND_ROUTE } = require("../constants");
+const {
+    ROUTER_PATH_STATE,
+    ROUTER_ROUTE_STATE,
+    ROUTER_NOT_FOUND_ROUTE,
+    ROUTER_DYNAMIC_REG_EXP,
+} = require("../constants");
 const flattenRoutes = require("./src/flattenRoutes");
 const replace = require("./src/replace");
 const resolvePath = require("./src/resolveInputRoute");
@@ -90,7 +95,7 @@ class RecursiveRouter {
         const regExp = ROUTER_DYNAMIC_REG_EXP;
 
         const [currentName] = this.getPathState();
-        const current = isDynamicRoute(currentName, router);
+        const current = this.isDynamicRoute(currentName);
 
         /**
          * If the current route is not dynamic,
