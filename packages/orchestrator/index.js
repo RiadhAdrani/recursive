@@ -1,5 +1,4 @@
-const RecursiveConsole = require("../console/");
-const { RecursiveRenderer } = require("../renderer");
+const { RecursiveConsole } = require("../console");
 const createTaskId = require("./src/createTaskId");
 const createUpdateObject = require("./src/createUpdateObject");
 const {
@@ -27,11 +26,8 @@ class RecursiveOrchestrator {
      *
      * Use `RecursiveApp` to create an app using the orchestrator.
      */
-    constructor() {
-        /**
-         * @type {RecursiveRenderer}
-         */
-        this.renderer = undefined;
+    constructor(boostrapper) {
+        this.boostrapper = boostrapper;
 
         /**
          * Currently executing task.
@@ -106,6 +102,10 @@ class RecursiveOrchestrator {
             execOnUpdated: () => (this.step = ORCHESTRATOR_EXEC_ON_UPDATED),
             cleanStates: () => (this.step = ORCHESTRATOR_CLEAN_STATES),
         };
+    }
+
+    get renderer() {
+        return this.boostrapper.renderer;
     }
 
     /**

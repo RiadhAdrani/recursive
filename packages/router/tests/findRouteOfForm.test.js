@@ -1,4 +1,4 @@
-const findRouteOfForm = require("../src/findRouteOfForm");
+const { findRouteOfForm } = require("../utility");
 
 const routes = {
     "/": {},

@@ -3,31 +3,37 @@ export interface Flags {
     forceRerender: boolean;
 }
 
-export interface Hooks {
-    onCreated: (el: any) => void;
-    onUpdated: (el: any) => void;
-    onRef: (el: any) => void;
-    beforeDestroyed: (el: any) => void;
-    onDestroyed: (el: any) => void;
+export interface Hooks<T = any> {
+    onCreated: (el: T) => void;
+    onUpdated: (el: T) => void;
+    onRef: (el: T) => void;
+    beforeDestroyed: (el: T) => void;
+    onDestroyed: () => void;
 }
 
-export interface RawElement {
+export interface CommonProps<T = any> {
     elementType: string;
-    instance: any;
-    key: string;
-    flags: Flags;
-    hooks: Hooks;
-    rendererOptions: { [item: string]: any };
-    children: Array<any>;
     $$_RecursiveSymbol: Symbol;
-    [item: string]: any;
+    rendererOptions: { [item: string]: any };
+    hooks: Hooks<T>;
+    flags: Flags;
+    key: string;
 }
 
-export interface RecursiveElement extends RawElement {
+export interface BaseElement {
+    elementType: string;
+    $$_RecursiveSymbol: Symbol;
+    rendererOptions: { [item: string]: any };
+    [key: string]: any;
+}
+
+export interface RecursiveElement extends BaseElement {
     style: { [item: string]: any };
     attributes: { [item: string]: any };
-    events: { [item: string]: any };
-    map: { [item: string]: any };
+    events: { [item: string]: (ev: any) => void };
+    map: { [key: string]: number };
+    flags: Flags;
+    hooks: Hooks;
     parent: RecursiveElement;
     children: Array<RecursiveElement>;
 }
@@ -88,4 +94,6 @@ export interface StoreParams {
     obj: any;
 }
 
-export type StateArray = [any, (newValue: any) => void, () => any, () => void, any];
+export type StateArray<T = any> = [T, (value: T) => void, () => T, () => void, T];
+
+export type NativeElement = any;

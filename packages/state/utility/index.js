@@ -1,4 +1,5 @@
-const { RecursiveState } = require(".");
+const { RecursiveState } = require("..");
+const { copy } = require("../../common");
 
 /**
  * Common a stateful object from the store.
@@ -6,7 +7,7 @@ const { RecursiveState } = require(".");
  * @param {RecursiveState} store
  * @param {string} storeName
  * @param {string} key
- * @returns {import("../../lib").StateArray}
+ * @returns {import("../../../lib").StateArray}
  */
 function retrieveStatefulObject(store, storeName, key) {
     const state = store.getItem(key, storeName);
@@ -14,12 +15,12 @@ function retrieveStatefulObject(store, storeName, key) {
     /**
      * A new value instance.
      */
-    const _value = store.copy(state.value);
+    const _value = copy(state.value);
 
     /**
      * A new previous value instance.
      */
-    const _preValue = store.copy(state.preValue);
+    const _preValue = copy(state.preValue);
 
     /**
      * Update the value of the state.
@@ -41,7 +42,7 @@ function retrieveStatefulObject(store, storeName, key) {
      */
     const _live = function () {
         if (store.itemExists(key, storeName))
-            return store.copy(store.getItem(key, storeName, undefined).value);
+            return copy(store.getItem(key, storeName, undefined).value);
         else return undefined;
     };
 
@@ -51,7 +52,7 @@ function retrieveStatefulObject(store, storeName, key) {
     const _reset = function () {
         if (!store.itemExists(key, storeName)) return;
 
-        const newValue = store.copy(state.history[0]);
+        const newValue = copy(state.history[0]);
 
         store.updateItem(key, newValue, storeName, () => {
             store.useBatchCallback(() => {

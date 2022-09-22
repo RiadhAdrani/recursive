@@ -1,71 +1,22 @@
 const { RecursiveConsole } = require("../console");
-const { ROUTER_PATH_STATE, ROUTER_ROUTE_STATE, ROUTER_NOT_FOUND_ROUTE } = require("../constants");
-const { RecursiveOrchestrator } = require("../orchestrator");
-const { RecursiveState } = require("../state");
-const flattenRoutes = require("./src/flattenRoutes");
-const getParams = require("./src/getParams");
-const goTo = require("./src/goTo");
-const renderFragment = require("./src/renderFragment");
-const renderRoute = require("./src/renderRoute");
-const replace = require("./src/replace");
-const resolvePath = require("./src/resolveInputRoute");
-const mountNewRoute = require("./src/mountNewRoute");
+const {
+    ROUTER_PATH_STATE,
+    ROUTER_ROUTE_STATE,
+    ROUTER_NOT_FOUND_ROUTE,
+    ROUTER_DYNAMIC_REG_EXP,
+} = require("../constants");
+const { flattenRoute, resolvePath, stripPathAndAnchor, isDynamicRoute } = require("./utility");
 
-/**
- * Blueprint of a ``Recursive Router``.
- *
- * Manage App routing.
- *
- * These methods should be implemented, otherwise they will throw `errors`.
- * * `useRouterMakeURL`
- * * `useRouterGetLocationPath`
- * * `useRouterReplaceState`
- * * `useRouterPushState`
- * * `useRouterScrollToTop`
- * * `useRouterGoToAnchor`
- * * `useRouterNavigationListener`
- * * `useRouterGetRoute`
- * * `useRouterOnLoad`
- * * `useRouterSetTitle`
- */
 class RecursiveRouter {
-    /**
-     * Create an instance of the Recursive Router
-     * @param {import("../../lib").Route} route Route tree.
-     * @param {string} base application base.
-     * @param {boolean} scroll boolean indicating if the application should correct the current scrolling when a new route is mounted.
-     * @param {RecursiveState} stateManager application state manager.
-     * @param {RecursiveOrchestrator} orchestrator application orchestrator.
-     */
-    constructor(route, base, scroll, stateManager, orchestrator) {
-        /**
-         * @type {RecursiveState}
-         */
-        this.stateManager = stateManager;
+    constructor(route, base, scroll, boostrapper) {
+        this.boostrapper = boostrapper;
 
-        /**
-         * @type {RecursiveOrchestrator}
-         */
-        this.orchestrator = orchestrator;
-
-        /**
-         * @type {string}
-         */
         this.base = base || "";
 
-        /**
-         * @type {boolean}
-         */
         this.scroll = scroll || false;
 
-        /**
-         * @type {import("../../lib").FlatRoutes}
-         */
-        this.routes = flattenRoutes(route);
+        this.routes = flattenRoute(route);
 
-        /**
-         * Routing context.
-         */
         this.routerContext = {
             context: undefined,
             stack: [],
@@ -100,157 +51,294 @@ class RecursiveRouter {
         this.useRouterNavigationListener();
     }
 
-    /**
-     * Return the current path state.
-     * @returns {import("../../lib").StateArray} State array.
-     */
+    get stateManager() {
+        return this.boostrapper.stateManager;
+    }
+
+    get orchestrator() {
+        return this.boostrapper.orchestrator;
+    }
+
     getPathState() {
         return this.stateManager.getReserved(ROUTER_PATH_STATE);
     }
 
-    /**
-     * Return the current route object state.
-     * @returns {import("../../lib").StateArray} State array.
-     */
     getRouteState() {
         return this.stateManager.getReserved(ROUTER_ROUTE_STATE);
     }
 
-    /**
-     * Used to navigate between routes.
-     * @param {path} path
-     */
     goTo(path) {
-        goTo(path, this);
+        if (!path) return;
+
+        const [newPath, routeForm, anchor] = resolvePath(path, this.routes);
+        const [currentPath] = this.getPathState();
+
+        /**
+         * We should check if the wanted route
+         * is a different from the current one.
+         */
+        if (currentPath !== newPath) {
+            this.useRouterPushState(newPath, routeForm, anchor);
+
+            this.mountNewRoute(newPath, routeForm, anchor);
+        }
     }
 
-    /**
-     * Replace the current route with the given one.
-     * @param {string} path
-     * @param {string} hash
-     * @returns
-     */
-    replace(path, hash) {
-        replace(path, hash, this);
+    replace(routePath, routeAnchor) {
+        if (!routePath) return;
+
+        const [newPath, routeForm, anchor] = resolvePath(routePath, this.routes);
+
+        if (newPath) {
+            this.useRouterReplaceState(newPath, routeForm, anchor);
+
+            this.mountNewRoute(newPath, routeForm, routeAnchor);
+        }
     }
 
-    /**
-     * Return the parameters of the current route.
-     * @returns
-     */
     getParams() {
-        return getParams(this);
+        const regExp = ROUTER_DYNAMIC_REG_EXP;
+
+        const [currentName] = this.getPathState();
+        const current = isDynamicRoute(currentName, this.routes);
+
+        /**
+         * If the current route is not dynamic,
+         * we return an empty object.
+         */
+        if (!current.isDynamic) return {};
+
+        /**
+         * We match the given template against router dynamic regular expression
+         * and we extract he keys and the data.
+         */
+        const keys = current.template.path.match(regExp) || [];
+        const data = this.useRouterGetLocationPath().match(regExp) || [];
+
+        /**
+         * If the lengths or the keys and data arrays are equal and not null,
+         * It means that we have valid params.
+         */
+        if (keys.length === data.length && keys.length > 0) {
+            const params = {};
+
+            for (let i = 0; i < keys.length; i++) {
+                /**
+                 * for each index of the arrays,
+                 * we remove the delimiter ":" and ";" from both the key and its data,
+                 * because the dynamic route option should be of form "/:id;".
+                 * and we add it to the output params.
+                 */
+                const key = keys[i].replace(":", "").replace(";", "");
+                const keyData = data[i].replace(":", "").replace(";", "");
+
+                params[key] = keyData;
+            }
+
+            return params;
+        }
+
+        return {};
     }
 
-    /**
-     * Return the component matching the current context.
-     * @returns {any} component
-     */
     renderFragment() {
-        return renderFragment(this);
+        const routerContext = this.routerContext;
+
+        /**
+         * If the current router context depth is superior to the length of the fragments list,
+         * we know that we are out of context and we should return an empty string
+         * which will not be added to the tree of component.
+         */
+        if (routerContext.depth > routerContext.fragments.length) return "";
+
+        /**
+         * Contains the value of the expected route path at the current context depth.
+         * We assume that we are at a reasonable depth value.
+         * @type {string}
+         */
+        const expected = routerContext.fragments
+            .slice(0, routerContext.depth)
+            .reduce((prev, val) => {
+                return `${prev}${val}`;
+            });
+
+        let [routeForm] = stripPathAndAnchor(expected);
+
+        const isDynamic = isDynamicRoute(expected, this.routes);
+
+        if (isDynamic.isDynamic) {
+            routeForm = isDynamic.template.path;
+        }
+
+        /**
+         * The appropriate fragment route
+         * calculated using the `expected` route.
+         */
+        let fragmentRoute = this.routes[routeForm] || this.routes["/404"] || false;
+
+        /**
+         * Route fragment element.
+         * This should be transformed by the renderer
+         * into platform-specific component.
+         * @type {import("../../lib").RecursiveElement}
+         */
+        let fragmentComponent;
+
+        if (fragmentRoute) {
+            fragmentComponent = fragmentRoute.isDynamic
+                ? fragmentRoute.template.component()
+                : fragmentRoute.component();
+        } else {
+            /**
+             * This branch should be unreachable,
+             */
+            fragmentComponent = "";
+        }
+
+        return fragmentComponent;
     }
 
-    /**
-     * Combine `useRouterContext` and `renderFragment`.
-     * Render the route fragment to the tree.
-     * @returns
-     */
     renderRoute() {
-        return renderRoute(this);
+        const setRouterContextParams = () => {
+            const [route] = this.getPathState();
+
+            this.routerContext.fragments = route
+                .split("/")
+                .slice(1)
+                .map((val) => `/${val}`);
+        };
+
+        const useRouterContext = (context, componentCallback) => {
+            if (typeof componentCallback !== "function") {
+                RecursiveConsole.error("Route component is not a function.");
+            }
+
+            const startContext = (newContext) => {
+                const routerContext = this.routerContext;
+
+                routerContext.depth++;
+
+                if (routerContext.context) {
+                    routerContext.stack.push(routerContext.context);
+                }
+
+                routerContext.context = newContext;
+            };
+
+            const endContext = () => {
+                const routerContext = this.routerContext;
+
+                /**
+                 * We check if a context already exists
+                 */
+                if (routerContext.context) {
+                    /**
+                     * if the stack is not empty,
+                     * we set the current context to the previous one
+                     * which we popped from the stack.
+                     */
+                    if (routerContext.stack.length > 0)
+                        routerContext.context = routerContext.stack.pop();
+                    /**
+                     *  if the stack is empty
+                     *  we set the context to an undefined state.
+                     */ else routerContext.context = undefined;
+                }
+
+                routerContext.depth--;
+            };
+
+            startContext(context);
+
+            const fragment = componentCallback();
+
+            endContext();
+
+            return fragment;
+        };
+
+        const [route] = this.getRouteState();
+
+        setRouterContextParams();
+
+        /**
+         * We wrap the fragment rendering function within a context.
+         */
+        return useRouterContext({ route }, () => this.renderFragment());
     }
 
-    /**
-     * resolve path.
-     * @param {String} path
-     */
     resolvePath(path) {
         return resolvePath(path, this.routes);
     }
 
-    /**
-     * Mount the route with the given parameters.
-     * @param {string} path route path.
-     * @param {import("../../lib").RouteTemplate} route route template
-     * @param {string} anchor route anchor
-     */
-    mountNewRoute(path, route, anchor) {
-        mountNewRoute(path, route, anchor, this);
+    mountNewRoute(path, routeForm, anchor) {
+        const [currentPath, setCurrentPath] = this.getPathState();
+        const [currentRoute, setCurrentRoute] = this.getRouteState();
+
+        const routeTemplate = this.routes[routeForm];
+
+        this.orchestrator.batchCallback(() => {
+            if (typeof currentRoute.onExit == "function") {
+                currentRoute.onExit();
+            }
+
+            setCurrentRoute(routeTemplate);
+            setCurrentPath(path);
+
+            if (typeof routeTemplate.onLoad == "function") {
+                routeTemplate.onLoad();
+            }
+        });
+
+        if (anchor) {
+            this.useRouterGoToAnchor(anchor);
+        } else {
+            if (this.scroll) {
+                this.useRouterScrollToTop();
+            }
+        }
+
+        if (routeTemplate.title) {
+            this.useRouterSetTitle(routeTemplate.title);
+        }
     }
 
-    /**
-     * Build the URL.
-     * @param {string} path
-     */
     useRouterMakeURL(path) {
         RecursiveConsole.error("useRouterMakeURL is not implemented");
     }
 
-    /**
-     * Retreive the current path.
-     */
     useRouterGetLocationPath() {
         RecursiveConsole.error("useRouterGetLocationPath is not implemented");
     }
 
-    /**
-     * Replace the current route state.
-     * @param {String} destination
-     * @param {String} routeForm
-     * @param {String} hash
-     */
     useRouterReplaceState(destination, routeForm, hash) {
         RecursiveConsole.error("useRouterReplaceState is not implemented");
     }
 
-    /**
-     * Push a new route state.
-     * @param {String} destination
-     * @param {String} routeForm
-     * @param {String} hash
-     */
     useRouterPushState(destination, routeForm, hash) {
         RecursiveConsole.error("useRouterPushState is not implemented");
     }
 
-    /**
-     * Scroll to the top of the device view.
-     */
     useRouterScrollToTop() {
         RecursiveConsole.error("useRouterScrollToTop is not implemented");
     }
 
-    /**
-     * Scroll to the location of the element identified by the given anchor.
-     * @param {string} anchor
-     */
     useRouterGoToAnchor(anchor) {
         RecursiveConsole.error("useRouterGoToAnchor is not implemented");
     }
 
-    /**
-     * Attach a listener that watches the actions of pushing and replacing route states
-     */
     useRouterNavigationListener() {
         RecursiveConsole.error("useRouterNavigationListener is not implemented");
     }
 
-    /**
-     * Get the current route
-     */
     useRouterGetRoute() {
         RecursiveConsole.error("useRouterGetRoute is not implemented");
     }
 
-    /**
-     * Executed when the router has been initialized in the App.
-     */
     useRouterOnLoad() {
         RecursiveConsole.error("useRouterOnLoad is not implemented");
     }
 
-    /**
-     * Change the tab title of the browser.
-     */
     useRouterSetTitle(title) {
         RecursiveConsole.error("useRouterSetTitle is not implemented");
     }

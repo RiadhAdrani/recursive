@@ -1,25 +1,19 @@
 const { RecursiveState } = require("..");
 const { STATE_STATE_STORE } = require("../../constants");
-const addItem = require("../src/addItem");
-const getItem = require("../src/getItem");
 
 describe("RecursiveState.getItem", () => {
-    let StateManager = new RecursiveState();
+    let stateManager = new RecursiveState();
 
     beforeEach(() => {
-        StateManager = new RecursiveState();
+        stateManager = new RecursiveState();
     });
 
     it.each([[STATE_STATE_STORE, "value_key", "value"]])(
         "should get the correct value",
         (name, key, value) => {
-            expect(
-                (() => {
-                    addItem(key, value, name, 0, 0, StateManager);
+            stateManager.addItem(key, value, name, 0, 0);
 
-                    return getItem(key, name, undefined, StateManager).value;
-                })()
-            ).toBe(value);
+            expect(stateManager.getItem(key, name, undefined, stateManager).value).toBe(value);
         }
     );
 
@@ -31,12 +25,8 @@ describe("RecursiveState.getItem", () => {
         [STATE_STATE_STORE, null, "value"],
         [STATE_STATE_STORE, "", "value"],
     ])("should be falsy value", (name, key, value) => {
-        expect(
-            (() => {
-                addItem(key, value, name, 0, 0, StateManager);
+        stateManager.addItem(key, value, name, 0, 0);
 
-                return getItem(key, name, undefined, StateManager);
-            })()
-        ).toBeFalsy();
+        expect(stateManager.getItem(key, name, undefined, stateManager)).toBeFalsy();
     });
 });

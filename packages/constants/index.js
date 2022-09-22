@@ -43,7 +43,7 @@ const RENDERER_PHASE_ON_DESTROYED = "onDestroyed";
 const RENDERER_PHASE_BEFORE_DESTROYED = "beforeDestroyed";
 const RENDERER_PHASE_CHANGES = "changes";
 
-const RECURSIVE_ELEMENT_SYMBOL = Symbol();
+const RECURSIVE_ELEMENT_SYMBOL = Symbol.for("recursive.element");
 
 // STATE
 

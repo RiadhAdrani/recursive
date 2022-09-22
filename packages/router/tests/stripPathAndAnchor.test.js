@@ -1,4 +1,4 @@
-const stripPathAndAnchor = require("../src/stripPathAndAnchor");
+const { stripPathAndAnchor } = require("../utility");
 
 it.each([
     ["/", ["/", ""]],

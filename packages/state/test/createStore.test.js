@@ -1,31 +1,26 @@
 const { RecursiveState } = require("..");
-const createStore = require("../src/createStore");
 
 describe("RecursiveState.createStore", () => {
-    let StateManager = new RecursiveState();
+    let stateManager = new RecursiveState();
 
     beforeEach(() => {
-        StateManager = new RecursiveState();
+        stateManager = new RecursiveState();
     });
 
     it.each([["storage"]])("should create store with valid input", (name) => {
-        expect(
-            (() => {
-                createStore(
-                    {
-                        name,
-                        clear: () => {},
-                        flush: () => {},
-                        get: () => {},
-                        obj: {},
-                        set: () => {},
-                    },
-                    StateManager
-                );
+        stateManager.createStore(
+            {
+                name,
+                clear: () => {},
+                flush: () => {},
+                get: () => {},
+                obj: {},
+                set: () => {},
+            },
+            stateManager
+        );
 
-                return Object.keys(StateManager.stores[name].items).length;
-            })()
-        ).toBeDefined();
+        expect(Object.keys(stateManager.stores[name].items).length).toBeDefined();
     });
 
     it.each([
@@ -38,22 +33,18 @@ describe("RecursiveState.createStore", () => {
         ["storage", () => {}, () => {}, null, () => {}],
         ["storage", () => {}, () => {}, () => {}, null],
     ])("should decline any invalid property", (name, clear, flush, get, set) => {
-        expect(
-            (() => {
-                createStore(
-                    {
-                        name,
-                        clear,
-                        flush,
-                        get,
-                        obj: {},
-                        set,
-                    },
-                    StateManager
-                );
+        stateManager.createStore(
+            {
+                name,
+                clear,
+                flush,
+                get,
+                obj: {},
+                set,
+            },
+            stateManager
+        );
 
-                return StateManager.stores[name];
-            })()
-        ).toBeFalsy();
+        expect(stateManager.stores[name]).toBeFalsy();
     });
 });

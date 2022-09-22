@@ -1,9 +1,11 @@
+const { RECURSIVE_ELEMENT_SYMBOL } = require("../../constants");
+
 /**
  * Check if a given child is valid for processing.
  * @param {any} child
  * @returns {boolean}
  */
-function checkChildIsValid(child) {
+function isValidChild(child) {
     if ([undefined, null, ""].includes(child)) return false;
     if (Array.isArray(child)) return false;
 
@@ -53,4 +55,21 @@ function makeDiffList(oldList, newList) {
     return { toRemove, toUpdate, toAdd };
 }
 
-module.exports = { checkChildIsValid, makeDiffList };
+/**
+ * Check if the given element object is a valid recursive element.
+ * @param {Object} element
+ * @returns {boolean}
+ */
+function isRecursiveElement(element) {
+    return (
+        typeof element === "object" &&
+        element !== null &&
+        element.hasOwnProperty("elementType") &&
+        element.hasOwnProperty("$$_RecursiveSymbol") &&
+        typeof element.elementType === "string" &&
+        element.elementType.toString().trim() !== "" &&
+        element.$$_RecursiveSymbol === RECURSIVE_ELEMENT_SYMBOL
+    );
+}
+
+module.exports = { isValidChild, makeDiffList, isRecursiveElement };

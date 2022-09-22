@@ -1,13 +1,13 @@
 const { RecursiveState } = require("..");
 const { RecursiveConsole } = require("../../console");
 const { STATE_STATE_STORE } = require("../../constants");
-const { retrieveStatefulObject } = require("../common");
+const { retrieveStatefulObject } = require("../utility");
 
 /**
  * Create a new state store.
  * @param {RecursiveState} store
  */
-const CreateStateStore = (store) => {
+const stateStore = (store) => {
     const storeName = STATE_STATE_STORE;
 
     function retrieve(key) {
@@ -46,4 +46,4 @@ const CreateStateStore = (store) => {
     return { set, get, clear, flush, name: storeName };
 };
 
-module.exports = CreateStateStore;
+module.exports = stateStore;

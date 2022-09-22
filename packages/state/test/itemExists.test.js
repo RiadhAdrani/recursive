@@ -1,13 +1,11 @@
 const { RecursiveState } = require("..");
 const { STATE_STATE_STORE } = require("../../constants");
-const addItem = require("../src/addItem");
-const itemExists = require("../src/itemExists");
 
 describe("RecursiveState.itemExists", () => {
-    let StateManager = new RecursiveState();
+    let stateManager = new RecursiveState();
 
     beforeEach(() => {
-        StateManager = new RecursiveState();
+        stateManager = new RecursiveState();
     });
 
     it.each([
@@ -15,12 +13,8 @@ describe("RecursiveState.itemExists", () => {
         [null, "value_key", "value_key", false],
         [STATE_STATE_STORE, "value_key", "other_key", false],
     ])("should determine if an item exists", (name, key, searchKey, value) => {
-        expect(
-            (() => {
-                addItem(key, "lorem", name, 0, 0, StateManager);
+        stateManager.addItem(key, "lorem", name, 0, 0);
 
-                return itemExists(searchKey, name, StateManager);
-            })()
-        ).toBe(value);
+        expect(stateManager.itemExists(searchKey, name)).toBe(value);
     });
 });

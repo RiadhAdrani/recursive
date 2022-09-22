@@ -1,17 +1,11 @@
-const { copy } = require("../common");
+const { copy, areEqual } = require("../common");
 
-const CreateCacheStore = require("./cache");
-const CreateReservedStore = require("./reserved");
-const CreateRefStore = require("./ref");
-const CreateStateStore = require("./state");
+const cacheStore = require("./cache");
+const reservedStore = require("./reserved");
+const refStore = require("./ref");
+const stateStore = require("./state");
+const effectStore = require("./effect");
 
-const addItem = require("./src/addItem");
-const clear = require("./src/clear");
-const createStore = require("./src/createStore");
-const getItem = require("./src/getItem");
-const itemExists = require("./src/itemExists");
-const removeItem = require("./src/removeItem");
-const updateItem = require("./src/updateItem");
 const {
     STATE_STATE_STORE,
     STATE_CACHE_STORE,
@@ -19,161 +13,213 @@ const {
     STATE_REF_STORE,
     STATE_EFFECT_STORE,
 } = require("../constants");
-const { RecursiveOrchestrator } = require("../orchestrator");
-const CreateEffectStore = require("./effect");
 
-/**
- * Store and manage app state.
- *
- * * `state` reactive object that will last as long as it is needed.
- * * `cache` reactive state that will last as long as the App is running.
- * * `ref` reference an element in the App tree.
- * * `reserved`  used internally by some modules.
- * * `effect` launch side effects.
- */
+const { RecursiveConsole } = require("../console");
+
 class RecursiveState {
-    constructor() {
-        /**
-         * @type {import("../../lib").StateStores}
-         */
+    constructor(bootstrapper) {
         this.stores = {};
-
-        this.history = [this.copy(this.stores)];
-
-        /**
-         * @type {RecursiveOrchestrator}
-         */
-        this.orchestrator = undefined;
-
+        this.history = [copy(this.stores)];
+        this.bootstrapper = bootstrapper;
         this.cacheSize = 1000;
 
-        this.createStore(CreateStateStore(this));
-        this.createStore(CreateReservedStore(this));
-        this.createStore(CreateCacheStore(this));
-        this.createStore(CreateRefStore(this));
-        this.createStore(CreateEffectStore(this));
+        this.createStore(stateStore(this));
+        this.createStore(reservedStore(this));
+        this.createStore(cacheStore(this));
+        this.createStore(refStore(this));
+        this.createStore(effectStore(this));
     }
 
-    /**
-     * Create a new stateful object within the store.
-     * @param {String} key
-     * @param {any} value
-     * @param {String} store
-     * @param {Function} onAdded
-     * @param {Function} onRemoved
-     */
+    get orchestrator() {
+        return this.bootstrapper.orchestrator;
+    }
+
     addItem(key, value = undefined, store, onAdded, onRemoved) {
-        addItem(key, value, store, onAdded, onRemoved, this);
+        if (typeof key != "string") {
+            RecursiveConsole.error("Recursive State : State UID is not of type string.");
+            return;
+        }
+
+        if ([undefined, null, ""].includes(key.trim())) {
+            RecursiveConsole.error(
+                "Recursive State : State UID cannot be one of these : '' or 'undefined' or 'null'."
+            );
+            return;
+        }
+
+        if (this.stores[store] === undefined) {
+            RecursiveConsole.error("Recursive State : Invalid store name.");
+            return;
+        }
+
+        const _object = {
+            value,
+            preValue: undefined,
+            history: [value],
+            onRemoved,
+            unsubscribe: () => {},
+            addOrder: Object.keys(this.stores[store].items).length,
+        };
+
+        this.stores[store].items[key] = _object;
+
+        if (onAdded && typeof onAdded === "function")
+            (async () => {
+                const unsubscribe = await onAdded();
+
+                if (typeof unsubscribe === "function" && this.itemExists(key, store)) {
+                    this.stores[store].items[key].unsubscribe = unsubscribe;
+                }
+            })();
     }
 
-    /**
-     * Check if an item exists in the store.
-     * @param {String} key
-     * @param {String} store
-     * @returns {boolean}
-     */
     itemExists(key, store) {
-        return itemExists(key, store, this);
+        if (
+            !this.stores.hasOwnProperty(store) ||
+            !this.stores[store].hasOwnProperty("items") ||
+            !this.stores[store].items.hasOwnProperty(key)
+        )
+            return false;
+
+        return true;
     }
 
-    /**
-     * Create a new instance of the given object.
-     * @param {any} from
-     * @returns
-     */
-    copy(from) {
-        return copy(from);
-    }
-
-    /**
-     * Retrieve the item with located in the given store by its `key`.
-     * @param {String} key
-     * @param {String} store
-     * @param {any} defaultValue
-     * @returns
-     */
     getItem(key, store, defaultValue = undefined) {
-        return getItem(key, store, defaultValue, this);
+        if (this.stores[store] === undefined) {
+            RecursiveConsole.error("Invalid store name.");
+            return;
+        }
+
+        if (this.stores[store].items[key] === undefined) {
+            return defaultValue;
+        }
+
+        return this.stores[store].items[key];
     }
 
-    /**
-     * Remove item from the store.
-     * @param {String} key
-     * @param {String} store
-     */
     removeItem(key, store) {
-        removeItem(key, store, this);
+        if (this.stores[store] === undefined) {
+            RecursiveConsole.error("Invalid store name.");
+        }
+
+        if (!this.itemExists(key, store)) {
+            RecursiveConsole.error("State does not exist in the current store.");
+        }
+
+        const fn = this.stores[store].items[key].onRemoved;
+        const unsub = this.stores[store].items[key].unsubscribe;
+
+        (() => {
+            if (typeof fn === "function") fn();
+            unsub();
+        })();
+
+        delete this.stores[store].items[key];
     }
 
-    /**
-     * Update a given item within the provided store.
-     * @param {String} key
-     * @param {any} newValue
-     * @param {String} store
-     * @param {Function} onChanged
-     * @param {boolean} forceUpdate
-     */
     updateItem(key, newValue, store, onChanged, forceUpdate) {
-        updateItem(key, newValue, store, onChanged, forceUpdate, this);
+        if (this.stores[store] === undefined) {
+            RecursiveConsole.error("Invalid store name.");
+            return;
+        }
+
+        if (!this.itemExists(key, store)) {
+            RecursiveConsole.error("State does not exist in the current store.");
+            return;
+        }
+
+        if (!areEqual(this.stores[store].items[key].value, newValue) || forceUpdate) {
+            this.stores[store].items[key].history.push(copy(this.stores[store].items[key].value));
+            this.stores[store].items[key].preValue = this.stores[store].items[key].value;
+
+            this.stores[store].items[key].value = newValue;
+
+            if (onChanged && typeof onChanged === "function") (() => onChanged())();
+        }
     }
 
-    /**
-     * Clear out of scope and unused states.
-     */
     clear() {
-        clear(this);
+        this.history.push(copy(this.stores));
+
+        for (let store in this.stores) {
+            if (typeof this.stores[store].clear === "function") this.stores[store].clear();
+        }
     }
 
-    /**
-     * @unused
-     */
     flush() {}
 
-    /**
-     * Create a new store.
-     * @param {import("../../lib").StoreParams} params
-     */
     createStore(params) {
-        createStore(params, this);
+        const name = params.name;
+        const set = params.set;
+        const get = params.get;
+        const flush = params.flush;
+        const obj = params.obj;
+        const clear = params.clear;
+
+        if (typeof name !== "string") {
+            RecursiveConsole.error(`name is not a string`);
+            return;
+        }
+
+        if (!name.trim()) {
+            RecursiveConsole.error(`name is not valid`);
+            return;
+        }
+
+        if (typeof set !== "function") {
+            RecursiveConsole.error("set is not a function");
+            return;
+        }
+
+        if (typeof get !== "function") {
+            RecursiveConsole.error("get is not a function");
+            return;
+        }
+
+        if (typeof clear !== "function") {
+            RecursiveConsole.error("clear is not a function");
+            return;
+        }
+
+        if (typeof flush !== "function") {
+            RecursiveConsole.error("flush is not a function");
+            return;
+        }
+
+        const _name = name.trim();
+
+        if (this.stores[_name]) {
+            RecursiveConsole.error("store already exists");
+            return;
+        }
+
+        this.stores[_name] = {
+            items: {},
+            used: [],
+            obj,
+            set,
+            get,
+            clear,
+            flush,
+        };
     }
 
-    /**
-     * Call for an update to be scheduled,
-     * after executing the given callback.
-     */
     useBatchCallback(callback, batchName) {
         if (this.orchestrator) {
             this.orchestrator.batchCallback(callback, batchName);
         }
     }
 
-    /**
-     * Set the item as used in the current rendering iteration.
-     * @param {String} storeName
-     * @param {String} key
-     * @returns
-     */
     setItemUsed(storeName, key) {
         if (!this.stores[storeName]) return;
 
         this.stores[storeName].used.push(key);
     }
 
-    /**
-     * Check if the given item was used in the current rendering iteration.
-     * @param {String} storeName
-     * @param {String} key
-     * @returns
-     */
     itemIsUsed(storeName, key) {
         return this.stores[storeName].used.includes(key);
     }
 
-    /**
-     * Execute unsubscription callback for a given item in a given store.
-     * @param {string} key object key
-     * @param {string} storeName store identifier
-     */
     runUnsubscriptionCallback(key, storeName) {
         if (this.itemExists(key, storeName)) {
             const callback = this.getItem(key, storeName).unsubscribe;
@@ -186,106 +232,38 @@ class RecursiveState {
         }
     }
 
-    /**
-     * Retrieve an existing stateful object from the `state` store if it exists.
-     * @param {string} key identifier
-     * @throw an error if the state does not exist.
-     * @returns {import("../../lib").StateArray} StateArray
-     */
     getState(key) {
         return this.stores[STATE_STATE_STORE].get(key);
     }
 
-    /**
-     * Create and save a stateful object in the `state` store within the global `StateStore`.
-     *
-     * Objects created by this method are deleted when they are not used or called in a rendering iteration.
-     * @param {string} key unique identifier of the state whithin its store.
-     * @param {any} value initial value
-     * @param {Function} onInit a function that will execute when the state is initialized.
-     * If the return value of this function is a function itself,
-     * it will be executed whe the state is destroyed.
-     * @param {Function} onRemoved a function that will execute when the state has been destroyed.
-     * @returns {import("../../lib").StateArray} StateArray
-     */
     setState(key, value, onInit, onRemoved) {
         return this.stores[STATE_STATE_STORE].set(key, value, onInit, onRemoved);
     }
 
-    /**
-     * Retrieve an existing stateful object from the `cache` store if it exists.
-     * @param {string} key identifier
-     * @throw an error if the state does not exist.
-     * @returns {import("../../lib").StateArray} StateArray
-     */
     getCache(key) {
         return this.stores[STATE_CACHE_STORE].get(key);
     }
 
-    /**
-     * Create and save a stateful object in the `cache` store within the global `StateStore`.
-     *
-     * Objects created by this method are not deleted when they are not used,
-     * unless the number of cached object exceed the maximum allocated size which is by default `1000`.
-     *
-     * Older states will be deleted first.
-     *
-     * @param {string} key unique identifier of the state whithin its store.
-     * @param {any} value initial value
-     * @param {Function} onInit a function that will execute when the state is initialized.
-     * If the return value of this function is a function itself,
-     * it will be executed whe the state is destroyed.
-     * @param {Function} onRemoved a function that will execute when the state has been destroyed.
-     * @returns {import("../../lib").StateArray} StateArray
-     */
     setCache(key, value, onInit, onRemoved) {
         return this.stores[STATE_CACHE_STORE].set(key, value, onInit, onRemoved);
     }
 
-    /**
-     * Create a reserved item for the app.
-     * @param {String} key
-     * @param {any} value
-     * @returns {import("../../lib").StateArray} StateArray
-     */
     setReserved(key, value) {
         return this.stores[STATE_RESERVED_STORE].set(key, value);
     }
 
-    /**
-     * Retrieve the reserved item if it exists.
-     * @param {String} key
-     * @returns {import("../../lib").StateArray} StateArray
-     */
     getReserved(key) {
         return this.stores[STATE_RESERVED_STORE].get(key);
     }
 
-    /**
-     * Set reference for a UI element.
-     * @param {String} key
-     * @param {any} value
-     * @returns
-     */
     setRef(key, value) {
         return this.stores[STATE_REF_STORE].set(key, value);
     }
 
-    /**
-     * Retrieve an existing element from the `reference` store, or the default value.
-     * @param {string} key identifier
-     * @returns {any} element
-     */
     getRef(key, defaultValue) {
         return this.stores[STATE_REF_STORE].get(key, defaultValue);
     }
 
-    /**
-     * Create and execute a new effect.
-     * @param {string} key identifier.
-     * @param {Function} callback callback to be executed.
-     * @param {Array<>} dependencies effect dependencies that will decide if the effect should be called again.
-     */
     setEffect(key, callback, dependencies) {
         this.stores[STATE_EFFECT_STORE].set(key, callback, dependencies);
     }
