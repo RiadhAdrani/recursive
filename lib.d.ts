@@ -41,12 +41,37 @@ export interface RecursiveElement extends BaseElement {
 export type App = () => RecursiveElement;
 
 export interface Route {
+    /**
+     * path fragment.
+     *
+     * except for the root path, you should not add a backslash `/` at the beginning of the path.
+     */
     path: string;
+    /**
+     * absolute route path that the app will try to redirect to.
+     *
+     * if it does not exist, a `/404` route will load instead.
+     */
     redirectTo: string;
+    /**
+     * App title when the current route is mounted.
+     */
     title: string;
+    /**
+     * nested routes.
+     */
     routes: Array<Route>;
-    component: App;
+    /**
+     * component callback representing the route.
+     */
+    component: () => RecursiveElement;
+    /**
+     * callback executing when the route is mounted.
+     */
     onLoad: () => void;
+    /**
+     * callback executing when the route is unmounted.
+     */
     onExit: () => void;
 }
 

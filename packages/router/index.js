@@ -6,6 +6,7 @@ const {
     ROUTER_DYNAMIC_REG_EXP,
 } = require("../constants");
 const { flattenRoute, resolvePath, stripPathAndAnchor, isDynamicRoute } = require("./utility");
+const { createRoute } = require("./route");
 
 class RecursiveRouter {
     constructor(route, base, scroll, boostrapper) {
@@ -387,4 +388,4 @@ class RecursiveRouter {
     }
 }
 
-module.exports = { RecursiveRouter };
+module.exports = { RecursiveRouter, createRoute };

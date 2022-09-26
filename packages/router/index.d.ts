@@ -2,6 +2,9 @@ import { RecursiveElement, Route, RouteTemplate, StateArray } from "../../lib";
 import { RecursiveApp } from "../app";
 import { RecursiveOrchestrator } from "../orchestrator";
 import { RecursiveState } from "../state";
+import { createRoute } from "./route";
+
+export { createRoute };
 
 interface RouterContext {
     context: object;
