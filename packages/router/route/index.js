@@ -1,8 +1,10 @@
+const { copy } = require("../../common");
+
 /**
  * @param {import("../../../lib").Route} params
  */
 function createRoute(params) {
-    return { ...params };
+    return { ...copy(params) };
 }
 
 module.exports = { route: createRoute };

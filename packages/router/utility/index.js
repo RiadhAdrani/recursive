@@ -1,3 +1,4 @@
+const { copy } = require("../../common");
 const { RecursiveConsole } = require("../../console");
 const { ROUTER_DYNAMIC_REG_EXP, ROUTER_ANCHOR_REG_EXP } = require("../../constants");
 
@@ -9,64 +10,70 @@ const { ROUTER_DYNAMIC_REG_EXP, ROUTER_ANCHOR_REG_EXP } = require("../../constan
 function flattenRoute(route) {
     let list = {};
 
+    if (
+        typeof route !== "object" ||
+        typeof route.path !== "string" ||
+        typeof route.component !== "function"
+    )
+        return {};
+
+    route = copy(route);
+
     /**
      * we should accept a route only if :
      * - it is a non null javascript
      * - contains a path
      * - contains a component
      */
-    if (route && route.path && route.component) {
-        const onLoad = typeof route.onLoad == "function" ? route.onLoad : () => {};
-        const onExit = typeof route.onExit == "function" ? route.onExit : () => {};
-        const title = typeof route.title == "string" ? route.title : null;
-        const redirectTo = typeof route.redirectTo == "string" ? route.redirectTo : null;
 
-        if (typeof route.component != "function") {
-            RecursiveConsole.error(
-                "Recursive Router : router's component should be of type function."
-            );
-        }
+    const onLoad = typeof route.onLoad == "function" ? route.onLoad : () => {};
+    const onExit = typeof route.onExit == "function" ? route.onExit : () => {};
+    const title = typeof route.title == "string" ? route.title : null;
+    const redirectTo = typeof route.redirectTo == "string" ? route.redirectTo : null;
 
-        if (typeof route.path != "string") {
-            RecursiveConsole.error("Recursive Router : router's path should be of type string.");
-        }
+    if (typeof route.component != "function") {
+        RecursiveConsole.error("Recursive Router : router's component should be of type function.");
+    }
 
-        list[route.path] = {
-            path: route.path,
-            component: route.component,
-            redirectTo,
-            title,
-            onLoad,
-            onExit,
-        };
+    if (typeof route.path != "string") {
+        RecursiveConsole.error("Recursive Router : router's path should be of type string.");
+    }
 
-        if (Array.isArray(route.routes)) {
-            const parent = route.path;
+    list[route.path] = {
+        path: route.path,
+        component: route.component,
+        redirectTo,
+        title,
+        onLoad,
+        onExit,
+    };
 
-            /**
-             * we do not add a slash if the parent route is the root ("/") path.
-             */
-            const slash = route.path == "/" ? "" : "/";
+    if (Array.isArray(route.routes)) {
+        const parent = route.path;
 
-            route.routes.forEach((_route) => {
-                if (_route && _route.path) {
-                    const current = _route.path;
+        /**
+         * we do not add a slash if the parent route is the root ("/") path.
+         */
+        const slash = route.path == "/" ? "" : "/";
 
-                    /**
-                     * we construct the route path
-                     */
-                    _route.path = parent + slash + current;
+        route.routes.forEach((_route) => {
+            if (_route && _route.path) {
+                const current = _route.path;
 
-                    /**
-                     * we recursively flatten the child routes
-                     * and add them to the global list.
-                     */
-                    const _list = flattenRoute(_route);
+                /**
+                 * we construct the route path
+                 */
+                _route.path = parent + slash + current;
 
-                    list = { ...list, ..._list };
-                }
-            });
-        }
+                /**
+                 * we recursively flatten the child routes
+                 * and add them to the global list.
+                 */
+                const _list = flattenRoute(_route);
+
+                list = { ...list, ..._list };
+            }
+        });
     }
 
     return list;
