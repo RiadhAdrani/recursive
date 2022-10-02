@@ -5,44 +5,31 @@ const {
     HOOKS_ON_DESTROYED,
     HOOKS_ON_REF,
     HOOKS_ON_UPDATED,
+    HOOKS_BEFORE_PREPARED,
+    HOOKS_ON_PREPARED,
 } = require("../../../constants");
 
-test("is-hook before-destroyed test", () => {
-    expect(isHook(HOOKS_BEFORE_DESTROYED, () => {})).toBe(true);
+test.each([
+    [HOOKS_BEFORE_DESTROYED],
+    [HOOKS_ON_CREATED],
+    [HOOKS_ON_DESTROYED],
+    [HOOKS_ON_REF],
+    [HOOKS_ON_UPDATED],
+    [HOOKS_BEFORE_PREPARED],
+    [HOOKS_ON_PREPARED],
+])("should accept hook '%s'", (hook) => {
+    expect(isHook(hook, () => {})).toBeTruthy();
 });
 
-test("is-hook on-destroyed test", () => {
-    expect(isHook(HOOKS_ON_DESTROYED, () => {})).toBe(true);
-});
-
-test("is-hook on-created test", () => {
-    expect(isHook(HOOKS_ON_CREATED, () => {})).toBe(true);
-});
-
-test("is-hook on-updated test", () => {
-    expect(isHook(HOOKS_ON_UPDATED, () => {})).toBe(true);
-});
-
-test("is-hook on-ref test", () => {
-    expect(isHook(HOOKS_ON_REF, () => {})).toBe(true);
-});
-
-test("is-hook number-name test", () => {
-    expect(isHook(1, () => {})).toBe(false);
-});
-
-test("is-hook number-declaration test", () => {
-    expect(isHook(HOOKS_ON_REF, 1)).toBe(false);
-});
-
-test("is-hook object-declaration test", () => {
-    expect(isHook(HOOKS_ON_REF, {})).toBe(false);
-});
-
-test("is-hook string-declaration test", () => {
-    expect(isHook(HOOKS_ON_REF, "1")).toBe(false);
-});
-
-test("is-hook array-declaration test", () => {
-    expect(isHook(HOOKS_ON_REF, [])).toBe(false);
+test.each([
+    [HOOKS_BEFORE_DESTROYED, 1],
+    [HOOKS_ON_CREATED, ""],
+    [HOOKS_ON_DESTROYED, {}],
+    [HOOKS_ON_REF, []],
+    [HOOKS_ON_UPDATED, null],
+    [HOOKS_BEFORE_PREPARED, undefined],
+    [HOOKS_ON_PREPARED, "hook"],
+    ["onClicked", () => {}],
+])("should refuse invalid hooks '%s'", (hook, declaration) => {
+    expect(isHook(hook, declaration)).toBeFalsy();
 });

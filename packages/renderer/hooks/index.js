@@ -4,6 +4,8 @@ const {
     HOOKS_ON_UPDATED,
     HOOKS_BEFORE_DESTROYED,
     HOOKS_ON_REF,
+    HOOKS_BEFORE_PREPARED,
+    HOOKS_ON_PREPARED,
 } = require("../../constants");
 
 /**
@@ -15,6 +17,8 @@ const list = {
     onUpdated: { key: HOOKS_ON_UPDATED, type: "function" },
     beforeDestroyed: { key: HOOKS_BEFORE_DESTROYED, type: "function" },
     onRef: { key: HOOKS_ON_REF, type: "function" },
+    onPrepared: { key: HOOKS_ON_PREPARED, type: "function" },
+    beforePrepared: { key: HOOKS_BEFORE_PREPARED, type: "function" },
 };
 
 /**

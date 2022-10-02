@@ -586,6 +586,10 @@ class RecursiveRenderer {
      * @returns
      */
     prepareElement(element, id, parent) {
+        if (element.hasOwnProperty("hooks") && typeof element.beforePrepared === "function") {
+            element.hooks.beforePrepared(element);
+        }
+
         const _element = {};
 
         if (!element.$$_RecursiveSymbol || element.$$_RecursiveSymbol != RECURSIVE_ELEMENT_SYMBOL) {
@@ -699,6 +703,10 @@ class RecursiveRenderer {
             }
 
             _element.map = this.prepareMap(_element.children);
+        }
+
+        if (_element.hasOwnProperty("hooks") && typeof _element.hooks.onPrepared === "function") {
+            _element.hooks.onPrepared(_element);
         }
 
         return _element;

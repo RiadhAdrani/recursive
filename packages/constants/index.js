@@ -32,6 +32,8 @@ const HOOKS_ON_UPDATED = "onUpdated";
 const HOOKS_ON_DESTROYED = "onDestroyed";
 const HOOKS_ON_REF = "onRef";
 const HOOKS_BEFORE_DESTROYED = "beforeDestroyed";
+const HOOKS_BEFORE_PREPARED = "beforePrepared";
+const HOOKS_ON_PREPARED = "onPrepared";
 
 const ELEMENT_TYPE_FRAGMENT = "fragment";
 const ELEMENT_TYPE_TEXT_NODE = "#text";
@@ -90,6 +92,8 @@ module.exports = {
     HOOKS_ON_DESTROYED,
     HOOKS_ON_REF,
     HOOKS_ON_UPDATED,
+    HOOKS_BEFORE_PREPARED,
+    HOOKS_ON_PREPARED,
 
     ELEMENT_TYPE_FRAGMENT,
     ELEMENT_TYPE_TEXT_NODE,
