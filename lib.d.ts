@@ -1,14 +1,70 @@
 export interface Flags {
+    /**
+     * ## `renderIf`
+     *
+     * A boolean indicating if the element should be rendered
+     * in the view.
+     */
     renderIf: boolean;
+    /**
+     * ## `forceRerender`
+     *
+     * A boolean indicating if the element should override
+     * the old one without performing deep diffing.
+     */
     forceRerender: boolean;
 }
 
 export interface Hooks<T = any> {
+    /**
+     * ## `onCreated`
+     *
+     * Hook executed when the element
+     * is rendered for the first time.
+     * When an element
+     * gets updated with another one having the same type,
+     * the `onCreated` hook of the new one won't be executed,
+     * the operation is not considered as a creation of a new element.
+     */
     onCreated: (el: T) => void;
+    /**
+     * ## `onUpdated`
+     *
+     * Hook executed when the element attributes are removed, added or updated,
+     * or when events are added or removed.
+     */
     onUpdated: (el: T) => void;
+    /**
+     * ## `onRef`
+     *
+     * Executed everytime the app is updated.
+     * Return a string that will serve as the reference key.
+     */
     onRef: (el: T) => void;
+    /**
+     * ## `beforeDestroyed`
+     *
+     * Executed before the element get removed from the DOM.
+     */
     beforeDestroyed: (el: T) => void;
+    /**
+     * ## `onDestroyed`
+     *
+     * Executed after the element get removed from the DOM.
+     */
     onDestroyed: () => void;
+    /**
+     * ## `onPrepared`
+     *
+     * Executed after the element is computed and checked.
+     */
+    onPrepared: (el: RecursiveElement) => void;
+    /**
+     * ## `onPrepared`
+     *
+     * Executed before element checking.
+     */
+    beforePrepared: (el: BaseElement) => void;
 }
 
 export interface CommonProps<T = any> {
@@ -27,15 +83,15 @@ export interface BaseElement {
     [key: string]: any;
 }
 
-export interface RecursiveElement extends BaseElement {
+export interface RecursiveElement<T = any> extends BaseElement {
     style: { [item: string]: any };
     attributes: { [item: string]: any };
     events: { [item: string]: (ev: any) => void };
     map: { [key: string]: number };
     flags: Flags;
-    hooks: Hooks;
-    parent: RecursiveElement;
-    children: Array<RecursiveElement>;
+    hooks: Hooks<T>;
+    parent: RecursiveElement<T>;
+    children: Array<RecursiveElement<T>>;
 }
 
 export type App = () => RecursiveElement;
