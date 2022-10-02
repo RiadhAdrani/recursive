@@ -651,11 +651,6 @@ class RecursiveRenderer {
             }
 
             if (this.useRendererIsEvent(property)) {
-                if (typeof element[property] != "function") {
-                    RecursiveConsole.error(
-                        `Recursive Renderer : Event "${property}" is not a function.`
-                    );
-                }
                 _element.events[property] = element[property];
                 continue;
             }

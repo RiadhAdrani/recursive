@@ -1,3 +1,4 @@
+const { areEqual } = require("../../common");
 const { RECURSIVE_ELEMENT_SYMBOL } = require("../../constants");
 
 /**
@@ -36,12 +37,7 @@ function makeDiffList(oldList, newList) {
     for (let key in combined) {
         if (newList.hasOwnProperty(key)) {
             if (oldList.hasOwnProperty(key)) {
-                if (
-                    typeof oldList[key] == typeof newList[key] &&
-                    typeof newList[key] == "function"
-                ) {
-                    toUpdate[key] = combined[key];
-                } else if (JSON.stringify(oldList[key]) != JSON.stringify(newList[key])) {
+                if (areEqual(oldList[key], newList[key]) === false) {
                     toUpdate[key] = combined[key];
                 }
             } else if (!oldList.hasOwnProperty(key)) {
