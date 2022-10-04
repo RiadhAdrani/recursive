@@ -1,4 +1,5 @@
 const { RecursiveState } = require("..");
+const { RecursiveConsole } = require("../../console");
 const { STATE_REF_STORE } = require("../../constants");
 
 /**
@@ -17,6 +18,13 @@ const refStore = (store) => {
     }
 
     function set(key, value, onInit, onRemoved) {
+        if (store.itemIsUsed(storeName, key)) {
+            RecursiveConsole.error(
+                `Recursive State : reference key "${key}" has already been used.`
+            );
+            return;
+        }
+
         store.addItem(key, value, storeName, onInit, onRemoved);
         store.setItemUsed(storeName, key);
     }
