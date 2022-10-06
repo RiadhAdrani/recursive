@@ -36,7 +36,7 @@ export class RecursiveApp {
     public renderer: RecursiveRenderer;
 
     /**
-     * Create a new Recusive Application instance.
+     * Create a new Recursive Application instance.
      * @param params application parameters.
      */
     constructor(params: RecursiveAppConstructorParams);
@@ -181,7 +181,7 @@ export class RecursiveApp {
      * @param {string} key identifier
      * @returns {any} Native Element
      */
-    getRef(key: string): any;
+    getRef<T>(key: string, defaultValue: T): T;
 
     /**
      * Execute an effect.

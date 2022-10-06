@@ -167,10 +167,11 @@ class RecursiveApp {
 
     /**
      * @param {string} key
+     * @param {any} defaultValue
      * @returns {import("../../lib").NativeElement}
      */
-    getRef(key) {
-        return this.stateManager.getRef(key);
+    getRef(key, defaultValue) {
+        return this.stateManager.getRef(key, defaultValue);
     }
 
     /**
