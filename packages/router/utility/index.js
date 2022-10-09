@@ -1,4 +1,4 @@
-const { copy } = require("../../common");
+const { copy } = require("@riadh-adrani/utility-js");
 const { RecursiveConsole } = require("../../console");
 const { ROUTER_DYNAMIC_REG_EXP, ROUTER_ANCHOR_REG_EXP } = require("../../constants");
 

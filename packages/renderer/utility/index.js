@@ -1,4 +1,4 @@
-const { areEqual } = require("../../common");
+const { areEqual } = require("@riadh-adrani/utility-js");
 const { RECURSIVE_ELEMENT_SYMBOL } = require("../../constants");
 
 /**

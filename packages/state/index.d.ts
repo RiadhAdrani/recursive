@@ -1,4 +1,4 @@
-import { StateArray } from "../../lib";
+import { StateArray, StateEntry } from "../../lib";
 import { RecursiveApp } from "../app";
 import { RecursiveOrchestrator } from "../orchestrator";
 
@@ -58,7 +58,7 @@ export class RecursiveState {
      * @param onAdded initialization callback.
      * @param onRemoved removal callback.
      */
-    addItem(key: string, value: T, onAdded: () => Function, onRemoved: () => void): void;
+    addItem<T>(key: string, value: T, onAdded: () => Function, onRemoved: () => void): void;
 
     /**
      * check if an item exists in the given store.
@@ -201,7 +201,7 @@ export class RecursiveState {
      * @param key identifier.
      * @param value initial value.
      */
-    setReserved(key: string, value: T): StateArray<T>;
+    setReserved<T>(key: string, value: T): StateArray<T>;
 
     /**
      * Retrieve the reserved item if it exists.
@@ -229,5 +229,5 @@ export class RecursiveState {
      * @param callback callback to be executed.
      * @param dependencies effect dependencies that will decide if the effect should be called again.
      */
-    setEffect(key: string, callback: () => Function, dependencies: Array[]): void;
+    setEffect(key: string, callback: () => Function, dependencies: Array<any>): void;
 }

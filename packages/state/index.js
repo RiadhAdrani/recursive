@@ -1,4 +1,4 @@
-const { copy, areEqual } = require("../common");
+const { copy, areEqual } = require("@riadh-adrani/utility-js");
 
 const cacheStore = require("./cache");
 const reservedStore = require("./reserved");

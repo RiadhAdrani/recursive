@@ -1,4 +1,4 @@
-const { copy } = require("../../common");
+const { copy } = require("@riadh-adrani/utility-js");
 
 /**
  * @param {import("../../../lib").Route} params

@@ -1,9 +1,9 @@
 const { RecursiveState } = require("..");
-const { copy } = require("../../common");
+const { copy } = require("@riadh-adrani/utility-js");
 
 /**
  * Common a stateful object from the store.
- * Used for sotres: `state`, `cache` and `reserved`.
+ * Used for stores: `state`, `cache` and `reserved`.
  * @param {RecursiveState} store
  * @param {string} storeName
  * @param {string} key
