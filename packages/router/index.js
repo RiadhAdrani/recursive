@@ -1,11 +1,13 @@
 const { RecursiveConsole } = require("../console");
+const { ROUTER_PATH_STATE, ROUTER_ROUTE_STATE, ROUTER_NOT_FOUND_ROUTE } = require("../constants");
 const {
-    ROUTER_PATH_STATE,
-    ROUTER_ROUTE_STATE,
-    ROUTER_NOT_FOUND_ROUTE,
-    ROUTER_DYNAMIC_REG_EXP,
-} = require("../constants");
-const { flattenRoute, resolvePath, stripPathAndAnchor, isDynamicRoute } = require("./utility");
+    flattenRoute,
+    resolvePath,
+    stripPathAndAnchor,
+    extractParams,
+    findRouteOfForm,
+    fragmentize,
+} = require("./utility");
 const { createRoute } = require("./route");
 
 class RecursiveRouter {
@@ -117,48 +119,21 @@ class RecursiveRouter {
     }
 
     getParams() {
-        const regExp = ROUTER_DYNAMIC_REG_EXP;
+        let params = {};
 
-        const [currentName] = this.getPathState();
-        const current = isDynamicRoute(currentName, this.routes);
+        const fragments = fragmentize(this.useRouterGetLocationPath());
 
-        /**
-         * If the current route is not dynamic,
-         * we return an empty object.
-         */
-        if (!current.isDynamic) return {};
+        for (let i = 0; i < fragments.length; i++) {
+            const path = "/" + fragments.slice(0, i + 1).join("/");
 
-        /**
-         * We match the given template against router dynamic regular expression
-         * and we extract he keys and the data.
-         */
-        const keys = current.template.path.match(regExp) || [];
-        const data = this.useRouterGetLocationPath().match(regExp) || [];
+            const template = findRouteOfForm(path, this.routes);
 
-        /**
-         * If the lengths or the keys and data arrays are equal and not null,
-         * It means that we have valid params.
-         */
-        if (keys.length === data.length && keys.length > 0) {
-            const params = {};
-
-            for (let i = 0; i < keys.length; i++) {
-                /**
-                 * for each index of the arrays,
-                 * we remove the delimiter ":" and ";" from both the key and its data,
-                 * because the dynamic route option should be of form "/:id;".
-                 * and we add it to the output params.
-                 */
-                const key = keys[i].replace(":", "").replace(";", "");
-                const keyData = data[i].replace(":", "").replace(";", "");
-
-                params[key] = keyData;
+            if (template) {
+                params = { ...extractParams(template, path) };
             }
-
-            return params;
         }
 
-        return {};
+        return params;
     }
 
     renderFragment() {
@@ -182,40 +157,11 @@ class RecursiveRouter {
                 return `${prev}${val}`;
             });
 
-        let [routeForm] = stripPathAndAnchor(expected);
+        const [routeForm] = stripPathAndAnchor(expected);
 
-        const isDynamic = isDynamicRoute(expected, this.routes);
+        const found = findRouteOfForm(routeForm, this.routes);
 
-        if (isDynamic.isDynamic) {
-            routeForm = isDynamic.template.path;
-        }
-
-        /**
-         * The appropriate fragment route
-         * calculated using the `expected` route.
-         */
-        let fragmentRoute = this.routes[routeForm] || this.routes["/404"] || false;
-
-        /**
-         * Route fragment element.
-         * This should be transformed by the renderer
-         * into platform-specific component.
-         * @type {import("../../lib").RecursiveElement}
-         */
-        let fragmentComponent;
-
-        if (fragmentRoute) {
-            fragmentComponent = fragmentRoute.isDynamic
-                ? fragmentRoute.template.component()
-                : fragmentRoute.component();
-        } else {
-            /**
-             * This branch should be unreachable,
-             */
-            fragmentComponent = "";
-        }
-
-        return fragmentComponent;
+        return this.routes[found || "/404"].component();
     }
 
     renderRoute() {

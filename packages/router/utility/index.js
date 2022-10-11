@@ -140,20 +140,16 @@ function stripPathAndAnchor(destination) {
 
 /**
  * Find and return the route with the suitable path.
- * @param {String} form the path/template form of the route.
+ * @param {String} path the path/template form of the route.
  * @param {import("../../../lib").FlatRoutes} listOfRoutes an object containing path to be checked.
  * @return {String | Boolean} the key of the route or false in case not found.
  */
-function findRouteOfForm(form, listOfRoutes) {
-    if (typeof form != "string") return false;
+function findRouteOfForm(path, listOfRoutes) {
+    if (typeof path != "string") return false;
 
-    const regEx = ROUTER_DYNAMIC_REG_EXP;
-
-    const tester = ":recursive;";
-
-    for (let path in listOfRoutes) {
-        if (path.replace(regEx, tester) === form.replace(regEx, tester)) {
-            return path;
+    for (let template in listOfRoutes) {
+        if (areMatch(template, path)) {
+            return template;
         }
     }
 
@@ -164,68 +160,12 @@ function findRouteOfForm(form, listOfRoutes) {
  * Check if the provided route is dynamic : contains parameters.
  * @param {string} inputPath
  * @param {import("../../../lib").FlatRoutes} routes
+ * @deprecated
  * @returns {import("../../../lib").RouteTemplate | {isDynamic: boolean}}
  */
 function isDynamicRoute(inputPath, routes) {
-    const regExp = ROUTER_DYNAMIC_REG_EXP;
-
-    for (let pathKey in routes) {
-        /**
-         * Basically,
-         * this is the path that we are testing,
-         * we are using a new variable
-         * to avoid confusion.
-         * the name `pathKey` could be interpreted as something else,
-         * despite being just the key of the path within the object of routes.
-         */
-        const templatePath = pathKey;
-
-        /**
-         * This is a testing string,
-         * could be set to any value
-         * but we decided "recusive".
-         */
-        const tester = "recursive";
-
-        /**
-         * We match the given input path against the dynamic route regular expression.
-         */
-        const inputRouteMatch = inputPath.match(regExp);
-        /**
-         * We match the currently iterated on path against the dynamic route regular expression.
-         */
-        const currentRouteMatch = pathKey.match(regExp);
-
-        /**
-         * If one of the matches is falsy,
-         * we just skip this route.
-         */
-        if (!currentRouteMatch || !inputRouteMatch) continue;
-
-        /**
-         * This may cause errors
-         * and we should wrap it in an "try catch" block.
-         */
-        try {
-            if (
-                inputRouteMatch.length === currentRouteMatch.length &&
-                currentRouteMatch.length > 0
-            ) {
-                /**
-                 * If the number of matches is the same and not null,
-                 * we should check if both routes give us the same route
-                 * with a custom parameter.
-                 * We return the route template if it is a match.
-                 */
-                if (inputPath.replace(regExp, tester) === templatePath.replace(regExp, tester)) {
-                    return { isDynamic: true, template: routes[pathKey] };
-                }
-            }
-        } catch (e) {
-            /**
-             * Something went wrong...
-             */
-        }
+    for (let route in routes) {
+        if (areMatch(route, inputPath)) return { isDynamic: true, template: routes[route] };
     }
 
     /**
@@ -263,6 +203,69 @@ function preparePath(destination) {
     return decodeURI(prepared);
 }
 
+function isDynamicFragment(pathFragment) {
+    const dynamicRegEx = /^:[^:]{1,}/;
+
+    return dynamicRegEx.test(pathFragment);
+}
+
+/**
+ *
+ * @param {string} path
+ */
+function fragmentize(path) {
+    return path.substring(1).split("/");
+}
+
+function isDynamicPath(path) {
+    const fragments = fragmentize(path);
+
+    for (let fragment of fragments) {
+        if (isDynamicFragment(fragment)) return true;
+    }
+
+    return false;
+}
+
+function areMatch(templatePath, path) {
+    if (!isDynamicPath(templatePath)) {
+        return templatePath === path;
+    }
+
+    const fragments = fragmentize(path);
+    const templateFragments = fragmentize(templatePath);
+
+    if (fragments.length !== templateFragments.length) return false;
+
+    for (let i = 0; i < fragments.length; i++) {
+        const _fragment = fragments[i];
+        const _template = templateFragments[i];
+
+        if (!isDynamicFragment(_template) && _fragment !== _template) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function extractParams(templatePath, path) {
+    const _template = fragmentize(templatePath);
+    const _path = fragmentize(path);
+
+    const params = {};
+
+    const length = Math.min(_template.length, _path.length);
+
+    for (let i = 0; i < length; i++) {
+        if (isDynamicFragment(_template[i])) {
+            params[_template[i].substring(1)] = decodeURI(_path[i]);
+        }
+    }
+
+    return params;
+}
+
 module.exports = {
     flattenRoute,
     resolvePath,
@@ -270,4 +273,9 @@ module.exports = {
     findRouteOfForm,
     isDynamicRoute,
     preparePath,
+    isDynamicFragment,
+    isDynamicPath,
+    fragmentize,
+    areMatch,
+    extractParams,
 };
