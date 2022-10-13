@@ -4,12 +4,15 @@ const routes = {
     "/": {},
     "/route": {},
     "/route/:id": {},
+    "/route/rec": {},
     "/user/:id/name/:name": {},
 };
 
 it.each([
     ["/route", "/route"],
     ["/user/123/name/framework", "/user/:id/name/:name"],
+    ["/route/123", "/route/:id"],
+    ["/route/rec", "/route/rec"],
     ["", false],
     [undefined, false],
     [false, false],

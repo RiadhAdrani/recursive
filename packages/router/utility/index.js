@@ -1,6 +1,6 @@
 const { copy } = require("@riadh-adrani/utility-js");
 const { RecursiveConsole } = require("../../console");
-const { ROUTER_DYNAMIC_REG_EXP, ROUTER_ANCHOR_REG_EXP } = require("../../constants");
+const { ROUTER_ANCHOR_REG_EXP } = require("../../constants");
 
 /**
  * Resolve the provided route and return a flat object.
@@ -147,6 +147,10 @@ function stripPathAndAnchor(destination) {
 function findRouteOfForm(path, listOfRoutes) {
     if (typeof path != "string") return false;
 
+    const exact = findExactRoute(path, listOfRoutes);
+
+    if (typeof exact != "boolean") return exact;
+
     for (let template in listOfRoutes) {
         if (areMatch(template, path)) {
             return template;
@@ -203,6 +207,10 @@ function preparePath(destination) {
     return decodeURI(prepared);
 }
 
+/**
+ *
+ * @param {string} pathFragment
+ */
 function isDynamicFragment(pathFragment) {
     const dynamicRegEx = /^:[^:]{1,}/;
 
@@ -217,6 +225,9 @@ function fragmentize(path) {
     return path.substring(1).split("/");
 }
 
+/**
+ * @param {string} path
+ */
 function isDynamicPath(path) {
     const fragments = fragmentize(path);
 
@@ -227,6 +238,10 @@ function isDynamicPath(path) {
     return false;
 }
 
+/**
+ * @param {string} templatePath
+ * @param {string} path
+ */
 function areMatch(templatePath, path) {
     if (!isDynamicPath(templatePath)) {
         return templatePath === path;
@@ -249,6 +264,11 @@ function areMatch(templatePath, path) {
     return true;
 }
 
+/**
+ * @param {string} templatePath
+ * @param {string} path
+ * @returns
+ */
 function extractParams(templatePath, path) {
     const _template = fragmentize(templatePath);
     const _path = fragmentize(path);
@@ -266,11 +286,22 @@ function extractParams(templatePath, path) {
     return params;
 }
 
+/**
+ * @param {string} path
+ * @param {import("../../../lib").FlatRoutes} routes
+ */
+function findExactRoute(path, routes) {
+    const res = Object.keys(routes).find((_path) => _path === path);
+
+    return res ? res : false;
+}
+
 module.exports = {
     flattenRoute,
     resolvePath,
     stripPathAndAnchor,
     findRouteOfForm,
+    findExactRoute,
     isDynamicRoute,
     preparePath,
     isDynamicFragment,
