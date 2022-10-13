@@ -96,6 +96,11 @@ export abstract class RecursiveRouter {
     resolvePath(path: string): [string, RouteTemplate, string];
 
     /**
+     * return the currently targeted anchor.
+     */
+    getAnchor(): string;
+
+    /**
      * mount the route with the given parameters.
      * @param path destination path.
      * @param route route template.
@@ -115,7 +120,7 @@ export abstract class RecursiveRouter {
     abstract useRouterGetLocationPath(): string;
 
     /**
-     * recplace the current route state.
+     * replace the current route state.
      * @param destination destination path.
      * @param routeForm destination path form (route form is not the same as the destination in case of a dynamic route).
      * @param hash

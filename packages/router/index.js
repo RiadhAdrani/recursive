@@ -1,5 +1,10 @@
 const { RecursiveConsole } = require("../console");
-const { ROUTER_PATH_STATE, ROUTER_ROUTE_STATE, ROUTER_NOT_FOUND_ROUTE } = require("../constants");
+const {
+    ROUTER_PATH_STATE,
+    ROUTER_ROUTE_STATE,
+    ROUTER_NOT_FOUND_ROUTE,
+    ROUTER_ANCHOR_STATE,
+} = require("../constants");
 const {
     flattenRoute,
     resolvePath,
@@ -62,6 +67,7 @@ class RecursiveRouter {
 
         this.stateManager.setReserved(ROUTER_PATH_STATE, "/");
         this.stateManager.setReserved(ROUTER_ROUTE_STATE, fTemplate);
+        this.stateManager.setReserved(ROUTER_ANCHOR_STATE, "");
 
         this.useRouterNavigationListener();
     }
@@ -80,6 +86,10 @@ class RecursiveRouter {
 
     getRouteState() {
         return this.stateManager.getReserved(ROUTER_ROUTE_STATE);
+    }
+
+    getAnchorState() {
+        return this.stateManager.getReserved(ROUTER_ANCHOR_STATE);
     }
 
     /**
@@ -237,6 +247,10 @@ class RecursiveRouter {
         return resolvePath(path, this.routes);
     }
 
+    getAnchor() {
+        return this.getAnchorState()[0];
+    }
+
     /**
      * @param {string} path
      * @param {import("../../lib").RouteTemplate} routeForm
@@ -245,6 +259,7 @@ class RecursiveRouter {
     mountNewRoute(path, routeForm, anchor) {
         const [currentPath, setCurrentPath] = this.getPathState();
         const [currentRoute, setCurrentRoute] = this.getRouteState();
+        const [currentAnchor, setCurrentAnchor] = this.getAnchorState();
 
         const routeTemplate = this.routes[routeForm];
 
@@ -255,6 +270,7 @@ class RecursiveRouter {
 
             setCurrentRoute(routeTemplate);
             setCurrentPath(path);
+            setCurrentAnchor(anchor);
 
             if (typeof routeTemplate.onLoad == "function") {
                 routeTemplate.onLoad();

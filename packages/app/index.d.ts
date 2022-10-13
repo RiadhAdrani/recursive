@@ -71,6 +71,11 @@ export class RecursiveApp {
     getRoute(): string;
 
     /**
+     * return the currently targeted anchor.
+     */
+    getAnchor(): string;
+
+    /**
      * Calculate the parameters of the current path and returns them as a key-value object.
      * @throws an error when the router is not initialized.
      *
@@ -114,7 +119,7 @@ export class RecursiveApp {
      * Create and save a stateful object in the `state` store within the global `StateStore`.
      *
      * Objects created by this method are deleted when they are not used or called in a rendering iteration.
-     * @param {string} key unique identifier of the state whithin its store.
+     * @param {string} key unique identifier of the state within its store.
      * @param {any} value initial value
      * @param {Function} onInit a function that will execute when the state is initialized.
      * If the return value of this function is a function itself,
@@ -145,7 +150,7 @@ export class RecursiveApp {
      *
      * Older states will be deleted first.
      *
-     * @param {string} key unique identifier of the state whithin its store.
+     * @param {string} key unique identifier of the state within its store.
      * @param {any} value initial value
      * @param {Function} onInit a function that will execute when the state is initialized.
      * If the return value of this function is a function itself,

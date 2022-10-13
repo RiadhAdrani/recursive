@@ -1,8 +1,9 @@
 // Router
 const ROUTER_DYNAMIC_REG_EXP = /:[^:;]*;/g;
 const ROUTER_ANCHOR_REG_EXP = /#[\w.~:?#[\]@!$&'()*+,;=-]+$/;
-const ROUTER_PATH_STATE = "path";
-const ROUTER_ROUTE_STATE = "route";
+const ROUTER_PATH_STATE = "router-path";
+const ROUTER_ROUTE_STATE = "router-route";
+const ROUTER_ANCHOR_STATE = "router-anchor";
 const ROUTER_NOT_FOUND_ROUTE = "/404";
 
 // DEVELOPMENT
@@ -66,6 +67,7 @@ module.exports = {
     ROUTER_DYNAMIC_REG_EXP,
     ROUTER_PATH_STATE,
     ROUTER_ROUTE_STATE,
+    ROUTER_ANCHOR_STATE,
     ROUTER_NOT_FOUND_ROUTE,
 
     DEVELOPMENT_MODE,

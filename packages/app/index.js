@@ -107,6 +107,16 @@ class RecursiveApp {
         }
     }
 
+    getAnchor() {
+        if (this.router) {
+            return this.router.getAnchor();
+        } else {
+            RecursiveConsole.error(
+                "Recursive Router : You can not use the method 'getAnchor()' because no Router has been initialized."
+            );
+        }
+    }
+
     goTo(path) {
         if (this.router) {
             this.router.goTo(path);
