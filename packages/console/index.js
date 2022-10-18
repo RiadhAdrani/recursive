@@ -6,10 +6,7 @@ const { isDevMode } = require("../common");
 class RecursiveConsole {
     constructor() {}
 
-    /**
-     * @param {Map<string,any>} params
-     */
-    static showDeveloperHelp(params) {}
+    static showDeveloperHelp() {}
 
     /**
      * @param {String} msg

@@ -1,10 +1,9 @@
-const { RecursiveState } = require("..");
 const { RecursiveConsole } = require("../../console");
 const { STATE_REF_STORE } = require("../../constants");
 
 /**
  * Create a new reference store.
- * @param {RecursiveState} store
+ * @param {import("..").RecursiveState} store
  */
 const refStore = (store) => {
     const storeName = STATE_REF_STORE;

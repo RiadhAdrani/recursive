@@ -1,11 +1,10 @@
 const { RecursiveConsole } = require("../../console");
 const { retrieveStatefulObject } = require("../utility");
-const { RecursiveState } = require("..");
 const { STATE_RESERVED_STORE } = require("../../constants");
 
 /**
  * Create a new reserved state store.
- * @param {RecursiveState} store
+ * @param {import("..").RecursiveState} store
  */
 const reservedStore = (store) => {
     const storeName = STATE_RESERVED_STORE;

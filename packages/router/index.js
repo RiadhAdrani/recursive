@@ -257,9 +257,9 @@ class RecursiveRouter {
      * @param {string} anchor
      */
     mountNewRoute(path, routeForm, anchor) {
-        const [currentPath, setCurrentPath] = this.getPathState();
+        const [, setCurrentPath] = this.getPathState();
         const [currentRoute, setCurrentRoute] = this.getRouteState();
-        const [currentAnchor, setCurrentAnchor] = this.getAnchorState();
+        const [, setCurrentAnchor] = this.getAnchorState();
 
         const routeTemplate = this.routes[routeForm];
 
@@ -293,7 +293,7 @@ class RecursiveRouter {
     /**
      * @param {string} path
      */
-    useRouterMakeURL(path) {
+    useRouterMakeURL() {
         RecursiveConsole.error("useRouterMakeURL is not implemented");
     }
 
@@ -306,7 +306,7 @@ class RecursiveRouter {
      * @param {string} routeForm
      * @param {string} hash
      */
-    useRouterReplaceState(destination, routeForm, hash) {
+    useRouterReplaceState() {
         RecursiveConsole.error("useRouterReplaceState is not implemented");
     }
 
@@ -315,7 +315,7 @@ class RecursiveRouter {
      * @param {string} routeForm
      * @param {string} hash
      */
-    useRouterPushState(destination, routeForm, hash) {
+    useRouterPushState() {
         RecursiveConsole.error("useRouterPushState is not implemented");
     }
 
@@ -326,7 +326,7 @@ class RecursiveRouter {
     /**
      * @param {string} anchor
      */
-    useRouterGoToAnchor(anchor) {
+    useRouterGoToAnchor() {
         RecursiveConsole.error("useRouterGoToAnchor is not implemented");
     }
 
@@ -345,7 +345,7 @@ class RecursiveRouter {
     /**
      * @param {string} title
      */
-    useRouterSetTitle(title) {
+    useRouterSetTitle() {
         RecursiveConsole.error("useRouterSetTitle is not implemented");
     }
 }

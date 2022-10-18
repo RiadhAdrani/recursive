@@ -1,10 +1,9 @@
-const { RecursiveState } = require("..");
 const { RecursiveConsole } = require("../../console");
 const { STATE_EFFECT_STORE } = require("../../constants");
 
 /**
  * Create a new effect store.
- * @param {RecursiveState} store
+ * @param {import("..").RecursiveState} store
  */
 const effectStore = (store) => {
     const storeName = STATE_EFFECT_STORE;

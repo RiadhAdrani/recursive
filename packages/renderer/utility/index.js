@@ -1,4 +1,4 @@
-const { areEqual } = require("@riadh-adrani/utility-js");
+const { areEqual, hasProperty } = require("@riadh-adrani/utility-js");
 const { RECURSIVE_ELEMENT_SYMBOL } = require("../../constants");
 
 /**
@@ -35,12 +35,12 @@ function makeDiffList(oldList, newList) {
     }
 
     for (let key in combined) {
-        if (newList.hasOwnProperty(key)) {
-            if (oldList.hasOwnProperty(key)) {
+        if (hasProperty(newList, key)) {
+            if (hasProperty(oldList, key)) {
                 if (areEqual(oldList[key], newList[key]) === false) {
                     toUpdate[key] = combined[key];
                 }
-            } else if (!oldList.hasOwnProperty(key)) {
+            } else if (!hasProperty(oldList, key)) {
                 toAdd[key] = combined[key];
             }
         } else {
@@ -60,8 +60,8 @@ function isRecursiveElement(element) {
     return (
         typeof element === "object" &&
         element !== null &&
-        element.hasOwnProperty("elementType") &&
-        element.hasOwnProperty("$$_RecursiveSymbol") &&
+        hasProperty(element, "elementType") &&
+        hasProperty(element, "$$_RecursiveSymbol") &&
         typeof element.elementType === "string" &&
         element.elementType.toString().trim() !== "" &&
         element.$$_RecursiveSymbol === RECURSIVE_ELEMENT_SYMBOL

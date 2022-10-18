@@ -72,6 +72,8 @@ export class RecursiveApp {
 
     /**
      * return the currently targeted anchor.
+     *
+     * @throws an error when the router is not initialized.
      */
     getAnchor(): string;
 
@@ -103,7 +105,7 @@ export class RecursiveApp {
      * Could be used recursively within nested routes to render the appropriate components.
      *
      * @throws an error when the router is not initialized.
-     * @returns {RecursiveElement} The current route fragment element.
+     * @returns The current route fragment element.
      */
     renderRoute(): RecursiveElement;
 

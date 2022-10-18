@@ -1,5 +1,5 @@
 /**
- * Generate a unique Task identifer.
+ * Generate a unique Task identifier.
  * @param {bigint} time
  * @returns {string} uid
  */

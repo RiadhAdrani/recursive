@@ -1,3 +1,5 @@
+const { hasProperty } = require("@riadh-adrani/utility-js");
+
 const { RecursiveConsole } = require("../console");
 const { RecursiveContext } = require("../context");
 
@@ -586,7 +588,7 @@ class RecursiveRenderer {
      * @returns
      */
     prepareElement(element, id, parent) {
-        if (element.hasOwnProperty("hooks") && typeof element.beforePrepared === "function") {
+        if (hasProperty(element, "hooks") && typeof element.beforePrepared === "function") {
             element.hooks.beforePrepared(element);
         }
 
@@ -595,7 +597,7 @@ class RecursiveRenderer {
         if (!element.$$_RecursiveSymbol || element.$$_RecursiveSymbol != RECURSIVE_ELEMENT_SYMBOL) {
             RecursiveConsole.error(
                 "Recursive Renderer : Element does not have the RecursiveElement signature symbol.",
-                ['You should create an element only using "createRecursiveElement" method.']
+                ["You should create an element only using createElement() method."]
             );
             return false;
         }
@@ -606,7 +608,7 @@ class RecursiveRenderer {
             !element.elementType.toString().trim()
         ) {
             RecursiveConsole.error(
-                'Recursive Renderer : "elementType" should not be empty or null.',
+                "Recursive Renderer : (elementType) should not be empty or null.",
                 [
                     "Element type should be of type string.",
                     "Make sure to provide a type for your element (ex: div in web).",
@@ -700,7 +702,7 @@ class RecursiveRenderer {
             _element.map = this.prepareMap(_element.children);
         }
 
-        if (_element.hasOwnProperty("hooks") && typeof _element.hooks.onPrepared === "function") {
+        if (hasProperty(_element, "hooks") && typeof _element.hooks.onPrepared === "function") {
             _element.hooks.onPrepared(_element);
         }
 
@@ -775,7 +777,7 @@ class RecursiveRenderer {
      * @param {import("../../lib").RecursiveElement} element
      * @param {import("../../lib").RecursiveElement} newElement
      */
-    useRendererUpdateStyle(element, newElement) {
+    useRendererUpdateStyle() {
         RecursiveConsole.error("Renderer has no method updateStyle.");
     }
 
@@ -783,7 +785,7 @@ class RecursiveRenderer {
      * @param {import("../../lib").RecursiveElement} textElement
      * @param {import("../../lib").RecursiveElement} newTextElement
      */
-    useRendererUpdateText(textElement, newTextElement) {
+    useRendererUpdateText() {
         RecursiveConsole.error("Renderer has no method updateText.");
     }
 
@@ -794,7 +796,7 @@ class RecursiveRenderer {
     /**
      * @param {import("../../lib").RecursiveElement} tree
      */
-    useRendererOnTreePrepared(tree) {
+    useRendererOnTreePrepared() {
         RecursiveConsole.error("Renderer has no method onTreePrepared.");
     }
 
@@ -802,7 +804,7 @@ class RecursiveRenderer {
      * @param {Array<string,any>} attribute
      * @param {import("../../lib").NativeElement} instance
      */
-    useRendererRemoveAttribute(attribute, instance) {
+    useRendererRemoveAttribute() {
         RecursiveConsole.error("Renderer has no method RemoveAttribute.");
     }
 
@@ -811,14 +813,14 @@ class RecursiveRenderer {
      * @param {any} value
      * @param {import("../../lib").RecursiveElement} element
      */
-    useRendererSetAttribute(attribute, value, element) {
+    useRendererSetAttribute() {
         RecursiveConsole.error("Renderer has no method SetAttribute.");
     }
 
     /**
      * @param {import("../../lib").RecursiveElement} element
      */
-    useRendererItemInTree(element) {
+    useRendererItemInTree() {
         RecursiveConsole.error("Renderer has no method itemInTree.");
     }
 
@@ -826,7 +828,7 @@ class RecursiveRenderer {
      * @param {string} eventName
      * @param {import("../../lib").NativeElement} instance
      */
-    useRendererRemoveEvent(eventName, instance) {
+    useRendererRemoveEvent() {
         RecursiveConsole.error("Renderer has no method RemoveEvent.");
     }
 
@@ -835,7 +837,7 @@ class RecursiveRenderer {
      * @param {() => void} callback
      * @param {import("../../lib").RecursiveElement} element
      */
-    useRendererAddEvent(eventName, callback, element) {
+    useRendererAddEvent() {
         RecursiveConsole.error("Renderer has no method AddEvent.");
     }
 
@@ -848,21 +850,21 @@ class RecursiveRenderer {
      * @param {import("../../lib").RecursiveElement} parentElement
      * @param {number} newPosition
      */
-    useRendererChangeElementPosition(element, parentElement, newPosition) {
+    useRendererChangeElementPosition() {
         RecursiveConsole.error("Renderer has no method useRendererChangeElementPosition.");
     }
 
     /**
      * @param {import("../../lib").RecursiveElement} element
      */
-    useRendererGetElementPosition(element) {
+    useRendererGetElementPosition() {
         RecursiveConsole.error("Renderer has no method useRendererGetElementPosition.");
     }
 
     /**
      * @param {import("../../lib").RecursiveElement} element
      */
-    useRendererRemoveElement(element) {
+    useRendererRemoveElement() {
         RecursiveConsole.error("Renderer has no method useRendererRemoveElement");
     }
 
@@ -871,7 +873,7 @@ class RecursiveRenderer {
      * @param {import("../../lib").RecursiveElement} parentElement
      * @param {number} index
      */
-    useRendererAddElement(element, parentElement, index) {
+    useRendererAddElement() {
         RecursiveConsole.error("Renderer has no method useRendererAddElement.");
     }
 
@@ -879,28 +881,28 @@ class RecursiveRenderer {
      * @param {import("../../lib").RecursiveElement} element
      * @param {import("../../lib").RecursiveElement} newElement
      */
-    useRendererReplaceElement(element, newElement) {
+    useRendererReplaceElement() {
         RecursiveConsole.error("Renderer has no method useRendererReplaceElement.");
     }
 
     /**
      * @param {string} attribute
      */
-    useRendererIsAttribute(attribute) {
+    useRendererIsAttribute() {
         RecursiveConsole.error("Renderer has no method useRendererIsAttribute.");
     }
 
     /**
      * @param {string} event
      */
-    useRendererIsEvent(event) {
+    useRendererIsEvent() {
         RecursiveConsole.error("Renderer has no method useRendererIsEvent.");
     }
 
     /**
      * @param {import("../../lib").RecursiveElement} element
      */
-    useRendererCreateInstance(element) {
+    useRendererCreateInstance() {
         RecursiveConsole.error("Renderer has no method useRendererCreateInstance.");
     }
 
@@ -909,7 +911,7 @@ class RecursiveRenderer {
      * @param {any} value
      * @param {import("../../lib").NativeElement} instance
      */
-    useRendererInjectAttribute(attributeName, value, instance) {
+    useRendererInjectAttribute() {
         RecursiveConsole.error("Renderer has no method useRendererInjectAttribute.");
     }
 
@@ -917,7 +919,7 @@ class RecursiveRenderer {
      * @param {any} style
      * @param {import("../../lib").NativeElement} instance
      */
-    useRendererInjectStyle(style, instance) {
+    useRendererInjectStyle() {
         RecursiveConsole.error("Renderer has no method useRendererInjectStyle.");
     }
 
@@ -926,7 +928,7 @@ class RecursiveRenderer {
      * @param {() => void} callback
      * @param {import("../../lib").NativeElement} instance
      */
-    useRendererInjectEvent(event, callback, instance) {
+    useRendererInjectEvent() {
         RecursiveConsole.error("Renderer has no method useRendererInjectEvent.");
     }
 
@@ -935,7 +937,7 @@ class RecursiveRenderer {
      * @param {() => void} callback
      * @param {import("../../lib").RecursiveElement} element
      */
-    useRendererUpdateEvent(event, callback, element) {
+    useRendererUpdateEvent() {
         RecursiveConsole.error("Renderer has no method useRendererUpdateEvent.");
     }
 
@@ -943,14 +945,14 @@ class RecursiveRenderer {
      * @param {import("../../lib").RecursiveElement} child
      * @param {import("../../lib").NativeElement} instance
      */
-    useRendererInjectChild(child, instance) {
+    useRendererInjectChild() {
         RecursiveConsole.error("Renderer has no method useRendererInjectChild.");
     }
 
     /**
      * @param {import("../../lib").RecursiveElement} element
      */
-    useRendererCreateRawContainer(element) {
+    useRendererCreateRawContainer() {
         RecursiveConsole.error("Renderer has no method useRendererCreateRawContainer.");
     }
 
@@ -958,7 +960,7 @@ class RecursiveRenderer {
      * @param {import("../../lib").RecursiveElement} element
      * @param {import("../../lib").RecursiveElement} newElement
      */
-    useRendererUpdateRawContainersAgainstEachOthers(element, newElement) {
+    useRendererUpdateRawContainersAgainstEachOthers() {
         RecursiveConsole.error(
             "Renderer has no method useRendererUpdateRawContainersAgainstEachOthers."
         );
