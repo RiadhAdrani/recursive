@@ -30,6 +30,6 @@
         "jest": "^28.1.3"
     },
     "dependencies": {
-        "@riadh-adrani/utility-js": "^0.10.0"
+        "@riadh-adrani/utility-js": "^0.11.1"
     }
 }

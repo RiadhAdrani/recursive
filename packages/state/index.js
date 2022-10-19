@@ -174,7 +174,8 @@ class RecursiveState {
 
         if (!areEqual(this.stores[store].items[key].value, newValue) || forceUpdate) {
             this.stores[store].items[key].history.push(copy(this.stores[store].items[key].value));
-            this.stores[store].items[key].preValue = this.stores[store].items[key].value;
+
+            this.stores[store].items[key].preValue = copy(this.stores[store].items[key].value);
 
             this.stores[store].items[key].value = newValue;
 
