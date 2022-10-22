@@ -7,4 +7,4 @@ function createRoute(params) {
     return { ...copy(params) };
 }
 
-module.exports = { route: createRoute };
+module.exports = { createRoute };

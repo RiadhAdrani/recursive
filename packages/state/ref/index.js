@@ -12,7 +12,7 @@ const refStore = (store) => {
         if (store.itemExists(key, storeName)) {
             return store.getItem(key, storeName).value;
         } else {
-            store.getItem(key, storeName, defaultValue);
+            return store.getItem(key, storeName, defaultValue);
         }
     }
 

@@ -1,4 +1,4 @@
-import { NativeElement, RecursiveElement } from "../../lib";
+import { BaseElement, NativeElement, RecursiveElement } from "../../lib";
 import { RecursiveApp } from "../app";
 import { RecursiveContext } from "../context";
 import { RecursiveOrchestrator } from "../orchestrator";
@@ -61,6 +61,18 @@ export abstract class RecursiveRenderer {
      * @returns Recursive Element.
      */
     createElement(elementType: string, props: object): RecursiveElement;
+
+    /**
+     * create a recursive element from a base one.
+     * @param element
+     * @param id
+     * @param parent
+     */
+    prepareElement(
+        element: BaseElement,
+        id: string,
+        parent: RecursiveElement | null
+    ): RecursiveElement;
 
     /**
      * Store the given callback in the provided phase
@@ -272,7 +284,7 @@ export abstract class RecursiveRenderer {
      *
      * _**``Recursive-Web implementation example``**_
      *
-     * Depnding on the type of the attribute,
+     * Depending on the type of the attribute,
      * we use `element.instance.setAttribute()` or `element.instance.toggleAttribute()`
      * to update its value.
      *

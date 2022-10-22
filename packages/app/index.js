@@ -69,6 +69,15 @@ class RecursiveApp {
         return this.renderer.createElement(elementType, props);
     }
 
+    /**
+     * @param {import("../../lib").BaseElement} element
+     */
+    renderElement(element) {
+        const recursiveEl = this.renderer.prepareElement(element, "1", null);
+
+        return this.renderer.renderInstance(recursiveEl);
+    }
+
     render() {
         this.renderer.render();
 

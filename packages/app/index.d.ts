@@ -1,4 +1,4 @@
-import { RecursiveElement, StateArray } from "../../lib";
+import { BaseElement, RecursiveElement, StateArray } from "../../lib";
 import { RecursiveOrchestrator } from "../orchestrator";
 import { RecursiveRenderer } from "../renderer";
 import { RecursiveRouter } from "../router";
@@ -53,6 +53,12 @@ export class RecursiveApp {
      * @returns {RecursiveElement} Recursive Element.
      */
     createElement(elementType: string, props: object): RecursiveElement;
+
+    /**
+     * render a native element and return it using the data provided.
+     * @param element
+     */
+    renderElement<T>(element: BaseElement): T;
 
     /**
      * Inject the resulting Recursive Element from the `app` callback

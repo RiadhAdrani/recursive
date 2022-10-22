@@ -100,7 +100,7 @@ class RecursiveRouter {
 
         const [newPath, routeForm, anchor] = resolvePath(path, this.routes);
         const [currentPath] = this.getPathState();
-
+        resolvePath;
         /**
          * We should check if the wanted route
          * is a different from the current one.
@@ -131,7 +131,7 @@ class RecursiveRouter {
     getParams() {
         let params = {};
 
-        const fragments = fragmentize(this.useRouterGetLocationPath());
+        const fragments = fragmentize(this.useRouterGetRoute());
 
         for (let i = 0; i < fragments.length; i++) {
             const path = "/" + fragments.slice(0, i + 1).join("/");
