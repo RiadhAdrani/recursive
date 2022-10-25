@@ -116,6 +116,12 @@ export class RecursiveApp {
     renderRoute(): RecursiveElement;
 
     /**
+     * determine if the current route is a sub route of the given one.
+     * @param parentRoute parent route.
+     */
+    isWithinRoute(parentRoute: string): boolean;
+
+    /**
      * Retrieve an existing stateful object from the `state` store if it exists.
      * @param {string} key identifier
      * @throw an error if the state does not exist.

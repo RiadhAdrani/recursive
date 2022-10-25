@@ -146,6 +146,16 @@ class RecursiveApp {
         }
     }
 
+    isWithinRoute(parentRoute) {
+        if (this.router) {
+            return this.router.isWithinRoute(parentRoute);
+        } else {
+            RecursiveConsole.error(
+                "Recursive Router : You can not use the method 'isWithinRoute()' because no Router has been initialized."
+            );
+        }
+    }
+
     /**
      * @param {string} key
      * @returns {import("../../lib").StateArray}

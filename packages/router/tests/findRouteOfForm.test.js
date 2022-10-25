@@ -21,6 +21,6 @@ it.each([
     [{}, false],
     ["/", "/"],
     ["/:id:name;;", false],
-])("should should find the correct path '%s'", (input, expected) => {
+])("should find the correct path '%s'", (input, expected) => {
     expect(findRouteOfForm(input, routes)).toBe(expected);
 });

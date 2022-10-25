@@ -252,6 +252,35 @@ class RecursiveRouter {
     }
 
     /**
+     * @param {string} route
+     * @returns {boolean}
+     */
+    isWithinRoute(route) {
+        if (typeof route != "string") return false;
+
+        const current = this.getPathState()[0];
+
+        if (current === route) return true;
+
+        const route_f = fragmentize(route);
+        const current_f = fragmentize(current);
+
+        if (route_f.length > current_f.length) return false;
+
+        for (let i = 0; i < route_f.length; i++) {
+            const c_route = "/" + route_f.slice(0, i + 1).join("/");
+            const c_current = "/" + current_f.slice(0, i + 1).join("/");
+
+            if (findRouteOfForm(c_current, this.routes) !== c_route) {
+                console.log(findRouteOfForm(c_current, this.routes), c_route);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @param {string} path
      * @param {import("../../lib").RouteTemplate} routeForm
      * @param {string} anchor

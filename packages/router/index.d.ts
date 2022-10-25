@@ -101,6 +101,12 @@ export abstract class RecursiveRouter {
     getAnchor(): string;
 
     /**
+     * determine if the current route is a sub route of the given one.
+     * @param route parent route.
+     */
+    isWithinRoute(route: string): boolean;
+
+    /**
      * mount the route with the given parameters.
      * @param path destination path.
      * @param route route template.
