@@ -272,7 +272,6 @@ class RecursiveRouter {
             const c_current = "/" + current_f.slice(0, i + 1).join("/");
 
             if (findRouteOfForm(c_current, this.routes) !== c_route) {
-                console.log(findRouteOfForm(c_current, this.routes), c_route);
                 return false;
             }
         }
