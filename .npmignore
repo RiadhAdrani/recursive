@@ -1,0 +1,4 @@
+packages/**/*.test.js
+.github
+.vscode
+package-lock.json
