@@ -94,7 +94,7 @@ export interface RecursiveElement<T = any> extends BaseElement {
     children: Array<RecursiveElement<T>>;
 }
 
-export type App = () => RecursiveElement;
+export type App = () => BaseElement;
 
 export interface Route {
     /**
@@ -120,7 +120,7 @@ export interface Route {
     /**
      * component callback representing the route.
      */
-    component: () => RecursiveElement;
+    component: () => BaseElement | string;
     /**
      * callback executing when the route is mounted.
      */
