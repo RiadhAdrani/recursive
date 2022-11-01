@@ -52,7 +52,7 @@ export class RecursiveApp {
      * @deprecated
      * @returns {RecursiveElement} Recursive Element.
      */
-    createElement(elementType: string, props: object): RecursiveElement;
+    createElement(elementType: string, props?: object): RecursiveElement;
 
     /**
      * render a native element and return it using the data provided.
@@ -144,8 +144,8 @@ export class RecursiveApp {
     setState<T>(
         key: string,
         value: T,
-        onInit: () => Function,
-        onRemoved: () => void
+        onInit?: () => Function,
+        onRemoved?: () => void
     ): StateArray<T>;
 
     /**
@@ -175,8 +175,8 @@ export class RecursiveApp {
     setCache<T>(
         key: string,
         value: T,
-        onInit: () => Function,
-        onRemoved: () => void
+        onInit?: () => Function,
+        onRemoved?: () => void
     ): StateArray<T>;
 
     /**

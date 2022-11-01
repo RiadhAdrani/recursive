@@ -5,14 +5,14 @@ export interface Flags {
      * A boolean indicating if the element should be rendered
      * in the view.
      */
-    renderIf: boolean;
+    renderIf?: boolean;
     /**
      * ## `forceRerender`
      *
      * A boolean indicating if the element should override
      * the old one without performing deep diffing.
      */
-    forceRerender: boolean;
+    forceRerender?: boolean;
 }
 
 export interface Hooks<T = any> {
@@ -26,60 +26,60 @@ export interface Hooks<T = any> {
      * the `onCreated` hook of the new one won't be executed,
      * the operation is not considered as a creation of a new element.
      */
-    onCreated: (el: T) => void;
+    onCreated?: (el: T) => void;
     /**
      * ## `onUpdated`
      *
      * Hook executed when the element attributes are removed, added or updated,
      * or when events are added or removed.
      */
-    onUpdated: (el: T) => void;
+    onUpdated?: (el: T) => void;
     /**
      * ## `onRef`
      *
-     * Executed everytime the app is updated.
+     * Executed every time the app is updated.
      * Return a string that will serve as the reference key.
      */
-    onRef: (el: T) => void;
+    onRef?: (el: T) => void;
     /**
      * ## `beforeDestroyed`
      *
      * Executed before the element get removed from the DOM.
      */
-    beforeDestroyed: (el: T) => void;
+    beforeDestroyed?: (el: T) => void;
     /**
      * ## `onDestroyed`
      *
      * Executed after the element get removed from the DOM.
      */
-    onDestroyed: () => void;
+    onDestroyed?: () => void;
     /**
      * ## `onPrepared`
      *
      * Executed after the element is computed and checked.
      */
-    onPrepared: (el: RecursiveElement) => void;
+    onPrepared?: (el: RecursiveElement) => void;
     /**
      * ## `onPrepared`
      *
      * Executed before element checking.
      */
-    beforePrepared: (el: BaseElement) => void;
+    beforePrepared?: (el: BaseElement) => void;
 }
 
 export interface CommonProps<T = any> {
     elementType: string;
     $$_RecursiveSymbol: Symbol;
-    rendererOptions: { [item: string]: any };
-    hooks: Hooks<T>;
-    flags: Flags;
-    key: string;
+    rendererOptions?: { [item: string]: any };
+    hooks?: Hooks<T>;
+    flags?: Flags;
+    key?: string;
 }
 
 export interface BaseElement {
     elementType: string;
     $$_RecursiveSymbol: Symbol;
-    rendererOptions: { [item: string]: any };
+    rendererOptions?: { [item: string]: any };
     [key: string]: any;
 }
 
@@ -108,15 +108,15 @@ export interface Route {
      *
      * if it does not exist, a `/404` route will load instead.
      */
-    redirectTo: string;
+    redirectTo?: string;
     /**
      * App title when the current route is mounted.
      */
-    title: string;
+    title?: string;
     /**
      * nested routes.
      */
-    routes: Array<Route>;
+    routes?: Array<Route>;
     /**
      * component callback representing the route.
      */
@@ -124,11 +124,11 @@ export interface Route {
     /**
      * callback executing when the route is mounted.
      */
-    onLoad: () => void;
+    onLoad?: () => void;
     /**
      * callback executing when the route is unmounted.
      */
-    onExit: () => void;
+    onExit?: () => void;
 }
 
 export interface RouteTemplate {
