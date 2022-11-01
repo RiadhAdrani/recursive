@@ -3,6 +3,7 @@ import { RecursiveOrchestrator } from "../orchestrator";
 import { RecursiveRenderer } from "../renderer";
 import { RecursiveRouter } from "../router";
 import { RecursiveState } from "../state";
+import { ObjectOf } from "@riadh-adrani/utility-js/types";
 
 export interface RecursiveAppConstructorParams {
     /**
@@ -47,12 +48,12 @@ export class RecursiveApp {
      * This method is deprecated,
      * use `createElement` from the renderer package instead.
      *
-     * @param {string} elementType Element type.
-     * @param {object} props Element properties.
+     * @param elementType Element type.
+     * @param props Element properties.
      * @deprecated
-     * @returns {RecursiveElement} Recursive Element.
+     * @returns Recursive Element.
      */
-    createElement(elementType: string, props?: object): RecursiveElement;
+    createElement(elementType: string, props?: ObjectOf<any>): RecursiveElement;
 
     /**
      * render a native element and return it using the data provided.
@@ -87,9 +88,9 @@ export class RecursiveApp {
      * Calculate the parameters of the current path and returns them as a key-value object.
      * @throws an error when the router is not initialized.
      *
-     * @returns {object} Parameters.
+     * @returns Parameters.
      */
-    getParams(): object;
+    getParams(): ObjectOf<string>;
 
     /**
      * Return the base of the application.
@@ -113,7 +114,7 @@ export class RecursiveApp {
      * @throws an error when the router is not initialized.
      * @returns The current route fragment element.
      */
-    renderRoute(): RecursiveElement;
+    renderRoute(): BaseElement;
 
     /**
      * determine if the current route is a sub route of the given one.
@@ -127,7 +128,7 @@ export class RecursiveApp {
      * @throw an error if the state does not exist.
      * @returns {StateArray} state as an array.
      */
-    getState(key: string): StateArray;
+    getState<T>(key: string): StateArray<T>;
 
     /**
      * Create and save a stateful object in the `state` store within the global `StateStore`.
