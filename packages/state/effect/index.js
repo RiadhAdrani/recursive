@@ -1,3 +1,4 @@
+const { areEqual } = require("@riadh-adrani/utility-js");
 const { RecursiveConsole } = require("../../console");
 const { STATE_EFFECT_STORE } = require("../../constants");
 
@@ -38,13 +39,15 @@ const effectStore = (store) => {
             const old = store.getItem(key, storeName);
 
             if (store.itemIsUsed(storeName, key)) {
-                RecursiveConsole.error("Recursive State : Duplicate effect detected.", [
+                RecursiveConsole.warn("Recursive State : Duplicate effect detected.", [
                     "You are using an effect twice in your tree, which is forbidden.",
                     "Try changing the keys of the effects to be unique or merge them into a single effect.",
                 ]);
+
+                return;
             }
 
-            if (JSON.stringify(value) !== JSON.stringify(old.value)) {
+            if (areEqual(value, old.value)) {
                 // Dependencies have changed,
                 // we run the unsubscribe function before executing the new one
                 store.runUnsubscriptionCallback(key, storeName);
