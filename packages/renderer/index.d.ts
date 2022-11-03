@@ -34,7 +34,7 @@ export { createElement };
  * * `useRendererCreateRawContainer`
  * * `useRendererUpdateRawContainersAgainstEachOthers`
  */
-export abstract class RecursiveRenderer {
+export abstract class RecursiveRenderer<T = any> {
     public bootstrapper: RecursiveApp;
     public contextManager: RecursiveContext;
     public app: () => RecursiveElement;
@@ -42,7 +42,7 @@ export abstract class RecursiveRenderer {
     public current: RecursiveElement;
     public phases: { [key: string]: Array<Function> };
 
-    get stateManager(): RecursiveState;
+    get stateManager(): RecursiveState<T>;
 
     get orchestrator(): RecursiveOrchestrator;
 
@@ -52,7 +52,7 @@ export abstract class RecursiveRenderer {
      * @param root native element in which the UI will be injected.
      * @param bootstrapper bootstrapping recursive application instance.
      */
-    constructor(app: () => RecursiveElement, root: NativeElement, bootstrapper: RecursiveApp);
+    constructor(app: () => BaseElement, root: T, bootstrapper: RecursiveApp);
 
     /**
      * Create an element with the recursive signature symbol.
@@ -60,7 +60,7 @@ export abstract class RecursiveRenderer {
      * @param  props Element properties.
      * @returns Recursive Element.
      */
-    createElement(elementType: string, props: object): RecursiveElement;
+    createElement(elementType: string, props: object): BaseElement;
 
     /**
      * create a recursive element from a base one.

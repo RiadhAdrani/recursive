@@ -38,7 +38,7 @@ export interface StoreItem<T = any> {
  * * `reserved`  used internally by some modules.
  * * `effect` launch side effects.
  */
-export class RecursiveState {
+export class RecursiveState<T = any> {
     public stores: { [key: string]: Store };
     public history: [{ [key: string]: Store }];
     public cacheSize: 1000;
@@ -58,7 +58,7 @@ export class RecursiveState {
      * @param onAdded initialization callback.
      * @param onRemoved removal callback.
      */
-    addItem<T>(key: string, value: T, onAdded: () => Function, onRemoved: () => void): void;
+    addItem<T>(key: string, value: T, onAdded: () => Function | void, onRemoved: () => void): void;
 
     /**
      * check if an item exists in the given store.
@@ -153,26 +153,26 @@ export class RecursiveState {
      * Create and save a stateful object in the `state` store within the global `StateStore`.
      *
      * Objects created by this method are deleted when they are not used or called in a rendering iteration.
-     * @param key unique identifier of the state whithin its store.
+     * @param key unique identifier of the state within its store.
      * @param value initial value
      * @param onInit a function that will execute when the state is initialized.
      * If the return value of this function is a function itself,
      * it will be executed whe the state is destroyed.
      * @param onRemoved a function that will execute when the state has been destroyed.
      */
-    setState<T>(
+    setState<S>(
         key: string,
-        value: T,
+        value: S,
         onInit: () => Function,
         onRemoved: () => void
-    ): StateArray<T>;
+    ): StateArray<S>;
 
     /**
      * Retrieve an existing stateful object from the `cache` store if it exists.
      * @param key identifier
      * @throw an error if the state does not exist.
      */
-    getCache(key: string): StateArray<any>;
+    getCache<C>(key: string): StateArray<C>;
 
     /**
      * Create and save a stateful object in the `cache` store within the global `StateStore`.
@@ -182,7 +182,7 @@ export class RecursiveState {
      *
      * Older states will be deleted first.
      *
-     * @param key unique identifier of the state whithin its store.
+     * @param key unique identifier of the state within its store.
      * @param value initial value
      * @param onInit a function that will execute when the state is initialized.
      * If the return value of this function is a function itself,

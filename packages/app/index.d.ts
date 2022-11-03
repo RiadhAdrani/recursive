@@ -30,7 +30,7 @@ export interface RecursiveAppConstructorParams {
 /**
  * Recursive Application Bootstrapper.
  */
-export class RecursiveApp {
+export class RecursiveApp<T = any> {
     public orchestrator: RecursiveOrchestrator;
     public stateManager: RecursiveState;
     public router: RecursiveRouter;
@@ -53,13 +53,13 @@ export class RecursiveApp {
      * @deprecated
      * @returns Recursive Element.
      */
-    createElement(elementType: string, props?: ObjectOf<any>): RecursiveElement;
+    createElement(elementType: string, props?: ObjectOf<T>): RecursiveElement;
 
     /**
      * render a native element and return it using the data provided.
      * @param element
      */
-    renderElement<T>(element: BaseElement): T;
+    renderElement(element: BaseElement): T;
 
     /**
      * Inject the resulting Recursive Element from the `app` callback
@@ -128,7 +128,7 @@ export class RecursiveApp {
      * @throw an error if the state does not exist.
      * @returns {StateArray} state as an array.
      */
-    getState<T>(key: string): StateArray<T>;
+    getState<S>(key: string): StateArray<S>;
 
     /**
      * Create and save a stateful object in the `state` store within the global `StateStore`.
@@ -142,12 +142,12 @@ export class RecursiveApp {
      * @param {Function} onRemoved a function that will execute when the state has been destroyed.
      * @returns {StateArray} state as an Array
      */
-    setState<T>(
+    setState<S>(
         key: string,
-        value: T,
-        onInit?: () => Function,
+        value: S,
+        onInit?: () => Function | void,
         onRemoved?: () => void
-    ): StateArray<T>;
+    ): StateArray<S>;
 
     /**
      * Retrieve an existing stateful object from the `cache` store if it exists.
@@ -155,7 +155,7 @@ export class RecursiveApp {
      * @throw an error if the state does not exist.
      * @returns {StateArray} state as an array.
      */
-    getCache(key: string): StateArray<any>;
+    getCache<C>(key: string): StateArray<C>;
 
     /**
      * Create and save a stateful object in the `cache` store within the global `StateStore`.
@@ -173,12 +173,12 @@ export class RecursiveApp {
      * @param {Function} onRemoved a function that will execute when the state has been destroyed.
      * @returns {StateArray} state as an array.
      */
-    setCache<T>(
+    setCache<C>(
         key: string,
-        value: T,
-        onInit?: () => Function,
+        value: C,
+        onInit?: () => Function | void,
         onRemoved?: () => void
-    ): StateArray<T>;
+    ): StateArray<C>;
 
     /**
      * Retrieve an existing element from the `reference` store, or the default value.
@@ -201,7 +201,7 @@ export class RecursiveApp {
      * @param {string} key identifier
      * @returns {any} Native Element
      */
-    getRef<T>(key: string, defaultValue: T): T;
+    getRef<E = T>(key: string, defaultValue: T): T;
 
     /**
      * Execute an effect.
