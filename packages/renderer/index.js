@@ -43,9 +43,6 @@ class RecursiveRenderer {
          */
         this.app = app;
 
-        /**
-         * @type {import("../../lib").NativeElement}
-         */
         this.root = root;
 
         /**
@@ -802,7 +799,7 @@ class RecursiveRenderer {
 
     /**
      * @param {Array<string,any>} attribute
-     * @param {import("../../lib").NativeElement} instance
+     * @param {any} instance
      */
     useRendererRemoveAttribute() {
         RecursiveConsole.error("Renderer has no method RemoveAttribute.");
@@ -826,7 +823,7 @@ class RecursiveRenderer {
 
     /**
      * @param {string} eventName
-     * @param {import("../../lib").NativeElement} instance
+     * @param {any} instance
      */
     useRendererRemoveEvent() {
         RecursiveConsole.error("Renderer has no method RemoveEvent.");
@@ -909,7 +906,7 @@ class RecursiveRenderer {
     /**
      * @param {string} attributeName
      * @param {any} value
-     * @param {import("../../lib").NativeElement} instance
+     * @param {any} instance
      */
     useRendererInjectAttribute() {
         RecursiveConsole.error("Renderer has no method useRendererInjectAttribute.");
@@ -917,7 +914,7 @@ class RecursiveRenderer {
 
     /**
      * @param {any} style
-     * @param {import("../../lib").NativeElement} instance
+     * @param {any} instance
      */
     useRendererInjectStyle() {
         RecursiveConsole.error("Renderer has no method useRendererInjectStyle.");
@@ -926,7 +923,7 @@ class RecursiveRenderer {
     /**
      * @param {string} event
      * @param {() => void} callback
-     * @param {import("../../lib").NativeElement} instance
+     * @param {any} instance
      */
     useRendererInjectEvent() {
         RecursiveConsole.error("Renderer has no method useRendererInjectEvent.");
@@ -943,7 +940,7 @@ class RecursiveRenderer {
 
     /**
      * @param {import("../../lib").RecursiveElement} child
-     * @param {import("../../lib").NativeElement} instance
+     * @param {any} instance
      */
     useRendererInjectChild() {
         RecursiveConsole.error("Renderer has no method useRendererInjectChild.");

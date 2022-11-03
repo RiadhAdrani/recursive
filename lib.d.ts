@@ -1,3 +1,5 @@
+import { ObjectOf } from "@riadh-adrani/utility-js/types";
+
 export interface Flags {
     /**
      * ## `renderIf`
@@ -86,7 +88,7 @@ export interface BaseElement {
 export interface RecursiveElement<T = any> extends BaseElement {
     style: { [item: string]: any };
     attributes: { [item: string]: any };
-    events: { [item: string]: (ev: any) => void };
+    events: ObjectOf<(e: any) => void>;
     map: { [key: string]: number };
     flags: Flags;
     hooks: Hooks<T>;
@@ -176,5 +178,3 @@ export interface StoreParams {
 }
 
 export type StateArray<T = any> = [T, (value: T) => void, () => T, () => void, T];
-
-export type NativeElement = any;

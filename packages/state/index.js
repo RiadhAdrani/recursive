@@ -355,8 +355,8 @@ class RecursiveState {
 
     /**
      * @param {string} key
-     * @param {import("../../lib").NativeElement} value
-     * @returns {import("../../lib").NativeElement}
+     * @param {any} value
+     * @returns {any}
      */
     setRef(key, value) {
         return this.stores[STATE_REF_STORE].set(key, value);
@@ -365,7 +365,7 @@ class RecursiveState {
     /**
      * @param {string} key
      * @param {any} defaultValue
-     * @returns {import("../../lib").NativeElement}
+     * @returns {any}
      */
     getRef(key, defaultValue) {
         return this.stores[STATE_REF_STORE].get(key, defaultValue);

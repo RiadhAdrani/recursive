@@ -1,4 +1,4 @@
-import { BaseElement, NativeElement, RecursiveElement } from "../../lib";
+import { BaseElement, RecursiveElement } from "../../lib";
 import { RecursiveApp } from "../app";
 import { RecursiveContext } from "../context";
 import { RecursiveOrchestrator } from "../orchestrator";
@@ -38,7 +38,7 @@ export abstract class RecursiveRenderer<T = any> {
     public bootstrapper: RecursiveApp;
     public contextManager: RecursiveContext;
     public app: () => RecursiveElement;
-    public root: NativeElement;
+    public root: T;
     public current: RecursiveElement;
     public phases: { [key: string]: Array<Function> };
 
@@ -115,7 +115,7 @@ export abstract class RecursiveRenderer<T = any> {
      * Inject the different attributes, events and children into the created instance;
      * @param element target element.
      */
-    renderInstance(element: RecursiveElement): NativeElement;
+    renderInstance(element: RecursiveElement): T;
 
     /**
      * Replace the given element by the new one.
@@ -275,7 +275,7 @@ export abstract class RecursiveRenderer<T = any> {
      * @param attribute attribute name.
      * @param instance element instance.
      */
-    abstract useRendererRemoveAttribute(attribute: string, instance: NativeElement): void;
+    abstract useRendererRemoveAttribute(attribute: string, instance: T): void;
 
     /**
      * Set an attribute
@@ -324,7 +324,7 @@ export abstract class RecursiveRenderer<T = any> {
      * @param event event name.
      * @param instance target native element.
      */
-    abstract useRendererRemoveEvent(event: string, instance: NativeElement): void;
+    abstract useRendererRemoveEvent(event: string, instance: T): void;
 
     /**
      * Use the renderer to remove an event
@@ -485,7 +485,7 @@ export abstract class RecursiveRenderer<T = any> {
      * _`document.createTextNode`_ (for plain text elements).
      * @param element element to be created
      */
-    abstract useRendererCreateInstance(element: RecursiveElement): NativeElement;
+    abstract useRendererCreateInstance(element: RecursiveElement): T;
 
     /**
      * Inject attributes into the created instance.
@@ -507,11 +507,7 @@ export abstract class RecursiveRenderer<T = any> {
      * @param value attribute value.
      * @param instance target instance.
      */
-    abstract useRendererInjectAttribute(
-        attribute: string,
-        value: any,
-        instance: NativeElement
-    ): void;
+    abstract useRendererInjectAttribute(attribute: string, value: any, instance: T): void;
 
     /**
      * Inject element style.
@@ -519,7 +515,7 @@ export abstract class RecursiveRenderer<T = any> {
      * @param style element style declaration.
      * @param instance target instance.
      */
-    abstract useRendererInjectStyle(style: object, instance: NativeElement): void;
+    abstract useRendererInjectStyle(style: object, instance: T): void;
 
     /**
      * Inject events into the created instance;
@@ -540,11 +536,7 @@ export abstract class RecursiveRenderer<T = any> {
      * @param callback event callback.
      * @param instance target instance.
      */
-    abstract useRendererInjectEvent(
-        event: string,
-        callback: () => void,
-        instance: NativeElement
-    ): void;
+    abstract useRendererInjectEvent(event: string, callback: () => void, instance: T): void;
 
     /**
      * Update the target element event with the given new one.
@@ -576,7 +568,7 @@ export abstract class RecursiveRenderer<T = any> {
      * @param childElement child to be injected.
      * @param instance target instance.
      */
-    abstract useRendererInjectChild(childElement: RecursiveElement, instance: NativeElement): void;
+    abstract useRendererInjectChild(childElement: RecursiveElement, instance: T): void;
 
     /**
      * Used to create a raw element.
