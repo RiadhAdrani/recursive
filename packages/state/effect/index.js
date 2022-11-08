@@ -39,10 +39,10 @@ const effectStore = (store) => {
             const old = store.getItem(key, storeName);
 
             if (store.itemIsUsed(storeName, key)) {
-                RecursiveConsole.warn("Recursive State : Duplicate effect detected.", [
-                    "You are using an effect twice in your tree, which is forbidden.",
-                    "Try changing the keys of the effects to be unique or merge them into a single effect.",
-                ]);
+                // RecursiveConsole.warn("Recursive State : Duplicate effect detected.", [
+                //     "You are using an effect twice in your tree, which is forbidden.",
+                //     "Try changing the keys of the effects to be unique or merge them into a single effect.",
+                // ]);
 
                 return;
             }
