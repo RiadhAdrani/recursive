@@ -1,4 +1,10 @@
-packages/**/*.test.js
 .github
 .vscode
 package-lock.json
+README.md
+./**/*.test.js
+.eslintignore
+.eslintrc
+.gitignore
+.jest.config.js
+tsconfig.json
