@@ -26,8 +26,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
-      - run: yarn ci
-      - run: yarn run --if-present
       - run: yarn test
 
   check-windows:
@@ -44,6 +42,4 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
-      - run: yarn ci
-      - run: yarn run --if-present
       - run: yarn test
