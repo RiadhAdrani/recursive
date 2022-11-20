@@ -13,19 +13,37 @@ on:
 
 jobs:
   check-ubuntu:
-  name: run checks on ubuntu
-  runs-on: ubuntu-latest
-  strategy:
-    matrix:
-      node-version: [14.x, 16.x, 18.x]
+    name: run checks on ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
 
-  steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: "yarn"
-    - run: yarn ci
-    - run: yarn run --if-present
-    - run: yarn test
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - run: yarn ci
+      - run: yarn run --if-present
+      - run: yarn test
+
+  check-windows:
+    name: run checks on windows
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - run: yarn ci
+      - run: yarn run --if-present
+      - run: yarn test
