@@ -14,24 +14,18 @@ describe("ContextStore", () => {
     expect(store.get()).toBe(undefined);
   });
 
-  it("should replace old context and push it to the stored", async () => {
-    await store.contextualize(async () => {
-      expect(store.get()).toBe("hello");
+  it("should throw when context data is undefined", async () => {
+    expect.assertions(1);
 
-      await store.contextualize(async () => {
-        expect(store.get()).toBe("world");
-
-        await store.contextualize(() => {
-          expect(store.get()).toBe(undefined);
-        });
-      }, "world");
-    }, "hello");
+    expect(async () => {
+      return await store.contextualize(() => "Hello", undefined as unknown as string);
+    }).rejects.toEqual("Invalid context data.");
   });
 
   it("should return the callback result", async () => {
     const res = await store.contextualize(() => {
       return "hello";
-    });
+    }, "ctx");
 
     expect(res).toBe("hello");
   });

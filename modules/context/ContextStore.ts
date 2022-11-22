@@ -8,7 +8,11 @@ export default class ContextStore<T> {
     return this.current;
   }
 
-  private start(data?: T): void {
+  getStack(): T[] {
+    return this.stack;
+  }
+
+  private start(data: T): void {
     if (this.current != undefined) {
       this.stack.push(this.current);
     }
@@ -23,9 +27,13 @@ export default class ContextStore<T> {
     }
   }
 
-  public async contextualize<R>(callback: () => R, data?: T): Promise<R> {
+  public async contextualize<R>(callback: () => R, data: T): Promise<R> {
     if (!isFunction(callback)) {
-      throw "Invalid callback";
+      throw "Invalid context callback";
+    }
+
+    if (data === undefined) {
+      throw "Invalid context data.";
     }
 
     this.start(data);

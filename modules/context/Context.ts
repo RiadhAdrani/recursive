@@ -12,7 +12,7 @@ export default class Context {
     }
   }
 
-  public async contextualizeNamed<T, R>(callback: () => R, id: string, data?: T): Promise<R> {
+  public async contextualizeNamed<T, R>(callback: () => R, id: string, data: T): Promise<R> {
     return await this.findStore<T>(id).contextualize(callback, data);
   }
 
