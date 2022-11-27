@@ -1,3 +1,4 @@
+import { Priority } from ".";
 import { throwError, useId } from "../helpers";
 
 export type ActionCall = () => void | Promise<void>;
@@ -6,18 +7,18 @@ export type ActionCheck = () => boolean;
 export class Action {
   public id: string = useId();
   public check: ActionCheck;
-  public priority: number;
+  public priority: Priority;
   public isDone = false;
 
   private callback: ActionCall;
 
-  constructor(callback: ActionCall, check: ActionCheck, priority = 0) {
+  constructor(callback: ActionCall, check: ActionCheck, priority = Priority.normal) {
     this.callback = callback;
     this.priority = priority;
     this.check = check;
   }
 
-  static create(callback: ActionCall, check: ActionCheck, priority = 0): Action {
+  static create(callback: ActionCall, check: ActionCheck, priority = Priority.normal): Action {
     return new Action(callback, check, priority);
   }
 

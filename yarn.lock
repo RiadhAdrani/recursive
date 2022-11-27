@@ -600,10 +600,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@riadh-adrani/utility-js@^0.26.0":
-  version "0.26.0"
-  resolved "https://registry.yarnpkg.com/@riadh-adrani/utility-js/-/utility-js-0.26.0.tgz#06aca6e4f6323df4430608ec0f0ab960e36c15d4"
-  integrity sha512-KmaHT9ERvvt1RxPbxpfKnzenfOw62tflcPerFytoxAP4H7cuX6qDHz0XEEYOHhbE+ZAFHvgoVl5X1uigScMqdQ==
+"@riadh-adrani/utility-js@^0.28.1":
+  version "0.28.1"
+  resolved "https://registry.yarnpkg.com/@riadh-adrani/utility-js/-/utility-js-0.28.1.tgz#d7861e46147832e605d75a24361e5f72de0a7fac"
+  integrity sha512-GtPVGHU7wlsSonaN+M85FONmwokPaCRe6/0u/goXdxXzCNnKmlsZW+ETvw1BUEbddAARVp+plrUvehZ7PIdRhw==
 
 "@sinclair/typebox@^0.24.1":
   version "0.24.51"

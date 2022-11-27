@@ -1,5 +1,6 @@
 import { throwError, useId } from "../helpers";
 import { Action } from "./Action";
+import { Priority } from ".";
 
 export class Task {
   private actions: Action[];
@@ -7,18 +8,18 @@ export class Task {
   public id = useId();
   public name: string;
   public check: () => boolean;
-  public priority: number;
+  public priority: Priority;
 
   public isDone = false;
 
-  constructor(name: string, priority: number, check: () => boolean, actions: Action[]) {
+  constructor(name: string, priority: Priority, check: () => boolean, actions: Action[]) {
     this.name = name;
     this.priority = priority;
     this.check = check;
     this.actions = actions;
   }
 
-  static create(name: string, priority: number, check: () => boolean, actions: Action[]) {
+  static create(name: string, priority: Priority, check: () => boolean, actions: Action[]) {
     return new Task(name, priority, check, actions);
   }
 

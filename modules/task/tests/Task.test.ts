@@ -1,4 +1,5 @@
 import { describe, it, expect, jest } from "@jest/globals";
+import { Priority } from "..";
 import { Action, ActionCall } from "../Action";
 import { Task } from "../Task";
 
@@ -12,7 +13,11 @@ describe("Task", () => {
     const action2 = Action.create(mockCallback as ActionCall, () => true);
     const action3 = Action.create(mockCallback as ActionCall, () => true);
 
-    const task = Task.create("run test actions", 0, () => true, [action1, action2, action3]);
+    const task = Task.create("run test actions", Priority.normal, () => true, [
+      action1,
+      action2,
+      action3,
+    ]);
 
     expect(task.isDone).toBe(false);
 
@@ -36,7 +41,7 @@ describe("Task", () => {
     const action3 = Action.create(mockCallback as ActionCall, () => true);
     const action4 = Action.create(mockCallback as ActionCall, () => true);
 
-    const task = Task.create("run test actions", 0, () => count < 2, [
+    const task = Task.create("run test actions", Priority.normal, () => count < 2, [
       action1,
       action2,
       action3,

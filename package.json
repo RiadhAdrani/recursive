@@ -25,7 +25,7 @@
     "framework"
   ],
   "dependencies": {
-    "@riadh-adrani/utility-js": "^0.26.0",
+    "@riadh-adrani/utility-js": "^0.28.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
