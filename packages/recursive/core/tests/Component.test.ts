@@ -1,5 +1,5 @@
 import { describe, it, expect } from "@jest/globals";
-import { Component } from "../Component";
+import { Component, ComponentSymbol, createComponentDeclaration } from "../Component";
 
 describe("Component", () => {
   const component = new Component("view");
@@ -150,5 +150,18 @@ describe("Component", () => {
 
     expect(component.children[0] === child4).toBe(true);
     expect(child4.parent === component).toBe(true);
+  });
+
+  it("should create an object with signature", () => {
+    expect(createComponentDeclaration("view", {})).toStrictEqual({
+      __recursive__component__: ComponentSymbol,
+      componentType: "view",
+    });
+
+    expect(createComponentDeclaration("view", { id: "name" })).toStrictEqual({
+      __recursive__component__: ComponentSymbol,
+      id: "name",
+      componentType: "view",
+    });
   });
 });

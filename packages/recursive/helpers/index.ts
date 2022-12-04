@@ -7,3 +7,9 @@ export function useId(): string {
 export function throwError(message: string, label = "Error") {
   throw `[${label}] ${message}`;
 }
+
+export function run(callback: () => void) {
+  (() => {
+    callback();
+  })();
+}

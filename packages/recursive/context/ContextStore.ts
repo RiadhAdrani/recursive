@@ -27,7 +27,7 @@ export default class ContextStore<T> {
     }
   }
 
-  public async contextualize<R>(callback: () => R, data: T): Promise<R> {
+  public contextualize<R>(callback: () => R, data: T): R {
     if (!isFunction(callback)) {
       throw "Invalid context callback";
     }
@@ -37,7 +37,7 @@ export default class ContextStore<T> {
     }
 
     this.start(data);
-    const res = await callback();
+    const res = callback();
     this.end();
 
     return res;

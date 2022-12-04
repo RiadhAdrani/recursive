@@ -1,8 +1,49 @@
-import { hasProperty, isFunction, isInInterval } from "@riadh-adrani/utility-js";
+import { hasProperty, isBlank, isFunction, isInInterval } from "@riadh-adrani/utility-js";
 import { throwError } from "../helpers";
 
+export const ComponentSymbol = Symbol.for("recursive-component");
+
 export type ComponentEvent<E> = (event: E) => void;
+
 export type ComponentAttribute = string | number | boolean;
+
+export type ComponentLifeCycleCallback = () => void;
+
+export type ComponentCallback = <O>(options: O) => ComponentRawDeclaration;
+
+export type ComponentOptions = {
+  key?: string;
+  options?: Record<string, unknown>;
+} & Record<string, unknown>;
+
+export type ComponentRawDeclaration = {
+  __recursive__component__: symbol;
+  componentType: string;
+} & ComponentOptions;
+
+export type ComponentDeclaration<E, S> = {
+  __recursive__component__: symbol;
+  componentType: string;
+  key?: string;
+  style: S;
+  attributes: Record<string, ComponentAttribute>;
+  events: Record<string, ComponentEvent<E>>;
+  options: Record<string, unknown>;
+  children: ComponentCallback[];
+};
+
+export function createComponentDeclaration(
+  componentType: string,
+  options: ComponentOptions
+): ComponentRawDeclaration {
+  if (isBlank(componentType)) throwError(`Invalid component type (${componentType})`);
+
+  return {
+    ...options,
+    componentType,
+    __recursive__component__: ComponentSymbol,
+  };
+}
 
 export class Component<I, E, S> {
   public type: string;
@@ -14,6 +55,11 @@ export class Component<I, E, S> {
   public instance?: I;
   public style?: S;
   public options: Record<string, unknown> = {};
+
+  public onMounted?: ComponentLifeCycleCallback;
+  public onUpdated?: ComponentLifeCycleCallback;
+  public onUnmounted?: ComponentLifeCycleCallback;
+  public beforeUnmounted?: ComponentLifeCycleCallback;
 
   public onAttributeAdded?: (name: string, value: ComponentAttribute) => void;
   public onAttributeUpdated?: (name: string, value: ComponentAttribute) => void;
@@ -31,7 +77,7 @@ export class Component<I, E, S> {
   }
 
   get uid(): string {
-    if (this.index !== undefined && this.parent !== undefined) {
+    if (this.parent !== undefined) {
       return [this.parent.uid, this.index].join("-");
     } else {
       return "0";

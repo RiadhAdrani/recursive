@@ -21,8 +21,8 @@ describe("ContextStore", () => {
     expect(fn).toThrow();
   });
 
-  it("should get named context", async () => {
-    await ctx.contextualizeNamed(
+  it("should get named context", () => {
+    ctx.contextualizeNamed(
       () => {
         expect(ctx.getNamed(STATE)).toStrictEqual({ state: "id", value: 3 });
       },
@@ -30,7 +30,7 @@ describe("ContextStore", () => {
       { state: "id", value: 3 }
     );
 
-    await ctx.contextualizeNamed(
+    ctx.contextualizeNamed(
       () => {
         expect(ctx.getNamed(CORE)).toStrictEqual("core");
       },
@@ -38,7 +38,7 @@ describe("ContextStore", () => {
       "core"
     );
 
-    await ctx.contextualizeNamed(
+    ctx.contextualizeNamed(
       () => {
         ctx.contextualizeNamed(
           () => {
