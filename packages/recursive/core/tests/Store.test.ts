@@ -99,6 +99,16 @@ describe("Store", () => {
       global: false,
       history: [],
       value: "hello",
+      onRemoved: undefined,
+    });
+
+    store.runEffects();
+
+    expect(store.collections[STATE_COLLECTION].items["test"]).toStrictEqual({
+      addOrder: 0,
+      global: false,
+      history: [],
+      value: "hello",
       onRemoved,
     });
 
@@ -140,10 +150,25 @@ describe("Store", () => {
 
     store.add(STATE_COLLECTION, "test", "hello", false, () => () => output.push("test"));
 
+    store.runEffects();
+
     store.remove(STATE_COLLECTION, "test");
 
     expect(store.collections[STATE_COLLECTION].items).toStrictEqual({});
     expect(output).toStrictEqual(["test"]);
+  });
+
+  it("should not run onCreated when object gets removed by re-computation", () => {
+    const output: string[] = [];
+
+    store.add(STATE_COLLECTION, "test", "hello", false, () => () => output.push("test"));
+
+    store.remove(STATE_COLLECTION, "test");
+
+    store.runEffects();
+
+    expect(store.collections[STATE_COLLECTION].items).toStrictEqual({});
+    expect(output).toStrictEqual([]);
   });
 
   it("should throw when removing a non-existing item ", () => {

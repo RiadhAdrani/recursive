@@ -111,7 +111,9 @@ export class Store {
     this.collections[collection].items[key] = item;
 
     if (isFunction(onCreated)) {
-      run(async () => {
+      this.queueEffect(() => {
+        if (!this.exists(collection, key)) return;
+
         const res = onCreated?.() as () => void;
 
         if (isFunction(res)) {
