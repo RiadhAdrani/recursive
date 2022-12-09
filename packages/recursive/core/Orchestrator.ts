@@ -24,6 +24,18 @@ export type OrchestratorOptions = {
   commit: OrchestratorTask;
 };
 
+export type CancelableTaskPayload<T> = {
+  cancelled: boolean;
+  data?: T;
+};
+
+export type CancelableTaskCallback<T> = (cancelled: () => boolean, data?: T) => T | undefined;
+
+export type StartCancelableTaskOptions<T> = {
+  task: CancelableTaskCallback<T>;
+  next?: (data?: T) => CancelableTaskCallback<T>[];
+};
+
 export class Orchestrator {
   state: OrchestratorState = OrchestratorState.Free;
   queue: OrchestratorUpdateRequest[] = [];
@@ -40,6 +52,40 @@ export class Orchestrator {
     return {
       cancelled: () => this.cancelled(),
       notifyCancelled: () => this.startComputing(),
+    };
+  }
+
+  startTask<T>({ task, next }: StartCancelableTaskOptions<T>): CancelableTaskPayload<T> {
+    const cancelPayload = {
+      cancelled: true,
+      data: undefined,
+    };
+
+    if (this.cancelled()) {
+      return cancelPayload;
+    }
+
+    const payload = task(this.cancelled, undefined);
+
+    if (this.cancelled()) {
+      return cancelPayload;
+    }
+
+    if (isFunction(next)) {
+      const nextTasks = next?.(payload) as CancelableTaskCallback<T>[];
+
+      if (nextTasks.length > 0) {
+        for (const task of nextTasks) {
+          if (this.cancelled()) return cancelPayload;
+
+          task(this.cancelled, payload);
+        }
+      }
+    }
+
+    return {
+      cancelled: false,
+      data: payload,
     };
   }
 
