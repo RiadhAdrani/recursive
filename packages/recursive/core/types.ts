@@ -9,8 +9,8 @@ export type CoreTasks = {
   committed: Action[];
 };
 
-export type CoreContext<I, E, S> = {
-  parent: Component<I, E, S>;
+export type CoreContext<I, E> = {
+  parent?: Component<I, E>;
 };
 
 export type StoreCollectionItem<T = unknown> = {

@@ -21,11 +21,11 @@ export type ComponentRawDeclaration = {
   componentType: string;
 } & ComponentOptions;
 
-export type ComponentDeclaration<E, S> = {
+export type ComponentDeclaration<E> = {
   __recursive__component__: symbol;
   componentType: string;
   key?: string;
-  style: S;
+  style: Record<string, unknown>;
   attributes: Record<string, ComponentAttribute>;
   events: Record<string, ComponentEvent<E>>;
   options: Record<string, unknown>;
@@ -45,15 +45,15 @@ export function createComponentDeclaration(
   };
 }
 
-export class Component<I, E, S> {
+export class Component<I, E> {
   public type: string;
-  public parent?: Component<I, E, S>;
+  public parent?: Component<I, E>;
   public key?: string;
   public attributes: Record<string, ComponentAttribute> = {};
   public events: Record<string, ComponentEvent<E>> = {};
-  public children: Component<I, E, S>[] = [];
+  public children: Component<I, E>[] = [];
   public instance?: I;
-  public style?: S;
+  public style?: Record<string, unknown>;
   public options: Record<string, unknown> = {};
 
   public onMounted?: ComponentLifeCycleCallback;
@@ -69,8 +69,8 @@ export class Component<I, E, S> {
   public onEventRemoved?: (name: string) => void;
   public onChildPositionChanged?: (oldPos: number, newPos: number) => void;
   public onChildRemoved?: (pos: number) => void;
-  public onChildAdded?: (child: Component<I, E, S>, pos: number) => void;
-  public onReplaced?: (component: Component<I, E, S>) => void;
+  public onChildAdded?: (child: Component<I, E>, pos: number) => void;
+  public onReplaced?: (component: Component<I, E>) => void;
 
   get index(): number {
     return this.parent ? this.parent.children.indexOf(this) : -1;
@@ -184,7 +184,7 @@ export class Component<I, E, S> {
     this.onChildRemoved?.(pos);
   }
 
-  addChild__Test(child: Component<I, E, S>, pos = -1) {
+  addChild__Test(child: Component<I, E>, pos = -1) {
     if (pos === -1) {
       this.children.push(child);
     } else {
@@ -199,13 +199,13 @@ export class Component<I, E, S> {
     this.onChildAdded?.(child, pos);
   }
 
-  addChild(child: Component<I, E, S>, pos = -1) {
+  addChild(child: Component<I, E>, pos = -1) {
     this.addChild__Test(child, pos);
 
     child.parent = this;
   }
 
-  replace(component: Component<I, E, S>) {
+  replace(component: Component<I, E>) {
     if (this.parent) {
       this.parent.children[this.index] = component;
       component.parent = this.parent;

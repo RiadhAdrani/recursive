@@ -1,16 +1,29 @@
 import ContextStore from "../context/ContextStore";
 import { Action } from "../task";
-import { Component, ComponentAttribute, ComponentEvent } from "./Component";
-import { CoreContext, CoreTasks } from "./types";
+import { Component, ComponentCallback, ComponentRawDeclaration } from "./Component";
+import { Orchestrator } from "./Orchestrator";
+import { INTERNAL_COLLECTION, REFERENCE_COLLECTION, STATE_COLLECTION, Store } from "./Store";
+import { Callback, CoreContext, CoreTasks, StateArray } from "./types";
 
-export abstract class Core<
-  I = Record<string, unknown>,
-  E = (ev: Record<string, unknown>) => void,
-  S = Record<string, unknown>
-> {
+export class Core<I = Record<string, unknown>, E = (ev: Record<string, unknown>) => void> {
   public iteration = 0;
 
-  public context: ContextStore<CoreContext<I, E, S>> = new ContextStore();
+  public context: ContextStore<CoreContext<I, E>> = new ContextStore();
+
+  public tree?: Component<I, E> = undefined;
+
+  public orchestrator: Orchestrator = new Orchestrator({
+    commit: () => {
+      //
+    },
+    compute: () => {
+      //
+    },
+  });
+
+  public store: Store = new Store(() => {
+    // request an update
+  });
 
   public tasks: CoreTasks = {
     beforeUnmounted: [],
@@ -34,45 +47,41 @@ export abstract class Core<
     };
   }
 
-  abstract onComponentStyleUpdated(component: Component<I, E, S>): void;
-  abstract onComponentAttributeAdded(
-    name: string,
-    value: ComponentAttribute,
-    component: Component<I, E, S>
-  ): void;
-  abstract onComponentAttributeUpdated(
-    name: string,
-    value: ComponentAttribute,
-    component: Component<I, E, S>
-  ): void;
-  abstract onComponentAttributeRemoved(name: string, component: Component<I, E, S>): void;
-  abstract onComponentEventAdded(
-    name: string,
-    value: ComponentEvent<E>,
-    component: Component<I, E, S>
-  ): void;
-  abstract onComponentEventUpdated(
-    name: string,
-    value: ComponentEvent<E>,
-    component: Component<I, E, S>
-  ): void;
-  abstract onComponentEventRemoved(name: string, component: Component<I, E, S>): void;
-  abstract onComponentChildPositionChanged(
-    oldPos: number,
-    newPos: number,
-    component: Component<I, E, S>
-  ): void;
-  abstract onComponentChildAdded(
-    child: Component<I, E, S>,
-    pos: number,
-    component: Component<I, E, S>
-  ): void;
-  abstract onComponentChildRemoved(pos: number): void;
-  abstract onComponentReplaced(
-    component: Component<I, E, S>,
-    newComponent: Component<I, E, S>
-  ): void;
+  get componentOptions() {
+    return {};
+  }
 
-  abstract isComponentRendered(component: Component<I, E, S>): boolean;
-  abstract renderComponent(component: Component<I, E, S>): I;
+  setState<T = unknown>(key: string, value: T, onCreated?: Callback): StateArray<T> {
+    const global = this.context.get() === undefined;
+
+    return this.store.collections[STATE_COLLECTION].set({ key, value, global, onCreated });
+  }
+
+  getState<T = unknown>(key: string): StateArray<T> {
+    return this.store.collections[STATE_COLLECTION].get(key);
+  }
+
+  setEffect(key: string, callback: Callback, dependencies = []): void {
+    this.store.addEffect(key, callback, dependencies);
+  }
+
+  setInternal<T = unknown>(key: string, value: T, onCreated?: Callback): StateArray<T> {
+    return this.store.collections[INTERNAL_COLLECTION].set({ key, value, global: true, onCreated });
+  }
+
+  getInternal<T = unknown>(key: string): StateArray<T> {
+    return this.store.collections[INTERNAL_COLLECTION].get(key);
+  }
+
+  setRef(key: string, value: I) {
+    this.store.collections[REFERENCE_COLLECTION].set({ key, value, global: false });
+  }
+
+  getRef<T = I>(key: string): T {
+    return this.store.collections[REFERENCE_COLLECTION].get<T>(key)[0];
+  }
+
+  extractRawComponent(callback: ComponentCallback): ComponentRawDeclaration {
+    return callback(this.componentOptions);
+  }
 }
