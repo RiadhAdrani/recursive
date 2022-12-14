@@ -1,12 +1,35 @@
 import { describe, it, expect } from "@jest/globals";
 import { Component, ComponentSymbol, createComponentDeclaration } from "../Component";
+import { ComponentImplementation } from "../types";
 
 describe("Component", () => {
-  const component = new Component("view");
-  const child1 = new Component("button");
-  const child2 = new Component("container");
-  const child3 = new Component("image");
-  const child4 = new Component("spacer");
+  const imp: ComponentImplementation<unknown, unknown> = {
+    attributes: {
+      add: () => 0,
+      remove: () => 0,
+      update: () => 0,
+      is: () => true,
+    },
+    events: {
+      add: () => 0,
+      remove: () => 0,
+      update: () => 0,
+      is: () => true,
+    },
+    instance: {
+      addChild: () => 0,
+      changeChildPosition: () => 0,
+      remove: () => 0,
+      replace: () => 0,
+      render: () => 0,
+    },
+  };
+
+  const component = new Component("view", imp);
+  const child1 = new Component("button", imp);
+  const child2 = new Component("container", imp);
+  const child3 = new Component("image", imp);
+  const child4 = new Component("spacer", imp);
 
   it("should have a type", () => {
     expect(component.type).toBe("view");

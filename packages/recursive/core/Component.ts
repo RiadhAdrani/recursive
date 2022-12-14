@@ -1,5 +1,6 @@
 import { hasProperty, isBlank, isFunction, isInInterval } from "@riadh-adrani/utility-js";
 import { throwError } from "../helpers";
+import { ComponentImplementation } from "./types";
 
 export const ComponentSymbol = Symbol.for("recursive-component");
 
@@ -56,21 +57,7 @@ export class Component<I, E> {
   public style?: Record<string, unknown>;
   public options: Record<string, unknown> = {};
 
-  public onMounted?: ComponentLifeCycleCallback;
-  public onUpdated?: ComponentLifeCycleCallback;
-  public onUnmounted?: ComponentLifeCycleCallback;
-  public beforeUnmounted?: ComponentLifeCycleCallback;
-
-  public onAttributeAdded?: (name: string, value: ComponentAttribute) => void;
-  public onAttributeUpdated?: (name: string, value: ComponentAttribute) => void;
-  public onAttributeRemoved?: (name: string) => void;
-  public onEventAdded?: (name: string, value: ComponentEvent<E>) => void;
-  public onEventUpdated?: (name: string, value: ComponentEvent<E>) => void;
-  public onEventRemoved?: (name: string) => void;
-  public onChildPositionChanged?: (oldPos: number, newPos: number) => void;
-  public onChildRemoved?: (pos: number) => void;
-  public onChildAdded?: (child: Component<I, E>, pos: number) => void;
-  public onReplaced?: (component: Component<I, E>) => void;
+  public implementation: ComponentImplementation<I, E>;
 
   get index(): number {
     return this.parent ? this.parent.children.indexOf(this) : -1;
@@ -84,14 +71,15 @@ export class Component<I, E> {
     }
   }
 
-  constructor(type: string) {
+  constructor(type: string, implementation: ComponentImplementation<I, E>) {
+    this.implementation = implementation;
     this.type = type;
   }
 
   addAttribute(name: string, value: ComponentAttribute) {
     this.attributes[name] = value;
 
-    this.onAttributeAdded?.(name, value);
+    this.implementation.attributes.add(this, name, value);
   }
 
   updateAttribute(name: string, value: ComponentAttribute) {
@@ -102,7 +90,7 @@ export class Component<I, E> {
 
     this.attributes[name] = value;
 
-    this.onAttributeAdded?.(name, value);
+    this.implementation.attributes.update(this, name, value);
   }
 
   removeAttribute(name: string) {
@@ -113,7 +101,7 @@ export class Component<I, E> {
 
     delete this.attributes[name];
 
-    this.onAttributeRemoved?.(name);
+    this.implementation.attributes.remove(this, name);
   }
 
   addEvent(name: string, value: ComponentEvent<E>) {
@@ -124,7 +112,7 @@ export class Component<I, E> {
 
     this.events[name] = value;
 
-    this.onEventAdded?.(name, value);
+    this.implementation.events.add(this, name, value);
   }
 
   updateEvent(name: string, value: ComponentEvent<E>) {
@@ -140,7 +128,7 @@ export class Component<I, E> {
 
     this.events[name] = value;
 
-    this.onEventUpdated?.(name, value);
+    this.implementation.events.update(this, name, value);
   }
 
   removeEvent(name: string) {
@@ -151,7 +139,7 @@ export class Component<I, E> {
 
     delete this.events[name];
 
-    this.onEventRemoved?.(name);
+    this.implementation.events.remove(this, name);
   }
 
   changeChildPosition(oldPos: number, newPos: number) {
@@ -169,7 +157,7 @@ export class Component<I, E> {
 
     this.children.splice(newPos, 0, child);
 
-    this.onChildPositionChanged?.(oldPos, newPos);
+    this.implementation.instance.changeChildPosition(this, oldPos, newPos);
   }
 
   removeChild(pos: number) {
@@ -181,7 +169,7 @@ export class Component<I, E> {
     const child = this.children.splice(pos, 1)[0];
     child.parent = undefined;
 
-    this.onChildRemoved?.(pos);
+    child.implementation.instance.remove(child);
   }
 
   addChild__Test(child: Component<I, E>, pos = -1) {
@@ -196,7 +184,7 @@ export class Component<I, E> {
       this.children.splice(pos, 0, child);
     }
 
-    this.onChildAdded?.(child, pos);
+    this.implementation.instance.addChild(this, child, pos);
   }
 
   addChild(child: Component<I, E>, pos = -1) {
@@ -211,6 +199,6 @@ export class Component<I, E> {
       component.parent = this.parent;
     }
 
-    this.onReplaced?.(component);
+    this.implementation.instance.replace(this, component);
   }
 }
