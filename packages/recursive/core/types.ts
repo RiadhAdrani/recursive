@@ -91,3 +91,8 @@ export type RouterImplementation = {
   getRoute: () => string;
   setTitle: (title: string) => void;
 };
+
+export type RecursiveImplementation<I, E> = {
+  component: ComponentImplementation<I, E>;
+  router: RouterImplementation;
+};

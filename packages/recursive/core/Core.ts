@@ -1,16 +1,18 @@
 import ContextStore from "../context/ContextStore";
+import { useId } from "../helpers";
 import { Action } from "../task";
 import { Component, ComponentCallback, ComponentRawDeclaration } from "./Component";
 import { Orchestrator } from "./Orchestrator";
 import { INTERNAL_COLLECTION, REFERENCE_COLLECTION, STATE_COLLECTION, Store } from "./Store";
-import { Callback, CoreContext, CoreTasks, StateArray } from "./types";
+import { Callback, CoreContext, CoreTasks, RecursiveImplementation, StateArray } from "./types";
 
 export class Core<I = Record<string, unknown>, E = (ev: Record<string, unknown>) => void> {
   public iteration = 0;
+  public tree?: Component<I, E> = undefined;
+
+  public implementation?: RecursiveImplementation<I, E>;
 
   public context: ContextStore<CoreContext<I, E>> = new ContextStore();
-
-  public tree?: Component<I, E> = undefined;
 
   public orchestrator: Orchestrator = new Orchestrator({
     commit: () => {
@@ -22,7 +24,7 @@ export class Core<I = Record<string, unknown>, E = (ev: Record<string, unknown>)
   });
 
   public store: Store = new Store(() => {
-    // request an update
+    this.orchestrator.requestUpdate({ id: useId(), source: "state-update" });
   });
 
   public tasks: CoreTasks = {

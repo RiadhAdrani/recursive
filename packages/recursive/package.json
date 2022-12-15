@@ -1,0 +1,26 @@
+{
+  "version": "0.8.1",
+  "name": "@riadh-adrani/recursive",
+  "main": "./index.ts",
+  "description": "Recursive is a Javascript framework to build beautiful component-based apps.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RiadhAdrani/recursive"
+  },
+  "dependencies": {
+    "@riadh-adrani/utility-js": "^0.29.1",
+    "uuid": "^9.0.0"
+  },
+  "keywords": [
+    "npm",
+    "package",
+    "riadh",
+    "adrani",
+    "recursive",
+    "core",
+    "javascript",
+    "component-based",
+    "framework"
+  ]
+}

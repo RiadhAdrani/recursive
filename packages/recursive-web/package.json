@@ -1,0 +1,7 @@
+{
+  "name": "@riadh-adrani/recursive-web",
+  "main": "./index.ts",
+  "dependencies": {
+    "@riadh-adrani/recursive": "*"
+  }
+}
