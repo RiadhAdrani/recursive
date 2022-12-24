@@ -1,4 +1,5 @@
 import { hasProperty } from "@riadh-adrani/utility-js";
+import { RError } from "../console";
 import ContextStore from "./ContextStore";
 
 export default class Context {
@@ -8,7 +9,7 @@ export default class Context {
     if (hasProperty(this.stores, id)) {
       return this.stores[id] as ContextStore<T>;
     } else {
-      throw "Could not find store.";
+      throw new RError("Could not find store.");
     }
   }
 
@@ -22,7 +23,7 @@ export default class Context {
 
   public addStore<T>(id: string, store: ContextStore<T>): void {
     if (hasProperty(this.stores, id)) {
-      throw "Store exists already";
+      throw new RError("Store exists already");
     }
 
     this.stores[id] = store;

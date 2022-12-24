@@ -1,4 +1,5 @@
 import { isFunction } from "@riadh-adrani/utility-js";
+import { RError } from "../console";
 
 export default class ContextStore<T> {
   private current?: T;
@@ -29,11 +30,11 @@ export default class ContextStore<T> {
 
   public contextualize<R>(callback: () => R, data: T): R {
     if (!isFunction(callback)) {
-      throw "Invalid context callback";
+      throw new RError("Invalid context callback");
     }
 
     if (data === undefined) {
-      throw "Invalid context data.";
+      throw new RError("Invalid context data.");
     }
 
     this.start(data);
