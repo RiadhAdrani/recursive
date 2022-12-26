@@ -1,3 +1,1 @@
-const isDevMode = require("./src/isDevMode");
-
-module.exports = { isDevMode };
+export { default as isDevMode } from "./src/isDevMode";

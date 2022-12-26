@@ -1,9 +1,9 @@
-const { isDynamicFragment } = require("../utility");
+import { isDynamicFragment } from "../utility";
 
 it.each([
-    ["", false],
-    ["user", false],
-    [":id", true],
+  ["", false],
+  ["user", false],
+  [":id", true],
 ])("should determine if the fragment is dynamic '%s'", (input, expected) => {
-    expect(isDynamicFragment(input)).toBe(expected);
+  expect(isDynamicFragment(input)).toBe(expected);
 });

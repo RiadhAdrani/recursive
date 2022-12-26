@@ -1,47 +1,44 @@
-const { RecursiveConsole } = require("../../console");
-const { STATE_STATE_STORE } = require("../../constants");
-const { retrieveStatefulObject } = require("../utility");
-
+import { RecursiveConsole } from "../../console";
+import { retrieveStatefulObject } from "../utility";
+import { STATE_STATE_STORE } from "../../constants";
 /**
  * Create a new state store.
  * @param {import("..").RecursiveState} store */
-const stateStore = (store) => {
-    const storeName = STATE_STATE_STORE;
+export default (store) => {
+  const storeName = STATE_STATE_STORE;
 
-    function retrieve(key) {
-        return retrieveStatefulObject(store, storeName, key);
+  function retrieve(key) {
+    return retrieveStatefulObject(store, storeName, key);
+  }
+
+  function set(key, value, onInit, onRemoved) {
+    const first = !store.itemExists(key, storeName);
+
+    if (first) {
+      store.addItem(key, value, storeName, onInit, onRemoved);
     }
 
-    function set(key, value, onInit, onRemoved) {
-        const first = !store.itemExists(key, storeName);
+    store.setItemUsed(storeName, key);
 
-        if (first) {
-            store.addItem(key, value, storeName, onInit, onRemoved);
-        }
+    return retrieve(key);
+  }
 
-        store.setItemUsed(storeName, key);
+  function get(key) {
+    if (!store.itemExists(key, storeName))
+      RecursiveConsole.error("State with the uid " + key + " does not exists.");
 
-        return retrieve(key);
+    return retrieve(key);
+  }
+
+  function clear() {
+    for (let key in store.stores[storeName].items) {
+      if (!store.itemIsUsed(storeName, key)) store.removeItem(key, storeName);
     }
 
-    function get(key) {
-        if (!store.itemExists(key, storeName))
-            RecursiveConsole.error("State with the uid " + key + " does not exists.");
+    store.stores[storeName].used = [];
+  }
 
-        return retrieve(key);
-    }
+  function flush() {}
 
-    function clear() {
-        for (let key in store.stores[storeName].items) {
-            if (!store.itemIsUsed(storeName, key)) store.removeItem(key, storeName);
-        }
-
-        store.stores[storeName].used = [];
-    }
-
-    function flush() {}
-
-    return { set, get, clear, flush, name: storeName };
+  return { set, get, clear, flush, name: storeName };
 };
-
-module.exports = stateStore;

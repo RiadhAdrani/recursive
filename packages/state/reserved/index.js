@@ -1,42 +1,39 @@
-const { RecursiveConsole } = require("../../console");
-const { retrieveStatefulObject } = require("../utility");
-const { STATE_RESERVED_STORE } = require("../../constants");
-
+import { RecursiveConsole } from "../../console";
+import { retrieveStatefulObject } from "../utility";
+import { STATE_RESERVED_STORE } from "../../constants";
 /**
  * Create a new reserved state store.
  * @param {import("..").RecursiveState} store
  */
-const reservedStore = (store) => {
-    const storeName = STATE_RESERVED_STORE;
+export default (store) => {
+  const storeName = STATE_RESERVED_STORE;
 
-    function retrieve(key) {
-        return retrieveStatefulObject(store, storeName, key);
+  function retrieve(key) {
+    return retrieveStatefulObject(store, storeName, key);
+  }
+
+  function set(key, value, onInit, onRemoved) {
+    const first = !store.itemExists(key, storeName);
+
+    if (first) {
+      store.addItem(key, value, storeName, onInit, onRemoved);
     }
 
-    function set(key, value, onInit, onRemoved) {
-        const first = !store.itemExists(key, storeName);
+    store.setItemUsed(storeName, key);
 
-        if (first) {
-            store.addItem(key, value, storeName, onInit, onRemoved);
-        }
+    return retrieve(key);
+  }
 
-        store.setItemUsed(storeName, key);
+  function get(key) {
+    if (!store.itemExists(key, storeName))
+      RecursiveConsole.error("State with the uid " + key + " does not exists.");
 
-        return retrieve(key);
-    }
+    return retrieve(key);
+  }
 
-    function get(key) {
-        if (!store.itemExists(key, storeName))
-            RecursiveConsole.error("State with the uid " + key + " does not exists.");
+  function clear() {}
 
-        return retrieve(key);
-    }
+  function flush() {}
 
-    function clear() {}
-
-    function flush() {}
-
-    return { set, get, clear, flush, name: storeName };
+  return { set, get, clear, flush, name: storeName };
 };
-
-module.exports = reservedStore;

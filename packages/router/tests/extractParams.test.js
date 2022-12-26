@@ -1,10 +1,10 @@
-const { isDynamicFragment, extractParams } = require("../utility");
+import { isDynamicFragment, extractParams } from "../utility";
 
 it.each([
-    ["/", "/:id", { id: "" }],
-    ["/user", "/:id", { id: "user" }],
-    ["/:id", "/:id", { id: ":id" }],
-    ["/user/123/section/about", "/user/:id/section/:section", { id: "123", section: "about" }],
+  ["/", "/:id", { id: "" }],
+  ["/user", "/:id", { id: "user" }],
+  ["/:id", "/:id", { id: ":id" }],
+  ["/user/123/section/about", "/user/:id/section/:section", { id: "123", section: "about" }],
 ])("should extract correct params '%s' x '%s'", (path, template, expected) => {
-    expect(extractParams(template, path)).toStrictEqual(expected);
+  expect(extractParams(template, path)).toStrictEqual(expected);
 });

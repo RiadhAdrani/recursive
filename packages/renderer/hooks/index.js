@@ -1,24 +1,24 @@
-const {
-    HOOKS_ON_CREATED,
-    HOOKS_ON_DESTROYED,
-    HOOKS_ON_UPDATED,
-    HOOKS_BEFORE_DESTROYED,
-    HOOKS_ON_REF,
-    HOOKS_BEFORE_PREPARED,
-    HOOKS_ON_PREPARED,
-} = require("../../constants");
+import {
+  HOOKS_ON_CREATED,
+  HOOKS_ON_DESTROYED,
+  HOOKS_ON_UPDATED,
+  HOOKS_BEFORE_DESTROYED,
+  HOOKS_ON_REF,
+  HOOKS_BEFORE_PREPARED,
+  HOOKS_ON_PREPARED,
+} from "../../constants";
 
 /**
  * Object containing all hooks used by the app.
  */
 const list = {
-    onCreated: { key: HOOKS_ON_CREATED, type: "function" },
-    onDestroyed: { key: HOOKS_ON_DESTROYED, type: "function" },
-    onUpdated: { key: HOOKS_ON_UPDATED, type: "function" },
-    beforeDestroyed: { key: HOOKS_BEFORE_DESTROYED, type: "function" },
-    onRef: { key: HOOKS_ON_REF, type: "function" },
-    onPrepared: { key: HOOKS_ON_PREPARED, type: "function" },
-    beforePrepared: { key: HOOKS_BEFORE_PREPARED, type: "function" },
+  onCreated: { key: HOOKS_ON_CREATED, type: "function" },
+  onDestroyed: { key: HOOKS_ON_DESTROYED, type: "function" },
+  onUpdated: { key: HOOKS_ON_UPDATED, type: "function" },
+  beforeDestroyed: { key: HOOKS_BEFORE_DESTROYED, type: "function" },
+  onRef: { key: HOOKS_ON_REF, type: "function" },
+  onPrepared: { key: HOOKS_ON_PREPARED, type: "function" },
+  beforePrepared: { key: HOOKS_BEFORE_PREPARED, type: "function" },
 };
 
 /**
@@ -28,11 +28,11 @@ const list = {
  * @returns {boolean} check result.
  */
 function isHook(hook, declaration) {
-    if (!list[hook]) return false;
+  if (!list[hook]) return false;
 
-    if (typeof declaration !== list[hook].type) return false;
+  if (typeof declaration !== list[hook].type) return false;
 
-    return true;
+  return true;
 }
 
-module.exports = { isHook, list };
+export { isHook, list };

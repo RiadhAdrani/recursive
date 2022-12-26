@@ -1,19 +1,17 @@
-const { FLAGS_RENDER_IF, FLAGS_FORCE_RERENDER } = require("../../constants");
+import { FLAGS_RENDER_IF, FLAGS_FORCE_RERENDER } from "../../constants";
 
 /**
  * Object containing all flags.
  */
-const list = { forceRerender: FLAGS_FORCE_RERENDER, renderIf: FLAGS_RENDER_IF };
+export const list = { forceRerender: FLAGS_FORCE_RERENDER, renderIf: FLAGS_RENDER_IF };
 
 /**
  * Check if the given key represents a flag.
  * @param {string} key string representing the flag.
  * @returns {boolean} Check result.
  */
-function isFlag(key) {
-    if (!list[key]) return false;
+export function isFlag(key) {
+  if (!list[key]) return false;
 
-    return true;
+  return true;
 }
-
-module.exports = { isFlag, list };

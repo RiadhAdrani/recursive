@@ -3,14 +3,14 @@
  * @param {bigint} time
  * @returns {string} uid
  */
-function createTaskId(time) {
-    let uuid = "";
+export function createTaskId(time) {
+  let uuid = "";
 
-    for (let i = 0; i < 5; i++) {
-        uuid += Math.random() * i * 10 * Math.random();
-    }
+  for (let i = 0; i < 5; i++) {
+    uuid += Math.random() * i * 10 * Math.random();
+  }
 
-    return `task-${uuid}-${time}`;
+  return `task-${uuid}-${time}`;
 }
 
 /**
@@ -19,14 +19,12 @@ function createTaskId(time) {
  * @param {string} uuid - sender id
  * @returns
  */
-function createUpdateObject(sender, uuid) {
-    const object = {
-        sender,
-        time: Date.now(),
-        uuid,
-    };
+export function createUpdateObject(sender, uuid) {
+  const object = {
+    sender,
+    time: Date.now(),
+    uuid,
+  };
 
-    return object;
+  return object;
 }
-
-module.exports = { createTaskId, createUpdateObject };

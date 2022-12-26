@@ -1,51 +1,49 @@
-const { isDevMode } = require("../common");
+import isDevMode from "../common/src/isDevMode";
 
 /**
  * Display Error messages, logs and warnings in development mode.
  */
-class RecursiveConsole {
-    constructor() {}
+export class RecursiveConsole {
+  constructor() {}
 
-    static showDeveloperHelp() {}
+  static showDeveloperHelp() {}
 
-    /**
-     * @param {String} msg
-     * @param {Array} help
-     */
-    static error(msg, help) {
-        if (!isDevMode() || !msg) return;
+  /**
+   * @param {String} msg
+   * @param {Array} help
+   */
+  static error(msg, help) {
+    if (!isDevMode() || !msg) return;
 
-        let helpMsg = "";
+    let helpMsg = "";
 
-        if (Array.isArray(help) && help.length > 0) {
-            helpMsg += "- Help - " + help.join(", ");
-        }
-
-        this.showDeveloperHelp({ msg, help });
-
-        throw new Error(`${msg} ${helpMsg}`);
+    if (Array.isArray(help) && help.length > 0) {
+      helpMsg += "- Help - " + help.join(", ");
     }
 
-    /**
-     * @param {String} msg
-     * @param {Array} help
-     */
-    static log(msg) {
-        if (!isDevMode() || !msg) return;
+    this.showDeveloperHelp({ msg, help });
 
-        console.log(msg);
-    }
+    throw new Error(`${msg} ${helpMsg}`);
+  }
 
-    /**
-     * @param {String} msg
-     */
-    static warn(msg) {
-        if (!isDevMode() || !msg) return;
+  /**
+   * @param {String} msg
+   * @param {Array} help
+   */
+  static log(msg) {
+    if (!isDevMode() || !msg) return;
 
-        this.showDeveloperHelp({ msg });
+    console.log(msg);
+  }
 
-        console.warn(msg);
-    }
+  /**
+   * @param {String} msg
+   */
+  static warn(msg) {
+    if (!isDevMode() || !msg) return;
+
+    this.showDeveloperHelp({ msg });
+
+    console.warn(msg);
+  }
 }
-
-module.exports = { RecursiveConsole };

@@ -1,10 +1,8 @@
-const { copy } = require("@riadh-adrani/utility-js");
+import { copy } from "@riadh-adrani/utility-js";
 
 /**
  * @param {import("../../../lib").Route} params
  */
-function createRoute(params) {
-    return { ...copy(params) };
+export function createRoute(params) {
+  return { ...copy(params) };
 }
-
-module.exports = { createRoute };

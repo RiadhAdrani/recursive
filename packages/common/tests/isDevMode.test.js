@@ -1,5 +1,5 @@
-const isDevMode = require("../src/isDevMode");
+import isDevMode from "../src/isDevMode";
 
 test("is-dev-mode test", () => {
-    expect(isDevMode()).toBe(false);
+  expect(isDevMode()).toBe(false);
 });
